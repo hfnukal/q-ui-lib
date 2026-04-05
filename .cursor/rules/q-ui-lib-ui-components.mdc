@@ -1,0 +1,8 @@
+---
+description: Postup pro nové a úpravy UI komponent v q-ui-lib (CREATE.md, Qwik, demo).
+alwaysApply: true
+---
+
+Při práci na nových UI komponentách nebo při větších úpravách existujících komponent v tomto repozitáři použij postup v souboru **CREATE.md** v kořeni repozitáře (případně ho připoj jako `@CREATE.md`).
+
+Pokud uživatel chce **vytvořit novou** komponentu a **neuvedl její název**, nejdřív se ho zeptej na název a na odpovídající kebab-case složku v `components/`; bez toho neimplementuj.

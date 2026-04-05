@@ -1,0 +1,43 @@
+# Dependencies (root, template, demo)
+node_modules/
+
+# Build (Qwik — template & demo)
+dist/
+lib/
+lib-types/
+server/
+
+# Local env / secrets
+.env
+*.local
+
+# Cache
+.cache/
+.mf/
+.rollup.cache/
+tsconfig.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/launch.json
+!.vscode/*.code-snippets
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Yarn (Berry)
+.yarn/*
+!.yarn/releases

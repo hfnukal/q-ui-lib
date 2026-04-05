@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * HSL tokeny pro tailwind.config.js (space-separated, bez hsl()).
+ * Viz COLORS.md — orientačně iOS light / dark.
+ */
+
+:root {
+  /* Text */
+  --label: 0 0% 0%;
+  --secondary-label: 240 2% 25%;
+  --tertiary-label: 240 2% 42%;
+  --quaternary-label: 240 2% 52%;
+  --placeholder: 240 2% 52%;
+  --link: 211 100% 50%;
+  --accent: 211 100% 50%;
+  --ring: 211 100% 50%;
+
+  /* Surfaces — flat */
+  --background: 0 0% 100%;
+  --surface-raised: 240 5% 96%;
+  --surface-overlay: 0 0% 100%;
+
+  /* Surfaces — grouped */
+  --grouped-background: 240 6% 96%;
+  --grouped-surface: 0 0% 100%;
+  --grouped-surface-inset: 240 5% 93%;
+
+  /* Fills (use with /opacity, e.g. bg-fill/20) */
+  --fill: 240 6% 50%;
+  --fill-secondary: 240 5% 45%;
+  --fill-tertiary: 240 4% 40%;
+  --fill-quaternary: 240 4% 35%;
+
+  /* Separators */
+  --separator: 240 6% 50%;
+  --separator-opaque: 240 5% 82%;
+
+  /* System palette (light) */
+  --system-blue: 211 100% 50%;
+  --system-brown: 28 35% 48%;
+  --system-cyan: 199 94% 43%;
+  --system-green: 135 59% 42%;
+  --system-indigo: 241 61% 52%;
+  --system-mint: 168 72% 38%;
+  --system-orange: 28 100% 50%;
+  --system-pink: 349 100% 59%;
+  --system-purple: 292 55% 48%;
+  --system-red: 3 100% 50%;
+  --system-teal: 184 100% 35%;
+  --system-yellow: 48 100% 50%;
+
+  --system-gray: 240 2% 50%;
+  --system-gray-2: 240 2% 55%;
+  --system-gray-3: 240 2% 60%;
+  --system-gray-4: 240 2% 65%;
+  --system-gray-5: 240 2% 70%;
+  --system-gray-6: 240 3% 75%;
+}
+
+.dark {
+  --label: 0 0% 100%;
+  --secondary-label: 240 1% 70%;
+  --tertiary-label: 240 1% 50%;
+  --quaternary-label: 240 1% 40%;
+  --placeholder: 240 1% 45%;
+  --link: 210 100% 56%;
+  --accent: 210 100% 56%;
+  --ring: 210 100% 56%;
+
+  --background: 240 6% 6%;
+  --surface-raised: 240 4% 12%;
+  --surface-overlay: 240 4% 16%;
+
+  --grouped-background: 0 0% 0%;
+  --grouped-surface: 240 4% 12%;
+  --grouped-surface-inset: 240 4% 16%;
+
+  --fill: 240 5% 56%;
+  --fill-secondary: 240 4% 50%;
+  --fill-tertiary: 240 4% 44%;
+  --fill-quaternary: 240 4% 38%;
+
+  --separator: 240 4% 28%;
+  --separator-opaque: 240 4% 22%;
+
+  --system-blue: 210 100% 56%;
+  --system-brown: 28 40% 58%;
+  --system-cyan: 199 85% 55%;
+  --system-green: 135 50% 52%;
+  --system-indigo: 241 55% 62%;
+  --system-mint: 168 60% 48%;
+  --system-orange: 28 95% 55%;
+  --system-pink: 349 85% 65%;
+  --system-purple: 292 50% 58%;
+  --system-red: 3 90% 58%;
+  --system-teal: 184 70% 45%;
+  --system-yellow: 48 95% 55%;
+
+  --system-gray: 240 2% 56%;
+  --system-gray-2: 240 2% 50%;
+  --system-gray-3: 240 2% 44%;
+  --system-gray-4: 240 2% 38%;
+  --system-gray-5: 240 2% 32%;
+  --system-gray-6: 240 3% 26%;
+}

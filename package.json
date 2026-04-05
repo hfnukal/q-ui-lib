@@ -1,0 +1,23 @@
+{
+  "name": "q-ui-lib",
+  "version": "0.1.0",
+  "description": "Custom Qwik UI component library with CLI",
+  "main": "index.js",
+  "bin": {
+    "q-ui-lib": "./cli/index.js"
+  },
+  "scripts": {
+    "build": "echo 'No build step needed for library'",
+    "qui": "node cli/index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@builder.io/qwik": "^1.19.2",
+    "@builder.io/qwik-city": "^1.19.2",
+    "@qwik-ui/headless": "^0.7.4",
+    "chalk": "^4.1.2",
+    "commander": "^11.0.0",
+    "fs-extra": "^11.1.1"
+  }
+}
