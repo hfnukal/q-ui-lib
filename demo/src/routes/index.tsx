@@ -1,5 +1,5 @@
 import { component$ } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import { Link, type DocumentHead } from "@builder.io/qwik-city";
 
 export default component$(() => {
   return (
@@ -12,12 +12,17 @@ export default component$(() => {
         <code class="rounded bg-slate-200 px-1.5 py-0.5 text-sm">
           @qwik-ui/headless
         </code>{" "}
-        are configured. Add UI blocks with{" "}
+        are configured. Icons use{" "}
+        <code class="rounded bg-slate-200 px-1.5 py-0.5 text-sm">
+          @qwikest/icons/lucide
+        </code>{" "}
+        (e.g. <code class="text-sm">LuSearch</code>). Add UI blocks with{" "}
         <code class="rounded bg-slate-200 px-1.5 py-0.5 text-sm">
           npm run q -- add …
         </code>{" "}
         from the library repo.
       </p>
+      <p><Link href="/admin">Admin</Link></p>
     </div>
   );
 });

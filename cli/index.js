@@ -52,8 +52,30 @@ function addComponents(targetApp, components) {
   });
 }
 
-// Helper for interactive update
-function updateComponents(targetApp) {
+/** Copy listed components from library into target app (demo/src/components/ui/). */
+function syncComponentsToApp(targetApp, components) {
+  const appRoot = path.resolve(targetApp);
+  const uiDir = path.join(appRoot, 'src', 'components', 'ui');
+  fs.ensureDirSync(uiDir);
+  components.forEach((comp) => {
+    const srcComp = path.resolve(__dirname, '..', 'components', comp);
+    if (!fs.existsSync(srcComp)) {
+      console.log(chalk.red(`Component ${comp} does not exist in library.`));
+      return;
+    }
+    const destComp = path.join(uiDir, comp);
+    fs.copySync(srcComp, destComp);
+    console.log(chalk.green(`Synced ${comp} to ${destComp}`));
+  });
+}
+
+// Interactive update by meta.json version mismatch, or explicit sync when component names given
+function updateComponents(targetApp, explicitComponents) {
+  if (explicitComponents && explicitComponents.length > 0) {
+    syncComponentsToApp(targetApp, explicitComponents);
+    return;
+  }
+
   const appRoot = path.resolve(targetApp);
   const uiDir = path.join(appRoot, 'src', 'components', 'ui');
   if (!fs.existsSync(uiDir)) {
@@ -96,9 +118,14 @@ program
   .action(addComponents);
 
 program
-  .command('update <target>')
-  .description('Interactively update components in an existing Qwik app')
-  .action(updateComponents);
+  .command('update <target> [components...]')
+  .description(
+    'Sync named components from the library into the app (e.g. demo), or run interactive version-based update when no names are given'
+  )
+  .action((target, components) => {
+    const list = Array.isArray(components) ? components : [];
+    updateComponents(target, list);
+  });
 
 program
   .command('sync-template <target>')

@@ -22,6 +22,10 @@
     "start": "vite --open --mode ssr",
     "qwik": "qwik"
   },
+  "dependencies": {
+    "@qwikest/icons": "^0.0.13",
+    "dayjs": "^1.11.13"
+  },
   "devDependencies": {
     "@builder.io/qwik": "^1.19.2",
     "@builder.io/qwik-city": "^1.19.2",

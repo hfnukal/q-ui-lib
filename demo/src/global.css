@@ -3,6 +3,183 @@
 @tailwind utilities;
 
 /**
+ * Progress (q-ui-lib): neurčitý stav — posuv segmentu; `transform` necháváme headlessu, pohyb přes `left` (viz Qwik UI docs).
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .q-ui-progress-indicator[data-progress="indeterminate"] {
+    animation: q-ui-progress-indeterminate 2s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+  }
+}
+
+@keyframes q-ui-progress-indeterminate {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/**
+ * Sheet (q-ui-lib): ukotvení <dialog>:modal + vstupní/výstupní slide.
+ * @qwik-ui/headless při zavírání čeká na animationend, pokud getComputedStyle(modal).animationDuration ≠ 0s.
+ * Samotný <dialog> musí mít výstupní @keyframes při .modal-closing — transition na transform často nevyvolá transitionend spolehlivě.
+ */
+@layer components {
+  /**
+   * Tailwind `flex` na <dialog> přebije UA display:none → obsah panelu je vidět v toku stránky před otevřením.
+   */
+  dialog.q-sheet-panel:not(:modal) {
+    display: none !important;
+  }
+
+  dialog.q-sheet-panel:modal {
+    margin: 0;
+    max-block-size: 100dvh;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+  }
+
+  dialog.q-sheet-panel[data-sheet-side="right"].modal-closing {
+    animation: q-ui-sheet-out-right 0.3s ease-in forwards !important;
+  }
+  dialog.q-sheet-panel[data-sheet-side="left"].modal-closing {
+    animation: q-ui-sheet-out-left 0.3s ease-in forwards !important;
+  }
+  dialog.q-sheet-panel[data-sheet-side="top"].modal-closing {
+    animation: q-ui-sheet-out-top 0.3s ease-in forwards !important;
+  }
+  dialog.q-sheet-panel[data-sheet-side="bottom"].modal-closing {
+    animation: q-ui-sheet-out-bottom 0.3s ease-in forwards !important;
+  }
+
+  dialog.q-sheet-panel[data-sheet-side="right"]:modal:not(.modal-closing) {
+    animation: q-ui-sheet-in-right 0.3s ease-out both;
+  }
+  dialog.q-sheet-panel[data-sheet-side="left"]:modal:not(.modal-closing) {
+    animation: q-ui-sheet-in-left 0.3s ease-out both;
+  }
+  dialog.q-sheet-panel[data-sheet-side="top"]:modal:not(.modal-closing) {
+    animation: q-ui-sheet-in-top 0.3s ease-out both;
+  }
+  dialog.q-sheet-panel[data-sheet-side="bottom"]:modal:not(.modal-closing) {
+    animation: q-ui-sheet-in-bottom 0.3s ease-out both;
+  }
+
+  /**
+   * Dialog: vycentrovaný <dialog> — stejný princip jako sheet (display:none mimo :modal).
+   */
+  dialog.q-dialog-panel:not(:modal) {
+    display: none !important;
+  }
+
+  dialog.q-dialog-panel:modal {
+    margin: 0;
+    max-block-size: min(90dvh, 40rem);
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+  }
+
+  dialog.q-dialog-panel.modal-closing {
+    animation: q-ui-dialog-out 0.15s ease-in forwards !important;
+  }
+
+  dialog.q-dialog-panel:modal:not(.modal-closing) {
+    animation: q-ui-dialog-in 0.2s ease-out both;
+  }
+}
+
+@keyframes q-ui-sheet-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes q-ui-sheet-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes q-ui-sheet-in-top {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes q-ui-sheet-in-bottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes q-ui-sheet-out-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes q-ui-sheet-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes q-ui-sheet-out-top {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+@keyframes q-ui-sheet-out-bottom {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes q-ui-dialog-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes q-ui-dialog-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+}
+
+/**
  * HSL tokeny pro tailwind.config.js (space-separated, bez hsl()).
  * Viz COLORS.md — orientačně iOS light / dark.
  */
@@ -31,7 +208,7 @@
   /* Fills (use with /opacity, e.g. bg-fill/20) */
   --fill: 240 6% 50%;
   --fill-secondary: 240 5% 45%;
-  --fill-tertiary: 240 4% 40%;
+  --fill-tertiary: 240 4% 65%;
   --fill-quaternary: 240 4% 35%;
 
   /* Separators */

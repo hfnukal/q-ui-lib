@@ -1,11 +1,13 @@
 # Dependencies (root, template, demo)
 node_modules/
 
-# Build (Qwik — template & demo)
+# Build — Qwik (demo, template)
 dist/
 lib/
 lib-types/
-server/
+# Adapter SSR output only; **/src/server stays tracked
+demo/server/
+template/server/
 
 # Local env / secrets
 .env
@@ -15,7 +17,7 @@ server/
 .cache/
 .mf/
 .rollup.cache/
-tsconfig.tsbuildinfo
+*.tsbuildinfo
 
 # Logs
 logs/
