@@ -1,0 +1,11 @@
+{
+  "name": "label",
+  "title": "Label",
+  "version": "1.0.1",
+  "kind": "primitive",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "slot": true
+  }
+}

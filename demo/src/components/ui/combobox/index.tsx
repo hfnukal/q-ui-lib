@@ -7,6 +7,7 @@ import {
   Slot,
 } from "@builder.io/qwik";
 import { Combobox as HeadlessCombobox } from "@qwik-ui/headless";
+import { floatingComboboxListPanelClass } from "../utilities/floating-ui";
 
 const rootClass = "inline-block w-full max-w-xs";
 
@@ -34,10 +35,7 @@ const triggerClass = [
   "disabled:pointer-events-none disabled:opacity-50",
 ].join(" ");
 
-const popoverPanelClass = [
-  "z-50 min-w-[8rem] max-w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-lg border border-separator-opaque bg-surface-raised p-1 text-body text-label shadow-md outline-none ring-offset-background",
-  "max-h-[min(15rem,50vh)] overflow-y-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-].join(" ");
+const popoverPanelClass = floatingComboboxListPanelClass;
 
 const itemClass = [
   "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-callout text-label outline-none transition-colors",

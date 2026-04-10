@@ -1,3 +1,9 @@
+/**
+ * @component button-group
+ * @title ButtonGroup
+ * @version 1.0.0
+ */
+
 import { component$, Slot } from "@builder.io/qwik";
 
 export interface ButtonGroupProps {

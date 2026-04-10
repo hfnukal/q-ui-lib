@@ -1,19 +1,27 @@
+/**
+ * @component dropdown-menu
+ * @title DropdownMenu
+ * @version 1.2.1
+ */
+
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { Dropdown as HeadlessDropdown } from "@qwik-ui/headless";
+import {
+  floatingMenuListPanelClass,
+  floatingOutlineButtonTriggerClass,
+} from "../utilities/floating-ui";
 
 const rootClassDefault = "inline-block";
 
 const rootClassMenubar = "inline-flex";
 
-const triggerClass =
-  "inline-flex items-center justify-center rounded-md border border-separator-opaque bg-surface-raised px-3 py-2 font-medium text-callout text-label shadow-sm ring-offset-background transition-colors hover:bg-surface-overlay focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+const triggerClass = floatingOutlineButtonTriggerClass;
 
 /** Spouštěč vodorovné lišty menu (bez rámečku jako u samostatného tlačítka). */
 const menubarTriggerClass =
   "inline-flex h-8 cursor-default select-none items-center justify-center rounded-sm px-3 py-1 text-callout font-medium text-label outline-none ring-offset-background transition-colors hover:bg-surface-overlay focus:bg-surface-overlay data-[open]:bg-surface-overlay focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
-const popoverPanelClass =
-  "z-50 min-w-[8rem] max-w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-lg border border-separator-opaque bg-surface-raised p-1 text-body text-label shadow-md outline-none ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+const popoverPanelClass = floatingMenuListPanelClass;
 
 const itemClass =
   "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-callout text-label outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-surface-overlay data-[highlighted]:text-label";

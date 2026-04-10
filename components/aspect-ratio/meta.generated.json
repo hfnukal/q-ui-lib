@@ -1,0 +1,15 @@
+{
+  "name": "aspect-ratio",
+  "title": "AspectRatio",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "params": {
+      "ratio": "number",
+      "class": "string"
+    },
+    "slot": true
+  }
+}

@@ -1,3 +1,9 @@
+/**
+ * @component label
+ * @title Label
+ * @version 1.0.1
+ */
+
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 import { Label as HeadlessLabel } from "@qwik-ui/headless";
 

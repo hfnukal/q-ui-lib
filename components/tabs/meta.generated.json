@@ -1,0 +1,17 @@
+{
+  "name": "tabs",
+  "title": "Tabs",
+  "version": "1.1.1",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "Root": {
+      "children": {
+        "List": {},
+        "Tab": {},
+        "Panel": {}
+      }
+    }
+  }
+}

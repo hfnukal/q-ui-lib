@@ -1,0 +1,19 @@
+{
+  "name": "button-group",
+  "title": "ButtonGroup",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "params": {
+      "orientation": [
+        "horizontal",
+        "vertical"
+      ],
+      "aria-label": "string",
+      "class": "string"
+    },
+    "slot": true
+  }
+}

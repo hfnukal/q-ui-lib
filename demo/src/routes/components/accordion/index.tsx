@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import { CodeExample } from "~/components/demo/codeexample";
-import { AccordionList } from "~/components/ui/accordion";
+import { Accordion, AccordionList } from "~/components/ui/accordion";
 
 const sampleItems = [
   {
@@ -41,6 +41,15 @@ const items = [
 
 <AccordionList items={items} multiple />`;
 
+const codeCompound = `import { Accordion } from "~/components/ui/accordion";
+
+<Accordion.Root>
+  <Accordion.Trigger>a</Accordion.Trigger>
+  <Accordion.Content>aaa</Accordion.Content>
+  <Accordion.Trigger>b</Accordion.Trigger>
+  <Accordion.Content>bbb</Accordion.Content>
+</Accordion.Root>`;
+
 export default component$(() => {
   return (
     <div class="space-y-10">
@@ -54,6 +63,29 @@ export default component$(() => {
           , built on @qwik-ui/headless.
         </p>
       </div>
+
+      <section class="space-y-3">
+        <h2 class="text-lg font-medium text-slate-800">
+          Compound API (střídavě <code class="text-sm">Trigger</code> /{" "}
+          <code class="text-sm">Content</code>)
+        </h2>
+        <CodeExample code={codeCompound}>
+          <Accordion.Root>
+            <Accordion.Trigger>{sampleItems[0]!.title}</Accordion.Trigger>
+            <Accordion.Content>
+              <p>{sampleItems[0]!.content}</p>
+            </Accordion.Content>
+            <Accordion.Trigger>{sampleItems[1]!.title}</Accordion.Trigger>
+            <Accordion.Content>
+              <p>{sampleItems[1]!.content}</p>
+            </Accordion.Content>
+            <Accordion.Trigger>{sampleItems[2]!.title}</Accordion.Trigger>
+            <Accordion.Content>
+              <p>{sampleItems[2]!.content}</p>
+            </Accordion.Content>
+          </Accordion.Root>
+        </CodeExample>
+      </section>
 
       <section class="space-y-3">
         <h2 class="text-lg font-medium text-slate-800">Single open panel</h2>

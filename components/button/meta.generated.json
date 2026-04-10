@@ -1,0 +1,26 @@
+{
+  "name": "button",
+  "title": "Button",
+  "version": "2.0.0",
+  "kind": "primitive",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "params": {
+      "onClick$": "function",
+      "variant": [
+        "danger",
+        "primary",
+        "secondary"
+      ],
+      "size": [
+        "lg",
+        "md",
+        "sm"
+      ],
+      "disabled": "boolean",
+      "class": "string"
+    },
+    "slot": true
+  }
+}

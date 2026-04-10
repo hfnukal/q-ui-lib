@@ -1,3 +1,9 @@
+/**
+ * @component textarea
+ * @title Textarea
+ * @version 1.0.0
+ */
+
 import { component$, type PropsOf } from "@builder.io/qwik";
 
 export type TextareaProps = PropsOf<"textarea">;

@@ -1,3 +1,9 @@
+/**
+ * @component combobox
+ * @title Combobox
+ * @version 1.1.1
+ */
+
 import {
   $,
   component$,
@@ -7,6 +13,7 @@ import {
   Slot,
 } from "@builder.io/qwik";
 import { Combobox as HeadlessCombobox } from "@qwik-ui/headless";
+import { floatingComboboxListPanelClass } from "../utilities/floating-ui";
 
 const rootClass = "inline-block w-full max-w-xs";
 
@@ -34,10 +41,7 @@ const triggerClass = [
   "disabled:pointer-events-none disabled:opacity-50",
 ].join(" ");
 
-const popoverPanelClass = [
-  "z-50 min-w-[8rem] max-w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-lg border border-separator-opaque bg-surface-raised p-1 text-body text-label shadow-md outline-none ring-offset-background",
-  "max-h-[min(15rem,50vh)] overflow-y-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-].join(" ");
+const popoverPanelClass = floatingComboboxListPanelClass;
 
 const itemClass = [
   "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-callout text-label outline-none transition-colors",
@@ -303,20 +307,20 @@ export const ComboboxInline: FunctionComponent<ComboboxInlineProps> = (props) =>
 export const Combobox = {
   Root: ComboboxRoot,
   Label: ComboboxLabel,
+  HiddenNativeSelect: ComboboxHiddenNativeSelect,
   Control: ComboboxControl,
-  Input: ComboboxInput,
-  Trigger: ComboboxTrigger,
+  ControlInput: ComboboxInput,
+  ControlTrigger: ComboboxTrigger,
   Popover: ComboboxPopover,
   Listbox: ComboboxListbox,
   Group: ComboboxGroup,
   GroupLabel: ComboboxGroupLabel,
-  Item: ComboboxItem,
-  ItemLabel: ComboboxItemLabel,
-  ItemIndicator: ComboboxItemIndicator,
+  PopoverItem: ComboboxItem,
+  PopoverItemLabel: ComboboxItemLabel,
+  PopoverItemIndicator: ComboboxItemIndicator,
+  PopoverInline: ComboboxInline,
+  PopoverChip: ComboboxChip,
+  PopoverEmpty: ComboboxEmpty,
   Description: ComboboxDescription,
   ErrorMessage: ComboboxErrorMessage,
-  Empty: ComboboxEmpty,
-  HiddenNativeSelect: ComboboxHiddenNativeSelect,
-  Inline: ComboboxInline,
-  Chip: ComboboxChip,
 };

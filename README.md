@@ -47,6 +47,7 @@ npm run q -- init ./my-app
 ```
 
 - Copies the `template/` folder into the target directory (includes Tailwind, PostCSS, and `@qwik-ui/headless`).
+- Copies shared **`components/utilities/`** into `src/components/ui/utilities/` (Tailwind class-string tokens used by several components).
 - Prompts you to run `npm install` immediately (answer **y** to install dependencies).
 
 ### `add <target> <components...>`
@@ -59,6 +60,7 @@ npm run q -- add ./my-app accordion slider button
 
 - Components are placed under `src/components/ui/<name>/` in the target app.
 - `meta.json` is copied for version tracking.
+- **`components/utilities/`** is synced to `src/components/ui/utilities/` (shared styles for Popover, Dialog, Combobox, etc.).
 - **accordion** depends on `@qwik-ui/headless` (already in the template’s `package.json`).
 
 ### `update <target>`
@@ -71,6 +73,7 @@ npm run q -- update ./my-app
 
 - Scans the target app’s `src/components/ui/` folder.
 - For each component with a version mismatch, you are asked whether to overwrite it.
+- Also syncs **`components/utilities/`** into the target app (same as `add`).
 
 ## Components
 

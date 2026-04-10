@@ -1,27 +1,29 @@
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { Popover as HeadlessPopover } from "@qwik-ui/headless";
+import {
+  floatingOutlineButtonTriggerClass,
+  floatingPanelArrowClass,
+  floatingPopoverPanelClass,
+} from "../utilities/floating-ui";
 
 /** Kořen — drží kontext pro trigger a panel (plovoucí umístění přes Floating UI ve výchozím stavu). */
 const rootClass = "inline-block";
 
-/** Tlačítkový trigger v tónu tokenů z COLORS.md (surface, separator, ring). */
-const triggerClass =
-  "inline-flex items-center justify-center rounded-md border border-separator-opaque bg-surface-raised px-3 py-2 font-medium text-callout text-label shadow-sm ring-offset-background transition-colors hover:bg-surface-overlay focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+/** Tlačítkový trigger — viz {@link floatingOutlineButtonTriggerClass}. */
+const triggerClass = floatingOutlineButtonTriggerClass;
 
 /**
  * Panel host může mít u `[data-floating]` reset paddingu z headless CSS — vnitřní mezery
  * drž v dceřiném bloku nebo přidej vlastní `class` s `!p-4` apod.
  */
-const panelClass =
-  "z-50 w-72 max-w-[min(18rem,calc(100vw-2rem))] overflow-visible rounded-lg border border-separator-opaque bg-surface-raised text-body text-label shadow-md outline-none ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+const panelClass = floatingPopoverPanelClass;
 
 /**
  * Floating UI na šipku nastavuje `left`/`top` v px — fungují jen u `position: absolute`.
  * Při výchozím `floating` = bottom je na ose Y hodnota z middleware často prázdná; šipku proto
  * vytáhneme nad horní hranu panelu (`-top-2`), aby trojúhelník mířil k triggeru.
  */
-const panelArrowClass =
-  "pointer-events-none absolute -top-2 z-10 h-2.5 w-2.5 rotate-45 border-l border-t border-separator-opaque bg-surface-raised shadow-sm";
+const panelArrowClass = floatingPanelArrowClass;
 
 export type PopoverRootProps = PropsOf<typeof HeadlessPopover.Root>;
 

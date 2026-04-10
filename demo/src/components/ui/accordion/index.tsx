@@ -1,5 +1,98 @@
-import { component$ } from "@builder.io/qwik";
-import { Accordion } from "@qwik-ui/headless";
+import {
+  component$,
+  type FunctionComponent,
+  type PropsOf,
+} from "@builder.io/qwik";
+import type { JSXNode } from "@builder.io/qwik/jsx-runtime";
+import { Accordion as HeadlessAccordion } from "@qwik-ui/headless";
+
+const itemFrameClass =
+  "overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm";
+
+const headerClass = "flex";
+
+const triggerClass =
+  "flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium text-slate-800 transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 after:ml-auto after:inline-block after:text-slate-400 after:transition-transform after:duration-200 after:content-['▼'] [&[data-open]]:after:rotate-180";
+
+const contentClass =
+  "border-t border-slate-100 px-4 py-3 text-sm text-slate-600";
+
+const rootClass = "w-full max-w-xl space-y-2";
+
+export type AccordionRootProps = PropsOf<typeof HeadlessAccordion.Root>;
+
+export type AccordionTriggerProps = PropsOf<typeof HeadlessAccordion.Trigger>;
+
+export type AccordionContentProps = PropsOf<typeof HeadlessAccordion.Content>;
+
+function flattenChildren(children: unknown): JSXNode[] {
+  if (children == null || children === false) return [];
+  if (Array.isArray(children)) return children.flatMap(flattenChildren);
+  return [children as JSXNode];
+}
+
+/**
+ * Kořen accordionu. Přímé děti musí být střídavě {@link AccordionTrigger} a {@link AccordionContent}
+ * (Trigger, Content, Trigger, Content, …). Každá dvojice se zabalí do headless `Item` + `Header`.
+ */
+export const AccordionRoot: FunctionComponent<
+  AccordionRootProps & { children?: unknown }
+> = (props) => {
+  const { children, class: className, ...rest } = props;
+  const merged = [rootClass, className].filter(Boolean).join(" ");
+  const flat = flattenChildren(children);
+  const pairs: Array<{ trigger: JSXNode; content: JSXNode }> = [];
+  for (let i = 0; i < flat.length; i += 2) {
+    pairs.push({
+      trigger: flat[i] as JSXNode,
+      content: flat[i + 1] as JSXNode,
+    });
+  }
+
+  return (
+    <HeadlessAccordion.Root {...rest} class={merged}>
+      {pairs.map((pair, index) => (
+        <HeadlessAccordion.Item
+          key={index}
+          value={String(index)}
+          _index={index}
+          class={itemFrameClass}
+        >
+          <HeadlessAccordion.Header class={headerClass}>
+            {pair.trigger}
+          </HeadlessAccordion.Header>
+          {pair.content}
+        </HeadlessAccordion.Item>
+      ))}
+    </HeadlessAccordion.Root>
+  );
+};
+
+/** Trigger panelu — výchozí obsah přes headless `<Slot />` (šipka je `::after`, headless Trigger nepřidává další uzly). */
+export const AccordionTrigger: FunctionComponent<AccordionTriggerProps> = (
+  props,
+) => {
+  const merged = [triggerClass, props.class].filter(Boolean).join(" ");
+  return <HeadlessAccordion.Trigger {...props} class={merged} />;
+};
+
+/** Obsah panelu — výchozí obsah přes headless `<Slot />`. */
+export const AccordionContent: FunctionComponent<AccordionContentProps> = (
+  props,
+) => {
+  const merged = [contentClass, props.class].filter(Boolean).join(" ");
+  return <HeadlessAccordion.Content {...props} class={merged} />;
+};
+
+/**
+ * Složené API: {@link AccordionRoot}, {@link AccordionTrigger}, {@link AccordionContent}.
+ * Pod `Root` střídavě `Trigger` a `Content` (každý má vnitřní slot).
+ */
+export const Accordion = {
+  Root: AccordionRoot,
+  Trigger: AccordionTrigger,
+  Content: AccordionContent,
+};
 
 export type AccordionItemData = {
   value: string;
@@ -14,34 +107,15 @@ export interface AccordionProps {
 }
 
 /**
- * Accessible accordion built on {@link https://qwikui.com/docs/headless/accordion | @qwik-ui/headless}
- * with Tailwind styling.
+ * Zkratka nad {@link Accordion}: položky z pole jako střídavé Trigger / Content.
  */
 export const AccordionList = component$<AccordionProps>((props) => {
   return (
-    <Accordion.Root
-      class="w-full max-w-xl space-y-0"
-      multiple={props.multiple}
-    >
-      {props.items.map((item) => (
-        <Accordion.Item
-          key={item.value}
-          value={item.value}
-          class="overflow-hidden border border-slate-200 bg-white shadow-sm"
-        >
-          <Accordion.Header class="flex">
-            <Accordion.Trigger class="flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium text-slate-800 transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 [&[data-open]>span.chevron]:rotate-180">
-              <span>{item.title}</span>
-              <span aria-hidden="true" class="chevron text-slate-400 transition-transform duration-200">
-                ▼
-              </span>
-            </Accordion.Trigger>
-          </Accordion.Header>
-          <Accordion.Content class="border-t border-slate-100 px-4 py-3 text-sm text-slate-600">
-            <p>{item.content}</p>
-          </Accordion.Content>
-        </Accordion.Item>
-      ))}
-    </Accordion.Root>
+    <AccordionRoot multiple={props.multiple}>
+      {props.items.flatMap((item) => [
+        <AccordionTrigger key={`${item.value}-t`}>{item.title}</AccordionTrigger>,
+        <AccordionContent key={`${item.value}-c`}>{item.content}</AccordionContent>,
+      ])}
+    </AccordionRoot>
   );
 });

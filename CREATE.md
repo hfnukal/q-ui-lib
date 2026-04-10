@@ -15,6 +15,17 @@ Komponenty založené na **@qwik-ui/headless** stavěj jako **složené (compoun
 
 Kanónický příklad v repu: **`components/tabs/index.tsx`**. Accordion je jednodušší varianta stejné myšlenky (`Accordion.Root` / `Item` / …).
 
+### Pojmenování dílů a zanoření v registry (`apiTree`)
+
+Z `components/**/index.tsx` lze spustit generátor metadat (`npm run generate:meta`, podrobněji **META_GEN.md**). U **compound** exportu (`export const Foo = { Root, … }`) se strom **`apiTree` v `meta.generated.json`** odvozuje z **názvů klíčů** v tomto objektu (ne z JSX):
+
+- Klíče piš v **PascalCase** a tak, aby **nadřazený díl byl prefixem** podřízeného v rámci jedné „rodiny“: např. `Menu` a `MenuItem` → v metadatech bude `MenuItem` pod `Menu`; `Control` a `ControlInput` / `ControlTrigger` pod `Control`.
+- Jako rodič se vybere vždy **nejdelší** jiný klíč, který je platným prefixem (např. `PopoverItemLabel` pod `PopoverItem`, ne jen pod `Popover`, pokud `PopoverItem` v exportu existuje).
+- **`Root`** se pro tento účel chová jako **strukturální kořen** — vnořování podle názvů běží mezi **ostatními** klíči uvnitř `Root.children`.
+- **Hranice segmentu:** za prefix rodiče musí v názvu dítěte následovat **nový PascalCase segment** (začátek velkým písmenem). Díky tomu např. samostatný díl `Controller` neskončí omylem pod `Control`.
+
+Když díly nepojmenuješ konzistentně (prefix + další segment), v `apiTree` zůstanou jako **sourozenci** na stejné úrovni — což je v pořádku pro volně související části (`Trigger`, `Panel`, …).
+
 ---
 
 ## Prompt (zkopíruj a případně doplň název)
@@ -45,7 +56,7 @@ Postupuj striktně v tomto pořadí. **Hlavní princip** (compound API nad headl
 3) Konvence kódu
    - Drž se stylu existujících souborů v components/ (importy, typy props, JSDoc jen tam, kde to už rep používá).
    - Nepřidávej zbytečné závislosti; @qwik-ui/headless je už v root package.json.
-   - U headless obalů: **vždy** zvaž compound export (bod 1 + Hlavní princip); pojmenované díly (`XRoot`, `XList`, …) exportuj i jednotlivě, pokud to v repu už dělají jiné komponenty, a souhrnně jako objekt (`export const Tab = { Root, … }`).
+   - U headless obalů: **vždy** zvaž compound export (bod 1 + Hlavní princip); pojmenované díly (`XRoot`, `XList`, …) exportuj i jednotlivě, pokud to v repu už dělají jiné komponenty, a souhrnně jako objekt (`export const Tab = { Root, … }`). U nových dílů zvaž **pojmenování a zanoření v `apiTree`** (viz sekce **Pojmenování dílů a zanoření v registry** výše v CREATE.md).
    - U obalů nad @qwik-ui/headless: **nepředávej dětem props, které headless za běhu přepisuje** (typicky skončí chybou „Cannot set property … which has only a getter“). Postup viz sekce **„Headless a read-only props v Qwiku“** níže; u Tabs používej `key` místo explicitního `tabId` na triggeru, pokud to headless dovoluje.
 
 4) Demo aplikace (demo/)
@@ -90,6 +101,7 @@ Příklady první řádky úkolu:
 | Barvy, tokeny, Tailwind + CSS proměnné | `COLORS.md` |
 | Struktura knihovny, `meta.json`, CLI | `Q_UI_LIB.md`, `README.md` |
 | **Compound API + headless (kanón)** | `components/tabs/index.tsx` |
+| **Pojmenování dílů → zanoření v `meta.generated.json`** | `META_GEN.md`, `npm run generate:meta` |
 | Jednodušší headless obal | `components/accordion/index.tsx` |
 | Příklad vlastní komponenty + varianty | `components/button/index.tsx` |
 | Demo: náhled + kód | `demo/src/components/demo/codeexample.tsx` |

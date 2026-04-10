@@ -1,3 +1,9 @@
+/**
+ * @component item
+ * @title Item
+ * @version 1.0.0
+ */
+
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 import { Polymorphic } from "@qwik-ui/headless";
 

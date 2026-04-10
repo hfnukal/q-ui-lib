@@ -1,5 +1,6 @@
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { Popover as HeadlessPopover } from "@qwik-ui/headless";
+import { floatingPanelArrowClass } from "../utilities/floating-ui";
 
 /** Kořen — kontext triggeru a panelu; výchozí `hover` odpovídá vzoru Hover Card (popover při najetí). */
 const rootClass = "inline-block";
@@ -17,8 +18,7 @@ const triggerClass =
 const contentClass =
   "z-50 w-80 max-w-[min(20rem,calc(100vw-2rem))] overflow-visible rounded-lg border border-separator-opaque bg-surface-raised p-0 text-body text-label shadow-md outline-none ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
-const arrowClass =
-  "pointer-events-none absolute -top-2 z-10 h-2.5 w-2.5 rotate-45 border-l border-t border-separator-opaque bg-surface-raised shadow-sm";
+const arrowClass = floatingPanelArrowClass;
 
 export type HoverCardRootProps = PropsOf<typeof HeadlessPopover.Root>;
 

@@ -1,3 +1,9 @@
+/**
+ * @component scroll-area
+ * @title ScrollArea
+ * @version 1.1.0
+ */
+
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 
 export type ScrollAreaRootProps = PropsOf<"div">;

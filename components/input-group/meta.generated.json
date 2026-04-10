@@ -1,0 +1,29 @@
+{
+  "name": "input-group",
+  "title": "InputGroup",
+  "version": "1.0.0",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "Root": {
+      "params": {
+        "aria-label": "string"
+      },
+      "slot": true,
+      "children": {
+        "Addon": {
+          "params": {
+            "align": [
+              "end",
+              "start"
+            ],
+            "class": "string"
+          },
+          "slot": true
+        },
+        "Input": {}
+      }
+    }
+  }
+}

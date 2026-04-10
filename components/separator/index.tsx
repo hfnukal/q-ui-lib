@@ -1,3 +1,9 @@
+/**
+ * @component separator
+ * @title Separator
+ * @version 1.0.0
+ */
+
 import { component$, type PropsOf } from "@builder.io/qwik";
 import { Separator as HeadlessSeparator } from "@qwik-ui/headless";
 

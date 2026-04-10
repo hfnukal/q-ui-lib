@@ -1,0 +1,27 @@
+{
+  "name": "avatar",
+  "title": "Avatar",
+  "version": "1.0.0",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "Root": {
+      "params": {
+        "size": [
+          "lg",
+          "md",
+          "sm"
+        ],
+        "class": "string"
+      },
+      "slot": true,
+      "children": {
+        "Image": {},
+        "Fallback": {
+          "slot": true
+        }
+      }
+    }
+  }
+}

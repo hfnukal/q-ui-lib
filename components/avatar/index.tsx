@@ -1,3 +1,9 @@
+/**
+ * @component avatar
+ * @title Avatar
+ * @version 1.0.0
+ */
+
 import {
   $,
   component$,

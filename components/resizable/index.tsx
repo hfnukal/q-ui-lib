@@ -1,3 +1,9 @@
+/**
+ * @component resizable
+ * @title Resizable
+ * @version 1.0.0
+ */
+
 import {
   $,
   component$,

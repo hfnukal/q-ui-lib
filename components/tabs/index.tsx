@@ -1,3 +1,9 @@
+/**
+ * @component tabs
+ * @title Tabs
+ * @version 1.1.1
+ */
+
 import { component$, type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { Tabs as HeadlessTabs } from "@qwik-ui/headless";
 

@@ -1,10 +1,15 @@
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { Modal as HeadlessModal } from "@qwik-ui/headless";
+import {
+  modalDescriptionClass,
+  modalIconCloseButtonClass,
+  modalOutlineTriggerClass,
+  modalTitleClass,
+} from "../utilities/modal-ui";
 
 const rootClass = "contents";
 
-const triggerClass =
-  "inline-flex items-center justify-center rounded-md border border-separator-opaque bg-surface-raised px-3 py-2 font-medium text-callout text-label shadow-sm ring-offset-background transition-colors hover:bg-surface-overlay focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+const triggerClass = modalOutlineTriggerClass;
 
 /** `q-dialog-panel` — v global.css je :modal display:flex, skrytý stav a zoom animace (headless čeká na animationend při zavírání). */
 const panelBaseClass =
@@ -19,14 +24,12 @@ const headerClass =
 const footerClass =
   "flex min-w-0 w-full flex-col-reverse gap-2 border-t border-separator-opaque p-6 sm:flex-row sm:flex-wrap sm:justify-end";
 
-const titleClass =
-  "text-title-3 font-semibold leading-none tracking-tight text-label";
+const titleClass = modalTitleClass;
 
-const descriptionClass = "text-sm text-secondary-label";
+const descriptionClass = modalDescriptionClass;
 
 /** Ikona v rohu — pevná velikost; neslučovat s textovými akcemi v patičce (size-8 by roztrhalo label). */
-const closeClass =
-  "inline-flex size-8 shrink-0 items-center justify-center rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none";
+const closeClass = modalIconCloseButtonClass;
 
 /** Zavírací tlačítko s vlastním obsahem (např. „Zrušit“) — bez size-8. */
 const closeWithContentClass =

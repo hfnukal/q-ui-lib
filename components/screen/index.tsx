@@ -1,3 +1,9 @@
+/**
+ * @component screen
+ * @title Screen
+ * @version 1.0.0
+ */
+
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 
 export type ScreenProps = PropsOf<"div">;

@@ -9,6 +9,24 @@ const { runSyncTemplate } = require('./sync-template');
 
 const program = new Command();
 
+const libRoot = path.resolve(__dirname, '..');
+const utilitiesSrc = path.join(libRoot, 'components', 'utilities');
+
+/**
+ * Zkopíruje `components/utilities/` do `<cíl>/src/components/ui/utilities/`
+ * (import `../utilities/…` ze sousední složky komponenty).
+ */
+function syncUtilitiesToApp(targetApp) {
+  if (!fs.existsSync(utilitiesSrc)) {
+    return;
+  }
+  const appRoot = path.resolve(targetApp);
+  const dest = path.join(appRoot, 'src', 'components', 'ui', 'utilities');
+  fs.ensureDirSync(path.dirname(dest));
+  fs.copySync(utilitiesSrc, dest);
+  console.log(chalk.green(`Synced library utilities to ${dest}`));
+}
+
 program
   .name('q-ui-lib')
   .description('Bootstrap Qwik apps from the template and sync UI components');
@@ -23,6 +41,7 @@ function copyTemplate(target) {
   }
   fs.copySync(src, dest);
   console.log(chalk.green(`Template copied to ${dest}`));
+  syncUtilitiesToApp(dest);
   // Ask to run npm install
   const answer = require('readline')
     .createInterface({ input: process.stdin, output: process.stdout })
@@ -38,6 +57,7 @@ function copyTemplate(target) {
 // Helper to add components
 function addComponents(targetApp, components) {
   const appRoot = path.resolve(targetApp);
+  syncUtilitiesToApp(appRoot);
   const uiDir = path.join(appRoot, 'src', 'components', 'ui');
   fs.ensureDirSync(uiDir);
   components.forEach((comp) => {
@@ -55,6 +75,7 @@ function addComponents(targetApp, components) {
 /** Copy listed components from library into target app (demo/src/components/ui/). */
 function syncComponentsToApp(targetApp, components) {
   const appRoot = path.resolve(targetApp);
+  syncUtilitiesToApp(appRoot);
   const uiDir = path.join(appRoot, 'src', 'components', 'ui');
   fs.ensureDirSync(uiDir);
   components.forEach((comp) => {
@@ -82,9 +103,13 @@ function updateComponents(targetApp, explicitComponents) {
     console.log(chalk.red('No UI components directory found in target app.'));
     process.exit(1);
   }
+  syncUtilitiesToApp(appRoot);
   const comps = fs.readdirSync(path.resolve(__dirname, '..', 'components'));
   comps.forEach((comp) => {
     const libMetaPath = path.join(__dirname, '..', 'components', comp, 'meta.json');
+    if (!fs.existsSync(libMetaPath)) {
+      return;
+    }
     const libMeta = JSON.parse(fs.readFileSync(libMetaPath, 'utf-8'));
     const appCompPath = path.join(uiDir, comp);
     const appMetaPath = path.join(appCompPath, 'meta.json');

@@ -1,3 +1,9 @@
+/**
+ * @component checkbox
+ * @title Checkbox
+ * @version 1.1.0
+ */
+
 import { $, component$, type PropsOf, Slot, useId } from "@builder.io/qwik";
 import { Checkbox as HeadlessCheckbox } from "@qwik-ui/headless";
 import { Label } from "../label";

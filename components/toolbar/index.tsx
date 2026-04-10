@@ -1,3 +1,9 @@
+/**
+ * @component toolbar
+ * @title Toolbar
+ * @version 1.1.0
+ */
+
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 import { Separator } from "../separator";
 

@@ -1,0 +1,9 @@
+{
+  "name": "switch",
+  "title": "Switch",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {}
+}

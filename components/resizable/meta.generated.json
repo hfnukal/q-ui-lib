@@ -1,0 +1,41 @@
+{
+  "name": "resizable",
+  "title": "Resizable",
+  "version": "1.0.0",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "Panel": {
+      "params": {
+        "side": [
+          "end",
+          "start"
+        ],
+        "minSize": "number",
+        "class": "string"
+      },
+      "slot": true,
+      "children": {
+        "PanelGroup": {
+          "params": {
+            "direction": [
+              "horizontal",
+              "vertical"
+            ],
+            "defaultSplit": "number",
+            "class": "string"
+          },
+          "slot": true
+        }
+      }
+    },
+    "Handle": {
+      "params": {
+        "withHandle": "boolean",
+        "disabled": "boolean",
+        "class": "string"
+      }
+    }
+  }
+}

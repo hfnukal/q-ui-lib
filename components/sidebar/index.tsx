@@ -1,3 +1,9 @@
+/**
+ * @component sidebar
+ * @title Sidebar
+ * @version 1.0.0
+ */
+
 import {
   $,
   component$,

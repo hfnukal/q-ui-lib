@@ -1,3 +1,9 @@
+/**
+ * @component card
+ * @title Card
+ * @version 1.0.1
+ */
+
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 
 export type CardRootProps = PropsOf<"div">;

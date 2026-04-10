@@ -1,3 +1,9 @@
+/**
+ * @component navigation-menu
+ * @title NavigationMenu
+ * @version 1.0.0
+ */
+
 import {
   $,
   component$,

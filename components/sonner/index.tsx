@@ -1,3 +1,9 @@
+/**
+ * @component sonner
+ * @title Sonner
+ * @version 1.0.5
+ */
+
 import {
   $,
   component$,

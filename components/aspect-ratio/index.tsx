@@ -1,3 +1,9 @@
+/**
+ * @component aspect-ratio
+ * @title AspectRatio
+ * @version 1.0.0
+ */
+
 import { component$, Slot } from "@builder.io/qwik";
 
 export type AspectRatioProps = {

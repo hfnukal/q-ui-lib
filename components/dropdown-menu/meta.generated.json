@@ -1,0 +1,41 @@
+{
+  "name": "dropdown-menu",
+  "title": "DropdownMenu",
+  "version": "1.2.1",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [
+    "utilities"
+  ],
+  "apiTree": {
+    "Root": {
+      "children": {
+        "Trigger": {},
+        "Popover": {},
+        "Item": {
+          "children": {
+            "ItemIndicator": {}
+          }
+        },
+        "Separator": {},
+        "Group": {
+          "children": {
+            "GroupLabel": {}
+          }
+        },
+        "CheckboxItem": {},
+        "RadioGroup": {},
+        "RadioItem": {},
+        "Sub": {
+          "children": {
+            "SubTrigger": {},
+            "SubContent": {},
+            "SubItem": {},
+            "SubCheckboxItem": {},
+            "SubRadioItem": {}
+          }
+        }
+      }
+    }
+  }
+}

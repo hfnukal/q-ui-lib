@@ -1,0 +1,35 @@
+{
+  "name": "navigation-menu",
+  "title": "NavigationMenu",
+  "version": "1.0.0",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "Root": {
+      "params": {
+        "defaultValue": "string"
+      },
+      "slot": true,
+      "children": {
+        "List": {
+          "slot": true
+        },
+        "Item": {
+          "params": {
+            "value": "string"
+          },
+          "slot": true
+        },
+        "Trigger": {
+          "slot": true
+        },
+        "Content": {
+          "slot": true
+        },
+        "Link": {},
+        "Separator": {}
+      }
+    }
+  }
+}

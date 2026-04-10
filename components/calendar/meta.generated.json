@@ -1,0 +1,58 @@
+{
+  "name": "calendar",
+  "title": "Calendar",
+  "version": "1.0.0",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "Root": {
+      "params": {
+        "selected": "string",
+        "defaultSelected": "string",
+        "onSelect$": "function",
+        "viewMonth": "string",
+        "defaultViewMonth": "string",
+        "onViewMonthChange$": "function",
+        "weekStartsOn": [
+          0,
+          1
+        ],
+        "minDate": "string",
+        "maxDate": "string"
+      },
+      "slot": true,
+      "children": {
+        "Panel": {
+          "params": {
+            "selected": "string",
+            "defaultSelected": "string",
+            "onSelect$": "function",
+            "viewMonth": "string",
+            "defaultViewMonth": "string",
+            "onViewMonthChange$": "function",
+            "weekStartsOn": [
+              0,
+              1
+            ],
+            "minDate": "string",
+            "maxDate": "string"
+          }
+        },
+        "PrevButton": {
+          "slot": true
+        },
+        "NextButton": {
+          "slot": true
+        },
+        "Caption": {
+          "params": {
+            "format": "string"
+          }
+        },
+        "Weekdays": {},
+        "Grid": {}
+      }
+    }
+  }
+}

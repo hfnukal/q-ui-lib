@@ -1,3 +1,9 @@
+/**
+ * @component pagination
+ * @title Pagination
+ * @version 1.0.0
+ */
+
 import { component$, type PropsOf } from "@builder.io/qwik";
 import { Pagination as HeadlessPagination } from "@qwik-ui/headless";
 

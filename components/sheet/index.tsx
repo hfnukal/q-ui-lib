@@ -1,13 +1,24 @@
+/**
+ * @component sheet
+ * @title Sheet
+ * @version 1.0.5
+ */
+
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { Modal as HeadlessModal } from "@qwik-ui/headless";
+import {
+  modalDescriptionClass,
+  modalIconCloseButtonClass,
+  modalOutlineTriggerClass,
+  modalTitleClass,
+} from "../utilities/modal-ui";
 
 /** Boční strana panelu (slide + pozice). */
 export type SheetSide = "top" | "right" | "bottom" | "left";
 
 const rootClass = "contents";
 
-const triggerClass =
-  "inline-flex items-center justify-center rounded-md border border-separator-opaque bg-surface-raised px-3 py-2 font-medium text-callout text-label shadow-sm ring-offset-background transition-colors hover:bg-surface-overlay focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+const triggerClass = modalOutlineTriggerClass;
 
 /** `q-sheet-panel` + `data-sheet-side` — globální CSS (global.css) ukotvuje :modal dialog k viewportu a řídí vstupní animaci. */
 /** Odchod neřeš přes Tailwind transition na dialogu — @qwik-ui/headless čeká na animationend; viz global.css `q-ui-sheet-out-*`. */
@@ -31,14 +42,12 @@ const headerClass =
 const footerClass =
   "flex flex-col-reverse gap-2 border-t border-separator-opaque p-6 sm:flex-row sm:justify-end";
 
-const titleClass =
-  "text-title-3 font-semibold leading-none tracking-tight text-label";
+const titleClass = modalTitleClass;
 
-const descriptionClass = "text-sm text-secondary-label";
+const descriptionClass = modalDescriptionClass;
 
 /** Bez pevné pozice — v rohu panelu doplň např. `class="absolute right-4 top-4"`. */
-const closeClass =
-  "inline-flex size-8 shrink-0 items-center justify-center rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none";
+const closeClass = modalIconCloseButtonClass;
 
 export type SheetRootProps = PropsOf<typeof HeadlessModal.Root>;
 

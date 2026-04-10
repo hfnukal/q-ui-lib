@@ -1,0 +1,49 @@
+{
+  "name": "menubar",
+  "title": "Menubar",
+  "version": "1.2.0",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [
+    "dropdown-menu",
+    "toolbar"
+  ],
+  "apiTree": {
+    "Root": {
+      "params": {
+        "aria-label": "string"
+      },
+      "slot": true,
+      "children": {
+        "Menu": {},
+        "useMenu": {},
+        "Trigger": {},
+        "Content": {},
+        "Item": {
+          "children": {
+            "ItemIndicator": {}
+          }
+        },
+        "Separator": {},
+        "Group": {
+          "children": {
+            "GroupLabel": {}
+          }
+        },
+        "CheckboxItem": {},
+        "RadioGroup": {},
+        "RadioItem": {},
+        "Shortcut": {},
+        "Sub": {
+          "children": {
+            "SubTrigger": {},
+            "SubContent": {},
+            "SubItem": {},
+            "SubCheckboxItem": {},
+            "SubRadioItem": {}
+          }
+        }
+      }
+    }
+  }
+}

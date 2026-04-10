@@ -1,3 +1,9 @@
+/**
+ * @component progress
+ * @title Progress
+ * @version 1.0.0
+ */
+
 import {
   component$,
   type FunctionComponent,

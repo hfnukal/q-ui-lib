@@ -1,3 +1,9 @@
+/**
+ * @component slider
+ * @title Slider
+ * @version 1.0.0
+ */
+
 import { component$, PropFunction, useId } from "@builder.io/qwik";
 
 export interface SliderProps {

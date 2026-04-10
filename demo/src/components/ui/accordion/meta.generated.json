@@ -1,0 +1,14 @@
+{
+  "name": "Accordion",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "Root": {
+      "children": {
+        "Trigger": {},
+        "Content": {}
+      }
+    }
+  }
+}

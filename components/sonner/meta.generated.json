@@ -1,0 +1,23 @@
+{
+  "name": "sonner",
+  "title": "Sonner",
+  "version": "1.0.5",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "Toaster": {
+      "params": {
+        "position": [
+          "bottom-left",
+          "bottom-right",
+          "top-left",
+          "top-right"
+        ],
+        "richColors": "boolean",
+        "class": "string"
+      },
+      "slot": true
+    }
+  }
+}

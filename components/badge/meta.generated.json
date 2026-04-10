@@ -1,0 +1,24 @@
+{
+  "name": "badge",
+  "title": "Badge",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "params": {
+      "variant": [
+        "default",
+        "destructive",
+        "outline",
+        "secondary"
+      ],
+      "size": [
+        "md",
+        "sm"
+      ],
+      "class": "string"
+    },
+    "slot": true
+  }
+}

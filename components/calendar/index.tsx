@@ -1,3 +1,9 @@
+/**
+ * @component calendar
+ * @title Calendar
+ * @version 1.0.0
+ */
+
 import {
   component$,
   createContextId,

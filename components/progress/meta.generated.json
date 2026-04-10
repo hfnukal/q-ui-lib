@@ -1,0 +1,16 @@
+{
+  "name": "progress",
+  "title": "Progress",
+  "version": "1.0.0",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "Root": {
+      "slot": true,
+      "children": {
+        "Indicator": {}
+      }
+    }
+  }
+}

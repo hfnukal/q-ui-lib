@@ -1,0 +1,26 @@
+{
+  "name": "chart",
+  "title": "Chart",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "params": {
+      "type": [
+        "bar",
+        "bubble",
+        "doughnut",
+        "line",
+        "pie",
+        "polarArea",
+        "radar",
+        "scatter"
+      ],
+      "data": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/chart.js/dist/types/index\").ChartData<keyof import(\"/Us...",
+      "options": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/chart.js/dist/types/utils\")._DeepPartialObject<import(\"...",
+      "class": "string",
+      "canvasClass": "string"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "hover-card",
+  "title": "HoverCard",
+  "version": "1.0.1",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [
+    "utilities"
+  ],
+  "apiTree": {
+    "Root": {
+      "children": {
+        "Trigger": {},
+        "Content": {},
+        "Arrow": {}
+      }
+    }
+  }
+}

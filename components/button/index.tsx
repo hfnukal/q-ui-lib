@@ -1,3 +1,9 @@
+/**
+ * @component button
+ * @title Button
+ * @version 2.0.0
+ */
+
 import { component$, PropFunction, Slot } from "@builder.io/qwik";
 
 export interface ButtonProps {

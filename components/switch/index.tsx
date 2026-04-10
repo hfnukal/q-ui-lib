@@ -1,3 +1,9 @@
+/**
+ * @component switch
+ * @title Switch
+ * @version 1.0.0
+ */
+
 import { component$, type PropsOf } from "@builder.io/qwik";
 import { Toggle as HeadlessToggle } from "@qwik-ui/headless";
 

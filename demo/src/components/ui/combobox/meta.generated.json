@@ -1,0 +1,35 @@
+{
+  "name": "Combobox",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [
+    "utilities"
+  ],
+  "apiTree": {
+    "Root": {
+      "children": {
+        "Label": {},
+        "Control": {},
+        "Input": {},
+        "Trigger": {},
+        "Popover": {
+          "slot": true
+        },
+        "Listbox": {},
+        "Group": {},
+        "GroupLabel": {},
+        "Item": {},
+        "ItemLabel": {},
+        "ItemIndicator": {},
+        "Description": {},
+        "ErrorMessage": {},
+        "Empty": {},
+        "HiddenNativeSelect": {},
+        "Inline": {},
+        "Chip": {
+          "slot": true
+        }
+      }
+    }
+  }
+}

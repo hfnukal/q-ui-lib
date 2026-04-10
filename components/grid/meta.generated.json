@@ -1,0 +1,25 @@
+{
+  "name": "grid",
+  "title": "Grid",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "params": {
+      "columnsClass": "string",
+      "gap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8
+      ],
+      "class": "string"
+    },
+    "slot": true
+  }
+}

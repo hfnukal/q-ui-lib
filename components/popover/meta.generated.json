@@ -1,0 +1,22 @@
+{
+  "name": "popover",
+  "title": "Popover",
+  "version": "1.0.1",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [
+    "utilities"
+  ],
+  "apiTree": {
+    "Root": {
+      "children": {
+        "Trigger": {},
+        "Panel": {
+          "children": {
+            "PanelArrow": {}
+          }
+        }
+      }
+    }
+  }
+}

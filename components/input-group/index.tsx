@@ -1,3 +1,9 @@
+/**
+ * @component input-group
+ * @title InputGroup
+ * @version 1.0.0
+ */
+
 import { component$, Slot, type PropsOf } from "@builder.io/qwik";
 
 export type InputGroupRootProps = PropsOf<"div"> & {

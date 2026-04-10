@@ -1,0 +1,17 @@
+{
+  "name": "tooltip",
+  "title": "Tooltip",
+  "version": "1.0.0",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "Root": {
+      "children": {
+        "Trigger": {},
+        "Panel": {},
+        "Arrow": {}
+      }
+    }
+  }
+}

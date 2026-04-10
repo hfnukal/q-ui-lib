@@ -1,3 +1,9 @@
+/**
+ * @component menubar
+ * @title Menubar
+ * @version 1.2.0
+ */
+
 import {
   $,
   component$,

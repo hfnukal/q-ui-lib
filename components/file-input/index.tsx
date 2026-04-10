@@ -1,3 +1,9 @@
+/**
+ * @component file-input
+ * @title FileInput
+ * @version 1.0.0
+ */
+
 import {
   $,
   component$,

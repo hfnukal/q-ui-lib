@@ -1,0 +1,15 @@
+{
+  "name": "toggle-group",
+  "title": "ToggleGroup",
+  "version": "1.0.0",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [],
+  "apiTree": {
+    "Root": {
+      "children": {
+        "Item": {}
+      }
+    }
+  }
+}
