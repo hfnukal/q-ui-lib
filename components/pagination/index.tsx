@@ -2,6 +2,14 @@
  * @component pagination
  * @title Pagination
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Pagination } from "~/components/ui/pagination";
+ * 
+ * <Pagination>…</Pagination>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/pagination` (zdroj `demo/src/routes/components/pagination/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf } from "@builder.io/qwik";

@@ -38,38 +38,26 @@ Význam prefixů:
 
 - V kódu převažuje vzor **`export const Xxx = { Root, … }`** u `Popover`, `Dialog`, `Field`, `Sidebar`, …
 - **`Button`** = jeden `component$` (jednoduchá komponenta).
-- Některé moduly zatím exportují **zkratku** (např. jen `AccordionList` místo plného compound exportu `Accordion.*`) — při úpravách směřuj k výše uvedeným konvencím a aktualizuj strom níže i `meta.json`.
+- Některé moduly zatím exportují **zkratku** (např. jen `AccordionList` místo plného compound exportu `Accordion.*`) — při úpravách směřuj k výše uvedeným konvencím a aktualizuj strom níže i `meta.generated.json` (po `npm run generate:meta`).
 
 ---
 
-## `meta.json` u složených komponent
+## Plánovaná rozšíření metadat u složených komponent
 
-Každá složka `components/<název>/` by měla mít **`meta.json`** kromě `name`, `version`, `type` doplněný o:
+Verze a základní API popisuje dnes generovaný **`meta.generated.json`**. Níže uvedená pole zatím **nejsou** v generátoru — šlo by je v budoucnu doplnit do schématu nebo ověřovat zvlášť:
 
 | Pole | Účel |
 | --- | --- |
 | **`cssVariables`** | Pole názvů **CSS custom properties** (nebo tokenů z `COLORS.md`), které komponenta čte nebo na které odkazují její třídy (např. `--color-accent`, `--ring`). |
 | **`composition`** | Popis **povoleného zanoření** podkomponent: textový strom, JSON strom, nebo pole pravidel „parent → child“. Měl by odpovídat veřejnému API (`Menu.List` jen pod `Menu.Root` atd.). |
 
-Příklad tvaru (konkrétní názvy polí sjednoťte s `Q_UI_LIB.md` / verzí schématu):
-
-```json
-{
-  "name": "popover",
-  "version": "2.0.0",
-  "type": "external",
-  "cssVariables": ["--ring", "--color-surface-raised"],
-  "composition": "Root → Trigger; Root → Panel [→ PanelArrow optional]"
-}
-```
-
 **CLI (cíl):** příkaz typu `qui verify-meta [komponenta]` nebo rozšíření `add`/`update` má:
 
 1. porovnat **`composition`** s importy / použitím v `index.tsx` (statická analýza, případně AST);
 2. **`cssVariables`** zkontrolovat proti výskytům v souborech komponenty (regex / seznam tokenů z `global.css`);
-3. při nesouladu **vypsat varování** nebo nabídnout **doplnění** šablony v `meta.json`.
+3. při nesouladu **vypsat varování** nebo nabídnout **doplnění** dokumentace / metadat.
 
-Dokud skript neexistuje, platí ruční udržba metadat při změně API.
+Dokud skript neexistuje, platí ruční kontrola při změně API.
 
 ---
 

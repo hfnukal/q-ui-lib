@@ -2,6 +2,16 @@
  * @component combobox
  * @title Combobox
  * @version 1.1.1
+ * @example
+ * ```tsx
+ * import { Combobox } from "~/components/ui/combobox";
+ * 
+ * <Combobox.Root>
+ *   …
+ * </Combobox.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/combobox` (zdroj `demo/src/routes/components/combobox/index.tsx`).
+ 
  */
 
 import {
@@ -311,6 +321,8 @@ export const Combobox = {
   Control: ComboboxControl,
   ControlInput: ComboboxInput,
   ControlTrigger: ComboboxTrigger,
+  Input: ComboboxInput,
+  Trigger: ComboboxTrigger,
   Popover: ComboboxPopover,
   Listbox: ComboboxListbox,
   Group: ComboboxGroup,
@@ -318,9 +330,16 @@ export const Combobox = {
   PopoverItem: ComboboxItem,
   PopoverItemLabel: ComboboxItemLabel,
   PopoverItemIndicator: ComboboxItemIndicator,
+  Item: ComboboxItem,
+  ItemLabel: ComboboxItemLabel,
+  ItemIndicator: ComboboxItemIndicator,
   PopoverInline: ComboboxInline,
+  Inline: ComboboxInline,
   PopoverChip: ComboboxChip,
+  /** Alias pro {@link ComboboxChip} — stejné jako `PopoverChip`. */
+  Chip: ComboboxChip,
   PopoverEmpty: ComboboxEmpty,
+  Empty: ComboboxEmpty,
   Description: ComboboxDescription,
   ErrorMessage: ComboboxErrorMessage,
 };

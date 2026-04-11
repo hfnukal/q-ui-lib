@@ -2,6 +2,36 @@
  * @component button
  * @title Button
  * @version 2.0.0
+ * @description Tlačítko — obsah předávej jako děti (default Slot), volitelně `variant`, `size` a `disabled`.
+ *
+ * @example Základní použití
+ * Kliknutím spustí handler předaný přes `onClick$`.
+ * ```tsx
+ * <Button onClick$={$(() => { alert("Button clicked"); })}>Click me</Button>
+ * ```
+ *
+ * @example Varianty
+ * Prop `variant`: `primary` (výchozí), `secondary`, `danger`.
+ * ```tsx
+ * <Button variant="primary">Primary</Button>
+ * <Button variant="secondary">Secondary</Button>
+ * <Button variant="danger">Danger</Button>
+ * ```
+ *
+ * @example Velikosti
+ * Prop `size`: `sm`, `md` (výchozí), `lg`.
+ * ```tsx
+ * <Button size="sm">Small</Button>
+ * <Button size="md">Medium</Button>
+ * <Button size="lg">Large</Button>
+ * ```
+ *
+ * @example Disabled
+ * Prop `disabled` zakazuje interakci a sníží opacity.
+ * ```tsx
+ * <Button>Enabled</Button>
+ * <Button disabled>Disabled</Button>
+ * ```
  */
 
 import { component$, PropFunction, Slot } from "@builder.io/qwik";

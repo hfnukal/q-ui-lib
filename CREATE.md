@@ -1,149 +1,51 @@
-# Vytvoření nebo aktualizace komponenty (prompt pro agenta)
+# Component — agent instructions (low token usage)
 
-Tento soubor slouží jako **šablona úkolu** pro AI agenta (Cursor a podobné). Vlož ho do konverzace nebo ho připoj přes `@CREATE.md`. Název komponenty buď uvedeš v úkolu, nebo ho agent doplní po dotazu (viz bod 0 v promptu).
-
----
-
-## Hlavní princip (vždy upřednostni)
-
-Komponenty založené na **@qwik-ui/headless** stavěj jako **složené (compound) API**: tenké `component$` obaly kolem jednotlivých primitiv z headlessu (např. `Root`, `List`, trigger, `Panel`), které **slučují výchozí Tailwind třídy** (COLORS.md, tokeny repa) s `props.class`.
-
-1. **Export namespace objektu** ve stylu Qwik UI — např. `Tab` s `Tab.Root`, `Tab.List`, `Tab.Tab`, `Tab.Panel` (název zvol podle komponenty; u headlessu `Tabs.*` můžeš mapovat na jeden srozumitelný namespace). Uživatel skládá markup stejně jako v dokumentaci headlessu, ale s knihovním vzhledem.
-2. **Typy** u obalů odvozuj z headlessu, např. `PropsOf<typeof HeadlessTabs.Root>` (ne duplikovat velké interface ručně).
-3. **Volitelná zkratka** nad stejnými primitivami (např. `TabsGroup` z pole položek) — implementuj ji **pouze jako skládání** exportovaného compound API, ne jako oddělenou stylistickou větev.
-4. Pokud headless **nemá** složené díly (jedna komponenta), zůstane jeden stylovaný export; princip „headless + tokeny + tenký obal“ platí stejně.
-
-Kanónický příklad v repu: **`components/tabs/index.tsx`**. Accordion je jednodušší varianta stejné myšlenky (`Accordion.Root` / `Item` / …).
-
-### Pojmenování dílů a zanoření v registry (`apiTree`)
-
-Z `components/**/index.tsx` lze spustit generátor metadat (`npm run generate:meta`, podrobněji **META_GEN.md**). U **compound** exportu (`export const Foo = { Root, … }`) se strom **`apiTree` v `meta.generated.json`** odvozuje z **názvů klíčů** v tomto objektu (ne z JSX):
-
-- Klíče piš v **PascalCase** a tak, aby **nadřazený díl byl prefixem** podřízeného v rámci jedné „rodiny“: např. `Menu` a `MenuItem` → v metadatech bude `MenuItem` pod `Menu`; `Control` a `ControlInput` / `ControlTrigger` pod `Control`.
-- Jako rodič se vybere vždy **nejdelší** jiný klíč, který je platným prefixem (např. `PopoverItemLabel` pod `PopoverItem`, ne jen pod `Popover`, pokud `PopoverItem` v exportu existuje).
-- **`Root`** se pro tento účel chová jako **strukturální kořen** — vnořování podle názvů běží mezi **ostatními** klíči uvnitř `Root.children`.
-- **Hranice segmentu:** za prefix rodiče musí v názvu dítěte následovat **nový PascalCase segment** (začátek velkým písmenem). Díky tomu např. samostatný díl `Controller` neskončí omylem pod `Control`.
-
-Když díly nepojmenuješ konzistentně (prefix + další segment), v `apiTree` zůstanou jako **sourozenci** na stejné úrovni — což je v pořádku pro volně související části (`Trigger`, `Panel`, …).
+**Styles:** only tokens from [COLORS.md](./COLORS.md) (no custom colors outside the scheme).
 
 ---
 
-## Prompt (zkopíruj a případně doplň název)
+## Workflow
+
+1. **Name** — For a new component without a name → ask for the name and `components/<kebab-case>/` first; do not implement without that.
+2. **Behavior** — Prefer `@qwik-ui/headless`; thin wrapper + Tailwind. Without headless: HTML + ARIA. Compound = one exported object with parts (`Root`, `List`, …); types from headless (`PropsOf<typeof …>`). Examples in the repo: `components/tabs/index.tsx`, simpler `components/accordion/index.tsx`.
+3. **File** — `components/<slug>/index.tsx`, leading JSDoc `@component` (slug = folder name), `@title`, `@version`, **`@example`** — one short usage example (typically JSX in a fenced `` ```tsx `` block), matching the exported API (compound or primitive); no unnecessary app context.
+4. **Meta** — After changes: `npm run qui:meta:updatecomment && npm run qui:meta:generate` — generates `meta.generated.json` (do not write it by hand; ignore the structure).
+5. **Headless** — Do not pass children props that headless overwrites at runtime (Qwik getter error). In `node_modules/@qwik-ui/headless`, verify assignments to `props`; often `key` is enough instead of a manual ID.
+6. **Demo** — `npm run qui -- update ./demo <slug>`; in the route import from `~/components/ui/<slug>`. Add `demo/src/routes/components/<slug>/index.tsx`: short component description and examples (each with a short description + `CodeExample` from `demo/src/components/demo/codeexample.tsx`). The sidebar list in `demo/src/routes/layout.tsx` loads dynamically (`import.meta.glob("./components/*/index.tsx")`) — you do not add `Link` manually.
+
+---
+
+## Parameters for the metadata generator
+
+The generator reads the **first type argument** of **`component$<…>`** and from it **prop properties** into metadata.
+
+- **Explicit type** — Interface or type alias in the **same file** with **directly listed** properties (`interface FooProps { … }`). Plain `component$<PropsOf<Headless.X>>` **without** your own extended type often **does not populate** parameters (inheritance from `PropsOf` / `extends Omit<PropsOf<…>>` does not surface in the output) → where you need documented parameters, **add your own interface** (e.g. `extends PropsOf<…>` + explicit lines, or `Pick`/`Omit` + own fields).
+- **Type intersection** — `&` / intersection: properties from both sides are merged when parseable in the file.
+- **Types in metadata** — `string` / `number` / `boolean` (including `| undefined`); union of **string/number literals** → array of values; `PropFunction<…>` / `QRL<…>` → `"function"`; more complex unions → text representation (truncated).
+
+---
+
+## Exported parts and `apiTree`
+
+Tree from **keys** of `export const X = { … }` (declaration order). **Not** from JSX.
+
+- **`Root`** — Structural root; other keys nest under `Root.children` (except `Root` itself).
+- **PascalCase** key names. **Parent** of part `K` = another key `P` such that `K` starts with `P`, `P` is shorter than `K`, and the **remainder** of `K` after `P` starts with an **uppercase letter** (new segment → `Menu` + `Item` → `MenuItem` under `Menu`). Multiple candidates → **longest** valid `P` (`PopoverItemLabel` under `PopoverItem`, not under `Popover`).
+- Siblings at the same level when the prefix does not match (e.g. `Trigger`, `Panel`).
+- Bad names → flat / wrong nesting in the generated tree.
+
+---
+
+## Prompt (copy)
 
 ```
-Úkol: V repozitáři q-ui-lib {{AKCE}} komponentu{{VOLITELNÝ_NÁZEV}}.
-
-{{AKCE}} je buď „vytvoř novou“, nebo „aktualizuj existující“ (pokud složka components/{{NÁZEV_SLOŽKY}} už existuje).
-
-Postupuj striktně v tomto pořadí. **Hlavní princip** (compound API nad headlesem, viz sekce výše v CREATE.md) dodrž vždy, když to mapování z SHADCN.md a headless API dovoluje.
-
-0) Název komponenty
-   - Pokud {{AKCE}} znamená vytvoření nové komponenty a uživatel v úkolu neuvedl konkrétní název (žádný „lidský“ název ani cílovou složku v components/), **nejdřív se zeptej**: jak se má komponenta jmenovat. Navrhni kebab-case název složky (např. „Tabs“ → components/tabs/) a nech ho potvrdit nebo upřesnit. **Bez tohoto upřesnění nezačínej implementaci.**
-   - Pokud název už je součástí zprávy (např. „vytvoř Tabs“) nebo jde o aktualizaci existující složky v components/, pokračuj bez dalšího dotazu.
-
-1) Zdroj chování a stylu (priorita)
-   - Nejdřív otevři SHADCN.md v kořeni repa. V sekci s mapováním shadcn → Qwik UI zjisti, zda pro tuto komponentu existuje modul v @qwik-ui/headless (Ano / ~).
-   - Pro **styly** vždy vycházej z konceptu v **COLORS.md** (kořen repa): aplikuj **Tailwind definice a proměnné** popsané tam (mapování na design tokeny / CSS custom properties, `@theme` apod.) — nepřidávej vlastní ad-hoc barvy nebo hodnoty tam, kde už existuje odpovídající třída nebo proměnná z tohoto schématu.
-   - Pokud ano: **nejprve** navrhni **složené API** (viz **Hlavní princip**): stylované obaly pro každou headless primitivu + jeden exportovaný objekt (namespace). Třídy slučuj s uživatelským `class` (např. `[defaultní, props.class].filter(Boolean).join(" ")`). Inspirace: **components/tabs/index.tsx**; u jednodušších kitů postačí stejný vzor jako **components/accordion/index.tsx**. Konvence z SHADCN.md (cva, cn) používej tam, kde už je rep zavedl.
-   - Volitelná „vysokoúrovňová“ komponenta (data-driven zkratka) musí být postavená **výhradně** na veřejném compound exportu, ne na paralelní kopii stylů.
-   - Pokud headless nestačí nebo chybí vzhled: jako druhou volbu prohlédni balíček @qwik-ui/styled (zdroj v node_modules nebo dokumentace). Neimportuj ho slepě do knihovny, pokud to není v souladu s root package.json — můžeš **zkopírovat nebo adaptovat** vzory markupu a tříd do vlastní komponenty v components/.
-   - Pokud ani styled není vhodný: vezmi strukturu a třídy z dokumentace shadcn/ui pro příbuznou komponentu a přepiš je do Qwiku (component$, handlery s $, signály). Radix / React závislosti nepřenášej — chování řeš headlessem nebo nativním HTML + ARIA; kde dává smysl, stále preferuj **rozčlenění na primitivy** a jeden namespace export.
-
-2) Umístění v knihovně
-   - Složka: components/{{NÁZEV_SLOŽKY}}/ (název složky v kebab-case, odpovídá názvu komponenty v CLI).
-   - Soubory: index.tsx (export hlavní komponenty), meta.json podle Q_UI_LIB.md (name, version, type). U nové komponenty version „1.0.0“; u aktualizace zvyš patch/minor podle rozsahu změny.
-
-3) Konvence kódu
-   - Drž se stylu existujících souborů v components/ (importy, typy props, JSDoc jen tam, kde to už rep používá).
-   - Nepřidávej zbytečné závislosti; @qwik-ui/headless je už v root package.json.
-   - U headless obalů: **vždy** zvaž compound export (bod 1 + Hlavní princip); pojmenované díly (`XRoot`, `XList`, …) exportuj i jednotlivě, pokud to v repu už dělají jiné komponenty, a souhrnně jako objekt (`export const Tab = { Root, … }`). U nových dílů zvaž **pojmenování a zanoření v `apiTree`** (viz sekce **Pojmenování dílů a zanoření v registry** výše v CREATE.md).
-   - U obalů nad @qwik-ui/headless: **nepředávej dětem props, které headless za běhu přepisuje** (typicky skončí chybou „Cannot set property … which has only a getter“). Postup viz sekce **„Headless a read-only props v Qwiku“** níže; u Tabs používej `key` místo explicitního `tabId` na triggeru, pokud to headless dovoluje.
-
-4) Demo aplikace (demo/)
-   - **Synchronizace knihovny do dema (vždy):** z **kořene repozitáře** spusť CLI, aby se komponenta zkopírovala do `demo/src/components/ui/` stejně jako v cílové aplikaci po `qui add` / `qui update`:
-
-     `npm run qui -- update ./demo {{NÁZEV_SLOŽKY}}`
-
-     Můžeš uvést více složek najednou (např. `tabs button`). Bez jmen (`npm run qui -- update ./demo`) zůstává **interaktivní** režim podle `meta.json` verzí v aplikaci.
-   - **Import v route:** vždy z **nainstalované kopie** v demu, alias `~/components/ui/…`, např. `import { Tab } from "~/components/ui/{{NÁZEV_SLOŽKY}}"` — stejně jako `demo/src/routes/tabs/index.tsx` nebo accordion.
-   - Přidej route `demo/src/routes/{{NÁZEV_SLOŽKY}}/index.tsx` s přehlednou ukázkou: nadpis, krátký popis, 1–3 sekce s různými stavy nebo props.
-   - V demo **upřednostni ukázku compound API** (skládání `Root` / dílů); zkratku (např. skupinová komponenta z pole) uveď jako další sekci, ne jako jediný příklad.
-   - Pro bloky „náhled + zdrojový kód“ používej **demo/src/components/demo/codeexample.tsx** (`CodeExample`) — sám staví na stejném compound `Tab` z UI, ať demo nekopíruje headless + vlastní třídy vedle knihovny.
-   - Uprav `demo/src/routes/layout.tsx`: přidej Link v navigaci na novou stránku (stejný vzor jako Button / Accordion).
-
-5) Ověření
-   - Projekt by měl projít bez chyb TypeScriptu; pokud běží dev server, **ověř novou route v prohlížeči** (SSR/dev někdy odhalí runtime chyby, které `tsc` nechytí — zejména u headlessu mutujícího props).
-
-Na konci stručně shrň: co bylo přidáno/změněno a kde (cesty k souborům).
+Task: in q-ui-lib {{ACTION}} component{{OPTIONAL_NAME}}. Workflow and rules: CREATE.md. At the end, briefly summarize changes and paths.
 ```
 
-**Před odesláním agentovi nahraď (nebo nech agenta doplnit po bodu 0):**
-
-| Zástupný symbol | Příklad |
-|-----------------|--------|
-| `{{AKCE}}` | `vytvoř novou` nebo `aktualizuj existující` |
-| `{{VOLITELNÝ_NÁZEV}}` | buď ` „Tabs“` (s názvem), nebo prázdné — pak agent použije bod 0 |
-| `{{NÁZEV_KOMPONENTY}}` | lidský název po upřesnění, např. „Checkbox“ |
-| `{{NÁZEV_SLOŽKY}}` | kebab-case jako složka v `components/`, např. `checkbox`, `dialog` |
-
-Příklady první řádky úkolu:
-
-- S názvem: `Úkol: V repozitáři q-ui-lib vytvoř novou komponentu „Tabs“. …` (`{{NÁZEV_SLOŽKY}}` = `tabs`)
-- Bez názvu (agent se zeptá): `Úkol: V repozitáři q-ui-lib vytvoř novou komponentu. …` (`{{VOLITELNÝ_NÁZEV}}` vynech nebo nech prázdné)
+`{{ACTION}}` = create new / update existing; `{{OPTIONAL_NAME}}` or empty; folder kebab-case.
 
 ---
 
-## Rychlá reference (pro člověka i agenta)
+## Cursor
 
-| Co | Kde |
-|----|-----|
-| Mapování shadcn ↔ Qwik UI, utilit | `SHADCN.md` |
-| Barvy, tokeny, Tailwind + CSS proměnné | `COLORS.md` |
-| Struktura knihovny, `meta.json`, CLI | `Q_UI_LIB.md`, `README.md` |
-| **Compound API + headless (kanón)** | `components/tabs/index.tsx` |
-| **Pojmenování dílů → zanoření v `meta.generated.json`** | `META_GEN.md`, `npm run generate:meta` |
-| Jednodušší headless obal | `components/accordion/index.tsx` |
-| Příklad vlastní komponenty + varianty | `components/button/index.tsx` |
-| Demo: náhled + kód | `demo/src/components/demo/codeexample.tsx` |
-| Demo route + navigace | `demo/src/routes/*/index.tsx`, `demo/src/routes/layout.tsx` |
-| **Sync knihovna → demo** (kořen repa) | `npm run qui -- update ./demo <složka>` — např. `… update ./demo tabs` |
-| **Import komponenty v demo route** | `~/components/ui/<složka>` (kopie po `qui update`, ne přímo z kořenového `components/`) |
-| Headless vs. Qwik props | sekce **Headless a read-only props v Qwiku** v tomto souboru |
-
-### Příklad: Tabs do dema
-
-Z kořene `q-ui-lib`:
-
-```bash
-npm run qui -- update ./demo tabs
-```
-
-V ukázkové route importuj **zkopírovanou** komponentu z `demo/src/components/ui/tabs`, např.:
-
-```ts
-import { Tab, TabsGroup } from "~/components/ui/tabs";
-```
-
-(Odkaz v repu: `demo/src/routes/tabs/index.tsx`.)
-
----
-
-## Headless a read-only props v Qwiku
-
-Některé komponenty v `@qwik-ui/headless` během sestavení stromu **mutují** objekty dětí (např. `child.props.tabId = …`, `child.key = …`, u panelů `_tabId`). V Qwiku jsou props předané z rodiče často **přístupné jen přes gettery**; zápis na takové klíče pak vyhodí:
-
-`Cannot set property <název> of #<Object> which has only a getter`
-
-**Postup, jak podobné chybě předcházet:**
-
-1. **Zjistit, co headless přepisuje** — v `node_modules/@qwik-ui/headless` otevři odpovídající zdroj (např. `components/tabs/tabs.qwik.mjs`) a hledej přiřazení do `props` nebo `child.props` u potomků.
-2. **Nepředávat tyto props z obalu** — pokud headless hodnotu stejně dopočítá (často z `key` na VNode), předej jen `key` a prop vynech (příklad: **Tabs** — na `Tabs.Tab` nepředávat `tabId`, pokud stačí `key={hodnota}` shodná s panelem; viz `components/tabs/index.tsx`).
-3. **Ověřit v dev serveru** — po přidání obalu otevři demo route; chyba se typicky projeví až při SSR/vykreslení, ne v TypeScriptu.
-
-Když headless vyžaduje prop, který nelze vynechat, a zároveň ho mutuje, jde o nekompatibilitu verzí nebo omezení knihovny — řešení je issue upstream, pin verze, nebo vlastní skládání bez té mutace (podle dokumentace Qwik UI).
-
----
-
-## Projektová pravidla
-
-V repozitáři je pravidlo v [`.cursor/rules/q-ui-lib-ui-components.mdc`](.cursor/rules/q-ui-lib-ui-components.mdc): při práci na UI komponentách se řiď tímto souborem. Název u nové komponenty můžeš vynechat — agent se má podle promptu nejdřív zeptat.
+[`.cursor/rules/q-ui-lib-ui-components.mdc`](.cursor/rules/q-ui-lib-ui-components.mdc)

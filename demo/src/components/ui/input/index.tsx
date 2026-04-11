@@ -1,3 +1,9 @@
+/**
+ * @component input
+ * @title Input
+ * @version 1.0.0
+ */
+
 import { component$, type PropsOf } from "@builder.io/qwik";
 
 export type InputProps = PropsOf<"input">;

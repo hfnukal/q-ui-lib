@@ -1,3 +1,9 @@
+/**
+ * @component tooltip
+ * @title Tooltip
+ * @version 1.0.0
+ */
+
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { Tooltip as HeadlessTooltip } from "@qwik-ui/headless";
 

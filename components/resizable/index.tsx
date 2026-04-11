@@ -2,6 +2,18 @@
  * @component resizable
  * @title Resizable
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Resizable } from "~/components/ui/resizable";
+ *
+ * <Resizable.PanelGroup direction="horizontal" class="h-48 rounded-lg border border-separator-opaque/40">
+ *   <Resizable.Panel side="start" minSize={20}>…</Resizable.Panel>
+ *   <Resizable.Handle withHandle />
+ *   <Resizable.Panel side="end" minSize={20}>…</Resizable.Panel>
+ * </Resizable.PanelGroup>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/resizable` (zdroj `demo/src/routes/components/resizable/index.tsx`).
+ 
  */
 
 import {

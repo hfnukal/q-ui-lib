@@ -2,6 +2,16 @@
  * @component input-group
  * @title InputGroup
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { InputGroup } from "~/components/ui/input-group";
+ * 
+ * <InputGroup.Root>
+ *   …
+ * </InputGroup.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/input-group` (zdroj `demo/src/routes/components/input-group/index.tsx`).
+ 
  */
 
 import { component$, Slot, type PropsOf } from "@builder.io/qwik";

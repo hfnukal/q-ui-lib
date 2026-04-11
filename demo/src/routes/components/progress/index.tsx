@@ -1,5 +1,10 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import { CodeExample } from "~/components/demo/codeexample";
+import {
+  CodeExample,
+  Desc,
+  TabCode,
+  TabExample,
+} from "~/components/demo/codeexample";
 import { Progress, ProgressBar } from "~/components/ui/progress";
 import { Slider } from "~/components/ui/slider";
 
@@ -57,61 +62,81 @@ export default component$(() => {
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Složené API</h2>
-        <p class="text-callout text-secondary-label">
-          <code class="text-caption-1 text-label">Progress.Root</code> +{" "}
-          <code class="text-caption-1 text-label">Progress.Indicator</code>.
-        </p>
-        <CodeExample layout="stack" code={codeCompound}>
-          <div class="max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
-            <Progress.Root value={40}>
-              <Progress.Indicator />
-            </Progress.Root>
-          </div>
+
+        <CodeExample>
+          <Desc>
+            <code class="text-caption-1 text-label">Progress.Root</code> +{" "}
+            <code class="text-caption-1 text-label">Progress.Indicator</code>.
+          </Desc>
+          <TabExample>
+            <div class="max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
+              <Progress.Root value={40}>
+                <Progress.Indicator />
+              </Progress.Root>
+            </div>
+          </TabExample>
+          <TabCode>{codeCompound}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">ProgressBar</h2>
-        <p class="text-callout text-secondary-label">
-          Zkratka se stejným vzhledem — vnitřně kořen + indikátor.
-        </p>
-        <CodeExample layout="stack" code={codeBar}>
-          <div class="max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
-            <ProgressBar value={66} />
-          </div>
+
+        <CodeExample>
+          <Desc>Zkratka se stejným vzhledem — vnitřně kořen + indikátor.</Desc>
+          <TabExample>
+            <div class="max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
+              <ProgressBar value={66} />
+            </div>
+          </TabExample>
+          <TabCode>{codeBar}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Neurčitý stav</h2>
-        <p class="text-callout text-secondary-label">
-          <code class="text-caption-1 text-label">value=&#123;null&#125;</code> →{" "}
-          <code class="text-caption-1 text-label">data-progress=&quot;indeterminate&quot;</code> a zkrácený segment s pulzováním.
-        </p>
-        <CodeExample layout="stack" code={codeIndeterminate}>
-          <div class="max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
-            <ProgressBar value={null} />
-          </div>
+
+        <CodeExample>
+          <Desc>
+            <code class="text-caption-1 text-label">
+              value=&#123;null&#125;
+            </code>{" "}
+            →{" "}
+            <code class="text-caption-1 text-label">
+              data-progress=&quot;indeterminate&quot;
+            </code>{" "}
+            a zkrácený segment s pulzováním.
+          </Desc>
+          <TabExample>
+            <div class="max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
+              <ProgressBar value={null} />
+            </div>
+          </TabExample>
+          <TabCode>{codeIndeterminate}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Vázaná hodnota</h2>
-        <p class="text-callout text-secondary-label">
-          <code class="text-caption-1 text-label">bind:value</code> na signál spolu se{" "}
-          <code class="text-caption-1 text-label">Slider</code>.
-        </p>
-        <CodeExample layout="stack" code={codeBound}>
-          <div class="max-w-md space-y-4 rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
-            <ProgressBar bind:value={bound} />
-            <Slider
-              label="Hodnota průběhu"
-              value={bound.value}
-              onChange$={(n) => {
-                bound.value = n;
-              }}
-            />
-          </div>
+
+        <CodeExample>
+          <Desc>
+            <code class="text-caption-1 text-label">bind:value</code> na signál
+            spolu se <code class="text-caption-1 text-label">Slider</code>.
+          </Desc>
+          <TabExample>
+            <div class="max-w-md space-y-4 rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
+              <ProgressBar bind:value={bound} />
+              <Slider
+                label="Hodnota průběhu"
+                value={bound.value}
+                onChange$={(n) => {
+                  bound.value = n;
+                }}
+              />
+            </div>
+          </TabExample>
+          <TabCode>{codeBound}</TabCode>
         </CodeExample>
       </section>
     </div>

@@ -1,5 +1,10 @@
 import { $, component$ } from "@builder.io/qwik";
-import { CodeExample } from "~/components/demo/codeexample";
+import {
+  CodeExample,
+  Desc,
+  TabCode,
+  TabExample,
+} from "~/components/demo/codeexample";
 import { Button } from "~/components/ui/button";
 import { ButtonGroup } from "~/components/ui/button-group";
 
@@ -40,66 +45,86 @@ export default component$(() => {
           <code class="rounded bg-fill-secondary/20 px-1 py-0.5 text-caption-1 text-label">
             components/button-group
           </code>
-          — přímí potomci sdílejí jeden stín a svislé okraje se překrývají. Pro segmentovaný vzhled se hodí{" "}
-          <code class="text-caption-1">Button</code> s <code class="text-caption-1">variant=&quot;secondary&quot;</code>.
+          — přímí potomci sdílejí jeden stín a svislé okraje se překrývají. Pro
+          segmentovaný vzhled se hodí <code class="text-caption-1">Button</code>{" "}
+          s <code class="text-caption-1">variant=&quot;secondary&quot;</code>.
         </p>
       </div>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Vodorovně</h2>
-        <CodeExample code={codeHorizontal}>
-          <ButtonGroup aria-label="Ukázka vodorovné skupiny">
-            <Button variant="secondary" onClick$={noop}>
-              Left
-            </Button>
-            <Button variant="secondary" onClick$={noop}>
-              Center
-            </Button>
-            <Button variant="secondary" onClick$={noop}>
-              Right
-            </Button>
-          </ButtonGroup>
+
+        <CodeExample>
+          <Desc>Vodorovně — viz ukázka níže.</Desc>
+          <TabExample>
+            <ButtonGroup aria-label="Ukázka vodorovné skupiny">
+              <Button variant="secondary" onClick$={noop}>
+                Left
+              </Button>
+              <Button variant="secondary" onClick$={noop}>
+                Center
+              </Button>
+              <Button variant="secondary" onClick$={noop}>
+                Right
+              </Button>
+            </ButtonGroup>
+          </TabExample>
+          <TabCode>{codeHorizontal}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Svisle</h2>
-        <p class="text-callout text-secondary-label">
-          Prop <code class="text-caption-1">orientation=&quot;vertical&quot;</code>.
-        </p>
-        <CodeExample code={codeVertical}>
-          <ButtonGroup orientation="vertical" aria-label="Ukázka svislé skupiny">
-            <Button variant="secondary" onClick$={noop}>
-              One
-            </Button>
-            <Button variant="secondary" onClick$={noop}>
-              Two
-            </Button>
-            <Button variant="secondary" onClick$={noop}>
-              Three
-            </Button>
-          </ButtonGroup>
+
+        <CodeExample>
+          <Desc>
+            Prop{" "}
+            <code class="text-caption-1">orientation=&quot;vertical&quot;</code>
+            .
+          </Desc>
+          <TabExample>
+            <ButtonGroup
+              orientation="vertical"
+              aria-label="Ukázka svislé skupiny"
+            >
+              <Button variant="secondary" onClick$={noop}>
+                One
+              </Button>
+              <Button variant="secondary" onClick$={noop}>
+                Two
+              </Button>
+              <Button variant="secondary" onClick$={noop}>
+                Three
+              </Button>
+            </ButtonGroup>
+          </TabExample>
+          <TabCode>{codeVertical}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Primární varianta</h2>
-        <p class="text-callout text-secondary-label">
-          Stejné sloučení okrajů funguje i u <code class="text-caption-1">primary</code> /{" "}
-          <code class="text-caption-1">danger</code>.
-        </p>
-        <CodeExample code={codePrimary}>
-          <ButtonGroup aria-label="Primární skupina">
-            <Button variant="primary" onClick$={noop}>
-              A
-            </Button>
-            <Button variant="primary" onClick$={noop}>
-              B
-            </Button>
-            <Button variant="primary" onClick$={noop}>
-              C
-            </Button>
-          </ButtonGroup>
+
+        <CodeExample>
+          <Desc>
+            Stejné sloučení okrajů funguje i u{" "}
+            <code class="text-caption-1">primary</code> /{" "}
+            <code class="text-caption-1">danger</code>.
+          </Desc>
+          <TabExample>
+            <ButtonGroup aria-label="Primární skupina">
+              <Button variant="primary" onClick$={noop}>
+                A
+              </Button>
+              <Button variant="primary" onClick$={noop}>
+                B
+              </Button>
+              <Button variant="primary" onClick$={noop}>
+                C
+              </Button>
+            </ButtonGroup>
+          </TabExample>
+          <TabCode>{codePrimary}</TabCode>
         </CodeExample>
       </section>
     </div>

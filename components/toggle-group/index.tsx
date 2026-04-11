@@ -2,6 +2,16 @@
  * @component toggle-group
  * @title ToggleGroup
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { ToggleGroup } from "~/components/ui/toggle-group";
+ * 
+ * <ToggleGroup.Root>
+ *   …
+ * </ToggleGroup.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/toggle-group` (zdroj `demo/src/routes/components/toggle-group/index.tsx`).
+ 
  */
 
 import { component$, type FunctionComponent, type PropsOf } from "@builder.io/qwik";

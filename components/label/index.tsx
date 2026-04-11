@@ -2,6 +2,14 @@
  * @component label
  * @title Label
  * @version 1.0.1
+ * @example
+ * ```tsx
+ * import { Label } from "~/components/ui/label";
+ * 
+ * <Label>…</Label>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/label` (zdroj `demo/src/routes/components/label/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

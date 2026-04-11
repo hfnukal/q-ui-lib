@@ -59,7 +59,7 @@ npm run q -- add ./my-app accordion slider button
 ```
 
 - Components are placed under `src/components/ui/<name>/` in the target app.
-- `meta.json` is copied for version tracking.
+- `meta.generated.json` is copied with the component (version for CLI `update`).
 - **`components/utilities/`** is synced to `src/components/ui/utilities/` (shared styles for Popover, Dialog, Combobox, etc.).
 - **accordion** depends on `@qwik-ui/headless` (already in the template’s `package.json`).
 
@@ -83,7 +83,7 @@ npm run q -- update ./my-app
 | `accordion`   | `@qwik-ui/headless`   | Export: `AccordionList`                    |
 | `slider`      | Native `<input type="range">` | Export: `Slider` (headless has no slider) |
 
-Each component lives in `components/<name>/` with `index.tsx` and `meta.json`.
+Each component lives in `components/<name>/` with `index.tsx`; `meta.generated.json` is produced by `npm run generate:meta` in the library repo.
 
 ## Example workflow
 
@@ -104,7 +104,7 @@ Each component lives in `components/<name>/` with `index.tsx` and `meta.json`.
 
 ## Contributing
 
-Add new components under `components/`, bump `version` in `meta.json`, and use the same `npm run q --` workflow to test locally.
+Add new components under `components/`, bump `@version` in the component’s JSDoc, run `npm run generate:meta`, and use the same `npm run q --` workflow to test locally.
 
 ---
 

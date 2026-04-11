@@ -1,4 +1,10 @@
-import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";
+/**
+ * @component dropdown-menu
+ * @title DropdownMenu
+ * @version 1.3.0
+ */
+
+import { type FunctionComponent, type JSXChildren, type PropsOf } from "@builder.io/qwik";
 import { Dropdown as HeadlessDropdown } from "@qwik-ui/headless";
 import {
   floatingMenuListPanelClass,
@@ -28,6 +34,34 @@ const groupLabelClass = "px-2 py-1.5 text-caption-1 font-medium text-secondary-l
 
 const itemIndicatorClass =
   "ml-auto inline-flex h-4 w-4 shrink-0 items-center justify-center text-label [&_svg]:h-3.5 [&_svg]:w-3.5";
+
+/** Položka s indikátorem vlevo — sdílí `itemClass` + přidává `pl-8` pro prostor indikátoru. */
+const checkableItemClass = [itemClass, "pl-8"].join(" ");
+
+/** Absolutně pozicovaný slot pro indikátor zaškrtnutí / výběru. */
+const indicatorSlotClass = "absolute left-2 flex h-3.5 w-3.5 items-center justify-center";
+
+const checkIcon = (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
+
+const radioIcon = (
+  <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor" aria-hidden="true">
+    <circle cx="4" cy="4" r="4" />
+  </svg>
+);
 
 /** Vnitřní řádek podmenu — vypadá jako položka, ne jako hlavní tlačítkové menu. */
 const subTriggerClass = [
@@ -89,13 +123,29 @@ export const DropdownMenuSubItem: FunctionComponent<DropdownMenuSubItemProps> = 
 };
 
 export const DropdownMenuSubCheckboxItem: FunctionComponent<DropdownMenuSubCheckboxItemProps> = (props) => {
-  const merged = [itemClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessDropdown.CheckboxItem {...props} class={merged} />;
+  const { class: className, children, ...rest } = props as typeof props & { children?: JSXChildren };
+  const merged = [checkableItemClass, className].filter(Boolean).join(" ");
+  return (
+    <HeadlessDropdown.CheckboxItem {...rest} class={merged}>
+      <span class={indicatorSlotClass}>
+        <HeadlessDropdown.ItemIndicator>{checkIcon}</HeadlessDropdown.ItemIndicator>
+      </span>
+      {children}
+    </HeadlessDropdown.CheckboxItem>
+  );
 };
 
 export const DropdownMenuSubRadioItem: FunctionComponent<DropdownMenuSubRadioItemProps> = (props) => {
-  const merged = [itemClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessDropdown.RadioItem {...props} class={merged} />;
+  const { class: className, children, ...rest } = props as typeof props & { children?: JSXChildren };
+  const merged = [checkableItemClass, className].filter(Boolean).join(" ");
+  return (
+    <HeadlessDropdown.RadioItem {...rest} class={merged}>
+      <span class={indicatorSlotClass}>
+        <HeadlessDropdown.ItemIndicator>{radioIcon}</HeadlessDropdown.ItemIndicator>
+      </span>
+      {children}
+    </HeadlessDropdown.RadioItem>
+  );
 };
 
 /**
@@ -139,13 +189,29 @@ export const DropdownMenuItem: FunctionComponent<DropdownMenuItemProps> = (props
 };
 
 export const DropdownMenuCheckboxItem: FunctionComponent<DropdownMenuCheckboxItemProps> = (props) => {
-  const merged = [itemClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessDropdown.CheckboxItem {...props} class={merged} />;
+  const { class: className, children, ...rest } = props as typeof props & { children?: JSXChildren };
+  const merged = [checkableItemClass, className].filter(Boolean).join(" ");
+  return (
+    <HeadlessDropdown.CheckboxItem {...rest} class={merged}>
+      <span class={indicatorSlotClass}>
+        <HeadlessDropdown.ItemIndicator>{checkIcon}</HeadlessDropdown.ItemIndicator>
+      </span>
+      {children}
+    </HeadlessDropdown.CheckboxItem>
+  );
 };
 
 export const DropdownMenuRadioItem: FunctionComponent<DropdownMenuRadioItemProps> = (props) => {
-  const merged = [itemClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessDropdown.RadioItem {...props} class={merged} />;
+  const { class: className, children, ...rest } = props as typeof props & { children?: JSXChildren };
+  const merged = [checkableItemClass, className].filter(Boolean).join(" ");
+  return (
+    <HeadlessDropdown.RadioItem {...rest} class={merged}>
+      <span class={indicatorSlotClass}>
+        <HeadlessDropdown.ItemIndicator>{radioIcon}</HeadlessDropdown.ItemIndicator>
+      </span>
+      {children}
+    </HeadlessDropdown.RadioItem>
+  );
 };
 
 /**

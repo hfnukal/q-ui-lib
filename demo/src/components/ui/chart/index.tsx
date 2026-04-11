@@ -1,3 +1,9 @@
+/**
+ * @component chart
+ * @title Chart
+ * @version 1.0.0
+ */
+
 import {
   component$,
   useSignal,

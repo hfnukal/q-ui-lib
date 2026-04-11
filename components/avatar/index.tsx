@@ -2,6 +2,16 @@
  * @component avatar
  * @title Avatar
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Avatar } from "~/components/ui/avatar";
+ * 
+ * <Avatar.Root>
+ *   …
+ * </Avatar.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/avatar` (zdroj `demo/src/routes/components/avatar/index.tsx`).
+ 
  */
 
 import {

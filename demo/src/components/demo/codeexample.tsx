@@ -1,73 +1,93 @@
-import { component$, Slot, type JSXChildren } from "@builder.io/qwik";
+import {
+  component$,
+  Slot,
+  type FunctionComponent,
+  type JSXChildren,
+} from "@builder.io/qwik";
+import { CodeEdit, type CodeEditLanguage } from "~/components/ui/code-edit";
 import { Tab } from "~/components/ui/tabs";
 
+// ─── Slot wrappers ────────────────────────────────────────────────────────────
+// FunctionComponent = inline expand → props.children místo <Slot />.
+// q:slot na root elementu → Qwik to promítne do příslušného <Slot name="..."> v CodeExample.
+
+/** Popis nad záložkami. */
+export const Desc: FunctionComponent<{ children?: JSXChildren }> = (props) => (
+  <p q:slot="desc" class="text-callout text-secondary-label">
+    {props.children}
+  </p>
+);
+
+/** Záložka s živým náhledem — `display:contents` aby wrapper div neovlivnil layout. */
+export const TabExample: FunctionComponent<{ children?: JSXChildren }> = (props) => (
+  <div q:slot="example" style="display:contents">
+    {props.children}
+  </div>
+);
+
+/** Záložka se zdrojákem. Předej kód jako children (template literal). */
+export const TabCode: FunctionComponent<{
+  children?: string;
+  language?: CodeEditLanguage;
+}> = (props) => {
+  const code = typeof props.children === "string" ? props.children : "";
+  const rows = Math.min(Math.max(4, code.split("\n").length + 1), 28);
+  return (
+    <div q:slot="code">
+      <CodeEdit readOnly value={code} language={props.language ?? "tsx"} rows={rows} />
+    </div>
+  );
+};
+
+// ─── CodeExample ──────────────────────────────────────────────────────────────
+
 export interface CodeExampleProps {
-  /** Zobrazený zdrojový kód (např. JSX použití komponenty). */
-  code: string;
   class?: string;
-  /**
-   * `tabs` — přepínač náhled / kód (neaktivní panel má `hidden`; nevhodné pro modaly/dialogy v náhledu).
-   * `stack` — náhled vždy nad kódem, obojí v DOM viditelné rozloženě (dialogy v top layer sedí k viewportu).
-   */
-  layout?: "tabs" | "stack";
-  /** Popisek karty s náhledem (výchozí: Example). */
-  previewTabLabel?: string;
-  /** Popisek karty se zdrojákem (výchozí: Code). */
-  codeTabLabel?: string;
-  /** Obsah záložky náhledu (vnořený obsah mezi značkami komponenty). */
-  children?: JSXChildren;
 }
 
 /**
- * Rámeček s přepínačem náhled / zdrojový kód. Používá stejný stylovaný {@link Tab} jako stránka komponenty Tabs.
+ * Rámeček s popisem a záložkami Example / Code.
+ *
+ * ```tsx
+ * <CodeExample>
+ *   <Desc>Popis komponenty</Desc>
+ *   <TabExample>
+ *     <Button>Tlačítko</Button>
+ *   </TabExample>
+ *   <TabCode>{`<Button>Tlačítko</Button>`}</TabCode>
+ * </CodeExample>
+ * ```
  */
 export const CodeExample = component$<CodeExampleProps>((props) => {
-  const previewLabel = props.previewTabLabel ?? "Example";
-  const codeLabel = props.codeTabLabel ?? "Code";
-  const layout = props.layout ?? "tabs";
-
-  const boxClass = [
-    "rounded-xl border border-separator-opaque bg-surface-overlay/40 p-4 shadow-sm ring-1 ring-black/5",
+  const wrapperClass = [
+    "rounded-xl border border-separator-opaque shadow-sm ring-1 ring-black/5",
     props.class,
   ]
     .filter(Boolean)
     .join(" ");
 
-  const codeBlock = (
-    <pre class="max-h-[28rem] overflow-auto rounded-lg bg-slate-950 p-4 text-xs leading-relaxed text-slate-100">
-      <code class="font-mono whitespace-pre">{props.code}</code>
-    </pre>
-  );
-
-  if (layout === "stack") {
-    return (
-      <div class={boxClass}>
-        <p class="mb-3 text-caption-1 font-medium text-secondary-label">{previewLabel}</p>
-        <div class="min-w-0">
-          <Slot />
-        </div>
-        <p class="mb-2 mt-6 text-caption-1 font-medium text-secondary-label">{codeLabel}</p>
-        {codeBlock}
-      </div>
-    );
-  }
-
   return (
-    <div class={boxClass}>
-      <Tab.Root class="w-full min-w-0" behavior="manual" selectedTabId="example">
-        <Tab.List>
-          <Tab.Tab key="example">{previewLabel}</Tab.Tab>
-          <Tab.Tab key="code">{codeLabel}</Tab.Tab>
-        </Tab.List>
-        <Tab.Panel key="example">
-          <div class="min-w-0">
-            <Slot />
-          </div>
-        </Tab.Panel>
-        <Tab.Panel key="code" class="!min-h-0 !p-0 border-0 bg-transparent shadow-none ring-0 focus-visible:ring-0">
-          {codeBlock}
-        </Tab.Panel>
-      </Tab.Root>
+    <div class={wrapperClass}>
+      {/* Desc — skryje se pokud je prázdný (CSS :has) */}
+      <div class="px-4 pt-4 pb-0 [&:not(:has(*))]:hidden">
+        <Slot name="desc" />
+      </div>
+
+      {/* Tabs */}
+      <div class="p-4">
+        <Tab.Root behavior="manual" selectedTabId="example" class="!max-w-none">
+          <Tab.List>
+            <Tab.Tab key="example">Example</Tab.Tab>
+            <Tab.Tab key="code">Code</Tab.Tab>
+          </Tab.List>
+          <Tab.Panel key="example">
+            <Slot name="example" />
+          </Tab.Panel>
+          <Tab.Panel key="code" class="!mt-0 !p-0 border-0 bg-transparent shadow-none ring-0 focus-visible:ring-0">
+            <Slot name="code" />
+          </Tab.Panel>
+        </Tab.Root>
+      </div>
     </div>
   );
 });

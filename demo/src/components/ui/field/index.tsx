@@ -1,3 +1,9 @@
+/**
+ * @component field
+ * @title Field
+ * @version 1.0.0
+ */
+
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 
 export type FieldRootProps = PropsOf<"div">;

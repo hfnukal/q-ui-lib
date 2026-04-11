@@ -2,6 +2,14 @@
  * @component input
  * @title Input
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Input } from "~/components/ui/input";
+ * 
+ * <Input>…</Input>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/input` (zdroj `demo/src/routes/components/input/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf } from "@builder.io/qwik";

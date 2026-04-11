@@ -2,6 +2,14 @@
  * @component button-group
  * @title ButtonGroup
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { ButtonGroup } from "~/components/ui/button-group";
+ * 
+ * <ButtonGroup>…</ButtonGroup>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/button-group` (zdroj `demo/src/routes/components/button-group/index.tsx`).
+ 
  */
 
 import { component$, Slot } from "@builder.io/qwik";

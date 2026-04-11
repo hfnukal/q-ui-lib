@@ -2,6 +2,16 @@
  * @component calendar
  * @title Calendar
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Calendar } from "~/components/ui/calendar";
+ * 
+ * <Calendar.Root>
+ *   …
+ * </Calendar.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/calendar` (zdroj `demo/src/routes/components/calendar/index.tsx`).
+ 
  */
 
 import {

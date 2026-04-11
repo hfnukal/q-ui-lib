@@ -1,3 +1,9 @@
+/**
+ * @component box
+ * @title Box
+ * @version 1.0.0
+ */
+
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 
 const paddingMap = {

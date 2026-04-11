@@ -1,3 +1,9 @@
+/**
+ * @component toggle-group
+ * @title ToggleGroup
+ * @version 1.0.0
+ */
+
 import { component$, type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { ToggleGroup as HeadlessToggleGroup } from "@qwik-ui/headless";
 

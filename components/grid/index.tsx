@@ -2,6 +2,14 @@
  * @component grid
  * @title Grid
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Grid } from "~/components/ui/grid";
+ * 
+ * <Grid>…</Grid>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/grid` (zdroj `demo/src/routes/components/grid/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

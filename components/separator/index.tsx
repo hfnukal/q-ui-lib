@@ -2,6 +2,14 @@
  * @component separator
  * @title Separator
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Separator } from "~/components/ui/separator";
+ * 
+ * <Separator>…</Separator>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/separator` (zdroj `demo/src/routes/components/separator/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf } from "@builder.io/qwik";

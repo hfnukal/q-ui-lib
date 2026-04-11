@@ -2,6 +2,14 @@
  * @component box
  * @title Box
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Box } from "~/components/ui/box";
+ * 
+ * <Box>…</Box>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/box` (zdroj `demo/src/routes/components/box/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

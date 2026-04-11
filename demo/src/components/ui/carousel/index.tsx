@@ -1,3 +1,9 @@
+/**
+ * @component carousel
+ * @title Carousel
+ * @version 1.0.0
+ */
+
 import {
   component$,
   type FunctionComponent,

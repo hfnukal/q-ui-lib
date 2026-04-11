@@ -2,6 +2,14 @@
  * @component textarea
  * @title Textarea
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Textarea } from "~/components/ui/textarea";
+ * 
+ * <Textarea>…</Textarea>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/textarea` (zdroj `demo/src/routes/components/textarea/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf } from "@builder.io/qwik";

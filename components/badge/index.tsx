@@ -2,6 +2,14 @@
  * @component badge
  * @title Badge
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Badge } from "~/components/ui/badge";
+ * 
+ * <Badge>…</Badge>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/badge` (zdroj `demo/src/routes/components/badge/index.tsx`).
+ 
  */
 
 import { component$, Slot } from "@builder.io/qwik";

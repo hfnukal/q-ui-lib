@@ -1,5 +1,10 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import { CodeExample } from "~/components/demo/codeexample";
+import {
+  CodeExample,
+  Desc,
+  TabCode,
+  TabExample,
+} from "~/components/demo/codeexample";
 import { Chart, ChartCanvas } from "~/components/ui/chart";
 
 const codeLine = `import { Chart } from "~/components/ui/chart";
@@ -93,100 +98,117 @@ export default component$(() => {
             chart.js
           </code>
           . Inicializace probíhá v prohlížeči (
-          <code class="text-caption-1 text-label">useVisibleTask$</code>
-          , dynamický import), aby se knihovna nespouštěla při SSR. Barvy tooltipů a os
-          se snaží číst z CSS proměnných dema (COLORS.md).
+          <code class="text-caption-1 text-label">useVisibleTask$</code>,
+          dynamický import), aby se knihovna nespouštěla při SSR. Barvy tooltipů
+          a os se snaží číst z CSS proměnných dema (COLORS.md).
         </p>
       </div>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Čára (line)</h2>
-        <p class="text-callout text-secondary-label">
-          Export <code class="text-caption-1 text-label">Chart</code> je alias pro{" "}
-          <code class="text-caption-1 text-label">ChartCanvas</code>.
-        </p>
-        <CodeExample layout="tabs" code={codeLine}>
-          <div class="rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
-            <Chart
-              type="line"
-              class="max-w-2xl"
-              data={{
-                labels: ["Po", "Út", "St", "Čt", "Pá"],
-                datasets: [
-                  {
-                    label: "Návštěvy",
-                    data: [12, 19, 15, 25, 22],
-                    borderColor: "hsl(var(--accent))",
-                    backgroundColor: "hsl(var(--accent) / 0.15)",
-                    fill: true,
-                    tension: 0.35,
-                  },
-                ],
-              }}
-            />
-          </div>
+
+        <CodeExample>
+          <Desc>
+            Export <code class="text-caption-1 text-label">Chart</code> je alias
+            pro <code class="text-caption-1 text-label">ChartCanvas</code>.
+          </Desc>
+          <TabExample>
+            <div class="rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
+              <Chart
+                type="line"
+                class="max-w-2xl"
+                data={{
+                  labels: ["Po", "Út", "St", "Čt", "Pá"],
+                  datasets: [
+                    {
+                      label: "Návštěvy",
+                      data: [12, 19, 15, 25, 22],
+                      borderColor: "hsl(var(--accent))",
+                      backgroundColor: "hsl(var(--accent) / 0.15)",
+                      fill: true,
+                      tension: 0.35,
+                    },
+                  ],
+                }}
+              />
+            </div>
+          </TabExample>
+          <TabCode>{codeLine}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Sloupce (bar)</h2>
-        <CodeExample layout="tabs" code={codeBar}>
-          <div class="rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
-            <ChartCanvas
-              type="bar"
-              class="max-w-2xl"
-              data={{
-                labels: ["Q1", "Q2", "Q3", "Q4"],
-                datasets: [
-                  {
-                    label: "Tržby",
-                    data: [48, 62, 55, 71],
-                    backgroundColor: [
-                      "hsl(var(--system-blue))",
-                      "hsl(var(--system-green))",
-                      "hsl(var(--system-orange))",
-                      "hsl(var(--system-purple))",
-                    ],
-                  },
-                ],
-              }}
-            />
-          </div>
+
+        <CodeExample>
+          <Desc>
+            Graf typu <code class="text-caption-1">bar</code> — srovnání
+            kategorií vedle sebe.
+          </Desc>
+          <TabExample>
+            <div class="rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
+              <ChartCanvas
+                type="bar"
+                class="max-w-2xl"
+                data={{
+                  labels: ["Q1", "Q2", "Q3", "Q4"],
+                  datasets: [
+                    {
+                      label: "Tržby",
+                      data: [48, 62, 55, 71],
+                      backgroundColor: [
+                        "hsl(var(--system-blue))",
+                        "hsl(var(--system-green))",
+                        "hsl(var(--system-orange))",
+                        "hsl(var(--system-purple))",
+                      ],
+                    },
+                  ],
+                }}
+              />
+            </div>
+          </TabExample>
+          <TabCode>{codeBar}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Doughnut</h2>
-        <CodeExample layout="tabs" code={codeDoughnut}>
-          <div class="rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
-            <Chart
-              type="doughnut"
-              class="mx-auto max-w-sm"
-              data={{
-                labels: ["Hotovo", "Probíhá", "Čeká"],
-                datasets: [
-                  {
-                    data: [62, 23, 15],
-                    backgroundColor: [
-                      "hsl(var(--system-green))",
-                      "hsl(var(--system-orange))",
-                      "hsl(var(--fill-secondary))",
-                    ],
-                    borderWidth: 0,
-                  },
-                ],
-              }}
-              options={{ plugins: { legend: { position: "bottom" } } }}
-            />
-          </div>
+
+        <CodeExample>
+          <Desc>Doughnut — viz ukázka níže.</Desc>
+          <TabExample>
+            <div class="rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
+              <Chart
+                type="doughnut"
+                class="mx-auto max-w-sm"
+                data={{
+                  labels: ["Hotovo", "Probíhá", "Čeká"],
+                  datasets: [
+                    {
+                      data: [62, 23, 15],
+                      backgroundColor: [
+                        "hsl(var(--system-green))",
+                        "hsl(var(--system-orange))",
+                        "hsl(var(--fill-secondary))",
+                      ],
+                      borderWidth: 0,
+                    },
+                  ],
+                }}
+                options={{ plugins: { legend: { position: "bottom" } } }}
+              />
+            </div>
+          </TabExample>
+          <TabCode>{codeDoughnut}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Reaktivní data</h2>
         <p class="text-callout text-secondary-label">
-          Při změně props se úloha znovu spustí a graf se přegeneruje (např. posuvník
-          mění <code class="text-caption-1 text-label">data</code>).
+          Při změně props se úloha znovu spustí a graf se přegeneruje (např.
+          posuvník mění <code class="text-caption-1 text-label">data</code>).
         </p>
         <div class="max-w-sm space-y-4 rounded-lg border border-separator-opaque/40 bg-surface-raised p-4">
           <label class="flex flex-col gap-2 text-callout text-label">
@@ -203,7 +225,11 @@ export default component$(() => {
               class="w-full accent-accent"
             />
           </label>
-          <Chart type="doughnut" class="mx-auto max-w-xs" data={doughnutReactive} />
+          <Chart
+            type="doughnut"
+            class="mx-auto max-w-xs"
+            data={doughnutReactive}
+          />
         </div>
       </section>
     </div>

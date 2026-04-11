@@ -2,6 +2,16 @@
  * @component file-input
  * @title FileInput
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { FileInput } from "~/components/ui/file-input";
+ * 
+ * <FileInput.DropArea>
+ *   <FileInput.Input />
+ * </FileInput.DropArea>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/file-input` (zdroj `demo/src/routes/components/file-input/index.tsx`).
+ 
  */
 
 import {

@@ -13,8 +13,8 @@
   "scripts": {
     "build": "echo 'No build step needed for library'",
     "qui": "node cli/index.js",
-    "generate:meta": "node scripts/generate-meta.mjs",
-    "sync:directives": "node scripts/sync-component-directives.mjs"
+    "qui:meta:generate": "node scripts/generate-meta.mjs",
+    "qui:meta:updatecomment": "node scripts/sync-component-directives.mjs"
   },
   "author": "",
   "license": "MIT",

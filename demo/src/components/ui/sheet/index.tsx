@@ -1,3 +1,9 @@
+/**
+ * @component sheet
+ * @title Sheet
+ * @version 1.0.5
+ */
+
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { Modal as HeadlessModal } from "@qwik-ui/headless";
 import {

@@ -2,6 +2,14 @@
  * @component chart
  * @title Chart
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Chart } from "~/components/ui/chart";
+ * 
+ * <Chart>…</Chart>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/chart` (zdroj `demo/src/routes/components/chart/index.tsx`).
+ 
  */
 
 import {

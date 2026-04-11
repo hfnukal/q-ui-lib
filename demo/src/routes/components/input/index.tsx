@@ -1,5 +1,10 @@
 import { component$ } from "@builder.io/qwik";
-import { CodeExample } from "~/components/demo/codeexample";
+import {
+  CodeExample,
+  Desc,
+  TabCode,
+  TabExample,
+} from "~/components/demo/codeexample";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
@@ -36,49 +41,67 @@ export default component$(() => {
           <code class="rounded bg-fill-secondary/20 px-1 py-0.5 text-caption-1 text-label">
             components/input
           </code>
-          — veškeré atributy HTML inputu (včetně <code class="text-caption-1">type</code>,{" "}
-          <code class="text-caption-1">name</code>, <code class="text-caption-1">value</code>) se předávají dál;
-          výchozí vzhled podle COLORS.md (shadcn-like).
+          — veškeré atributy HTML inputu (včetně{" "}
+          <code class="text-caption-1">type</code>,{" "}
+          <code class="text-caption-1">name</code>,{" "}
+          <code class="text-caption-1">value</code>) se předávají dál; výchozí
+          vzhled podle COLORS.md (shadcn-like).
         </p>
       </div>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Základ</h2>
-        <CodeExample code={codeBasic}>
-          <div class="max-w-md">
-            <Input type="text" placeholder="Zadejte text…" />
-          </div>
+
+        <CodeExample>
+          <Desc>Základ — viz ukázka níže.</Desc>
+          <TabExample>
+            <div class="max-w-md">
+              <Input type="text" placeholder="Zadejte text…" />
+            </div>
+          </TabExample>
+          <TabCode>{codeBasic}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Se štítkem</h2>
-        <CodeExample code={codeWithLabel}>
-          <div class="flex max-w-md flex-col gap-2">
-            <Label for="demo-input-email">E-mail</Label>
-            <Input
-              id="demo-input-email"
-              type="email"
-              name="email"
-              autoComplete="email"
-              placeholder="you@example.com"
-            />
-          </div>
+
+        <CodeExample>
+          <Desc>Se štítkem — viz ukázka níže.</Desc>
+          <TabExample>
+            <div class="flex max-w-md flex-col gap-2">
+              <Label for="demo-input-email">E-mail</Label>
+              <Input
+                id="demo-input-email"
+                type="email"
+                name="email"
+                autoComplete="email"
+                placeholder="you@example.com"
+              />
+            </div>
+          </TabExample>
+          <TabCode>{codeWithLabel}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Stavy</h2>
-        <p class="text-callout text-secondary-label">
-          <code class="text-caption-1">disabled</code> a <code class="text-caption-1">readOnly</code> — vlastní chybové
-          zobrazení řeš přes <code class="text-caption-1">class</code> nebo obal (např. border-destructive).
-        </p>
-        <CodeExample code={codeStates}>
-          <div class="flex max-w-md flex-col gap-3">
-            <Input placeholder="Běžný stav" />
-            <Input disabled value="Disabled" />
-            <Input readOnly value="Jen ke čtení" />
-          </div>
+
+        <CodeExample>
+          <Desc>
+            <code class="text-caption-1">disabled</code> a{" "}
+            <code class="text-caption-1">readOnly</code> — vlastní chybové
+            zobrazení řeš přes <code class="text-caption-1">class</code> nebo
+            obal (např. border-destructive).
+          </Desc>
+          <TabExample>
+            <div class="flex max-w-md flex-col gap-3">
+              <Input placeholder="Běžný stav" />
+              <Input disabled value="Disabled" />
+              <Input readOnly value="Jen ke čtení" />
+            </div>
+          </TabExample>
+          <TabCode>{codeStates}</TabCode>
         </CodeExample>
       </section>
 
@@ -88,7 +111,12 @@ export default component$(() => {
           <Label for="demo-input-pw" class="mb-2 block">
             Heslo
           </Label>
-          <Input id="demo-input-pw" type="password" placeholder="••••••••" autoComplete="current-password" />
+          <Input
+            id="demo-input-pw"
+            type="password"
+            placeholder="••••••••"
+            autoComplete="current-password"
+          />
         </div>
       </section>
     </div>

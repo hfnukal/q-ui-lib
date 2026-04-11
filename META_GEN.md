@@ -1,6 +1,6 @@
 # Generátor `meta.generated.json` (TS-Morph Extraction Pipeline)
 
-Tento dokument popisuje **implementovaný krok** z [REGISTRY.md](./REGISTRY.md) — skript, který prochází `components/`, čte u každé komponenty `index.tsx` a zapisuje **`meta.generated.json`**. Ostatní části registry (CLI repa, `cli generate`, více repozitářů) zde **nejsou** řešeny.
+Tento dokument popisuje skript, který prochází `components/`, čte u každé komponenty `index.tsx` a zapisuje **`meta.generated.json`**.
 
 ## Spuštění
 
@@ -16,7 +16,7 @@ nebo:
 npm run generate:meta
 ```
 
-Úvodní direktivy v `index.tsx` (synchronizace z `meta.json` verze a výchozího titulku):
+Úvodní direktivy v `index.tsx` (normalizace bloku `@component` / `@title` / `@version` z existujícího JSDoc; výchozí titulek PascalCase ze složky, výchozí verze `1.0.0` pokud chybí):
 
 ```bash
 npm run sync:directives
@@ -32,7 +32,7 @@ Blok na začátku souboru:
  */
 ```
 
-`@component` musí odpovídat **názvu složky** (slug). `@title` a `@version` generátor čte pro pole `title` a `version` v `meta.generated.json` (viz výše). Po úpravě `meta.json` nebo při přidání komponenty je vhodné znovu spustit `sync:directives` a poté `generate:meta`.
+`@component` musí odpovídat **názvu složky** (slug). `@title` a `@version` generátor čte pro pole `title` a `version` v `meta.generated.json` (viz výše). Verzi knihovny měň v tomto JSDoc (`@version`); po změně je vhodné spustit `npm run generate:meta`. Volitelně před generátorem `sync:directives` pro sjednocení formátu bloku.
 
 Závislosti: `ts-morph` (již v projektu), Node.js s podporou ES modulů (`"type": "module"` není nutné — skript je `.mjs`).
 
@@ -40,42 +40,44 @@ Závislosti: `ts-morph` (již v projektu), Node.js s podporou ES modulů (`"type
 
 | Vstup | Výstup |
 |--------|--------|
-| `components/<kebab-name>/index.tsx` | `components/<kebab-name>/meta.generated.json` |
+| `components/**/index.tsx` | vedle vstupního souboru: `meta.generated.json` |
 
-- Procházejí se **přímé podsložky** `components/`.
-- Složky **bez** `index.tsx` se přeskočí (např. `utilities/` má jen `index.ts`).
+- Generátor prochází `components/` **rekurzivně** — zpracuje jak flat layout (`components/button/`), tak 3-level (`components/base/button/`, `components/owner/set/slug/`).
+- Složky s `index.tsx` se zpracují; rekurze se do nich nezanořuje (předpokládá se, že komponenta neobsahuje podsložky s dalšími komponentami).
+- Složky **bez** `index.tsx` jsou jen průchozí (např. `components/base/`, `components/utilities/`).
 
-## Schéma výstupu (REGISTRY.md §11)
+## Schéma výstupu
 
 Pro každou analyzovanou komponentu se generuje JSON:
 
 - **`name`** — identifikátor podle **složky** v `components/` (kebab-case, např. `button`, `input-group`).
 - **`title`** — z úvodního JSDoc **`@title`** (celý řetězec za tagem), jinak název z hlavního exportu (PascalCase) nebo ze složky při `unknown`.
-- **`version`** — z **`@version`** v tomže JSDoc, jinak z **`meta.json`**, jinak `"0.0.0"`.
+- **`version`** — z **`@version`** v tomže JSDoc, jinak `"0.0.0"`.
 - **`kind`** — `"primitive"` \| `"compound"` \| `"unknown"` (pokud se nepodaří rozpoznat hlavní export).
-- **`registry`** — vždy `"base"` (lokální knihovna; více repozitářů řeší až budoucí CLI).
+- **`registry`** — vždy `"base"` (lokální knihovna).
 - **`dependencies`** — seřazené unikátní kořeny z **relativních** importů (`../…`), viz níže.
-- **`apiTree`** — strom API pro **compound**; u **primitive** prázdný objekt `{}` (REGISTRY ukazuje `apiTree` hlavně u compound; u primitive není ve schématu povinný detail).
+- **`apiTree`** — strom API; tvar je stejný pro **primitive** i **compound**. U **primitive** tvoří `params` a `slot` přímo kořen `apiTree`. U **compound** má každý pojmenovaný díl svůj uzel s `params` / `slot`.
+- **`npmDependencies`** — seznam npm balíčků (pole řetězců), které komponenta vyžaduje a nejsou součástí knihovny. Generátor pole odvodí z importů externích balíčků v `index.tsx`. CLI při `qui add` zkontroluje jejich přítomnost v cílové aplikaci a případně varuje.
 
-## Detekce hlavního exportu (REGISTRY.md §6 + rozšíření pro tento repozitář)
+## Detekce hlavního exportu
 
-REGISTRY předpokládá **`export default`**. V aktuálním kódu knihovny často **není** default export; skript proto používá toto pořadí:
+Nejjednodušší případ je **`export default`**. V kódu knihovny často **není** default export; skript proto používá toto pořadí:
 
-1. **`export default`**  
-   - objektový literál → `kind: "compound"`, `apiTree` z klíčů objektu;  
-   - volání `component$(…)` → `kind: "primitive"`, `apiTree: {}`.
+1. **`export default`**
+   - objektový literál → `kind: "compound"`, `apiTree` z klíčů objektu;
+   - volání `component$(…)` → `kind: "primitive"`, `apiTree: { params, slot }`.
 2. **`export const <Name> = …`** kde `<Name>` odpovídá složce: `button` → `Button`, `input-group` → `InputGroup`.
    - inicializátor je **objektový literál** s alespoň jednou vlastností → **compound**;
    - inicializátor je **`component$(…)`** → **primitive**.
 3. **Fallback** — první exportovaný `const` vhodný jako compound, pak jako primitive.
 4. Pokud nic z toho neplatí → **`kind: "unknown"`**, prázdný `apiTree`.
 
-## Primitive vs compound (REGISTRY.md §4, §7)
+## Primitive vs compound
 
 - **Primitive:** výchozí export nebo pojmenovaný export je přímo **`component$(…)`**.
 - **Compound:** výchozí export nebo pojmenovaný export je **objektový literál** s dílčími částmi (např. `Dialog`, `Combobox`).
 
-## `apiTree` pro compound (REGISTRY.md §9)
+## `apiTree` pro compound
 
 - Z objektového literálu se přečtou **klíče** (např. `Root`, `Trigger`, `Menu`, `MenuItem`) v **pořádku deklarace** ve zdroji.
 - Pokud existuje klíč **`Root`**, výstup má tvar `apiTree.Root` s **`children`** pro ostatní části.
@@ -90,7 +92,7 @@ Mezi klíči (kromě `Root`) se staví **strom podle prefixů v PascalCase**:
 
 Klíče bez rodiče jsou na aktuální úrovni vedle sebe (např. `Root` → `Trigger`, `Menu`, `Control`, …).
 
-**Omezení:** Vnoření **není** z JSX ani z runtime skládání — pouze z názvů exportovaných částí. REGISTRY doplňuje další heuristiky (JSX); ty zde nejsou.
+**Omezení:** Vnoření **není** z JSX ani z runtime skládání — pouze z názvů exportovaných částí. Složitější heuristiky z JSX zde nejsou.
 
 ### `params` (volitelné u každého uzlu)
 
@@ -104,16 +106,16 @@ U částí implementovaných jako **`component$<…>(…)`** se z prvního type 
 
 U **primitive** komponenty jsou `params` a případně **`slot`: `true`** přímo v kořeni **`apiTree`** (vedle sebe). U **compound** má `params` každý uzel, u kterého jde typ z `component$` rozřešit výše popsaným způsobem.
 
-### Slot (REGISTRY.md §8)
+### Slot
 
 - U každé části compoundu se zkusí najít **lokální** `const` se jménem odpovídajícím hodnotě vlastnosti (např. `Root: DialogRoot` → tělo `DialogRoot`).
-- V těle se hledá výskyt **`<Slot`** v textu AST (stejná myšlenka jako v REGISTRY).
+- V těle se hledá výskyt **`<Slot`** v textu AST.
 - Pokud je slot detekován, uzel má tvar `{ "slot": true }`; jinak `{}`.
-- U **Root** se `slot` zapisuje jen když je `true` (konzistence s příklady v REGISTRY).
+- U **Root** se `slot` zapisuje jen když je `true`.
 
 Části mapované na **importované** symboly (např. `HeadlessModal.Root`) bez lokálního těla v souboru často nedostanou `slot: true`, i když by headless komponenta slot podporovala.
 
-## Závislosti (REGISTRY.md §12)
+## Závislosti
 
 Z každého importu, jehož modul začíná na `.`, se vezme **první segment** cesty po `../` nebo `./`:
 

@@ -20,7 +20,7 @@ q-ui-lib/
 ├── components/          # modulární komponenty
 │   ├── button/
 │   │   ├── index.tsx
-│   │   └── meta.json
+│   │   └── meta.generated.json
 │   ├── slider/
 │   └── accordion/
 ├── cli/                 # skripty pro init, add, update
@@ -31,15 +31,7 @@ q-ui-lib/
 
 2. Metadata komponenty
 
-Každá komponenta má soubor meta.json:
-
-{
-  "name": "slider",
-  "version": "1.0.0",
-  "type": "external"
-}
-
-Slouží k verzování a správě aktualizací.
+Verze a název pro dokumentaci jsou v **úvodním JSDoc** v `index.tsx` (`@version`, `@title`). Soubor **`meta.generated.json`** se generuje příkazem `npm run generate:meta` (viz **META_GEN.md**) a obsahuje mimo jiné `name`, `title`, `version` a strom `apiTree`. Interaktivní **`qui update`** v cílové aplikaci porovnává pole `version` v `meta.generated.json` mezi knihovnou a zkopírovanou složkou v projektu.
 
 ⸻
 
@@ -66,7 +58,7 @@ npx ../q-ui-lib/cli add button slider
 ⸻
 
 5. Aktualizace komponent
-	•	V q-ui-lib opravíš komponentu, bumpneš verzi v meta.json.
+	•	V q-ui-lib opravíš komponentu, bumpneš `@version` v JSDoc a znovu spustíš `npm run generate:meta`.
 	•	V aplikaci spustíš:
 
 npx ../q-ui-lib/cli update

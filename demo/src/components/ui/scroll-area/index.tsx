@@ -1,10 +1,16 @@
+/**
+ * @component scroll-area
+ * @title ScrollArea
+ * @version 1.1.0
+ */
+
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 
 export type ScrollAreaRootProps = PropsOf<"div">;
 
 /**
  * Vnější obal — skryje přetečení rohů (`overflow-hidden`), výšku/šířku určuje `class` (např. `h-72`).
- * Inspirace shadcn Scroll Area; bez Radix — nativní scroll (SHADCN.md).
+ * Inspirace shadcn Scroll Area; bez Radix — nativní scroll (bez headless mapování; viz CREATE.md).
  */
 export const ScrollAreaRoot = component$<ScrollAreaRootProps>((props) => {
   const { class: className, ...rest } = props;

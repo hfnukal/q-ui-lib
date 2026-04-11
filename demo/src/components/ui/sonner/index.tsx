@@ -1,3 +1,9 @@
+/**
+ * @component sonner
+ * @title Sonner
+ * @version 1.0.5
+ */
+
 import {
   $,
   component$,
@@ -370,11 +376,16 @@ const SonnerToaster = component$<SonnerToasterProps>((props) => {
     "motion-reduce:transition-none [transition-timing-function:cubic-bezier(0.32,0.72,0,1)]",
   ].join(" ");
 
+  const hasToasts = nTotal > 0;
+
   return (
     <>
       <div class={viewport}>
         <div
-          class="pointer-events-auto w-full max-w-full"
+          class={[
+            "w-full max-w-full",
+            hasToasts ? "pointer-events-auto" : "pointer-events-none",
+          ].join(" ")}
           onMouseEnter$={() => {
             stackExpanded.value = true;
           }}

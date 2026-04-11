@@ -2,6 +2,16 @@
  * @component tooltip
  * @title Tooltip
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Tooltip } from "~/components/ui/tooltip";
+ * 
+ * <Tooltip.Root>
+ *   …
+ * </Tooltip.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/tooltip` (zdroj `demo/src/routes/components/tooltip/index.tsx`).
+ 
  */
 
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";

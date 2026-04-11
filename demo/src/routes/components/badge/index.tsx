@@ -1,5 +1,10 @@
 import { component$ } from "@builder.io/qwik";
-import { CodeExample } from "~/components/demo/codeexample";
+import {
+  CodeExample,
+  Desc,
+  TabCode,
+  TabExample,
+} from "~/components/demo/codeexample";
 import { Badge } from "~/components/ui/badge";
 
 const codeVariants = `import { Badge } from "~/components/ui/badge";
@@ -37,45 +42,61 @@ export default component$(() => {
           <code class="rounded bg-fill-secondary/20 px-1 py-0.5 text-caption-1 text-label">
             components/badge
           </code>
-          — čistý Tailwind podle COLORS.md, bez headlessu (viz SHADCN.md).
+          — čistý Tailwind podle COLORS.md, bez headlessu (viz CREATE.md).
         </p>
       </div>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Varianty</h2>
-        <CodeExample code={codeVariants}>
-          <div class="flex flex-wrap gap-2">
-            <Badge variant="default">Default</Badge>
-            <Badge variant="secondary">Secondary</Badge>
-            <Badge variant="outline">Outline</Badge>
-            <Badge variant="destructive">Destructive</Badge>
-          </div>
+
+        <CodeExample>
+          <Desc>Varianty — viz ukázka níže.</Desc>
+          <TabExample>
+            <div class="flex flex-wrap gap-2">
+              <Badge variant="default">Default</Badge>
+              <Badge variant="secondary">Secondary</Badge>
+              <Badge variant="outline">Outline</Badge>
+              <Badge variant="destructive">Destructive</Badge>
+            </div>
+          </TabExample>
+          <TabCode>{codeVariants}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Velikosti</h2>
-        <CodeExample code={codeSizes}>
-          <div class="flex flex-wrap items-center gap-2">
-            <Badge size="sm">Small</Badge>
-            <Badge size="md">Medium</Badge>
-          </div>
+
+        <CodeExample>
+          <Desc>Velikosti — viz ukázka níže.</Desc>
+          <TabExample>
+            <div class="flex flex-wrap items-center gap-2">
+              <Badge size="sm">Small</Badge>
+              <Badge size="md">Medium</Badge>
+            </div>
+          </TabExample>
+          <TabCode>{codeSizes}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">V řádku s textem</h2>
-        <p class="text-callout text-secondary-label">
-          Doplňkové třídy (např. <code class="text-caption-1">align-middle</code>, <code class="text-caption-1">ml-2</code>) sloučíš přes{" "}
-          <code class="text-caption-1">class</code>.
-        </p>
-        <CodeExample code={codeInline}>
-          <p class="text-body text-label">
-            Verze 2.1
-            <Badge variant="secondary" class="ml-2 align-middle">
-              Beta
-            </Badge>
-          </p>
+
+        <CodeExample>
+          <Desc>
+            Doplňkové třídy (např.{" "}
+            <code class="text-caption-1">align-middle</code>,{" "}
+            <code class="text-caption-1">ml-2</code>) sloučíš přes{" "}
+            <code class="text-caption-1">class</code>.
+          </Desc>
+          <TabExample>
+            <p class="text-body text-label">
+              Verze 2.1
+              <Badge variant="secondary" class="ml-2 align-middle">
+                Beta
+              </Badge>
+            </p>
+          </TabExample>
+          <TabCode>{codeInline}</TabCode>
         </CodeExample>
       </section>
     </div>

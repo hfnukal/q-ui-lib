@@ -1,5 +1,10 @@
 import { component$ } from "@builder.io/qwik";
-import { CodeExample } from "~/components/demo/codeexample";
+import {
+  CodeExample,
+  Desc,
+  TabCode,
+  TabExample,
+} from "~/components/demo/codeexample";
 import { Avatar } from "~/components/ui/avatar";
 
 /** Inline SVG data URLs — spolehlivé v demu bez externích hostitelů (picsum často selže / redirect). */
@@ -67,69 +72,94 @@ export default component$(() => {
           </a>
           : <code class="text-caption-1">Avatar.Root</code>,{" "}
           <code class="text-caption-1">Avatar.Image</code>,{" "}
-          <code class="text-caption-1">Avatar.Fallback</code>. Fallback používá tokeny z COLORS.md (
-          <code class="text-caption-1">fill-tertiary</code>, <code class="text-caption-1">label</code>) pro dobrý kontrast.
+          <code class="text-caption-1">Avatar.Fallback</code>. Fallback používá
+          tokeny z COLORS.md (<code class="text-caption-1">fill-tertiary</code>,{" "}
+          <code class="text-caption-1">label</code>) pro dobrý kontrast.
         </p>
       </div>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Obrázek + fallback</h2>
-        <CodeExample code={codeCompound}>
-          <Avatar.Root>
-            <Avatar.Image src={SRC_COMPOUND} alt="Ukázkový avatar (SVG)" />
-            <Avatar.Fallback>QU</Avatar.Fallback>
-          </Avatar.Root>
+
+        <CodeExample>
+          <Desc>Obrázek + fallback — viz ukázka níže.</Desc>
+          <TabExample>
+            <Avatar.Root>
+              <Avatar.Image src={SRC_COMPOUND} alt="Ukázkový avatar (SVG)" />
+              <Avatar.Fallback>QU</Avatar.Fallback>
+            </Avatar.Root>
+          </TabExample>
+          <TabCode>{codeCompound}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Velikosti</h2>
-        <p class="text-callout text-secondary-label">
-          Prop <code class="text-caption-1">size</code> na <code class="text-caption-1">Avatar.Root</code>:{" "}
-          <code class="text-caption-1">sm</code>, <code class="text-caption-1">md</code> (výchozí),{" "}
-          <code class="text-caption-1">lg</code>.
-        </p>
-        <CodeExample code={codeSizes}>
-          <div class="flex flex-wrap items-center gap-4">
-            <Avatar.Root size="sm">
-              <Avatar.Image src={SRC_SM} alt="" />
-              <Avatar.Fallback>S</Avatar.Fallback>
-            </Avatar.Root>
-            <Avatar.Root size="md">
-              <Avatar.Image src={SRC_MD} alt="" />
-              <Avatar.Fallback>M</Avatar.Fallback>
-            </Avatar.Root>
-            <Avatar.Root size="lg">
-              <Avatar.Image src={SRC_LG} alt="" />
-              <Avatar.Fallback>L</Avatar.Fallback>
-            </Avatar.Root>
-          </div>
+
+        <CodeExample>
+          <Desc>
+            Prop <code class="text-caption-1">size</code> na{" "}
+            <code class="text-caption-1">Avatar.Root</code>:{" "}
+            <code class="text-caption-1">sm</code>,{" "}
+            <code class="text-caption-1">md</code> (výchozí),{" "}
+            <code class="text-caption-1">lg</code>.
+          </Desc>
+          <TabExample>
+            <div class="flex flex-wrap items-center gap-4">
+              <Avatar.Root size="sm">
+                <Avatar.Image src={SRC_SM} alt="" />
+                <Avatar.Fallback>S</Avatar.Fallback>
+              </Avatar.Root>
+              <Avatar.Root size="md">
+                <Avatar.Image src={SRC_MD} alt="" />
+                <Avatar.Fallback>M</Avatar.Fallback>
+              </Avatar.Root>
+              <Avatar.Root size="lg">
+                <Avatar.Image src={SRC_LG} alt="" />
+                <Avatar.Fallback>L</Avatar.Fallback>
+              </Avatar.Root>
+            </div>
+          </TabExample>
+          <TabCode>{codeSizes}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Jen fallback</h2>
-        <p class="text-callout text-secondary-label">
-          Bez <code class="text-caption-1">Avatar.Image</code> nebo bez <code class="text-caption-1">src</code> zůstane
-          iniciála / placeholder.
-        </p>
-        <CodeExample code={codeFallbackOnly}>
-          <Avatar.Root>
-            <Avatar.Fallback>AB</Avatar.Fallback>
-          </Avatar.Root>
+
+        <CodeExample>
+          <Desc>
+            Bez <code class="text-caption-1">Avatar.Image</code> nebo bez{" "}
+            <code class="text-caption-1">src</code> zůstane iniciála /
+            placeholder.
+          </Desc>
+          <TabExample>
+            <Avatar.Root>
+              <Avatar.Fallback>AB</Avatar.Fallback>
+            </Avatar.Root>
+          </TabExample>
+          <TabCode>{codeFallbackOnly}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-headline text-label">Chyba načtení obrázku</h2>
-        <p class="text-callout text-secondary-label">
-          Neplatná URL zobrazí znovu <code class="text-caption-1">Avatar.Fallback</code>.
-        </p>
-        <CodeExample code={codeBroken}>
-          <Avatar.Root>
-            <Avatar.Image src="https://example.invalid/does-not-exist.jpg" alt="" />
-            <Avatar.Fallback>!</Avatar.Fallback>
-          </Avatar.Root>
+
+        <CodeExample>
+          <Desc>
+            Neplatná URL zobrazí znovu{" "}
+            <code class="text-caption-1">Avatar.Fallback</code>.
+          </Desc>
+          <TabExample>
+            <Avatar.Root>
+              <Avatar.Image
+                src="https://example.invalid/does-not-exist.jpg"
+                alt=""
+              />
+              <Avatar.Fallback>!</Avatar.Fallback>
+            </Avatar.Root>
+          </TabExample>
+          <TabCode>{codeBroken}</TabCode>
         </CodeExample>
       </section>
     </div>

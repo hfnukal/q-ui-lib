@@ -2,6 +2,16 @@
  * @component popover
  * @title Popover
  * @version 1.0.1
+ * @example
+ * ```tsx
+ * import { Popover } from "~/components/ui/popover";
+ * 
+ * <Popover.Root>
+ *   …
+ * </Popover.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/popover` (zdroj `demo/src/routes/components/popover/index.tsx`).
+ 
  */
 
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";

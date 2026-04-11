@@ -2,6 +2,16 @@
  * @component split
  * @title Split
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Split } from "~/components/ui/split";
+ * 
+ * <Split.Root>
+ *   …
+ * </Split.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/split` (zdroj `demo/src/routes/components/split/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

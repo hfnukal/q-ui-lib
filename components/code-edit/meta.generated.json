@@ -1,0 +1,29 @@
+{
+  "name": "code-edit",
+  "title": "CodeEdit",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "base",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "value": "string",
+      "onValue$": "function",
+      "language": [
+        "css",
+        "html",
+        "js",
+        "json",
+        "jsx",
+        "text",
+        "ts",
+        "tsx"
+      ],
+      "placeholder": "string",
+      "readOnly": "boolean",
+      "rows": "number",
+      "class": "string"
+    }
+  }
+}

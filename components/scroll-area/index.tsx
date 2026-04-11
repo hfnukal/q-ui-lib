@@ -2,6 +2,16 @@
  * @component scroll-area
  * @title ScrollArea
  * @version 1.1.0
+ * @example
+ * ```tsx
+ * import { ScrollArea } from "~/components/ui/scroll-area";
+ * 
+ * <ScrollArea.Root class="h-48 rounded-md border border-separator-opaque">
+ *   <ScrollArea.Viewport direction="vertical">…</ScrollArea.Viewport>
+ * </ScrollArea.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/scroll-area` (zdroj `demo/src/routes/components/scroll-area/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
@@ -10,7 +20,7 @@ export type ScrollAreaRootProps = PropsOf<"div">;
 
 /**
  * Vnější obal — skryje přetečení rohů (`overflow-hidden`), výšku/šířku určuje `class` (např. `h-72`).
- * Inspirace shadcn Scroll Area; bez Radix — nativní scroll (SHADCN.md).
+ * Inspirace shadcn Scroll Area; bez Radix — nativní scroll (bez headless mapování; viz CREATE.md).
  */
 export const ScrollAreaRoot = component$<ScrollAreaRootProps>((props) => {
   const { class: className, ...rest } = props;

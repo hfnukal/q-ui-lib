@@ -2,6 +2,14 @@
  * @component stack
  * @title Stack
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Stack } from "~/components/ui/stack";
+ * 
+ * <Stack>…</Stack>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/stack` (zdroj `demo/src/routes/components/stack/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

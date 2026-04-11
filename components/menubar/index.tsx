@@ -2,6 +2,16 @@
  * @component menubar
  * @title Menubar
  * @version 1.2.0
+ * @example
+ * ```tsx
+ * import { Menubar } from "~/components/ui/menubar";
+ * 
+ * <Menubar.Root>
+ *   …
+ * </Menubar.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/menubar` (zdroj `demo/src/routes/components/menubar/index.tsx`).
+ 
  */
 
 import {

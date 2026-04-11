@@ -1,9 +1,15 @@
+/**
+ * @component card
+ * @title Card
+ * @version 1.0.1
+ */
+
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 
 export type CardRootProps = PropsOf<"div">;
 
 /**
- * Kontejner karty — `grouped-surface`, okraj a stín (COLORS.md). Bez headlessu (SHADCN.md).
+ * Kontejner karty — `grouped-surface`, okraj a stín (COLORS.md). Bez @qwik-ui/headless.
  */
 export const CardRoot = component$<CardRootProps>((props) => {
   const { class: className, ...rest } = props;

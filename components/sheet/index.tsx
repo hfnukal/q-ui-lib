@@ -2,6 +2,16 @@
  * @component sheet
  * @title Sheet
  * @version 1.0.5
+ * @example
+ * ```tsx
+ * import { Sheet } from "~/components/ui/sheet";
+ * 
+ * <Sheet.Root>
+ *   …
+ * </Sheet.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/sheet` (zdroj `demo/src/routes/components/sheet/index.tsx`).
+ 
  */
 
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";

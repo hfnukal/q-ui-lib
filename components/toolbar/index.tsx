@@ -2,6 +2,16 @@
  * @component toolbar
  * @title Toolbar
  * @version 1.1.0
+ * @example
+ * ```tsx
+ * import { Toolbar } from "~/components/ui/toolbar";
+ * 
+ * <Toolbar.Root>
+ *   …
+ * </Toolbar.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/toolbar` (zdroj `demo/src/routes/components/toolbar/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

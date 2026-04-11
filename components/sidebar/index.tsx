@@ -2,6 +2,17 @@
  * @component sidebar
  * @title Sidebar
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Sidebar } from "~/components/ui/sidebar";
+ * 
+ * <Sidebar.Provider>
+ *   <Sidebar.Root>…</Sidebar.Root>
+ *   <Sidebar.Inset>…</Sidebar.Inset>
+ * </Sidebar.Provider>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/sidebar` (zdroj `demo/src/routes/components/sidebar/index.tsx`).
+ 
  */
 
 import {
@@ -106,36 +117,36 @@ export const SidebarRoot = component$<SidebarRootProps>((props) => {
   const widthMd = collapsed ? "md:w-14" : "md:w-64";
   const mobileWidth = "max-md:w-[min(18rem,100vw-2rem)]";
 
-  const base = [
-    "relative z-50 flex h-full min-h-0 shrink-0 flex-col border-separator-opaque bg-grouped-surface text-label",
+  /** Jeden DOM uzel sloupce (backdrop + aside), aby {@link SidebarProvider} flex měl jen [shell, inset] — fragment [backdrop, aside] jinak vytváří třetí „sloupec“ a obsah může překrývat odkazy. */
+  const shell = [
+    "relative z-[60] flex h-full min-h-0 shrink-0 flex-col border-separator-opaque bg-grouped-surface text-label",
     "transition-[width,transform,opacity] duration-200 ease-out",
     borderSide,
     widthMd,
     mobileWidth,
-    "max-md:fixed max-md:top-0 max-md:z-50 max-md:h-svh max-md:shadow-lg md:h-auto md:shadow-none",
+    "max-md:fixed max-md:top-0 max-md:z-[60] max-md:h-svh max-md:shadow-lg md:h-auto md:shadow-none",
     positionSide,
     mobileOpen ? slideOpen : slideClosed,
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  ].join(" ");
+
+  const asideMerged = ["relative flex min-h-0 min-w-0 flex-1 flex-col", className].filter(Boolean).join(" ");
 
   return (
-    <>
+    <div data-q-sidebar-shell="" class={shell}>
       <button
         type="button"
         class={[
-          "fixed inset-0 z-40 bg-black/40 transition-opacity md:pointer-events-none md:opacity-0",
+          "fixed inset-0 z-40 bg-black/40 transition-opacity md:hidden",
           mobileOpen ? "opacity-100" : "pointer-events-none opacity-0",
         ].join(" ")}
         aria-hidden="true"
         tabIndex={-1}
         onClick$={ctx.closeMobile$}
       />
-      <aside data-q-sidebar="" data-side={side} data-collapsed={collapsed ? "" : undefined} {...rest} class={base}>
+      <aside data-q-sidebar="" data-side={side} data-collapsed={collapsed ? "" : undefined} {...rest} class={asideMerged}>
         <Slot />
       </aside>
-    </>
+    </div>
   );
 });
 
@@ -415,7 +426,7 @@ export const SidebarRail = component$<SidebarRailProps>((props) => {
 });
 
 /**
- * Postranní navigace — layout kompozice (SHADCN.md: bez headless modulu), tokeny dle COLORS.md.
+ * Postranní navigace — layout kompozice (bez @qwik-ui/headless modulu; viz BASE_COMPONENTS.md), tokeny dle COLORS.md.
  * Mobilní režim: overlay + drawer; desktop: flex vedle {@link SidebarInset}.
  */
 export const Sidebar = {

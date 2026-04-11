@@ -1,34 +1,78 @@
 {
-  "name": "Combobox",
+  "name": "combobox",
+  "title": "Combobox",
+  "version": "1.1.1",
   "kind": "compound",
   "registry": "base",
   "dependencies": [
     "utilities"
   ],
+  "npmDependencies": [],
   "apiTree": {
     "Root": {
       "children": {
         "Label": {},
-        "Control": {},
+        "HiddenNativeSelect": {},
+        "Control": {
+          "children": {
+            "ControlInput": {},
+            "ControlTrigger": {}
+          }
+        },
         "Input": {},
         "Trigger": {},
         "Popover": {
-          "slot": true
+          "params": {
+            "align": [
+              "center",
+              "end",
+              "start"
+            ]
+          },
+          "slot": true,
+          "children": {
+            "PopoverItem": {
+              "children": {
+                "PopoverItemLabel": {},
+                "PopoverItemIndicator": {}
+              }
+            },
+            "PopoverInline": {},
+            "PopoverChip": {
+              "params": {
+                "class": "string",
+                "value": "string",
+                "onRemove$": "function"
+              },
+              "slot": true
+            },
+            "PopoverEmpty": {}
+          }
         },
         "Listbox": {},
-        "Group": {},
-        "GroupLabel": {},
-        "Item": {},
-        "ItemLabel": {},
-        "ItemIndicator": {},
-        "Description": {},
-        "ErrorMessage": {},
-        "Empty": {},
-        "HiddenNativeSelect": {},
+        "Group": {
+          "children": {
+            "GroupLabel": {}
+          }
+        },
+        "Item": {
+          "children": {
+            "ItemLabel": {},
+            "ItemIndicator": {}
+          }
+        },
         "Inline": {},
         "Chip": {
+          "params": {
+            "class": "string",
+            "value": "string",
+            "onRemove$": "function"
+          },
           "slot": true
-        }
+        },
+        "Empty": {},
+        "Description": {},
+        "ErrorMessage": {}
       }
     }
   }

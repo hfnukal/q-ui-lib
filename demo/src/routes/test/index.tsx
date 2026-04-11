@@ -1,4 +1,4 @@
-import { component$, createContextId, Slot, useContext, useContextProvider, useSignal, useStore, useTask$ } from "@builder.io/qwik";
+import { component$, createContextId, Slot, useContext, useContextProvider, useSignal, useTask$ } from "@builder.io/qwik";
 
 export interface TestContextValue {
   store: Record<string, string>;

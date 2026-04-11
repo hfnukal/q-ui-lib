@@ -2,6 +2,16 @@
  * @component checkbox
  * @title Checkbox
  * @version 1.1.0
+ * @example
+ * ```tsx
+ * import { Checkbox } from "~/components/ui/checkbox";
+ * 
+ * <Checkbox.Root>
+ *   …
+ * </Checkbox.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/checkbox` (zdroj `demo/src/routes/components/checkbox/index.tsx`).
+ 
  */
 
 import { $, component$, type PropsOf, Slot, useId } from "@builder.io/qwik";

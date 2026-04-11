@@ -1,72 +1,72 @@
-# Paleta a typografie — mapování na Apple HIG / UIKit (web)
+# Palette and typography — mapping to Apple HIG / UIKit (web)
 
-Tento dokument shrnuje **sémantické** barvy a **textové styly** z ekosystému Apple (odkazované z [Human Interface Guidelines — Color](https://developer.apple.com/design/human-interface-guidelines/color) na [UI element colors](https://developer.apple.com/documentation/uikit/uicolor/ui_element_colors) a související API). Pro webové aplikace vybíráme jen **významové tokeny** (ne fixní RGB z UIKitu), aby šly napojit na **light/dark** a na Tailwind.
-
----
-
-## Co záměrně nebereme (nebo jen výjimečně)
-
-| API / skupina | Důvod |
-|---------------|--------|
-| `darkText`, `lightText` | Neadaptivní — pro themed web lepší hierarchie `label` + `secondaryLabel` … |
-| Deprecated (`groupTableViewBackground`, …) | Nahrazeno novějšími tokeny |
-| Fixní barvy (`black`, `red`, `blue`, … v sekci *Fixed colors*) | Neadaptivní; pro značku/status spíš **adaptivní** `systemRed` atd. |
-| `tintColor` | Runtime kontext v UIKitu; na webu typicky **`accent`** / `ring` / `primary` |
+This document summarizes **semantic** colors and **text styles** from the Apple ecosystem (referenced from [Human Interface Guidelines — Color](https://developer.apple.com/design/human-interface-guidelines/color) to [UI element colors](https://developer.apple.com/documentation/uikit/uicolor/ui_element_colors) and related APIs). For web apps we only pick **semantic tokens** (not fixed RGB from UIKit) so they can be wired to **light/dark** and Tailwind.
 
 ---
 
-## 1. Barvy — placeholdery pro Tailwind (`theme.colors`)
+## What we deliberately omit (or use only rarely)
 
-Názvy ve sloupci **Token (Tailwind)** navrhují jako klíče v `theme.extend.colors` (kebab-case v konfiguraci: `secondary-label` → třída `text-secondary-label`).
+| API / group | Reason |
+|-------------|--------|
+| `darkText`, `lightText` | Non-adaptive — for themed web, `label` + `secondaryLabel` … hierarchy is better |
+| Deprecated (`groupTableViewBackground`, …) | Replaced by newer tokens |
+| Fixed colors (`black`, `red`, `blue`, … in *Fixed colors*) | Non-adaptive; for brand/status prefer **adaptive** `systemRed`, etc. |
+| `tintColor` | Runtime context in UIKit; on the web typically **`accent`** / `ring` / `primary` |
 
-### 1.1 Text a odkazy
+---
 
-| UIKit (UI element colors) | Účel | Token (Tailwind) |
-|---------------------------|------|------------------|
-| `label` | Primární text | `label` |
-| `secondaryLabel` | Sekundární text (méně důležité) | `secondary-label` |
-| `tertiaryLabel` | Terciární / potlačený text | `tertiary-label` |
-| `quaternaryLabel` | Nejslabší čitelný text v hierarchii | `quaternary-label` |
-| `placeholderText` | Placeholder ve vstupech | `placeholder` |
-| `link` | Odkazy | `link` |
+## 1. Colors — Tailwind placeholders (`theme.colors`)
 
-### 1.2 Pozadí — „ploché“ rozhraní (standardní layout)
+Names in the **Token (Tailwind)** column are suggested keys in `theme.extend.colors` (kebab-case in config: `secondary-label` → class `text-secondary-label`).
 
-| UIKit | Účel | Token (Tailwind) |
-|-------|------|------------------|
-| `systemBackground` | Hlavní plocha | `background` nebo `surface-base` |
-| `secondarySystemBackground` | Vrstva nad hlavním pozadím | `surface-raised` |
-| `tertiarySystemBackground` | Další vrstva (např. vnořené bloky) | `surface-overlay` |
+### 1.1 Text and links
 
-### 1.3 Pozadí — „seskupené“ (seznamy, karty ve skupinách)
+| UIKit (UI element colors) | Purpose | Token (Tailwind) |
+|---------------------------|---------|------------------|
+| `label` | Primary text | `label` |
+| `secondaryLabel` | Secondary text (less prominent) | `secondary-label` |
+| `tertiaryLabel` | Tertiary / muted text | `tertiary-label` |
+| `quaternaryLabel` | Weakest readable text in the hierarchy | `quaternary-label` |
+| `placeholderText` | Placeholder in inputs | `placeholder` |
+| `link` | Links | `link` |
 
-| UIKit | Účel | Token (Tailwind) |
-|-------|------|------------------|
-| `systemGroupedBackground` | Pozadí skupinové obrazovky | `grouped-background` |
-| `secondarySystemGroupedBackground` | Karta / řádek ve skupině | `grouped-surface` |
-| `tertiarySystemGroupedBackground` | Vnořený obsah ve skupině | `grouped-surface-inset` |
+### 1.2 Backgrounds — “flat” interface (standard layout)
 
-*Poznámka:* Na webu často stačí jedna varianta „grouped“ + `surface-raised`; tři úrovně použijte, pokud máte husté nested layouty (např. nastavení).
+| UIKit | Purpose | Token (Tailwind) |
+|-------|---------|------------------|
+| `systemBackground` | Main surface | `background` or `surface-base` |
+| `secondarySystemBackground` | Layer above main background | `surface-raised` |
+| `tertiarySystemBackground` | Another layer (e.g. nested blocks) | `surface-overlay` |
 
-### 1.4 Výplně (jemné plochy, stavy, chipy)
+### 1.3 Backgrounds — “grouped” (lists, cards in groups)
 
-| UIKit | Účel | Token (Tailwind) |
-|-------|------|------------------|
-| `systemFill` | Tenké / malé tvary | `fill` |
-| `secondarySystemFill` | Střední tvary | `fill-secondary` |
-| `tertiarySystemFill` | Velké tvary | `fill-tertiary` |
-| `quaternarySystemFill` | Velké plochy s komplexním obsahem | `fill-quaternary` |
+| UIKit | Purpose | Token (Tailwind) |
+|-------|---------|------------------|
+| `systemGroupedBackground` | Grouped screen background | `grouped-background` |
+| `secondarySystemGroupedBackground` | Card / row in a group | `grouped-surface` |
+| `tertiarySystemGroupedBackground` | Nested content in a group | `grouped-surface-inset` |
 
-### 1.5 Oddělovače
+*Note:* On the web, one “grouped” variant + `surface-raised` is often enough; use three levels if you have dense nested layouts (e.g. settings).
 
-| UIKit | Účel | Token (Tailwind) |
-|-------|------|------------------|
-| `separator` | Tenké linky, „prosvítá“ obsah | `separator` |
-| `opaqueSeparator` | Plná hranice | `separator-opaque` |
+### 1.4 Fills (subtle surfaces, states, chips)
 
-### 1.6 Akcenty a stavy — adaptivní „system“ barvy
+| UIKit | Purpose | Token (Tailwind) |
+|-------|---------|------------------|
+| `systemFill` | Thin / small shapes | `fill` |
+| `secondarySystemFill` | Medium shapes | `fill-secondary` |
+| `tertiarySystemFill` | Large shapes | `fill-tertiary` |
+| `quaternarySystemFill` | Large areas with complex content | `fill-quaternary` |
 
-Z [Standard colors](https://developer.apple.com/documentation/uikit/standard-colors) (vhodné pro badge, ikony stavu, ilustrativní akcenty; **ne** jako náhrada za plnou paletu značky).
+### 1.5 Separators
+
+| UIKit | Purpose | Token (Tailwind) |
+|-------|---------|------------------|
+| `separator` | Thin lines, “shows through” content | `separator` |
+| `opaqueSeparator` | Solid border | `separator-opaque` |
+
+### 1.6 Accents and states — adaptive “system” colors
+
+From [Standard colors](https://developer.apple.com/documentation/uikit/standard-colors) (suitable for badges, status icons, illustrative accents; **not** as a full brand palette substitute).
 
 | UIKit | Token (Tailwind) |
 |-------|------------------|
@@ -83,7 +83,7 @@ Z [Standard colors](https://developer.apple.com/documentation/uikit/standard-col
 | `systemTeal` | `system-teal` |
 | `systemYellow` | `system-yellow` |
 
-### 1.7 Šedé stupně (adaptivní)
+### 1.7 Gray steps (adaptive)
 
 | UIKit | Token (Tailwind) |
 |-------|------------------|
@@ -94,66 +94,66 @@ Z [Standard colors](https://developer.apple.com/documentation/uikit/standard-col
 | `systemGray5` | `system-gray-5` |
 | `systemGray6` | `system-gray-6` |
 
-### 1.8 Pomocné (volitelné)
+### 1.8 Helpers (optional)
 
-| UIKit | Token (Tailwind) | Poznámka |
-|-------|------------------|----------|
-| `clear` | `transparent` | Obvykle už v Tailwindu |
-
----
-
-## 2. Typografie — placeholdery podle `UIFont.TextStyle`
-
-Apple rozlišuje styly podle [UIFont.TextStyle](https://developer.apple.com/documentation/uikit/uifont/textstyle). Na web je mapujte jako **kombinaci** `font-size`, `line-height`, `font-weight` (a případně `letter-spacing`). Konkrétní px/rem nejsou součástí HIG jako jedna tabulka pro web — zde jsou jen **názvy tokenů** pro vaši Tailwind vrstvu.
-
-| TextStyle (UIKit) | Typické použití | Návrh utility / kompozice |
-|-------------------|-----------------|---------------------------|
-| `extraLargeTitle2` | Velmi velký hero nadpis | `text-extra-large-title-2` (custom) |
-| `extraLargeTitle` | Hero nadpis | `text-extra-large-title` |
-| `largeTitle` | Velký nadpis obrazovky | `text-large-title` |
-| `title1` | Hierarchie 1 | `text-title-1` |
-| `title2` | Hierarchie 2 | `text-title-2` |
-| `title3` | Hierarchie 3 | `text-title-3` |
-| `headline` | Zvýrazněný nadpis / sekce | `text-headline` |
-| `body` | Hlavní text | `text-body` |
-| `callout` | Mírně větší než body (důraz) | `text-callout` |
-| `subheadline` | Podnadpis pod headline | `text-subheadline` |
-| `footnote` | Menší doplňkový text | `text-footnote` |
-| `caption1` | Popisky, metadata | `text-caption-1` |
-| `caption2` | Nejmenší legální popisky | `text-caption-2` |
-
-**Barva textu** u typů obvykle držte zvlášť: např. `text-body text-label`, metadata `text-caption-1 text-secondary-label`, aby šla měnit hierarchie barev bez měnění měřítka.
+| UIKit | Token (Tailwind) | Note |
+|-------|------------------|------|
+| `clear` | `transparent` | Usually already in Tailwind |
 
 ---
 
-## 3. Doporučení pro praktické použití s Tailwind
+## 2. Typography — placeholders by `UIFont.TextStyle`
 
-### Varianta A — CSS proměnné + `theme.extend.colors` (doporučeno)
+Apple distinguishes styles via [UIFont.TextStyle](https://developer.apple.com/documentation/uikit/uifont/textstyle). Map them on the web as a **combination** of `font-size`, `line-height`, `font-weight` (and optionally `letter-spacing`). Specific px/rem are not part of HIG as a single web table — here are only **token names** for your Tailwind layer.
 
-- V globálním CSS definujte `:root` a `.dark` s hodnotami typu `hsl(...)` pro každý token z tabulek výše.
-- V `tailwind.config` mapujte barvy na `hsl(var(--token) / <alpha-value>)` (Tailwind 3.4+ podporuje alpha u custom barev podle nastavení).
-- **Výhoda:** Jedna definice pro light/dark, stejné názvy v komponentách (`bg-background`, `text-secondary-label`).
+| TextStyle (UIKit) | Typical use | Suggested utility / composition |
+|-------------------|---------------|--------------------------------|
+| `extraLargeTitle2` | Very large hero heading | `text-extra-large-title-2` (custom) |
+| `extraLargeTitle` | Hero heading | `text-extra-large-title` |
+| `largeTitle` | Large screen title | `text-large-title` |
+| `title1` | Hierarchy level 1 | `text-title-1` |
+| `title2` | Hierarchy level 2 | `text-title-2` |
+| `title3` | Hierarchy level 3 | `text-title-3` |
+| `headline` | Emphasized heading / section | `text-headline` |
+| `body` | Body copy | `text-body` |
+| `callout` | Slightly larger than body (emphasis) | `text-callout` |
+| `subheadline` | Subhead under headline | `text-subheadline` |
+| `footnote` | Smaller supplementary text | `text-footnote` |
+| `caption1` | Labels, metadata | `text-caption-1` |
+| `caption2` | Smallest legible labels | `text-caption-2` |
 
-### Varianta B — Pouze `theme.extend` bez CSS vars
-
-- Rychlý start; duplicitní hodnoty pro `darkMode: 'class'` přes `dark:` v komponentách nebo přes plugin — u větší knihovny hůř udržovatelné.
-
-### Varianta C — `@layer components` pro „Apple text style“ v jedné třídě
-
-- Např. `.text-body` = velikost + řádkování + výchozí barva `label`.
-- **Výhoda:** méně tříd v šablonách. **Nevýhoda:** hůř skládat s výjimkami (barva jen pro jeden blok).
-
-### Koncepční otázky (lze zvolit podle produktu)
-
-1. **Primární akce značky:** použijete `system-blue` jako `primary`, nebo vlastní brand barvu mimo Apple sadu?
-2. **Group vs flat:** webová appka bude víc „karty na šedém grouped pozadí“, nebo jednotné `background`?
-3. **Semantic HTML:** nadpisy držet jako `h1`–`h3` se stejnými vizuálními třídami jako `title1`–`title3`, nezávisle na velikosti.
-
-Až budete chtít, lze z tohoto dokumentu vygenerovat konkrétní `tailwind.config` + `app.css` s výchozími HSL hodnotami inspirovanými iOS light/dark.
+**Text color** for type scales is usually kept separate: e.g. `text-body text-label`, metadata `text-caption-1 text-secondary-label`, so you can change color hierarchy without changing scale.
 
 ---
 
-## Reference
+## 3. Practical recommendations with Tailwind
+
+### Option A — CSS variables + `theme.extend.colors` (recommended)
+
+- In global CSS define `:root` and `.dark` with values like `hsl(...)` for each token from the tables above.
+- In `tailwind.config` map colors to `hsl(var(--token) / <alpha-value>)` (Tailwind 3.4+ supports alpha on custom colors per config).
+- **Benefit:** One definition for light/dark, same names in components (`bg-background`, `text-secondary-label`).
+
+### Option B — `theme.extend` only, no CSS vars
+
+- Quick start; duplicate values for `darkMode: 'class'` via `dark:` in components or a plugin — harder to maintain for a larger library.
+
+### Option C — `@layer components` for “Apple text style” in one class
+
+- e.g. `.text-body` = size + line height + default `label` color.
+- **Benefit:** fewer classes in templates. **Drawback:** harder to compose exceptions (color for one block only).
+
+### Design questions (choose per product)
+
+1. **Primary brand action:** use `system-blue` as `primary`, or a custom brand color outside the Apple set?
+2. **Group vs flat:** will the web app be more “cards on gray grouped background”, or a single `background`?
+3. **Semantic HTML:** keep headings as `h1`–`h3` with the same visual classes as `title1`–`title3`, independent of size.
+
+When you want, this document can be used to generate a concrete `tailwind.config` + `app.css` with default HSL values inspired by iOS light/dark.
+
+---
+
+## References
 
 - [Color — Apple HIG](https://developer.apple.com/design/human-interface-guidelines/color)
 - [UI element colors](https://developer.apple.com/documentation/uikit/uicolor/ui_element_colors)

@@ -44,20 +44,6 @@ function parseComponentDirectiveBlock(text) {
   return out;
 }
 
-/**
- * @param {string} folderName
- * @returns {{ version?: string, title?: string } | null}
- */
-function readManualMetaJson(folderName) {
-  const p = path.join(componentsDir, folderName, "meta.json");
-  if (!fs.existsSync(p)) return null;
-  try {
-    return JSON.parse(fs.readFileSync(p, "utf8"));
-  } catch {
-    return null;
-  }
-}
-
 /** @param {string | undefined} v */
 function normalizeVersion(v) {
   if (typeof v === "string" && v.trim()) return v.trim();
@@ -462,6 +448,56 @@ function collectRelativeImportRoots(sf) {
   return [...deps].sort();
 }
 
+/** @param {string} spec module specifier */
+function npmPackageRootFromSpecifier(spec) {
+  if (spec.startsWith(".") || spec.startsWith("node:")) return null;
+  if (spec.startsWith("@")) {
+    const parts = spec.split("/");
+    return parts.length >= 2 ? `${parts[0]}/${parts[1]}` : spec;
+  }
+  return spec.split("/")[0] || null;
+}
+
+function loadBaselineNpmPackageNames(repoRoot) {
+  const p = path.join(repoRoot, "template", "package.json");
+  /** @type {Set<string>} */
+  const set = new Set();
+  if (!fs.existsSync(p)) return set;
+  const j = JSON.parse(fs.readFileSync(p, "utf8"));
+  for (const key of ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"]) {
+    const o = j[key];
+    if (o && typeof o === "object") {
+      for (const k of Object.keys(o)) set.add(k);
+    }
+  }
+  return set;
+}
+
+/** npm imports minus packages already listed in template/package.json */
+/** @param {import('ts-morph').SourceFile} sf */
+function collectExtraNpmDependencies(sf, baseline) {
+  const pkgs = new Set();
+  for (const imp of sf.getImportDeclarations()) {
+    const spec = imp.getModuleSpecifierValue();
+    const root = npmPackageRootFromSpecifier(spec);
+    if (root && !baseline.has(root)) pkgs.add(root);
+  }
+  sf.forEachDescendant((node) => {
+    if (node.getKind() !== SyntaxKind.ImportKeyword) return;
+    const call = node.getParent();
+    if (!Node.isCallExpression(call)) return;
+    if (call.getExpression() !== node) return;
+    const args = call.getArguments();
+    if (args.length < 1) return;
+    const lit = args[0];
+    if (!Node.isStringLiteral(lit) && !Node.isNoSubstitutionTemplateLiteral(lit)) return;
+    const spec = lit.getLiteralValue();
+    const root = npmPackageRootFromSpecifier(spec);
+    if (root && !baseline.has(root)) pkgs.add(root);
+  });
+  return [...pkgs].sort();
+}
+
 /**
  * @param {import('ts-morph').SourceFile} sf
  * @param {string} folderName
@@ -538,6 +574,31 @@ function analyzeSourceFile(sf, folderName) {
   return null;
 }
 
+/**
+ * Rekurzivně najde všechny složky s index.tsx pod baseDir.
+ * Nepokračuje dovnitř složky, která sama index.tsx obsahuje.
+ * @param {string} baseDir
+ * @returns {string[]}
+ */
+function findComponentDirs(baseDir) {
+  /** @type {string[]} */
+  const results = [];
+  /** @param {string} dir */
+  function walk(dir) {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    const hasIndex = entries.some((e) => e.isFile() && e.name === "index.tsx");
+    if (hasIndex) {
+      results.push(dir);
+      return; // neprocházej dovnitř komponenty
+    }
+    for (const e of entries) {
+      if (e.isDirectory()) walk(path.join(dir, e.name));
+    }
+  }
+  walk(baseDir);
+  return results;
+}
+
 function main() {
   const tsConfigPath = path.join(repoRoot, "tsconfig.json");
   if (!fs.existsSync(tsConfigPath)) {
@@ -549,14 +610,15 @@ function main() {
     tsConfigFilePath: tsConfigPath,
   });
 
-  const dirents = fs.readdirSync(componentsDir, { withFileTypes: true });
+  const componentDirs = findComponentDirs(componentsDir);
   let written = 0;
   let skipped = 0;
+  const npmBaseline = loadBaselineNpmPackageNames(repoRoot);
 
-  for (const d of dirents) {
-    if (!d.isDirectory()) continue;
-    const folderName = d.name;
-    const indexTsx = path.join(componentsDir, folderName, "index.tsx");
+  for (const componentDir of componentDirs) {
+    const folderName = path.basename(componentDir);
+    const indexTsx = path.join(componentDir, "index.tsx");
+    // findComponentDirs zaručuje existenci index.tsx, ale pro jistotu:
     if (!fs.existsSync(indexTsx)) {
       skipped++;
       continue;
@@ -564,14 +626,10 @@ function main() {
 
     const sf = project.addSourceFileAtPath(indexTsx);
     const directives = parseComponentDirectiveBlock(sf.getFullText());
-    const manualMeta = readManualMetaJson(folderName);
     const analyzed = analyzeSourceFile(sf, folderName);
-    const versionFallback =
-      normalizeVersion(directives.version) ||
-      normalizeVersion(manualMeta?.version) ||
-      "0.0.0";
+    const versionFallback = normalizeVersion(directives.version) || "0.0.0";
     if (!analyzed) {
-      console.warn(`[generate-meta] Nelze analyzovat export: ${folderName}/index.tsx`);
+      console.warn(`[generate-meta] Nelze analyzovat export: ${path.relative(repoRoot, indexTsx)}`);
       const payload = {
         name: folderName,
         title: directives.title || kebabToPascal(folderName),
@@ -579,10 +637,11 @@ function main() {
         kind: "unknown",
         registry: "base",
         dependencies: collectRelativeImportRoots(sf),
+        npmDependencies: collectExtraNpmDependencies(sf, npmBaseline),
         apiTree: {},
       };
       fs.writeFileSync(
-        path.join(componentsDir, folderName, "meta.generated.json"),
+        path.join(componentDir, "meta.generated.json"),
         JSON.stringify(payload, null, 2) + "\n",
         "utf8"
       );
@@ -597,10 +656,11 @@ function main() {
       kind: analyzed.kind,
       registry: "base",
       dependencies: collectRelativeImportRoots(sf),
+      npmDependencies: collectExtraNpmDependencies(sf, npmBaseline),
       apiTree: analyzed.apiTree,
     };
 
-    const outPath = path.join(componentsDir, folderName, "meta.generated.json");
+    const outPath = path.join(componentDir, "meta.generated.json");
     fs.writeFileSync(outPath, JSON.stringify(payload, null, 2) + "\n", "utf8");
     written++;
   }

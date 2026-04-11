@@ -2,6 +2,16 @@
  * @component select
  * @title Select
  * @version 1.2.3
+ * @example
+ * ```tsx
+ * import { Select } from "~/components/ui/select";
+ * 
+ * <Select.Root>
+ *   …
+ * </Select.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/select` (zdroj `demo/src/routes/components/select/index.tsx`).
+ 
  */
 
 import {

@@ -2,6 +2,14 @@
  * @component aspect-ratio
  * @title AspectRatio
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { AspectRatio } from "~/components/ui/aspect-ratio";
+ * 
+ * <AspectRatio>…</AspectRatio>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/aspect-ratio` (zdroj `demo/src/routes/components/aspect-ratio/index.tsx`).
+ 
  */
 
 import { component$, Slot } from "@builder.io/qwik";

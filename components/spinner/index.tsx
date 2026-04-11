@@ -2,6 +2,14 @@
  * @component spinner
  * @title Spinner
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Spinner } from "~/components/ui/spinner";
+ * 
+ * <Spinner>…</Spinner>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/spinner` (zdroj `demo/src/routes/components/spinner/index.tsx`).
+ 
  */
 
 import { component$ } from "@builder.io/qwik";

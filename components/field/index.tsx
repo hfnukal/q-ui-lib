@@ -2,6 +2,16 @@
  * @component field
  * @title Field
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Field } from "~/components/ui/field";
+ * 
+ * <Field.Root>
+ *   …
+ * </Field.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/field` (zdroj `demo/src/routes/components/field/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

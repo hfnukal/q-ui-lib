@@ -2,6 +2,16 @@
  * @component dialog
  * @title Dialog
  * @version 1.0.2
+ * @example
+ * ```tsx
+ * import { Dialog } from "~/components/ui/dialog";
+ * 
+ * <Dialog.Root>
+ *   …
+ * </Dialog.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/dialog` (zdroj `demo/src/routes/components/dialog/index.tsx`).
+ 
  */
 
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";

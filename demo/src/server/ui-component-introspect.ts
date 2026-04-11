@@ -387,6 +387,48 @@ export function scanSingleUiFile(relativePath: string): UiFileScan | null {
   };
 }
 
+/** Obsah `meta.generated.json` vedle `index.tsx` (viz `npm run generate:meta`). */
+export type MetaGenerated = {
+  name: string;
+  title: string;
+  version: string;
+  kind: string;
+  registry?: string;
+  dependencies?: string[];
+  npmDependencies?: string[];
+  apiTree: Record<string, unknown>;
+};
+
+/**
+ * Načte `meta.generated.json` ve stejné složce jako `index.tsx` komponenty v demu.
+ * `relativePath` ve stejném tvaru jako u {@link scanSingleUiFile} (např. `src/components/ui/button/index.tsx`).
+ */
+export function readMetaGeneratedForUiIndex(
+  relativePath: string,
+): MetaGenerated | null {
+  const root = demoRootDir();
+  const normalized = path
+    .normalize(relativePath.trim())
+    .replace(/\\/g, "/");
+  if (!normalized || normalized.includes("..")) return null;
+  if (!normalized.endsWith("index.tsx")) return null;
+
+  const indexFull = path.resolve(root, normalized);
+  if (!isPathInsideRoot(indexFull, path.resolve(root))) return null;
+  if (!fs.existsSync(indexFull)) return null;
+
+  const metaFull = path.join(path.dirname(indexFull), "meta.generated.json");
+  if (!isPathInsideRoot(metaFull, path.resolve(root))) return null;
+  if (!fs.existsSync(metaFull)) return null;
+
+  try {
+    const raw = fs.readFileSync(metaFull, "utf8");
+    return JSON.parse(raw) as MetaGenerated;
+  } catch {
+    return null;
+  }
+}
+
 /** Relativní cesty k `index.tsx` v podadresářích `src/components/ui` (řazeno). */
 export function listUiComponentRelativePaths(): string[] {
   const root = demoRootDir();

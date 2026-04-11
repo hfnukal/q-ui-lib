@@ -1,3 +1,9 @@
+/**
+ * @component badge
+ * @title Badge
+ * @version 1.0.0
+ */
+
 import { component$, Slot } from "@builder.io/qwik";
 
 export interface BadgeProps {

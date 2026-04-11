@@ -2,6 +2,16 @@
  * @component progress
  * @title Progress
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Progress } from "~/components/ui/progress";
+ * 
+ * <Progress.Root>
+ *   …
+ * </Progress.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/progress` (zdroj `demo/src/routes/components/progress/index.tsx`).
+ 
  */
 
 import {

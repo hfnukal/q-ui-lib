@@ -1,3 +1,9 @@
+/**
+ * @component dialog
+ * @title Dialog
+ * @version 1.0.2
+ */
+
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { Modal as HeadlessModal } from "@qwik-ui/headless";
 import {

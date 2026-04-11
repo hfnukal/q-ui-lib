@@ -1,0 +1,19 @@
+---
+description: CodeExample in demo — Desc, TabExample, TabCode
+globs: demo/src/**/*.tsx
+alwaysApply: false
+---
+
+# CodeExample (demo)
+
+Import: `import { CodeExample, Desc, TabExample, TabCode } from "~/components/demo/codeexample";`
+
+Structure (order):
+
+1. **`<Desc>…</Desc>`** — caption above the tabs (above `Tabs`).
+2. **`<TabExample>…</TabExample>`** — live preview (working example).
+3. **`<TabCode value={\`…\`} />`** — source as a string for `CodeEdit` (`readOnly`). Alternative: `<TabCode>{`…`}</TabCode>` if Qwik passes `children` as a string.
+
+Namespace aliases: `CodeExample.Desc`, `CodeExample.TabExample`, `CodeExample.TabCode`.
+
+Do not store code in `const` for simple demos — prefer inline `value={\`…\`}`.

@@ -1,3 +1,9 @@
+/**
+ * @component select
+ * @title Select
+ * @version 1.2.3
+ */
+
 import {
   component$,
   createContextId,

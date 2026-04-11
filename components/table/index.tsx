@@ -2,6 +2,16 @@
  * @component table
  * @title Table
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Table } from "~/components/ui/table";
+ * 
+ * <Table.Root>
+ *   …
+ * </Table.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/table` (zdroj `demo/src/routes/components/table/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

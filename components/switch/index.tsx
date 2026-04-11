@@ -2,6 +2,14 @@
  * @component switch
  * @title Switch
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Switch } from "~/components/ui/switch";
+ * 
+ * <Switch>…</Switch>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/switch` (zdroj `demo/src/routes/components/switch/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf } from "@builder.io/qwik";

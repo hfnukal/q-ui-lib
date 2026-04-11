@@ -2,6 +2,16 @@
  * @component carousel
  * @title Carousel
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Carousel } from "~/components/ui/carousel";
+ * 
+ * <Carousel.Root>
+ *   …
+ * </Carousel.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/carousel` (zdroj `demo/src/routes/components/carousel/index.tsx`).
+ 
  */
 
 import {

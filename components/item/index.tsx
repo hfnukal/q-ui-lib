@@ -2,6 +2,16 @@
  * @component item
  * @title Item
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Item } from "~/components/ui/item";
+ * 
+ * <Item.Root>
+ *   …
+ * </Item.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/item` (zdroj `demo/src/routes/components/item/index.tsx`).
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

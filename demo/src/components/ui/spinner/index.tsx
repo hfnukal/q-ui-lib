@@ -1,3 +1,9 @@
+/**
+ * @component spinner
+ * @title Spinner
+ * @version 1.0.0
+ */
+
 import { component$ } from "@builder.io/qwik";
 
 export interface SpinnerProps {

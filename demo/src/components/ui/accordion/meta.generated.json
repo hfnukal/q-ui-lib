@@ -1,8 +1,11 @@
 {
-  "name": "Accordion",
+  "name": "accordion",
+  "title": "Accordion",
+  "version": "1.0.1",
   "kind": "compound",
   "registry": "base",
   "dependencies": [],
+  "npmDependencies": [],
   "apiTree": {
     "Root": {
       "children": {

@@ -1,0 +1,12 @@
+{
+  "name": "item-list",
+  "title": "ItemList",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "base",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "slot": true
+  }
+}

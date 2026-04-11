@@ -2,6 +2,16 @@
  * @component navigation-menu
  * @title NavigationMenu
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { NavigationMenu } from "~/components/ui/navigation-menu";
+ * 
+ * <NavigationMenu.Root>
+ *   …
+ * </NavigationMenu.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/navigation-menu` (zdroj `demo/src/routes/components/navigation-menu/index.tsx`).
+ 
  */
 
 import {

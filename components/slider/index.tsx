@@ -2,6 +2,14 @@
  * @component slider
  * @title Slider
  * @version 1.0.0
+ * @example
+ * ```tsx
+ * import { Slider } from "~/components/ui/slider";
+ * 
+ * <Slider>…</Slider>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/slider` (zdroj `demo/src/routes/components/slider/index.tsx`).
+ 
  */
 
 import { component$, PropFunction, useId } from "@builder.io/qwik";

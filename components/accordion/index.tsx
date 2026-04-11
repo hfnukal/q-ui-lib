@@ -1,7 +1,17 @@
 /**
  * @component accordion
  * @title Accordion
- * @version 1.0.0
+ * @version 1.0.1
+ * @example
+ * ```tsx
+ * import { Accordion } from "~/components/ui/accordion";
+ * 
+ * <Accordion.Root>
+ *   …
+ * </Accordion.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/accordion` (zdroj `demo/src/routes/components/accordion/index.tsx`).
+ 
  */
 
 import {
@@ -13,15 +23,15 @@ import type { JSXNode } from "@builder.io/qwik/jsx-runtime";
 import { Accordion as HeadlessAccordion } from "@qwik-ui/headless";
 
 const itemFrameClass =
-  "overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm";
+  "overflow-hidden rounded-lg border border-separator-opaque bg-surface-raised shadow-sm";
 
 const headerClass = "flex";
 
 const triggerClass =
-  "flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-sm font-medium text-slate-800 transition-colors hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 after:ml-auto after:inline-block after:text-slate-400 after:transition-transform after:duration-200 after:content-['▼'] [&[data-open]]:after:rotate-180";
+  "flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-callout font-medium text-label transition-colors hover:bg-surface-overlay focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background after:ml-auto after:inline-block after:text-tertiary-label after:transition-transform after:duration-200 after:content-['▼'] [&[data-open]]:after:rotate-180";
 
 const contentClass =
-  "border-t border-slate-100 px-4 py-3 text-sm text-slate-600";
+  "border-t border-separator px-4 py-3 text-callout text-secondary-label";
 
 const rootClass = "w-full max-w-xl space-y-2";
 

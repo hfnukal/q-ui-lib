@@ -1,10 +1,21 @@
-import { component$, Slot, useSignal, useTask$ } from "@builder.io/qwik";
+import { component$, Slot } from "@builder.io/qwik";
 import { Link, useLocation } from "@builder.io/qwik-city";
 import { Sonner } from "~/components/ui/sonner";
 import { Sidebar } from "~/components/ui/sidebar";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import fg from "fast-glob";
 import { ComponentPropsTable } from "~/components/demo/component-props";
+import { Screen } from "~/components/ui/screen";
+
+/** Vite: seznam route modulů bez čtení disku za běhu (funguje i v prohlížeči po bundlu). */
+const COMPONENT_SLUGS: string[] = Object.keys(
+  import.meta.glob("./components/*/index.tsx"),
+)
+  .map((file) =>
+    file
+      .replace(/^\.\/components\//, "")
+      .replace(/\/index\.tsx$/, ""),
+  )
+  .sort((a, b) => a.localeCompare(b));
 
 function normalizePath(path: string) {
   const p = path.replace(/\/$/, "") || "/";
@@ -44,64 +55,70 @@ const menuTriggerIcon = (
 export default component$(() => {
   const loc = useLocation();
   const current = normalizePath(loc.url.pathname);
+  const componentDemoSlug =
+    current.match(/^\/components\/([^/]+)/)?.[1] ?? "";
 
-  const SLUGS = useSignal<string[]>([]);
-
-  useTask$(async () => {
-    const files = await fg("src/routes/components/*/index.tsx");
-    SLUGS.value = files.map((file) => file.replace("src/routes/components/", "")
-      .replace("/index.tsx", ""))
-      .sort((a, b) => a.localeCompare(b));
-  })
-
-  // console.log(slugs);
+  /** `/design` a `/dsgn` mají vlastní full-screen shell — bez demo postranního panelu. */
+  if (current === "/design" || current === "/dsgn") {
+    return <Slot />;
+  }
 
   return (
-    <Sonner.Toaster>
-      <Sidebar.Provider class="min-h-screen bg-background text-label md:min-h-svh">
-        <Sidebar.Root class="h-full overflow-hidden">
-          <Sidebar.Rail />
-          <Sidebar.Header>
-            <Link class="truncate text-headline font-semibold text-label hover:underline" href="/">
-              UI Lib Demo
-            </Link>
-          </Sidebar.Header>
-          <Sidebar.Content class="h-full overflow-hidden">
-            <Sidebar.Group>
-              <Sidebar.GroupLabel>Demo</Sidebar.GroupLabel>
-              <Sidebar.GroupContent>
-                <Sidebar.Menu>
-                  <ScrollArea.Root>
-                    <ScrollArea.Viewport>
-                      {SLUGS.value.map((slug) => (
-                        <Sidebar.MenuItem key={slug}>
-                          <Link
-                            class={menuLinkClass(current === normalizePath("/components/" + slug))}
-                            href={"/components/" + slug}
-                          >
-                            <span class="truncate">{slug}</span>
-                          </Link>
-                        </Sidebar.MenuItem>
-                      ))}
-                    </ScrollArea.Viewport>
-                  </ScrollArea.Root>
-                </Sidebar.Menu>
-              </Sidebar.GroupContent>
-            </Sidebar.Group>
-          </Sidebar.Content>
-        </Sidebar.Root>
-        <Sidebar.Inset>
-          <header class="flex shrink-0 items-center gap-2 border-b border-separator-opaque px-4 py-3">
-            <Sidebar.Trigger aria-label="Menu">{menuTriggerIcon}</Sidebar.Trigger>
-            <span class="text-callout font-medium text-label">Náhled</span>
-          </header>
-          <div class="min-w-0 flex-1 px-6 py-12 text-slate-800">
-            <Slot />
+    <Screen>
+      <Sonner.Toaster>
+        <Sidebar.Provider class="min-h-screen bg-background text-label md:min-h-svh">
+          <Sidebar.Root class="h-full overflow-hidden">
+            <Sidebar.Rail />
+            <Sidebar.Header>
+              <Link class="truncate text-headline font-semibold text-label hover:underline" href="/">
+                UI Lib Demo
+              </Link>
+            </Sidebar.Header>
+            <Sidebar.Content class="flex min-h-0 flex-1 flex-col overflow-hidden">
+              <ScrollArea.Root class="min-h-0 flex-1">
+                <ScrollArea.Viewport direction="vertical">
+                  <Sidebar.Group>
+                    <Sidebar.GroupLabel>Demo</Sidebar.GroupLabel>
+                    <Sidebar.GroupContent>
+                      <Sidebar.Menu>
+                        {COMPONENT_SLUGS.map((slug) => (
+                          <Sidebar.MenuItem key={slug}>
+                            <Link
+                              class={menuLinkClass(current === normalizePath("/components/" + slug))}
+                              href={"/components/" + slug}
+                            >
+                              <span class="truncate">{slug}</span>
+                            </Link>
+                          </Sidebar.MenuItem>
+                        ))}
+                      </Sidebar.Menu>
+                    </Sidebar.GroupContent>
+                  </Sidebar.Group>
+                </ScrollArea.Viewport>
+              </ScrollArea.Root>
+            </Sidebar.Content>
+          </Sidebar.Root>
+          <Sidebar.Inset>
+            <ScrollArea.Root class="min-h-0 flex-1">
+              <ScrollArea.Viewport direction="vertical">
+                <header class="flex shrink-0 items-center gap-2 border-b border-separator-opaque px-4 py-3">
+                  <Sidebar.Trigger aria-label="Menu">{menuTriggerIcon}</Sidebar.Trigger>
+                  <span class="text-callout font-medium text-label">Náhled</span>
+                </header>
+                <div class="min-w-0 flex-1 px-6 py-12 text-slate-800">
+                  <Slot />
 
-            <ComponentPropsTable filePath={`./src/components/ui/${current.replace("/components/", "")}/index.tsx`} />
-          </div>
-        </Sidebar.Inset>
-      </Sidebar.Provider>
-    </Sonner.Toaster>
+                  {componentDemoSlug ? (
+                    <ComponentPropsTable
+                      filePath={`./src/components/ui/${componentDemoSlug}/index.tsx`}
+                    />
+                  ) : null}
+                </div>
+              </ScrollArea.Viewport>
+            </ScrollArea.Root>
+          </Sidebar.Inset>
+        </Sidebar.Provider>
+      </Sonner.Toaster>
+    </Screen>
   );
 });

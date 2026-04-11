@@ -1,11 +1,26 @@
 import { component$, useSignal } from "@builder.io/qwik";
-import { CodeExample } from "~/components/demo/codeexample";
+import {
+  CodeExample,
+  Desc,
+  TabCode,
+  TabExample,
+} from "~/components/demo/codeexample";
 import { Select } from "~/components/ui/select";
 
 const chevron = (
   <span class="text-secondary-label" aria-hidden="true">
-    <svg class="h-4 w-4 shrink-0 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    <svg
+      class="h-4 w-4 shrink-0 opacity-50"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M19 9l-7 7-7-7"
+      />
     </svg>
   </span>
 );
@@ -162,232 +177,345 @@ export default component$(() => {
         <h1 class="text-2xl font-semibold text-slate-900">Select</h1>
         <p class="mt-2 max-w-prose text-sm text-slate-600">
           Vlastní (ne nativní) rozbalovací výběr nad{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">@qwik-ui/headless</code> Select —
-          stejný compound vzor jako u Dropdown menu (tokeny z COLORS.md).{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">Select.Popover</code> má{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">position=&quot;item-aligned&quot;</code>{" "}
+          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+            @qwik-ui/headless
+          </code>{" "}
+          Select — stejný compound vzor jako u Dropdown menu (tokeny z
+          COLORS.md).{" "}
+          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+            Select.Popover
+          </code>{" "}
+          má{" "}
+          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+            position=&quot;item-aligned&quot;
+          </code>{" "}
           (výchozí; vybraná položka na úrovni triggeru) nebo{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">position=&quot;popper&quot;</code> (čistý Floating UI).
-          Horizontální <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">align</code> je v další sekci.
+          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+            position=&quot;popper&quot;
+          </code>{" "}
+          (čistý Floating UI). Horizontální{" "}
+          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">align</code>{" "}
+          je v další sekci.
         </p>
       </div>
 
       <section class="space-y-3">
         <h2 class="text-lg font-medium text-slate-800">Základní výběr</h2>
-        <CodeExample code={codeBasic} previewTabLabel="Ukázka" codeTabLabel="Kód">
-          <Select.Root>
-            <Select.Label>Téma</Select.Label>
-            <Select.Trigger>
-              <Select.DisplayValue placeholder="Vyberte možnost" />
-              {chevron}
-            </Select.Trigger>
-            <Select.Popover>
-              <Select.Item value="light">
-                <Select.ItemLabel>Světlý</Select.ItemLabel>
-                <Select.ItemIndicator>
-                  <span aria-hidden="true">✓</span>
-                </Select.ItemIndicator>
-              </Select.Item>
-              <Select.Item value="dark">
-                <Select.ItemLabel>Tmavý</Select.ItemLabel>
-                <Select.ItemIndicator>
-                  <span aria-hidden="true">✓</span>
-                </Select.ItemIndicator>
-              </Select.Item>
-              <Select.Item value="system" disabled>
-                <Select.ItemLabel>Systém (neaktivní)</Select.ItemLabel>
-              </Select.Item>
-            </Select.Popover>
-          </Select.Root>
+
+        <CodeExample>
+          <Desc>Základní výběr — viz ukázka níže.</Desc>
+          <TabExample>
+            <Select.Root>
+              <Select.Label>Téma</Select.Label>
+              <Select.Trigger>
+                <Select.DisplayValue placeholder="Vyberte možnost" />
+                {chevron}
+              </Select.Trigger>
+              <Select.Popover>
+                <Select.Item value="light">
+                  <Select.ItemLabel>Světlý</Select.ItemLabel>
+                  <Select.ItemIndicator>
+                    <span aria-hidden="true">✓</span>
+                  </Select.ItemIndicator>
+                </Select.Item>
+                <Select.Item value="dark">
+                  <Select.ItemLabel>Tmavý</Select.ItemLabel>
+                  <Select.ItemIndicator>
+                    <span aria-hidden="true">✓</span>
+                  </Select.ItemIndicator>
+                </Select.Item>
+                <Select.Item value="system" disabled>
+                  <Select.ItemLabel>Systém (neaktivní)</Select.ItemLabel>
+                </Select.Item>
+              </Select.Popover>
+            </Select.Root>
+          </TabExample>
+          <TabCode>{codeBasic}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
-        <h2 class="text-lg font-medium text-slate-800">Align item with trigger vs popper</h2>
-        <p class="max-w-prose text-sm text-slate-600">
-          Analogie k Radix/shadcn:{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">position=&quot;item-aligned&quot;</code>{" "}
-          po otevření posune panel tak, aby řádka s aktuální hodnotou (nebo zvýrazněnou položkou) měla stejnou
-          výšku jako trigger; při jiné volbě se pozice znovu dopočítá.{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">position=&quot;popper&quot;</code> to
-          nevynucuje — chová se jako standardní plovoucí menu. Obě varianty mají počáteční hodnotu uprostřed
-          seznamu (1–10).
-        </p>
-        <CodeExample code={codePosition} previewTabLabel="Ukázka" codeTabLabel="Kód">
-          <div class="flex flex-wrap gap-10">
-            <div class="w-56 space-y-1">
-              <p class="text-caption-1 font-medium text-secondary-label">item-aligned (výchozí)</p>
-              <Select.Root class="!max-w-none w-full" value="6">
-                <Select.Trigger>
-                  <Select.DisplayValue placeholder="Vyberte" />
-                  {chevron}
-                </Select.Trigger>
-                <Select.Popover position="item-aligned">
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                    <Select.Item key={n} value={String(n)}>
-                      <Select.ItemLabel>{`Možnost ${n}`}</Select.ItemLabel>
-                    </Select.Item>
-                  ))}
-                </Select.Popover>
-              </Select.Root>
+        <h2 class="text-lg font-medium text-slate-800">
+          Align item with trigger vs popper
+        </h2>
+
+        <CodeExample>
+          <Desc>
+            Analogie k Radix/shadcn:{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+              position=&quot;item-aligned&quot;
+            </code>{" "}
+            po otevření posune panel tak, aby řádka s aktuální hodnotou (nebo
+            zvýrazněnou položkou) měla stejnou výšku jako trigger; při jiné
+            volbě se pozice znovu dopočítá.{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+              position=&quot;popper&quot;
+            </code>{" "}
+            to nevynucuje — chová se jako standardní plovoucí menu. Obě varianty
+            mají počáteční hodnotu uprostřed seznamu (1–10).
+          </Desc>
+          <TabExample>
+            <div class="flex flex-wrap gap-10">
+              <div class="w-56 space-y-1">
+                <p class="text-caption-1 font-medium text-secondary-label">
+                  item-aligned (výchozí)
+                </p>
+                <Select.Root class="!max-w-none w-full" value="6">
+                  <Select.Trigger>
+                    <Select.DisplayValue placeholder="Vyberte" />
+                    {chevron}
+                  </Select.Trigger>
+                  <Select.Popover position="item-aligned">
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                      <Select.Item key={n} value={String(n)}>
+                        <Select.ItemLabel>{`Možnost ${n}`}</Select.ItemLabel>
+                      </Select.Item>
+                    ))}
+                  </Select.Popover>
+                </Select.Root>
+              </div>
+              <div class="w-56 space-y-1">
+                <p class="text-caption-1 font-medium text-secondary-label">
+                  popper
+                </p>
+                <Select.Root class="!max-w-none w-full" value="6">
+                  <Select.Trigger>
+                    <Select.DisplayValue placeholder="Vyberte" />
+                    {chevron}
+                  </Select.Trigger>
+                  <Select.Popover position="popper">
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                      <Select.Item key={n} value={String(n)}>
+                        <Select.ItemLabel>{`Možnost ${n}`}</Select.ItemLabel>
+                      </Select.Item>
+                    ))}
+                  </Select.Popover>
+                </Select.Root>
+              </div>
             </div>
-            <div class="w-56 space-y-1">
-              <p class="text-caption-1 font-medium text-secondary-label">popper</p>
-              <Select.Root class="!max-w-none w-full" value="6">
-                <Select.Trigger>
-                  <Select.DisplayValue placeholder="Vyberte" />
-                  {chevron}
-                </Select.Trigger>
-                <Select.Popover position="popper">
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                    <Select.Item key={n} value={String(n)}>
-                      <Select.ItemLabel>{`Možnost ${n}`}</Select.ItemLabel>
-                    </Select.Item>
-                  ))}
-                </Select.Popover>
-              </Select.Root>
-            </div>
-          </div>
+          </TabExample>
+          <TabCode>{codePosition}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
-        <h2 class="text-lg font-medium text-slate-800">Zarovnání panelu (align)</h2>
-        <p class="max-w-prose text-sm text-slate-600">
-          Prop <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">align</code> na{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">Select.Popover</code>:{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">start</code> (výchozí, odpovídá{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">bottom-start</code>),{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">center</code>,{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">end</code>. Zde je u všech příkladů{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">position=&quot;popper&quot;</code>, aby byl
-          vidět jen horizontální rozdíl. Při vlastním{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">floating</code> s příponou{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">-start</code> /{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">-end</code> se <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">align</code> neaplikuje.
-        </p>
-        <CodeExample code={codeAlign} previewTabLabel="Ukázka" codeTabLabel="Kód">
-          <div class="flex flex-wrap gap-8">
-            <div class="w-56 space-y-1">
-              <p class="text-caption-1 font-medium text-secondary-label">align=&quot;start&quot; (výchozí)</p>
-              <Select.Root class="!max-w-none w-full">
-                <Select.Trigger>
-                  <Select.DisplayValue placeholder="Start" />
-                  {chevron}
-                </Select.Trigger>
-                <Select.Popover position="popper" align="start">
-                  <Select.Item value="a-start">
-                    <Select.ItemLabel>Ant</Select.ItemLabel>
-                  </Select.Item>
-                  <Select.Item value="b-start">
-                    <Select.ItemLabel>Bó</Select.ItemLabel>
-                  </Select.Item>
-                </Select.Popover>
-              </Select.Root>
+        <h2 class="text-lg font-medium text-slate-800">
+          Zarovnání panelu (align)
+        </h2>
+
+        <CodeExample>
+          <Desc>
+            Prop{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+              align
+            </code>{" "}
+            na{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+              Select.Popover
+            </code>
+            :{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+              start
+            </code>{" "}
+            (výchozí, odpovídá{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+              bottom-start
+            </code>
+            ),{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+              center
+            </code>
+            ,{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">end</code>
+            . Zde je u všech příkladů{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+              position=&quot;popper&quot;
+            </code>
+            , aby byl vidět jen horizontální rozdíl. Při vlastním{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+              floating
+            </code>{" "}
+            s příponou{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+              -start
+            </code>{" "}
+            /{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+              -end
+            </code>{" "}
+            se{" "}
+            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+              align
+            </code>{" "}
+            neaplikuje.
+          </Desc>
+          <TabExample>
+            <div class="flex flex-wrap gap-8">
+              <div class="w-56 space-y-1">
+                <p class="text-caption-1 font-medium text-secondary-label">
+                  align=&quot;start&quot; (výchozí)
+                </p>
+                <Select.Root class="!max-w-none w-full">
+                  <Select.Trigger>
+                    <Select.DisplayValue placeholder="Start" />
+                    {chevron}
+                  </Select.Trigger>
+                  <Select.Popover position="popper" align="start">
+                    <Select.Item value="a-start">
+                      <Select.ItemLabel>Ant</Select.ItemLabel>
+                    </Select.Item>
+                    <Select.Item value="b-start">
+                      <Select.ItemLabel>Bó</Select.ItemLabel>
+                    </Select.Item>
+                  </Select.Popover>
+                </Select.Root>
+              </div>
+              <div class="w-56 space-y-1">
+                <p class="text-caption-1 font-medium text-secondary-label">
+                  align=&quot;center&quot;
+                </p>
+                <Select.Root class="!max-w-none w-full">
+                  <Select.Trigger>
+                    <Select.DisplayValue placeholder="Střed" />
+                    {chevron}
+                  </Select.Trigger>
+                  <Select.Popover position="popper" align="center">
+                    <Select.Item value="a-center">
+                      <Select.ItemLabel>Ant</Select.ItemLabel>
+                    </Select.Item>
+                    <Select.Item value="b-center">
+                      <Select.ItemLabel>Bó</Select.ItemLabel>
+                    </Select.Item>
+                  </Select.Popover>
+                </Select.Root>
+              </div>
+              <div class="w-56 space-y-1">
+                <p class="text-caption-1 font-medium text-secondary-label">
+                  align=&quot;end&quot;
+                </p>
+                <Select.Root class="!max-w-none w-full">
+                  <Select.Trigger>
+                    <Select.DisplayValue placeholder="Konec" />
+                    {chevron}
+                  </Select.Trigger>
+                  <Select.Popover position="popper" align="end">
+                    <Select.Item value="a-end">
+                      <Select.ItemLabel>Ant</Select.ItemLabel>
+                    </Select.Item>
+                    <Select.Item value="b-end">
+                      <Select.ItemLabel>Bó</Select.ItemLabel>
+                    </Select.Item>
+                  </Select.Popover>
+                </Select.Root>
+              </div>
             </div>
-            <div class="w-56 space-y-1">
-              <p class="text-caption-1 font-medium text-secondary-label">align=&quot;center&quot;</p>
-              <Select.Root class="!max-w-none w-full">
-                <Select.Trigger>
-                  <Select.DisplayValue placeholder="Střed" />
-                  {chevron}
-                </Select.Trigger>
-                <Select.Popover position="popper" align="center">
-                  <Select.Item value="a-center">
-                    <Select.ItemLabel>Ant</Select.ItemLabel>
-                  </Select.Item>
-                  <Select.Item value="b-center">
-                    <Select.ItemLabel>Bó</Select.ItemLabel>
-                  </Select.Item>
-                </Select.Popover>
-              </Select.Root>
-            </div>
-            <div class="w-56 space-y-1">
-              <p class="text-caption-1 font-medium text-secondary-label">align=&quot;end&quot;</p>
-              <Select.Root class="!max-w-none w-full">
-                <Select.Trigger>
-                  <Select.DisplayValue placeholder="Konec" />
-                  {chevron}
-                </Select.Trigger>
-                <Select.Popover position="popper" align="end">
-                  <Select.Item value="a-end">
-                    <Select.ItemLabel>Ant</Select.ItemLabel>
-                  </Select.Item>
-                  <Select.Item value="b-end">
-                    <Select.ItemLabel>Bó</Select.ItemLabel>
-                  </Select.Item>
-                </Select.Popover>
-              </Select.Root>
-            </div>
-          </div>
+          </TabExample>
+          <TabCode>{codeAlign}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
         <h2 class="text-lg font-medium text-slate-800">Skupiny</h2>
-        <CodeExample code={codeGroups} previewTabLabel="Ukázka" codeTabLabel="Kód">
-          <Select.Root>
-            <Select.Label>Framework</Select.Label>
-            <Select.Trigger>
-              <Select.DisplayValue placeholder="Vyberte…" />
-              {chevron}
-            </Select.Trigger>
-            <Select.Popover>
-              <Select.Group>
-                <Select.GroupLabel>Populární</Select.GroupLabel>
-                <Select.Item value="qwik">
-                  <Select.ItemLabel>Qwik</Select.ItemLabel>
-                </Select.Item>
-              </Select.Group>
-              <Select.Group>
-                <Select.GroupLabel>Ostatní</Select.GroupLabel>
-                <Select.Item value="other">
-                  <Select.ItemLabel>Jiné</Select.ItemLabel>
-                </Select.Item>
-              </Select.Group>
-            </Select.Popover>
-          </Select.Root>
-        </CodeExample>
-      </section>
 
-      <section class="space-y-3">
-        <h2 class="text-lg font-medium text-slate-800">Řízená hodnota (bind:value)</h2>
-        <CodeExample code={codeControlled} previewTabLabel="Ukázka" codeTabLabel="Kód">
-          <div>
-            <Select.Root bind:value={fruit}>
+        <CodeExample>
+          <Desc>
+            Rozdělení položek pomocí{" "}
+            <code class="text-caption-1">Select.Group</code> a{" "}
+            <code class="text-caption-1">GroupLabel</code> (sekce v seznamu).
+          </Desc>
+          <TabExample>
+            <Select.Root>
+              <Select.Label>Framework</Select.Label>
               <Select.Trigger>
-                <Select.DisplayValue placeholder="Ovoce" />
+                <Select.DisplayValue placeholder="Vyberte…" />
                 {chevron}
               </Select.Trigger>
               <Select.Popover>
-                <Select.Item value="apple">
-                  <Select.ItemLabel>Jablko</Select.ItemLabel>
-                </Select.Item>
-                <Select.Item value="banana">
-                  <Select.ItemLabel>Banán</Select.ItemLabel>
-                </Select.Item>
-                <Select.Item value="citrus">
-                  <Select.ItemLabel>Citrus</Select.ItemLabel>
-                </Select.Item>
+                <Select.Group>
+                  <Select.GroupLabel>Populární</Select.GroupLabel>
+                  <Select.Item value="qwik">
+                    <Select.ItemLabel>Qwik</Select.ItemLabel>
+                  </Select.Item>
+                </Select.Group>
+                <Select.Group>
+                  <Select.GroupLabel>Ostatní</Select.GroupLabel>
+                  <Select.Item value="other">
+                    <Select.ItemLabel>Jiné</Select.ItemLabel>
+                  </Select.Item>
+                </Select.Group>
               </Select.Popover>
             </Select.Root>
-            <p class="mt-2 text-caption-1 text-secondary-label">
-              Aktuální hodnota: <span class="font-medium text-label">{fruit.value}</span>
-            </p>
-          </div>
+          </TabExample>
+          <TabCode>{codeGroups}</TabCode>
         </CodeExample>
       </section>
 
       <section class="space-y-3">
-        <h2 class="text-lg font-medium text-slate-800">Popis a nativní pole pro formulář</h2>
+        <h2 class="text-lg font-medium text-slate-800">
+          Řízená hodnota (bind:value)
+        </h2>
+
+        <CodeExample>
+          <Desc>Řízená hodnota (bind:value) — viz ukázka níže.</Desc>
+          <TabExample>
+            <div>
+              <Select.Root bind:value={fruit}>
+                <Select.Trigger>
+                  <Select.DisplayValue placeholder="Ovoce" />
+                  {chevron}
+                </Select.Trigger>
+                <Select.Popover>
+                  <Select.Item value="apple">
+                    <Select.ItemLabel>Jablko</Select.ItemLabel>
+                  </Select.Item>
+                  <Select.Item value="banana">
+                    <Select.ItemLabel>Banán</Select.ItemLabel>
+                  </Select.Item>
+                  <Select.Item value="citrus">
+                    <Select.ItemLabel>Citrus</Select.ItemLabel>
+                  </Select.Item>
+                </Select.Popover>
+              </Select.Root>
+              <p class="mt-2 text-caption-1 text-secondary-label">
+                Aktuální hodnota:{" "}
+                <span class="font-medium text-label">{fruit.value}</span>
+              </p>
+            </div>
+          </TabExample>
+          <TabCode>{codeControlled}</TabCode>
+        </CodeExample>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-lg font-medium text-slate-800">
+          Popis a nativní pole pro formulář
+        </h2>
         <p class="max-w-prose text-sm text-slate-600">
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">Select.Description</code> doplňuje{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">aria-describedby</code>. S{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">name</code> na kořeni vložte{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">Select.HiddenNativeSelect</code> — vznikne
-          skrytý <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">&lt;select&gt;</code> pro submit.
-          Pro chyby validace použijte <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">Select.ErrorMessage</code>{" "}
-          (headless pak označí trigger atributem <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">data-invalid</code>
+          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+            Select.Description
+          </code>{" "}
+          doplňuje{" "}
+          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+            aria-describedby
+          </code>
+          . S{" "}
+          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">name</code>{" "}
+          na kořeni vložte{" "}
+          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+            Select.HiddenNativeSelect
+          </code>{" "}
+          — vznikne skrytý{" "}
+          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+            &lt;select&gt;
+          </code>{" "}
+          pro submit. Pro chyby validace použijte{" "}
+          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+            Select.ErrorMessage
+          </code>{" "}
+          (headless pak označí trigger atributem{" "}
+          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
+            data-invalid
+          </code>
           ).
         </p>
         <div class="max-w-xs rounded-lg border border-slate-200 bg-white p-4 shadow-sm">

@@ -1,3 +1,9 @@
+/**
+ * @component popover
+ * @title Popover
+ * @version 1.0.1
+ */
+
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { Popover as HeadlessPopover } from "@qwik-ui/headless";
 import {

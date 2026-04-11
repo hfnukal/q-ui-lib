@@ -1,3 +1,9 @@
+/**
+ * @component split
+ * @title Split
+ * @version 1.0.0
+ */
+
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 
 export type SplitDirection = "horizontal" | "vertical";

@@ -2,6 +2,16 @@
  * @component tabs
  * @title Tabs
  * @version 1.1.1
+ * @example
+ * ```tsx
+ * import { Tab } from "~/components/ui/tabs";
+ * 
+ * <Tab.Root>
+ *   …
+ * </Tab.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/tabs` (zdroj `demo/src/routes/components/tabs/index.tsx`).
+ 
  */
 
 import { component$, type FunctionComponent, type PropsOf } from "@builder.io/qwik";

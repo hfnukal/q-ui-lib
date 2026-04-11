@@ -2,6 +2,16 @@
  * @component hover-card
  * @title HoverCard
  * @version 1.0.1
+ * @example
+ * ```tsx
+ * import { HoverCard } from "~/components/ui/hover-card";
+ * 
+ * <HoverCard.Root>
+ *   …
+ * </HoverCard.Root>
+ * ```
+ * Ukázka v demo aplikaci: route `/components/hover-card` (zdroj `demo/src/routes/components/hover-card/index.tsx`).
+ 
  */
 
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";
