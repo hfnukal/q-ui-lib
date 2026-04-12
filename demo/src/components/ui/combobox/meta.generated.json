@@ -7,7 +7,9 @@
   "dependencies": [
     "utilities"
   ],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "~"
+  ],
   "apiTree": {
     "Root": {
       "children": {

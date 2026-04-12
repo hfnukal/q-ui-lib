@@ -38,6 +38,8 @@ Names in the **Token (Tailwind)** column are suggested keys in `theme.extend.col
 | `secondarySystemBackground` | Layer above main background | `surface-raised` |
 | `tertiarySystemBackground` | Another layer (e.g. nested blocks) | `surface-overlay` |
 
+**Navigation rows on grouped surfaces:** On `grouped-surface` (often pure white in light mode), `surface-overlay` can match the row background, so **`hover:bg-surface-overlay` shows no visible hover** and can also wash out a selected row that used a fill. For sidebar / list links, prefer **`fill-secondary` at partial opacity** (same idea as `Sidebar.MenuButton`): `hover:bg-fill-secondary/20`, selected `bg-fill-secondary/30`, selected + hover `hover:bg-fill-secondary/40`, with `data-active` or `aria-current="page"`. The demo/template ship a utility **`.q-nav-link-on-grouped`** in `global.css` for this pattern.
+
 ### 1.3 Backgrounds — “grouped” (lists, cards in groups)
 
 | UIKit | Purpose | Token (Tailwind) |
@@ -56,6 +58,8 @@ Names in the **Token (Tailwind)** column are suggested keys in `theme.extend.col
 | `secondarySystemFill` | Medium shapes | `fill-secondary` |
 | `tertiarySystemFill` | Large shapes | `fill-tertiary` |
 | `quaternarySystemFill` | Large areas with complex content | `fill-quaternary` |
+
+In **light** mode, `fill-secondary` in `global.css` uses a **high lightness** (~92% L) so solid surfaces (badges, switch track, slider track) pair cleanly with `text-secondary-label`. In **dark** mode, `secondary-label` is tuned slightly brighter so it stays readable on mid-gray `fill-secondary` fills.
 
 ### 1.5 Separators
 

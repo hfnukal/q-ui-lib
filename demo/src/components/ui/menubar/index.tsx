@@ -2,22 +2,45 @@
  * @component menubar
  * @title Menubar
  * @version 1.2.0
+ * @example Lišta s podmenu
+ * `Menubar.Root` → pro každé menu `Menubar.Menu` + `Menubar.useMenu("id")` → `Menubar.Trigger` + `Menubar.Content` s položkami.
+ * ```tsx
+ * import { component$ } from "@builder.io/qwik";
+ * import { Menubar } from "~/components/ui/menubar";
+ * 
+ * export default component$(() => {
+ *   const fileMenu = Menubar.useMenu("file");
+ *   const editMenu = Menubar.useMenu("edit");
+ *   return (
+ *     <Menubar.Root class="rounded-md border border-separator-opaque p-1">
+ *       <Menubar.Menu {...fileMenu}>
+ *         <Menubar.Trigger>Soubor</Menubar.Trigger>
+ *         <Menubar.Content>
+ *           <Menubar.Item>Nový</Menubar.Item>
+ *           <Menubar.Item>Uložit</Menubar.Item>
+ *         </Menubar.Content>
+ *       </Menubar.Menu>
+ *       <Menubar.Menu {...editMenu}>
+ *         <Menubar.Trigger>Úpravy</Menubar.Trigger>
+ *         <Menubar.Content>
+ *           <Menubar.Item>Zpět</Menubar.Item>
+ *         </Menubar.Content>
+ *       </Menubar.Menu>
+ *     </Menubar.Root>
+ *   );
+ * });
+ * ```
  */
 
 import {
   $,
   component$,
-  createContextId,
   type FunctionComponent,
   type PropsOf,
   type QRL,
   type Signal,
   Slot,
-  useContext,
-  useContextProvider,
-  useId,
   useSignal,
-  useTask$,
 } from "@builder.io/qwik";
 import type { DropdownMenuPopoverProps, DropdownMenuRootProps, DropdownMenuTriggerProps } from "../dropdown-menu";
 import {
@@ -41,20 +64,6 @@ import {
 } from "../dropdown-menu";
 import { ToolbarRoot } from "../toolbar";
 
-interface MenubarRootContext {
-  activeMenuId: Signal<string | null>;
-}
-
-const menubarRootContextId = createContextId<MenubarRootContext | undefined>("q-ui-lib.menubar.root");
-
-function useMenubarRoot(name: string): MenubarRootContext {
-  const ctx = useContext(menubarRootContextId);
-  if (!ctx) {
-    throw new Error(`${name} musí být uvnitř <Menubar.Root>.`);
-  }
-  return ctx;
-}
-
 export type MenubarRootProps = Omit<PropsOf<typeof ToolbarRoot>, "role"> & {
   /** Popisek pro `role="menubar"`. */
   "aria-label"?: string;
@@ -65,30 +74,25 @@ export type MenubarRootProps = Omit<PropsOf<typeof ToolbarRoot>, "role"> & {
  * {@link DropdownMenuRoot} přes {@link MenubarMenu} a {@link useMenubarMenu}.
  */
 export const MenubarRoot = component$<MenubarRootProps>((props) => {
-  const { class: className, "aria-label": ariaLabel = "Menu", children, ...rest } = props;
-  const activeMenuId = useSignal<string | null>(null);
-
-  useContextProvider(menubarRootContextId, { activeMenuId });
-
+  const { class: className, "aria-label": ariaLabel = "Menu", ...rest } = props;
   const merged = ["!gap-0 min-h-9 h-9", className].filter(Boolean).join(" ");
-
   return (
     <ToolbarRoot role="menubar" aria-label={ariaLabel} {...rest} class={merged}>
-      {children ?? <Slot />}
+      <Slot />
     </ToolbarRoot>
   );
 });
 
 export type MenubarMenuControlProps = {
-  "bind:open": Signal<boolean>;
-  onOpenChange$: QRL<(open: boolean) => void>;
+  "bind:open"?: Signal<boolean>;
+  onOpenChange$?: QRL<(open: boolean) => void>;
 };
 
 export type MenubarMenuProps = Omit<DropdownMenuRootProps, "variant"> & MenubarMenuControlProps;
 
 /**
- * Jedno rozbalovací menu v liště — obal {@link DropdownMenuRoot} s `variant="menubar"` a řízením
- * otevření z {@link useMenubarMenu} (`{...menu}`).
+ * Jedno rozbalovací menu v liště — obal {@link DropdownMenuRoot} s `variant="menubar"`.
+ * Stav otevření přichází z {@link useMenubarMenu}.
  */
 export const MenubarMenu: FunctionComponent<MenubarMenuProps> = (props) => {
   const {
@@ -131,35 +135,16 @@ export const MenubarContent: FunctionComponent<MenubarContentProps> = (props) =>
 };
 
 /**
- * Volání pouze uvnitř `component$` pod {@link MenubarRoot}. Vrací `bind:open` a `onOpenChange$`
- * pro jedno menu — rozlož na {@link MenubarMenu}: `<Menubar.Menu {...useMenubarMenu("file")}>…`.
+ * Vrací `bind:open` a `onOpenChange$` pro jedno menu — rozlož na {@link MenubarMenu}:
+ * `<Menubar.Menu {...useMenu("file")}>…`. Každé menu spravuje svůj stav otevření samostatně.
  */
-export function useMenubarMenu(valueProp?: string): MenubarMenuControlProps {
-  const autoId = useId();
-  const value = valueProp ?? autoId;
-  const ctx = useMenubarRoot("useMenubarMenu");
+export function useMenubarMenu(menuId?: string): MenubarMenuControlProps {
+  void menuId;
   const openSig = useSignal(false);
-
-  useTask$(({ track }) => {
-    track(() => ctx.activeMenuId.value);
-    if (ctx.activeMenuId.value !== value) {
-      openSig.value = false;
-    }
-  });
-
   const onOpenChange$ = $((open: boolean) => {
     openSig.value = open;
-    if (open) {
-      ctx.activeMenuId.value = value;
-    } else if (ctx.activeMenuId.value === value) {
-      ctx.activeMenuId.value = null;
-    }
   });
-
-  return {
-    "bind:open": openSig,
-    onOpenChange$,
-  };
+  return { "bind:open": openSig, onOpenChange$ };
 }
 
 export type MenubarShortcutProps = PropsOf<"span">;

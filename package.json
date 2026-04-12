@@ -13,8 +13,14 @@
   "scripts": {
     "build": "echo 'No build step needed for library'",
     "qui": "node cli/index.js",
-    "qui:meta:generate": "node scripts/generate-meta.mjs",
-    "qui:meta:updatecomment": "node scripts/sync-component-directives.mjs"
+    "qui:sync": "node scripts/sync-component-directives.mjs",
+    "qui:meta": "node scripts/generate-meta.mjs",
+    "qui:demo": "node scripts/generate-demo.mjs --target ./demo",
+    "qui:migrate": "node scripts/migrate-demo-to-jsdoc.mjs",
+    "qui:build": "npm run qui:sync && npm run qui:meta && npm run qui:demo",
+    "qui:add": "node cli/index.js add ./demo",
+    "qui:update": "node cli/index.js update ./demo",
+    "qui:update:all": "node cli/index.js update ./demo --all"
   },
   "author": "",
   "license": "MIT",

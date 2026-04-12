@@ -2,6 +2,94 @@
  * @component table
  * @title Table
  * @version 1.0.0
+ * @example Základní tabulka
+ * Základní tabulka — viz ukázka níže.
+ * ```tsx
+ * import { Table } from "~/components/ui/table";
+ * 
+ * <Table.Root class="max-w-2xl rounded-lg border border-separator-opaque">
+ *   <Table.Header>
+ *     <Table.Row>
+ *       <Table.Head>Název</Table.Head>
+ *       <Table.Head>Stav</Table.Head>
+ *       <Table.Head class="text-right">Částka</Table.Head>
+ *     </Table.Row>
+ *   </Table.Header>
+ *   <Table.Body>
+ *     <Table.Row>
+ *       <Table.Cell class="font-medium">Projekt Alpha</Table.Cell>
+ *       <Table.Cell>
+ *         <span class="text-secondary-label">Aktivní</span>
+ *       </Table.Cell>
+ *       <Table.Cell class="text-right">12 400 Kč</Table.Cell>
+ *     </Table.Row>
+ *     <Table.Row>
+ *       <Table.Cell class="font-medium">Projekt Beta</Table.Cell>
+ *       <Table.Cell>
+ *         <span class="text-secondary-label">Návrh</span>
+ *       </Table.Cell>
+ *       <Table.Cell class="text-right">8 200 Kč</Table.Cell>
+ *     </Table.Row>
+ *   </Table.Body>
+ * </Table.Root>
+ * ```
+ *
+ * @example Caption a Footer
+ * Caption a Footer — viz ukázka níže.
+ * ```tsx
+ * import { Table } from "~/components/ui/table";
+ * 
+ * <Table.Root class="max-w-2xl rounded-lg border border-separator-opaque">
+ *   <Table.Caption>Fakturace za období Q1</Table.Caption>
+ *   <Table.Header>
+ *     <Table.Row>
+ *       <Table.Head>Položka</Table.Head>
+ *       <Table.Head class="text-right">Hodnota</Table.Head>
+ *     </Table.Row>
+ *   </Table.Header>
+ *   <Table.Body>
+ *     <Table.Row>
+ *       <Table.Cell>Licence</Table.Cell>
+ *       <Table.Cell class="text-right">99 €</Table.Cell>
+ *     </Table.Row>
+ *     <Table.Row>
+ *       <Table.Cell>Podpora</Table.Cell>
+ *       <Table.Cell class="text-right">49 €</Table.Cell>
+ *     </Table.Row>
+ *   </Table.Body>
+ *   <Table.Footer>
+ *     <Table.Row>
+ *       <Table.Cell>Celkem</Table.Cell>
+ *       <Table.Cell class="text-right font-semibold">148 €</Table.Cell>
+ *     </Table.Row>
+ *   </Table.Footer>
+ * </Table.Root>
+ * ```
+ *
+ * @example Stav řádku
+ * Pro zvýraznění vybraného řádku nastav na `Table.Row` atribut `data-state=&quot;selected&quot;`.
+ * ```tsx
+ * import { Table } from "~/components/ui/table";
+ * 
+ * <Table.Root class="max-w-xl rounded-lg border border-separator-opaque">
+ *   <Table.Body>
+ *     <Table.Row data-state="selected">
+ *       <Table.Cell>Vybraný řádek</Table.Cell>
+ *       <Table.Cell class="text-secondary-label">data-state=&quot;selected&quot;</Table.Cell>
+ *     </Table.Row>
+ *     <Table.Row>
+ *       <Table.Cell>Běžný řádek</Table.Cell>
+ *       <Table.Cell class="text-secondary-label">hover pro zvýraznění</Table.Cell>
+ *     </Table.Row>
+ *   </Table.Body>
+ * </Table.Root>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

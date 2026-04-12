@@ -2,6 +2,65 @@
  * @component dialog
  * @title Dialog
  * @version 1.0.2
+ * @example Základní dialog
+ * Základní dialog — viz ukázka níže.
+ * ```tsx
+ * import { Dialog } from "~/components/ui/dialog";
+ * import { Button } from "~/components/ui/button";
+ * 
+ * <Dialog.Root>
+ *   <Dialog.Trigger>Otevřít dialog</Dialog.Trigger>
+ *   <Dialog.Panel>
+ *     <Dialog.Close class="absolute right-4 top-4 z-10" />
+ *     <Dialog.Header>
+ *       <Dialog.Title>Upravit profil</Dialog.Title>
+ *       <Dialog.Description>
+ *         Zde můžeš změnit údaje zobrazené ostatním uživatelům.
+ *       </Dialog.Description>
+ *     </Dialog.Header>
+ *     <Dialog.Content>
+ *       <p class="text-callout text-secondary-label">Hlavní obsah dialogu.</p>
+ *     </Dialog.Content>
+ *     <Dialog.Footer>
+ *       <Dialog.Close class="rounded-md border border-separator-opaque bg-surface-raised px-4 py-2 text-callout font-medium text-label shadow-sm hover:bg-surface-overlay">
+ *         Zrušit
+ *       </Dialog.Close>
+ *       <Button>Uložit</Button>
+ *     </Dialog.Footer>
+ *   </Dialog.Panel>
+ * </Dialog.Root>
+ * ```
+ *
+ * @example Alert dialog
+ * Na `Dialog.Root` nastav `alert` — headless nastaví `role=&quot;alertdialog&quot;` a vypne zavření klikem na pozadí.
+ * ```tsx
+ * import { Dialog } from "~/components/ui/dialog";
+ * 
+ * <Dialog.Root alert>
+ *   <Dialog.Trigger>Smazat účet</Dialog.Trigger>
+ *   <Dialog.Panel>
+ *     <Dialog.Close class="absolute right-4 top-4 z-10" />
+ *     <Dialog.Header>
+ *       <Dialog.Title>Opravdu smazat?</Dialog.Title>
+ *       <Dialog.Description>Tuto akci nelze vrátit zpět.</Dialog.Description>
+ *     </Dialog.Header>
+ *     <Dialog.Footer>
+ *       <Dialog.Close class="rounded-md border border-separator-opaque px-4 py-2 text-callout">
+ *         Zrušit
+ *       </Dialog.Close>
+ *       <Dialog.Close class="rounded-md bg-system-red px-4 py-2 text-callout font-medium text-white">
+ *         Smazat
+ *       </Dialog.Close>
+ *     </Dialog.Footer>
+ *   </Dialog.Panel>
+ * </Dialog.Root>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";

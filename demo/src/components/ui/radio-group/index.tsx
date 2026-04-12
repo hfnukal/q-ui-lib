@@ -2,6 +2,43 @@
  * @component radio-group
  * @title RadioGroup
  * @version 1.0.0
+ * @example Základní použití
+ * Základní použití — viz ukázka níže.
+ * ```tsx
+ * import { RadioGroup } from "~/components/ui/radio-group";
+ * 
+ * <RadioGroup.Root>
+ *   <RadioGroup.Item name="plan" value="free" label="Free" />
+ *   <RadioGroup.Item name="plan" value="pro" label="Pro" />
+ *   <RadioGroup.Item name="plan" value="enterprise" label="Enterprise" />
+ * </RadioGroup.Root>
+ * ```
+ *
+ * @example Vodorovné rozložení
+ * Přidej `class="flex-row flex-wrap gap-4"` na Root.
+ * ```tsx
+ * <RadioGroup.Root class="flex-row flex-wrap gap-4">
+ *   <RadioGroup.Item name="size" value="sm" label="Small" />
+ *   <RadioGroup.Item name="size" value="md" label="Medium" />
+ *   <RadioGroup.Item name="size" value="lg" label="Large" />
+ * </RadioGroup.Root>
+ * ```
+ *
+ * @example Disabled položka
+ * Jedna z položek může být nedostupná přes `disabled`.
+ * ```tsx
+ * <RadioGroup.Root>
+ *   <RadioGroup.Item name="tier" value="basic" label="Basic" />
+ *   <RadioGroup.Item name="tier" value="plus" label="Plus" disabled />
+ *   <RadioGroup.Item name="tier" value="premium" label="Premium" />
+ * </RadioGroup.Root>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

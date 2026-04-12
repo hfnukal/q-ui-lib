@@ -2,28 +2,180 @@
  * @component combobox
  * @title Combobox
  * @version 1.1.1
- * @example
+ * @example Filtrování a prázdný stav
+ * Headless ve výchozím stavu zapíná `filter` — při psaní se schovávají nevyhovující položky. S `Combobox.Empty` zobrazíš hlášku, když nic nezůstane.
  * ```tsx
  * import { Combobox } from "~/components/ui/combobox";
  * 
- * <Combobox.Root>
- *   …
+ * <Combobox.Root filter placeholder="Hledej framework…">
+ *   <Combobox.Label>Framework</Combobox.Label>
+ *   <Combobox.Control>
+ *     <Combobox.Input />
+ *     <Combobox.Trigger>▼</Combobox.Trigger>
+ *   </Combobox.Control>
+ *   <Combobox.Popover>
+ *     <Combobox.Item value="qwik">
+ *       <Combobox.ItemLabel>Qwik</Combobox.ItemLabel>
+ *     </Combobox.Item>
+ *     <Combobox.Item value="react">
+ *       <Combobox.ItemLabel>React</Combobox.ItemLabel>
+ *     </Combobox.Item>
+ *     <Combobox.Empty>Žádná shoda.</Combobox.Empty>
+ *   </Combobox.Popover>
  * </Combobox.Root>
  * ```
- * Ukázka v demo aplikaci: route `/components/combobox` (zdroj `demo/src/routes/components/combobox/index.tsx`).
- 
+ *
+ * @example Řízená hodnota (bind:value)
+ * Vybraná hodnota v signálu přes `bind:value` (řízený combobox).
+ * ```tsx
+ * import { component$, useSignal } from "@builder.io/qwik";
+ * import { Combobox } from "~/components/ui/combobox";
+ * 
+ * export const Controlled = component$(() => {
+ *   const value = useSignal("praha");
+ * 
+ *   return (
+ *     <>
+ *       <Combobox.Root bind:value={value} filter placeholder="Město…">
+ *         <Combobox.Label>Město</Combobox.Label>
+ *         <Combobox.Control>
+ *           <Combobox.Input />
+ *           <Combobox.Trigger>▼</Combobox.Trigger>
+ *         </Combobox.Control>
+ *         <Combobox.Popover>
+ *           <Combobox.Item value="praha">
+ *             <Combobox.ItemLabel>Praha</Combobox.ItemLabel>
+ *           </Combobox.Item>
+ *           <Combobox.Item value="brno">
+ *             <Combobox.ItemLabel>Brno</Combobox.ItemLabel>
+ *           </Combobox.Item>
+ *           <Combobox.Empty>Nic nenalezeno.</Combobox.Empty>
+ *         </Combobox.Popover>
+ *       </Combobox.Root>
+ *       <p class="mt-2 text-caption-1 text-secondary-label">Hodnota: {value.value}</p>
+ *     </>
+ *   );
+ * });
+ * ```
+ *
+ * @example Vícenásobný výběr a chipy
+ * S `multiple` a `bind:value` jako `string[]` (bez jednorázového `value` na kořeni — headless to v multi režimu nepovoluje). Vybrané položky vykresli jako `Combobox.Chip` s `onRemove ; odfiltrováním z pole se synchronizuje stav. Na `Combobox.Control` použij `comboboxMultiselectControlClass` a na vstup `comboboxMultiselectInputClass` . Bez `Combobox.Trigger` (žádná šipka): seznam otevři při fokusu vstupu přes `bind:open` a `onFocus . Text ve vstupu drž v samostatném signálu přes `Combobox.Input bind:value` (výchozí prázdný řetězec) — headless by jinak při `multiple` vyplnil vstup názvy vybraných položek; výběr zůstává jen na chipích. Po změně výběru vyčisti filtr v `onChange na kořeni. V seznamu označ vybrané řádky přes `Combobox.ItemIndicator` (headless je zobrazí jen u vybraných položek).
+ * ```tsx
+ * import { $, component$, useSignal } from "@builder.io/qwik";
+ * import {
+ *   Combobox,
+ *   comboboxMultiselectControlClass,
+ *   comboboxMultiselectInputClass,
+ * } from "~/components/ui/combobox";
+ * 
+ * const LANGS = [
+ *   { value: "ts", label: "TypeScript" },
+ *   { value: "rust", label: "Rust" },
+ *   { value: "go", label: "Go" },
+ * ];
+ * 
+ * export const Multi = component$(() => {
+ *   const selected = useSignal<string[]>(["ts", "rust"]);
+ *   const filterText = useSignal("");
+ *   const open = useSignal(false);
+ *   const remove$ = $((v: string) => {
+ *     selected.value = selected.value.filter((x) => x !== v);
+ *   });
+ * 
+ *   return (
+ *     <Combobox.Root
+ *       multiple
+ *       bind:value={selected}
+ *       bind:open={open}
+ *       filter
+ *       placeholder="Přidej jazyk…"
+ *       onChange$={$(() => {
+ *         filterText.value = "";
+ *       })}
+ *     >
+ *       <Combobox.Label>Jazyky</Combobox.Label>
+ *       <Combobox.Control class={comboboxMultiselectControlClass}>
+ *         {selected.value.map((v) => (
+ *           <Combobox.Chip key={v} value={v} onRemove$={remove$}>
+ *             {LANGS.find((l) => l.value === v)?.label ?? v}
+ *           </Combobox.Chip>
+ *         ))}
+ *         <Combobox.Input
+ *           bind:value={filterText}
+ *           class={comboboxMultiselectInputClass}
+ *           onFocus$={$(() => {
+ *             open.value = true;
+ *           })}
+ *         />
+ *       </Combobox.Control>
+ *       <Combobox.Popover>
+ *         {LANGS.map(({ value, label }) => (
+ *           <Combobox.Item key={value} value={value}>
+ *             <Combobox.ItemLabel>{label}</Combobox.ItemLabel>
+ *             <Combobox.ItemIndicator>
+ *               <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+ *                 <path stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5" />
+ *               </svg>
+ *             </Combobox.ItemIndicator>
+ *           </Combobox.Item>
+ *         ))}
+ *         <Combobox.Empty>Žádný jazyk.</Combobox.Empty>
+ *       </Combobox.Popover>
+ *     </Combobox.Root>
+ *   );
+ * });
+ * ```
+ *
+ * @example showOnFocus — otevření při fokusu
+ * Prop `showOnFocus` na `Combobox.Input` otevře seznam automaticky při fokusu bez nutnosti psát.
+ * ```tsx
+ * import { Combobox } from "~/components/ui/combobox";
+ *
+ * <Combobox.Root filter placeholder="Vyber nebo piš…">
+ *   <Combobox.Label>Výběr</Combobox.Label>
+ *   <Combobox.Control>
+ *     <Combobox.Input showOnFocus />
+ *     <Combobox.Trigger>▼</Combobox.Trigger>
+ *   </Combobox.Control>
+ *   <Combobox.Popover>
+ *     <Combobox.Item value="qwik">
+ *       <Combobox.ItemLabel>Qwik</Combobox.ItemLabel>
+ *     </Combobox.Item>
+ *     <Combobox.Item value="react">
+ *       <Combobox.ItemLabel>React</Combobox.ItemLabel>
+ *     </Combobox.Item>
+ *     <Combobox.Item value="vue">
+ *       <Combobox.ItemLabel>Vue</Combobox.ItemLabel>
+ *     </Combobox.Item>
+ *     <Combobox.Empty>Žádná shoda.</Combobox.Empty>
+ *   </Combobox.Popover>
+ * </Combobox.Root>
+ * ```
+ *
  */
 
 import {
   $,
   component$,
+  createContextId,
   type FunctionComponent,
   type PropsOf,
   type QRL,
+  type Signal,
   Slot,
+  useContext,
+  useVisibleTask$,
 } from "@builder.io/qwik";
 import { Combobox as HeadlessCombobox } from "@qwik-ui/headless";
 import { floatingComboboxListPanelClass } from "../utilities/floating-ui";
+
+/** Musí odpovídat `createContextId` v @qwik-ui/headless combobox (řetězec `qui-combobox`). */
+type ComboboxCtxLite = {
+  controlRef: Signal<HTMLDivElement | undefined>;
+  panelRef: Signal<HTMLDivElement | undefined>;
+  isListboxOpenSig: Signal<boolean>;
+};
+const comboboxContextId = createContextId<ComboboxCtxLite>("qui-combobox");
 
 const rootClass = "inline-block w-full max-w-xs";
 
@@ -148,38 +300,23 @@ export type ComboboxLabelProps = PropsOf<typeof HeadlessCombobox.Label>;
 
 export type ComboboxControlProps = PropsOf<typeof HeadlessCombobox.Control>;
 
-export type ComboboxInputProps = PropsOf<typeof HeadlessCombobox.Input>;
+export type ComboboxInputProps = PropsOf<typeof HeadlessCombobox.Input> & {
+  /** Při fokusu vstupu otevře seznam (užitečné s `filter`). */
+  showOnFocus?: boolean;
+};
 
 export type ComboboxTriggerProps = PropsOf<typeof HeadlessCombobox.Trigger>;
 
-/** Horizontální ukotvení plovoucího panelu (Floating UI). */
-export type ComboboxAlign = "start" | "center" | "end";
-
 type HeadlessComboboxPopoverProps = PropsOf<typeof HeadlessCombobox.Popover>;
 
-export type ComboboxPopoverProps = HeadlessComboboxPopoverProps & {
-  /**
-   * Horizontální zarovnání panelu vůči controlu (`bottom-start` / `bottom` / `bottom-end`).
-   * Ignoruje se, pokud předáš `floating` s příponou `-start` nebo `-end`.
-   */
-  align?: ComboboxAlign;
-};
+export type ComboboxPopoverProps = HeadlessComboboxPopoverProps;
 
 function resolveComboboxPopoverFloating(
   floating: HeadlessComboboxPopoverProps["floating"] | undefined,
-  align: ComboboxAlign
 ): HeadlessComboboxPopoverProps["floating"] {
   if (floating === false) return false;
   if (floating === undefined || floating === true) {
-    if (align === "center") return true;
-    if (align === "end") return "bottom-end";
     return "bottom-start";
-  }
-  if (typeof floating === "string") {
-    if (/-(start|end)$/.test(floating)) return floating;
-    if (align === "center") return floating;
-    if (align === "end") return `${floating}-end` as HeadlessComboboxPopoverProps["floating"];
-    return `${floating}-start` as HeadlessComboboxPopoverProps["floating"];
   }
   return floating;
 }
@@ -256,10 +393,27 @@ export const ComboboxControl: FunctionComponent<ComboboxControlProps> = (props) 
   return <HeadlessCombobox.Control {...props} class={merged} />;
 };
 
-export const ComboboxInput: FunctionComponent<ComboboxInputProps> = (props) => {
-  const merged = [inputClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessCombobox.Input {...props} class={merged} />;
-};
+export const ComboboxInput = component$<ComboboxInputProps>((props) => {
+  const ctx = useContext(comboboxContextId);
+  const { showOnFocus, onFocus$, class: className, ...rest } = props;
+  const merged = [inputClass, className].filter(Boolean).join(" ");
+  const mergedOnFocus$ = $((e: FocusEvent, el: HTMLInputElement) => {
+    if (showOnFocus) {
+      ctx.isListboxOpenSig.value = true;
+    }
+    if (onFocus$) {
+      const fn = onFocus$ as QRL<(ev: FocusEvent, element: HTMLInputElement) => void>;
+      void fn(e, el);
+    }
+  });
+  return (
+    <HeadlessCombobox.Input
+      {...rest}
+      class={merged}
+      onFocus$={showOnFocus || onFocus$ ? mergedOnFocus$ : undefined}
+    />
+  );
+});
 
 export const ComboboxTrigger: FunctionComponent<ComboboxTriggerProps> = (props) => {
   const merged = [triggerClass, props.class].filter(Boolean).join(" ");
@@ -267,9 +421,24 @@ export const ComboboxTrigger: FunctionComponent<ComboboxTriggerProps> = (props) 
 };
 
 export const ComboboxPopover = component$<ComboboxPopoverProps>((props) => {
-  const { align = "start", floating: floatingProp, gutter, class: className, ...rest } = props;
-  const floating = resolveComboboxPopoverFloating(floatingProp, align);
-  const merged = [popoverPanelClass, className].filter(Boolean).join(" ");
+  const ctx = useContext(comboboxContextId);
+  const { floating: floatingProp, gutter, class: className, ...rest } = props;
+  const floating = resolveComboboxPopoverFloating(floatingProp);
+  const merged = [popoverPanelClass, "mt-0.5", className].filter(Boolean).join(" ");
+
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(({ track }) => {
+    track(() => ctx.isListboxOpenSig.value);
+    track(() => ctx.controlRef.value);
+    const open = ctx.isListboxOpenSig.value;
+    const panel = ctx.panelRef.value;
+    const ctrl = ctx.controlRef.value;
+    if (!open || !panel || !ctrl) {
+      return;
+    }
+    const w = ctrl.getBoundingClientRect().width;
+    panel.style.minWidth = w > 0 ? `${Math.round(w)}px` : "";
+  });
 
   return (
     <HeadlessCombobox.Popover {...rest} class={merged} floating={floating} gutter={gutter ?? 4}>

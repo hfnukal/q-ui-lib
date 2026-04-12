@@ -2,6 +2,50 @@
  * @component accordion
  * @title Accordion
  * @version 1.0.1
+ * @example Compound API (střídavě `Trigger` / `Content`)
+ * Compound API (střídavě Trigger / Content) — viz ukázka níže.
+ * ```tsx
+ * import { Accordion } from "~/components/ui/accordion";
+ * 
+ * <Accordion.Root>
+ *   <Accordion.Trigger>a</Accordion.Trigger>
+ *   <Accordion.Content>aaa</Accordion.Content>
+ *   <Accordion.Trigger>b</Accordion.Trigger>
+ *   <Accordion.Content>bbb</Accordion.Content>
+ * </Accordion.Root>
+ * ```
+ *
+ * @example Single open panel
+ * Single open panel — viz ukázka níže.
+ * ```tsx
+ * import { AccordionList } from "~/components/ui/accordion";
+ * 
+ * const items = [
+ *   { value: "basics", title: "What is Qwik?", content: "…" },
+ *   // …
+ * ];
+ * 
+ * <AccordionList items={items} />
+ * ```
+ *
+ * @example Multiple open panels
+ * Multiple open panels — viz ukázka níže.
+ * ```tsx
+ * import { AccordionList } from "~/components/ui/accordion";
+ * 
+ * const items = [
+ *   { value: "basics", title: "What is Qwik?", content: "…" },
+ *   // …
+ * ];
+ * 
+ * <AccordionList items={items} multiple />
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import {
@@ -12,18 +56,19 @@ import {
 import type { JSXNode } from "@builder.io/qwik/jsx-runtime";
 import { Accordion as HeadlessAccordion } from "@qwik-ui/headless";
 
-const itemFrameClass =
-  "overflow-hidden rounded-lg border border-separator-opaque bg-surface-raised shadow-sm";
+/** Jedna souvislá karta — oddělení jen linkou mezi položkami (žádný meziřádek). */
+const itemFrameClass = "min-w-0 overflow-hidden bg-surface-raised";
 
 const headerClass = "flex";
 
 const triggerClass =
   "flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-callout font-medium text-label transition-colors hover:bg-surface-overlay focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background after:ml-auto after:inline-block after:text-tertiary-label after:transition-transform after:duration-200 after:content-['▼'] [&[data-open]]:after:rotate-180";
 
-const contentClass =
-  "border-t border-separator px-4 py-3 text-callout text-secondary-label";
+/** Horizontální padding + vertikální odsazení (nahoře pod triggerem, dole u spodní hrany karty). */
+const contentClass = "px-4 pb-3 pt-3 text-callout text-secondary-label";
 
-const rootClass = "w-full max-w-xl space-y-2";
+const rootClass =
+  "w-full max-w-xl divide-y divide-separator-opaque overflow-hidden rounded-lg border border-separator-opaque bg-surface-raised shadow-sm";
 
 export type AccordionRootProps = PropsOf<typeof HeadlessAccordion.Root>;
 

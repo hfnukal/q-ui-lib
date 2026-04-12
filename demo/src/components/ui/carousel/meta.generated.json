@@ -2,29 +2,11 @@
   "name": "carousel",
   "title": "Carousel",
   "version": "1.0.0",
-  "kind": "compound",
+  "kind": "primitive",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [],
-  "apiTree": {
-    "Root": {
-      "children": {
-        "Scroller": {},
-        "Slide": {},
-        "Previous": {},
-        "Next": {},
-        "Pagination": {},
-        "Bullet": {},
-        "Title": {
-          "params": {
-            "class": "string"
-          },
-          "slot": true
-        },
-        "Player": {},
-        "Stepper": {},
-        "Step": {}
-      }
-    }
-  }
+  "npmDependencies": [
+    "~"
+  ],
+  "apiTree": {}
 }

@@ -2,9 +2,55 @@
  * @component scroll-area
  * @title ScrollArea
  * @version 1.1.0
+ * @example Složené API
+ * `ScrollArea.Root` drží výšku a ořízne rohy; `ScrollArea.Viewport` scroluje obsah.
+ * ```tsx
+ * import { ScrollArea } from "~/components/ui/scroll-area";
+ * 
+ * <ScrollArea.Root class="h-48 max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised">
+ *   <ScrollArea.Viewport class="p-4">
+ *     <p class="text-body text-label">… dlouhý obsah …</p>
+ *   </ScrollArea.Viewport>
+ * </ScrollArea.Root>
+ * ```
+ *
+ * @example Zkratka Pane
+ * `ScrollArea.Pane` = Root + Viewport + slot; padding dejte přes `viewportClass`.
+ * ```tsx
+ * import { ScrollArea } from "~/components/ui/scroll-area";
+ * 
+ * <ScrollArea.Pane
+ *   class="h-48 max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised"
+ *   viewportClass="p-4"
+ * >
+ *   <p class="text-body text-label">… obsah …</p>
+ * </ScrollArea.Pane>
+ * ```
+ *
+ * @example Vodorovný scroll
+ * Prop `direction=&quot;horizontal&quot;` na Viewport / Pane ( `LAYOUT.md` ).
+ * ```tsx
+ * import { ScrollArea } from "~/components/ui/scroll-area";
+ * 
+ * <ScrollArea.Pane
+ *   direction="horizontal"
+ *   class="w-full max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised"
+ *   viewportClass="whitespace-nowrap p-4"
+ * >
+ *   <span class="inline-block min-w-max text-body text-label">
+ *     Velmi dlouhý řádek bez zalamování …
+ *   </span>
+ * </ScrollArea.Pane>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
-import { component$, type PropsOf, Slot } from "@builder.io/qwik";
+import { component$, type PropsOf, Slot, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 
 export type ScrollAreaRootProps = PropsOf<"div">;
 
@@ -27,6 +73,10 @@ export const ScrollAreaRoot = component$<ScrollAreaRootProps>((props) => {
 export type ScrollAreaViewportProps = PropsOf<"div"> & {
   /** Osa scrollování (LAYOUT.md). Výchozí `both` = chování jako dříve. */
   direction?: "vertical" | "horizontal" | "both";
+  /** Uloží pozici scrollu do `sessionStorage` a po obnovení stránky ji obnoví. */
+  keepScroll?: boolean;
+  /** Klíč v rámci `sessionStorage` (více scrollů na stránce). */
+  keepScrollId?: string;
 };
 
 /**
@@ -34,7 +84,42 @@ export type ScrollAreaViewportProps = PropsOf<"div"> & {
  * Scrollbar je zjemňěný pomocí tokenů `fill-tertiary` / `fill-secondary` (COLORS.md).
  */
 export const ScrollAreaViewport = component$<ScrollAreaViewportProps>((props) => {
-  const { class: className, tabIndex, direction = "both", ...rest } = props;
+  const {
+    class: className,
+    tabIndex,
+    direction = "both",
+    keepScroll,
+    keepScrollId = "default",
+    ...rest
+  } = props;
+
+  const viewportRef = useSignal<HTMLDivElement>();
+
+  useVisibleTask$(({ track, cleanup }) => {
+    track(() => viewportRef.value);
+    track(() => keepScroll);
+    track(() => keepScrollId);
+    if (!keepScroll) {
+      return;
+    }
+    const el = viewportRef.value;
+    if (!el) {
+      return;
+    }
+    const key = `qui-scroll-area:${keepScrollId}`;
+    const saved = sessionStorage.getItem(key);
+    if (saved) {
+      const y = Number.parseFloat(saved);
+      if (Number.isFinite(y)) {
+        el.scrollTop = y;
+      }
+    }
+    const onScroll = () => {
+      sessionStorage.setItem(key, String(el.scrollTop));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    cleanup(() => el.removeEventListener("scroll", onScroll));
+  });
 
   const overflow =
     direction === "vertical"
@@ -58,6 +143,7 @@ export const ScrollAreaViewport = component$<ScrollAreaViewportProps>((props) =>
   return (
     <div
       {...rest}
+      ref={viewportRef}
       data-scroll-area-viewport
       class={merged}
       tabIndex={tabIndex ?? 0}
@@ -72,17 +158,31 @@ export type ScrollAreaPaneProps = ScrollAreaRootProps & {
   viewportClass?: string;
   /** Předáno na {@link ScrollAreaViewport}. */
   direction?: ScrollAreaViewportProps["direction"];
+  keepScroll?: ScrollAreaViewportProps["keepScroll"];
+  keepScrollId?: ScrollAreaViewportProps["keepScrollId"];
 };
 
 /**
  * Zkratka: {@link ScrollAreaRoot} + {@link ScrollAreaViewport} + obsah ve slotu.
  */
 export const ScrollAreaPane = component$<ScrollAreaPaneProps>((props) => {
-  const { class: rootClass, viewportClass, direction, ...rootRest } = props;
+  const {
+    class: rootClass,
+    viewportClass,
+    direction,
+    keepScroll,
+    keepScrollId,
+    ...rootRest
+  } = props;
 
   return (
     <ScrollAreaRoot {...rootRest} class={rootClass}>
-      <ScrollAreaViewport class={viewportClass} direction={direction}>
+      <ScrollAreaViewport
+        class={viewportClass}
+        direction={direction}
+        keepScroll={keepScroll}
+        keepScrollId={keepScrollId}
+      >
         <Slot />
       </ScrollAreaViewport>
     </ScrollAreaRoot>

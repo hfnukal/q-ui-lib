@@ -1,0 +1,42 @@
+{
+  "name": "carousel",
+  "title": "Carousel",
+  "version": "1.0.0",
+  "kind": "compound",
+  "registry": "base",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "Root": {
+      "children": {
+        "Scroller": {},
+        "Slide": {
+          "slot": true
+        },
+        "Previous": {
+          "slot": true
+        },
+        "Next": {
+          "slot": true
+        },
+        "Pagination": {},
+        "Bullet": {
+          "slot": true
+        },
+        "Title": {
+          "params": {
+            "class": "string"
+          },
+          "slot": true
+        },
+        "Player": {
+          "slot": true
+        },
+        "Stepper": {},
+        "Step": {
+          "slot": true
+        }
+      }
+    }
+  }
+}

@@ -2,6 +2,46 @@
  * @component button
  * @title Button
  * @version 2.0.0
+ * @example Základní použití
+ * Kliknutím spustí handler předaný přes `onClick.
+ * ```tsx
+ * <Button onClick$={$(() => { alert("Button clicked"); })}>Click me</Button>
+ * ```
+ *
+ * @example Varianty
+ * Prop `variant`: `primary` (výchozí), `secondary`, `danger`.
+ * ```tsx
+ * <div class="flex flex-wrap gap-2">
+ *   <Button variant="primary">Primary</Button>
+ *   <Button variant="secondary">Secondary</Button>
+ *   <Button variant="danger">Danger</Button>
+ * </div>
+ * ```
+ *
+ * @example Velikosti
+ * Prop `size`: `sm`, `md` (výchozí), `lg`.
+ * ```tsx
+ * <div class="flex flex-wrap items-center gap-2">
+ *   <Button size="sm">Small</Button>
+ *   <Button size="md">Medium</Button>
+ *   <Button size="lg">Large</Button>
+ * </div>
+ * ```
+ *
+ * @example Disabled
+ * Prop `disabled` zakazuje interakci a sníží opacity.
+ * ```tsx
+ * <div class="flex flex-wrap gap-2">
+ *   <Button>Enabled</Button>
+ *   <Button disabled>Disabled</Button>
+ * </div>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, PropFunction, Slot } from "@builder.io/qwik";

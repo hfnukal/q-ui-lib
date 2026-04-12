@@ -2,6 +2,37 @@
  * @component split
  * @title Split
  * @version 1.0.0
+ * @example Vodorovně
+ * Dva panely vedle sebe — fixní šířka v pixelech a zbytek `1fr`.
+ * ```tsx
+ * import { Split } from "~/components/ui/split";
+ * 
+ * <Split.Root direction="horizontal" class="h-32 rounded-lg border border-separator-opaque">
+ *   <Split.Panel size="120px" class="bg-surface-raised p-3 text-callout">
+ *     Fixní
+ *   </Split.Panel>
+ *   <Split.Panel size="1fr" class="bg-surface-overlay p-3 text-callout">
+ *     Zbytek
+ *   </Split.Panel>
+ * </Split.Root>
+ * ```
+ *
+ * @example Svisle
+ * Svislé panely: horní s fixní výškou, spodní vyplní zbytek.
+ * ```tsx
+ * import { Split } from "~/components/ui/split";
+ * 
+ * <Split.Root direction="vertical" class="h-48 rounded-lg border border-separator-opaque">
+ *   <Split.Panel size="4rem" class="bg-surface-raised p-2 text-caption-1">Top</Split.Panel>
+ *   <Split.Panel size="1fr" class="bg-surface-overlay p-2 text-caption-1">Bottom</Split.Panel>
+ * </Split.Root>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

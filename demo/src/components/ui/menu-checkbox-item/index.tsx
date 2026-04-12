@@ -2,6 +2,54 @@
  * @component menu-checkbox-item
  * @title MenuCheckboxItem
  * @version 1.0.0
+ * @example Layout samotný
+ * Layout samotný — viz ukázka níže.
+ * ```tsx
+ * import { MenuCheckboxItem } from "~/components/ui/menu-checkbox-item";
+ * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * 
+ * <MenuCheckboxItem.Root>
+ *   <MenuCheckboxItem.Label>Zobrazit panel</MenuCheckboxItem.Label>
+ *   <MenuCheckboxItem.End><KbdShortcut>⌘B</KbdShortcut></MenuCheckboxItem.End>
+ * </MenuCheckboxItem.Root>
+ * ```
+ *
+ * @example V DropdownMenu.CheckboxItem
+ * Fajfka se zobrazí automaticky. Stav řídí reaktivní signál přes `bind:checked`.
+ * ```tsx
+ * import { useSignal } from "@builder.io/qwik";
+ * import { DropdownMenu } from "~/components/ui/dropdown-menu";
+ * import { MenuCheckboxItem } from "~/components/ui/menu-checkbox-item";
+ * 
+ * export default component$(() => {
+ *   const sidebar = useSignal(true);
+ *   const statusBar = useSignal(false);
+ *   return (
+ *     <DropdownMenu.Root>
+ *       <DropdownMenu.Trigger>Zobrazení</DropdownMenu.Trigger>
+ *       <DropdownMenu.Popover>
+ *         <DropdownMenu.CheckboxItem bind:checked={sidebar}>
+ *           <MenuCheckboxItem.Root>
+ *             <MenuCheckboxItem.Label>Postranní panel</MenuCheckboxItem.Label>
+ *             <MenuCheckboxItem.End><KbdShortcut>⌘B</KbdShortcut></MenuCheckboxItem.End>
+ *           </MenuCheckboxItem.Root>
+ *         </DropdownMenu.CheckboxItem>
+ *         <DropdownMenu.CheckboxItem bind:checked={statusBar}>
+ *           <MenuCheckboxItem.Root>
+ *             <MenuCheckboxItem.Label>Stavový řádek</MenuCheckboxItem.Label>
+ *           </MenuCheckboxItem.Root>
+ *         </DropdownMenu.CheckboxItem>
+ *       </DropdownMenu.Popover>
+ *     </DropdownMenu.Root>
+ *   );
+ * });
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

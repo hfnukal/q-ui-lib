@@ -1,0 +1,14 @@
+{
+  "name": "textarea",
+  "title": "Textarea",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "base",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "disableResize": "boolean"
+    }
+  }
+}

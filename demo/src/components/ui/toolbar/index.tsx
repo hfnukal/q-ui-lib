@@ -2,6 +2,60 @@
  * @component toolbar
  * @title Toolbar
  * @version 1.1.0
+ * @example Složené API — skupiny, oddělovač, spacer
+ * `Toolbar.Group` dává `role=&quot;group&quot;` a volitelný `aria-label`.
+ * ```tsx
+ * import { Toolbar } from "~/components/ui/toolbar";
+ * 
+ * <Toolbar.Root aria-label="Formátování">
+ *   <Toolbar.Group aria-label="Historie">
+ *     <Toolbar.Button>Zpět</Toolbar.Button>
+ *     <Toolbar.Button>Vpřed</Toolbar.Button>
+ *   </Toolbar.Group>
+ *   <Toolbar.Separator />
+ *   <Toolbar.Group>
+ *     <Toolbar.Link href="#">Nápověda</Toolbar.Link>
+ *   </Toolbar.Group>
+ *   <Toolbar.Spacer />
+ *   <Toolbar.Button>Uložit</Toolbar.Button>
+ * </Toolbar.Root>
+ * ```
+ *
+ * @example S ToggleGroup
+ * Headless toggle skupinu vlož jako dítě kořene; styl kořene ToggleGroup se zjemní, aby seděl uvnitř lišty.
+ * ```tsx
+ * import { Toolbar } from "~/components/ui/toolbar";
+ * import { ToggleGroup } from "~/components/ui/toggle-group";
+ * 
+ * <Toolbar.Root aria-label="Text" class="w-full max-w-xl">
+ *   <ToggleGroup.Root value="b" aria-label="Styl" class="border-0 bg-transparent p-0 shadow-none">
+ *     <ToggleGroup.Item value="b">B</ToggleGroup.Item>
+ *     <ToggleGroup.Item value="i">I</ToggleGroup.Item>
+ *     <ToggleGroup.Item value="u">U</ToggleGroup.Item>
+ *   </ToggleGroup.Root>
+ *   <Toolbar.Separator />
+ *   <Toolbar.Button type="button">Vložit odkaz</Toolbar.Button>
+ * </Toolbar.Root>
+ * ```
+ *
+ * @example Svislá orientace
+ * U `orientation=&quot;vertical&quot;` použij u oddělovače `orientation=&quot;horizontal&quot;` .
+ * ```tsx
+ * import { Toolbar } from "~/components/ui/toolbar";
+ * 
+ * <Toolbar.Root orientation="vertical" aria-label="Postranní nástroje">
+ *   <Toolbar.Button>Výběr</Toolbar.Button>
+ *   <Toolbar.Button>Orát</Toolbar.Button>
+ *   <Toolbar.Separator orientation="horizontal" />
+ *   <Toolbar.Button>Barva</Toolbar.Button>
+ * </Toolbar.Root>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

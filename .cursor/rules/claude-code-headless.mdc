@@ -1,0 +1,17 @@
+---
+description: Non-interactive Claude Code CLI (claude -p, .cursor/claude-once.sh)
+globs: .cursor/claude-once.sh
+alwaysApply: false
+---
+
+For **headless / one-shot** Claude Code runs (no interactive TTY session), follow **`.cursor/skills/claude-code-headless/SKILL.md`**.
+
+From the repo root (so the working directory is the project), prefer:
+
+```bash
+./.cursor/claude-once.sh "Concrete task"
+```
+
+Do not suggest `--dangerously-skip-permissions` unless the user explicitly accepts the risk.
+
+If **`claude-once.sh` exits 125** (rate limit), stderr lists **`wait_seconds`**. Do **not** retry `claude` / this script until that many seconds have elapsed — wait (`sleep`) or pause the workflow; do not loop tight retries.

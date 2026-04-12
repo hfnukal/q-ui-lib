@@ -2,6 +2,54 @@
  * @component aspect-ratio
  * @title AspectRatio
  * @version 1.0.0
+ * @example Výchozí 16∶9
+ * Prop `ratio` vynecháno — použije se `16 / 9`.
+ * ```tsx
+ * import { AspectRatio } from "~/components/ui/aspect-ratio";
+ * 
+ * <AspectRatio class="max-w-md rounded-lg border border-separator-opaque/40">
+ *   <img
+ *     src="https://picsum.photos/seed/aspect1/800/450"
+ *     alt="Ukázka"
+ *     width={800}
+ *     height={450}
+ *     class="h-full w-full object-cover"
+ *   />
+ * </AspectRatio>
+ * ```
+ *
+ * @example Čtverec
+ * `ratio={"{1}"}` pro poměr 1∶1.
+ * ```tsx
+ * import { AspectRatio } from "~/components/ui/aspect-ratio";
+ * 
+ * <AspectRatio ratio={1} class="max-w-xs rounded-lg border border-separator-opaque/40">
+ *   <img
+ *     src="https://picsum.photos/seed/aspect2/400/400"
+ *     alt="Čtverec"
+ *     width={400}
+ *     height={400}
+ *     class="h-full w-full object-cover"
+ *   />
+ * </AspectRatio>
+ * ```
+ *
+ * @example Vlastní poměr
+ * Libovolné číslo = šířka / výška (zde široké plátno `2.39`).
+ * ```tsx
+ * import { AspectRatio } from "~/components/ui/aspect-ratio";
+ * 
+ * @example Kinematografický poměr 2.39 : 1 
+ * ```tsx
+ * import { AspectRatio } from "~/components/ui/aspect-ratio";
+ * 
+ * <AspectRatio ratio={2.39} class="max-w-2xl rounded-lg border border-separator-opaque/40">
+ *   <div class="flex h-full w-full items-center justify-center bg-fill-tertiary/50 text-callout text-secondary-label">
+ *     Obsah místo obrázku
+ *   </div>
+ * </AspectRatio>
+ * ```
+ 
  */
 
 import { component$, Slot } from "@builder.io/qwik";

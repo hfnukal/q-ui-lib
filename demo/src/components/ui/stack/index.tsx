@@ -2,6 +2,33 @@
  * @component stack
  * @title Stack
  * @version 1.0.0
+ * @example Sloupec
+ * Sloupec ( `direction=&quot;column&quot;` ), mezery přes `gap`.
+ * ```tsx
+ * import { Stack } from "~/components/ui/stack";
+ * 
+ * <Stack direction="column" gap={4} align="stretch">
+ *   <div class="h-8 rounded bg-fill-secondary" />
+ *   <div class="h-8 rounded bg-fill-tertiary" />
+ * </Stack>
+ * ```
+ *
+ * @example Řádek
+ * Řádek se zarovnáním na střed a rozložením `justify=&quot;between&quot;`.
+ * ```tsx
+ * import { Stack } from "~/components/ui/stack";
+ * 
+ * <Stack direction="row" gap={2} align="center" justify="between" class="w-full max-w-md">
+ *   <span class="text-callout">Vlevo</span>
+ *   <span class="text-callout">Vpravo</span>
+ * </Stack>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

@@ -2,6 +2,55 @@
  * @component menu-radio-item
  * @title MenuRadioItem
  * @version 1.0.0
+ * @example V DropdownMenu.RadioGroup
+ * Skupina radio položek — první ukázka v demu.
+ * ```tsx
+ * import { DropdownMenu } from "~/components/ui/dropdown-menu";
+ * import { MenuRadioItem } from "~/components/ui/menu-radio-item";
+ * 
+ * <DropdownMenu.Root>
+ *   <DropdownMenu.Trigger>Motiv</DropdownMenu.Trigger>
+ *   <DropdownMenu.Popover>
+ *     <DropdownMenu.RadioGroup value="light">
+ *       <DropdownMenu.RadioItem value="light">
+ *         <MenuRadioItem.Root>
+ *           <MenuRadioItem.Label>Světlý</MenuRadioItem.Label>
+ *           <MenuRadioItem.End><KbdShortcut>⌘1</KbdShortcut></MenuRadioItem.End>
+ *         </MenuRadioItem.Root>
+ *       </DropdownMenu.RadioItem>
+ *       <DropdownMenu.RadioItem value="dark">
+ *         <MenuRadioItem.Root>
+ *           <MenuRadioItem.Label>Tmavý</MenuRadioItem.Label>
+ *           <MenuRadioItem.End><KbdShortcut>⌘2</KbdShortcut></MenuRadioItem.End>
+ *         </MenuRadioItem.Root>
+ *       </DropdownMenu.RadioItem>
+ *       <DropdownMenu.RadioItem value="system">
+ *         <MenuRadioItem.Root>
+ *           <MenuRadioItem.Label>Systémový</MenuRadioItem.Label>
+ *         </MenuRadioItem.Root>
+ *       </DropdownMenu.RadioItem>
+ *     </DropdownMenu.RadioGroup>
+ *   </DropdownMenu.Popover>
+ * </DropdownMenu.Root>
+ * ```
+ *
+ * @example Layout samotný
+ * Samostatný řádek bez `RadioGroup` — jen vzhled.
+ * ```tsx
+ * import { MenuRadioItem } from "~/components/ui/menu-radio-item";
+ * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * 
+ * <MenuRadioItem.Root>
+ *   <MenuRadioItem.Label>Světlý motiv</MenuRadioItem.Label>
+ *   <MenuRadioItem.End><KbdShortcut>⌘1</KbdShortcut></MenuRadioItem.End>
+ * </MenuRadioItem.Root>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

@@ -2,6 +2,73 @@
  * @component progress
  * @title Progress
  * @version 1.0.0
+ * @example Složené API
+ * `Progress.Root` + `Progress.Indicator` — ukázka s periodickou změnou hodnoty (simulace načítání).
+ * ```tsx
+ * import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+ * import { Progress } from "~/components/ui/progress";
+ * 
+ * export default component$(() => {
+ *   const v = useSignal(0);
+ *   useVisibleTask$(({ cleanup }) => {
+ *     const id = window.setInterval(() => {
+ *       v.value = v.value >= 100 ? 0 : v.value + 4;
+ *     }, 350);
+ *     cleanup(() => clearInterval(id));
+ *   });
+ *   return (
+ *     <Progress.Root value={v.value} class="max-w-md">
+ *       <Progress.Indicator />
+ *     </Progress.Root>
+ *   );
+ * });
+ * ```
+ *
+ * @example ProgressBar
+ * Zkratka se stejným vzhledem — vnitřně kořen + indikátor.
+ * ```tsx
+ * import { ProgressBar } from "~/components/ui/progress";
+ * 
+ * <ProgressBar value={66} class="max-w-md" />
+ * ```
+ *
+ * @example Neurčitý stav
+ * `value=&#123;null&#125;` → `data-progress=&quot;indeterminate&quot;` a zkrácený segment s pulzováním.
+ * ```tsx
+ * import { ProgressBar } from "~/components/ui/progress";
+ * 
+ * <ProgressBar value={null} class="max-w-md" />
+ * ```
+ *
+ * @example Vázaná hodnota
+ * `bind:value` na signál spolu se `Slider`.
+ * ```tsx
+ * import { component$, useSignal } from "@builder.io/qwik";
+ * import { ProgressBar } from "~/components/ui/progress";
+ * import { Slider } from "~/components/ui/slider";
+ * 
+ * export default component$(() => {
+ *   const v = useSignal(35);
+ *   return (
+ *     <div class="max-w-md space-y-4">
+ *       <ProgressBar bind:value={v} />
+ *       <Slider
+ *         label="Hodnota"
+ *         value={v.value}
+ *         onChange$={(n) => {
+ *           v.value = n;
+ *         }}
+ *       />
+ *     </div>
+ *   );
+ * });
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import {
@@ -16,7 +83,7 @@ const rootClass =
   "relative h-2 w-full overflow-hidden rounded-full bg-fill-secondary ring-offset-background";
 
 const indicatorClass =
-  "q-ui-progress-indicator relative h-full w-full min-h-0 bg-accent transition-transform duration-300 ease-out motion-reduce:transition-none data-[progress=indeterminate]:!w-[30%] data-[progress=indeterminate]:motion-reduce:animate-none";
+  "q-ui-progress-indicator relative h-full w-full min-h-0 origin-left bg-accent transition-[transform] duration-500 ease-out motion-reduce:transition-none data-[progress=indeterminate]:!w-[30%] data-[progress=indeterminate]:motion-reduce:animate-none";
 
 export type ProgressRootProps = PropsOf<typeof HeadlessProgress.Root>;
 

@@ -2,6 +2,111 @@
  * @component card
  * @title Card
  * @version 1.0.1
+ * @example Úplná skladba
+ * Složené API: `Card.Root`, `Media`, `Header`, `Title`, `Description`, `Action`, `Content`, `Footer`.
+ * ```tsx
+ * import { Button } from "~/components/ui/button";
+ * import { Card } from "~/components/ui/card";
+ * 
+ * <Card.Root class="max-w-md">
+ *   <Card.Header>
+ *     <Card.Title>Oznámení</Card.Title>
+ *     <Card.Description>
+ *       Shrnutí změn za poslední týden.
+ *     </Card.Description>
+ *   </Card.Header>
+ *   <Card.Content>
+ *     <p class="text-body text-secondary-label">
+ *       Máte 3 nepřečtené zprávy a 1 naplánovanou událost.
+ *     </p>
+ *   </Card.Content>
+ *   <Card.Footer class="gap-2">
+ *     <Button variant="secondary" size="sm">
+ *       Později
+ *     </Button>
+ *     <Button size="sm">Otevřít</Button>
+ *   </Card.Footer>
+ * </Card.Root>
+ * ```
+ *
+ * @example Hlavička s akcí
+ * `Card.Action` zapne v hlavičce dvousloupcové rozložení (titulek a popis vlevo, akce vpravo).
+ * ```tsx
+ * import { Button } from "~/components/ui/button";
+ * import { Card } from "~/components/ui/card";
+ * 
+ * <Card.Root class="max-w-md">
+ *   <Card.Header>
+ *     <Card.Title>Účet</Card.Title>
+ *     <Card.Description>Přihlášení e-mailem a heslem.</Card.Description>
+ *     <Card.Action>
+ *       <Button
+ *         variant="secondary"
+ *         size="sm"
+ *         class="border-0 bg-transparent px-2 text-link shadow-none hover:bg-transparent hover:underline"
+ *       >
+ *         Registrace
+ *       </Button>
+ *     </Card.Action>
+ *   </Card.Header>
+ *   <Card.Content>
+ *     <p class="text-body text-secondary-label">… formulář …</p>
+ *   </Card.Content>
+ * </Card.Root>
+ * ```
+ *
+ * @example Média nahoře
+ * `Card.Media` s `variant=&quot;image&quot;` pro poměr stran a vyplnění obrázku; kořen karty má `overflow-hidden`.
+ * ```tsx
+ * import { Badge } from "~/components/ui/badge";
+ * import { Button } from "~/components/ui/button";
+ * import { Card } from "~/components/ui/card";
+ * 
+ * <Card.Root class="max-w-sm">
+ *   <Card.Media variant="image">
+ *     <img
+ *       src="https://picsum.photos/seed/qcard/640/360"
+ *       width={640}
+ *       height={360}
+ *       alt="Ilustrace události"
+ *     />
+ *   </Card.Media>
+ *   <Card.Header>
+ *     <Card.Title>Meetup design systémů</Card.Title>
+ *     <Card.Description>
+ *       Komponenty, přístupnost a rychlejší dodávky.
+ *     </Card.Description>
+ *     <Card.Action>
+ *       <Badge variant="secondary">Vybrané</Badge>
+ *     </Card.Action>
+ *   </Card.Header>
+ *   <Card.Footer>
+ *     <Button class="w-full">Detail akce</Button>
+ *   </Card.Footer>
+ * </Card.Root>
+ * ```
+ *
+ * @example Jen obsah
+ * Minimální karta jen s `Card.Content` a vlastním odsazením přes `class`.
+ * ```tsx
+ * import { Card } from "~/components/ui/card";
+ * 
+ * <Card.Root class="max-w-sm">
+ *   <Card.Content class="pt-6">
+ *     <p class="text-body text-label">
+ *       Karta jen s obsahem — vlastní odsazení přes{" "}
+ *       <code class="text-caption-1">class</code> na{" "}
+ *       <code class="text-caption-1">Card.Content</code>.
+ *     </p>
+ *   </Card.Content>
+ * </Card.Root>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

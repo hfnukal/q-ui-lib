@@ -2,6 +2,51 @@
  * @component resizable
  * @title Resizable
  * @version 1.0.0
+ * @example Vodorovně
+ * Přetahujte oddělovač nebo použijte šipky vlevo/vpravo, když má fokus. Volitelně `withHandle` pro vizuální úchop.
+ * ```tsx
+ * import { Resizable } from "~/components/ui/resizable";
+ * 
+ * <Resizable.PanelGroup
+ *   direction="horizontal"
+ *   defaultSplit={40}
+ *   class="h-52 rounded-lg border border-separator-opaque/40"
+ * >
+ *   <Resizable.Panel side="start" minSize={15} class="bg-surface-raised p-4">
+ *     <p class="text-callout text-label">Levý panel</p>
+ *   </Resizable.Panel>
+ *   <Resizable.Handle withHandle />
+ *   <Resizable.Panel side="end" minSize={15} class="bg-surface-overlay p-4">
+ *     <p class="text-callout text-label">Pravý panel</p>
+ *   </Resizable.Panel>
+ * </Resizable.PanelGroup>
+ * ```
+ *
+ * @example Svisle
+ * `direction=&quot;vertical&quot;` — kurzor `row-resize`, klávesy nahoru/dolů. `withHandle` přidá vizuální úchop.
+ * ```tsx
+ * import { Resizable } from "~/components/ui/resizable";
+ *
+ * <Resizable.PanelGroup
+ *   direction="vertical"
+ *   defaultSplit={35}
+ *   class="h-72 max-w-md rounded-lg border border-separator-opaque/40"
+ * >
+ *   <Resizable.Panel side="start" minSize={10} class="bg-surface-raised p-3">
+ *     <p class="text-caption-1 text-secondary-label">Horní část</p>
+ *   </Resizable.Panel>
+ *   <Resizable.Handle withHandle />
+ *   <Resizable.Panel side="end" minSize={15} class="bg-surface-overlay p-3">
+ *     <p class="text-caption-1 text-secondary-label">Spodní část</p>
+ *   </Resizable.Panel>
+ * </Resizable.PanelGroup>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import {
@@ -153,6 +198,11 @@ export interface ResizableHandleProps extends Omit<PropsOf<"div">, "class"> {
   withHandle?: boolean;
   /** Disables dragging. */
   disabled?: boolean;
+  /**
+   * Position of the visual grip along the separator (CSS length, e.g. `"50%"`, `"100px"`, `"10%"`).
+   * Default: `"50%"` (centre). Only relevant when `withHandle` is true.
+   */
+  handlePosition?: string;
   class?: string;
 }
 
@@ -163,18 +213,16 @@ export const ResizableHandle = component$<ResizableHandleProps>((props) => {
   const ctx = useContext(resizableContextId);
   const rootRef = useSignal<HTMLElement | undefined>();
 
-  const { withHandle, disabled, class: className, ...rest } = props;
+  const { withHandle, disabled, handlePosition, class: className, ...rest } = props;
   const horizontal = ctx.direction === "horizontal";
 
   const merged = [
     horizontal
-      ? "relative flex w-px shrink-0 cursor-col-resize items-stretch justify-center bg-separator"
-      : "relative flex h-px shrink-0 cursor-row-resize items-center justify-stretch bg-separator",
-    "touch-none select-none outline-none transition-colors",
+      ? "group/rhandle relative flex w-3 shrink-0 cursor-col-resize items-stretch justify-center"
+      : "group/rhandle relative flex h-3 shrink-0 cursor-row-resize items-center justify-stretch",
+    "touch-none select-none outline-none transition-colors duration-150",
     "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-    "hover:bg-separator-opaque/80",
     disabled ? "pointer-events-none cursor-not-allowed opacity-40" : "",
-    withHandle ? (horizontal ? "w-2" : "h-2") : "",
     className,
   ]
     .filter(Boolean)
@@ -297,18 +345,36 @@ export const ResizableHandle = component$<ResizableHandleProps>((props) => {
       class={merged}
       onKeyDown$={onKeyDown$}
     >
+      {/* Tenká vizuální linka — jemná barva, při hover se mírně zesiluje */}
+      <span
+        class={
+          horizontal
+            ? "pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-separator-opaque/40 transition-colors duration-150 group-hover/rhandle:bg-separator-opaque"
+            : "pointer-events-none absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-separator-opaque/40 transition-colors duration-150 group-hover/rhandle:bg-separator-opaque"
+        }
+        aria-hidden="true"
+      />
       {withHandle ? (
         <span
-          class={
+          class={[
+            "pointer-events-none absolute z-10 flex items-center justify-center gap-0.5 rounded-sm border border-separator-opaque bg-surface-raised shadow-sm",
+            "opacity-60 transition-[padding,width,height,opacity] duration-150 group-hover/rhandle:opacity-100",
+            // Fit-content: not inset-y/x-0. Centered along the separator; expand on hover.
             horizontal
-              ? "pointer-events-none absolute inset-y-0 flex w-full flex-col items-center justify-center gap-0.5 py-1"
-              : "pointer-events-none absolute inset-x-0 flex h-full flex-row items-center justify-center gap-0.5 px-1"
+              ? "w-4 flex-col py-2 group-hover/rhandle:py-3 group-hover/rhandle:w-5"
+              : "h-4 flex-row px-2 group-hover/rhandle:px-3 group-hover/rhandle:h-5",
+          ].join(" ")}
+          style={
+            horizontal
+              // Centre vertically; handlePosition controls position along the separator
+              ? { left: handlePosition ?? "50%", top: "50%", transform: "translateX(-50%) translateY(-50%)" }
+              : { top: handlePosition ?? "50%", left: "50%", transform: "translateY(-50%) translateX(-50%)" }
           }
           aria-hidden="true"
         >
-          <span class="h-1 w-1 rounded-full bg-secondary-label" />
-          <span class="h-1 w-1 rounded-full bg-secondary-label" />
-          <span class="h-1 w-1 rounded-full bg-secondary-label" />
+          <span class="h-1 w-1 shrink-0 rounded-full bg-secondary-label" />
+          <span class="h-1 w-1 shrink-0 rounded-full bg-secondary-label" />
+          <span class="h-1 w-1 shrink-0 rounded-full bg-secondary-label" />
         </span>
       ) : null}
     </div>

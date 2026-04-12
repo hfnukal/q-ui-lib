@@ -2,6 +2,62 @@
  * @component menu-item
  * @title MenuItem
  * @version 1.0.0
+ * @example Layout samotný
+ * Layout samotný — viz ukázka níže.
+ * ```tsx
+ * import { MenuItem } from "~/components/ui/menu-item";
+ * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * import { LuSave, LuSettings, LuTrash } from "@qwikest/icons/lucide";
+ * 
+ * // Vizuální layout — uvnitř DropdownMenu.Item
+ * <MenuItem.Root>
+ *   <MenuItem.Start><LuSave /></MenuItem.Start>
+ *   <MenuItem.Label>Uložit</MenuItem.Label>
+ *   <MenuItem.End><KbdShortcut>⌘S</KbdShortcut></MenuItem.End>
+ * </MenuItem.Root>
+ * ```
+ *
+ * @example V DropdownMenu
+ * V DropdownMenu — viz ukázka níže.
+ * ```tsx
+ * import { LuSave, LuSettings, LuTrash } from "@qwikest/icons/lucide";
+ * import { DropdownMenu } from "~/components/ui/dropdown-menu";
+ * import { MenuItem } from "~/components/ui/menu-item";
+ * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * 
+ * <DropdownMenu.Root>
+ *   <DropdownMenu.Trigger>Soubor</DropdownMenu.Trigger>
+ *   <DropdownMenu.Popover>
+ *     <DropdownMenu.Item>
+ *       <MenuItem.Root>
+ *         <MenuItem.Start><LuSave /></MenuItem.Start>
+ *         <MenuItem.Label>Uložit</MenuItem.Label>
+ *         <MenuItem.End><KbdShortcut>⌘S</KbdShortcut></MenuItem.End>
+ *       </MenuItem.Root>
+ *     </DropdownMenu.Item>
+ *     <DropdownMenu.Item>
+ *       <MenuItem.Root>
+ *         <MenuItem.Start><LuSettings /></MenuItem.Start>
+ *         <MenuItem.Label>Nastavení</MenuItem.Label>
+ *         <MenuItem.End><KbdShortcut>⌘,</KbdShortcut></MenuItem.End>
+ *       </MenuItem.Root>
+ *     </DropdownMenu.Item>
+ *     <DropdownMenu.Separator />
+ *     <DropdownMenu.Item>
+ *       <MenuItem.Root>
+ *         <MenuItem.Start><LuTrash /></MenuItem.Start>
+ *         <MenuItem.Label>Smazat</MenuItem.Label>
+ *       </MenuItem.Root>
+ *     </DropdownMenu.Item>
+ *   </DropdownMenu.Popover>
+ * </DropdownMenu.Root>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

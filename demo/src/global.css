@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply font-sans antialiased;
+  }
+}
+
 /**
  * Progress (q-ui-lib): neurčitý stav — posuv segmentu; `transform` necháváme headlessu, pohyb přes `left` (viz Qwik UI docs).
  */
@@ -88,6 +94,15 @@
 
   dialog.q-dialog-panel:modal:not(.modal-closing) {
     animation: q-ui-dialog-in 0.2s ease-out both;
+  }
+
+  /**
+   * Odkazy v seznamu / sidebaru na `bg-grouped-surface`: ve světlém režimu je `surface-overlay` stejně bílý jako karta —
+   * `hover:bg-surface-overlay` hover neukáže a u aktivní položky přebije výplň. Stejný vzor jako `Sidebar.MenuButton`:
+   * `fill-secondary` s průhledností + `data-active` / `aria-current="page"`.
+   */
+  .q-nav-link-on-grouped {
+    @apply hover:bg-fill-secondary/20 data-[active]:bg-fill-secondary/30 data-[active]:hover:bg-fill-secondary/40;
   }
 }
 
@@ -207,7 +222,8 @@
 
   /* Fills (use with /opacity, e.g. bg-fill/20) */
   --fill: 240 6% 50%;
-  --fill-secondary: 240 5% 45%;
+  /* Light UI: high L so solid chips / tracks + text-secondary-label meet contrast (badges, switch, slider). */
+  --fill-secondary: 240 5% 92%;
   --fill-tertiary: 240 4% 65%;
   --fill-quaternary: 240 4% 35%;
 
@@ -239,7 +255,8 @@
 
 .dark {
   --label: 0 0% 100%;
-  --secondary-label: 240 1% 70%;
+  /* Slightly higher L vs fill-secondary on mid grays (badges, muted chips). */
+  --secondary-label: 240 1% 78%;
   --tertiary-label: 240 1% 50%;
   --quaternary-label: 240 1% 40%;
   --placeholder: 240 1% 45%;

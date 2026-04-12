@@ -1,7 +1,10 @@
 ---
-globs: components/*/index.tsx
+description: Library UI components under components/** (CREATE.md, qui)
+globs: components/**/index.tsx
 alwaysApply: false
 ---
 When working on new UI components or larger changes to existing components in this repository, follow the workflow in **CREATE.md** at the repository root (you can attach it as `@CREATE.md`).
 
-If the user wants to **create a new** component and **did not give its name**, ask them first for the name and the matching kebab-case folder under `components/`; do not implement without that.
+**Layout:** Primary sources live in **`components/base/<kebab-case>/`** (`index.tsx`, `meta.generated.json`). Shared helpers are in **`components/utilities/`**. External registry sets install under **`components/<owner>/<set>/`** (see `REGISTRY.md`). The CLI copies from the library into apps as `src/components/ui/<slug>/` (not directly from `components/` at repo root).
+
+If the user wants to **create a new** component and **did not give its name**, ask them first for the name and the matching kebab-case folder under **`components/base/`**; do not implement without that.

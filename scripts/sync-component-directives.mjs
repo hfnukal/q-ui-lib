@@ -76,13 +76,28 @@ function applyBlock(source, block) {
   return block + source.replace(/^\uFEFF?/, "");
 }
 
+/** Rekurzivně najde všechny složky s index.tsx pod baseDir. */
+function findComponentDirs(baseDir) {
+  const results = [];
+  function walk(dir) {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    if (entries.some((e) => e.isFile() && e.name === "index.tsx")) {
+      results.push(dir);
+      return;
+    }
+    for (const e of entries) {
+      if (e.isDirectory()) walk(path.join(dir, e.name));
+    }
+  }
+  walk(baseDir);
+  return results;
+}
+
 function main() {
   let n = 0;
-  for (const d of fs.readdirSync(componentsDir, { withFileTypes: true })) {
-    if (!d.isDirectory()) continue;
-    const folder = d.name;
-    const indexTsx = path.join(componentsDir, folder, "index.tsx");
-    if (!fs.existsSync(indexTsx)) continue;
+  for (const compDir of findComponentDirs(componentsDir)) {
+    const folder = path.basename(compDir);
+    const indexTsx = path.join(compDir, "index.tsx");
 
     const src = fs.readFileSync(indexTsx, "utf8");
     const m = src.match(/^\s*\/\*\*([\s\S]*?)\*\//);

@@ -2,6 +2,56 @@
  * @component code-edit
  * @title CodeEdit
  * @version 1.0.0
+ * @example Základní použití
+ * Řízená komponenta — hodnota přichází přes `value`, změny jsou hlášeny přes `onValue$`.
+ * ```tsx
+ * import { component$, useSignal } from "@builder.io/qwik";
+ * import { CodeEdit } from "~/components/ui/code-edit";
+ * 
+ * export default component$(() => {
+ *   const code = useSignal("const hello = 'world';");
+ * 
+ *   return (
+ *     <CodeEdit
+ *       value={code.value}
+ *       onValue$={(v) => { code.value = v; }}
+ *     />
+ *   );
+ * });
+ * ```
+ *
+ * @example TSX / TypeScript
+ * Jazyk `tsx` — vhodné pro ukázky Qwik komponent a TypeScriptu. Další jazyky (`json`, `html`, `css`) nastav stejným způsobem přes prop `language`.
+ * ```tsx
+ * import { component$, useSignal, $ } from "@builder.io/qwik";
+ * import { CodeEdit } from "~/components/ui/code-edit";
+ * 
+ * export default component$(() => {
+ *   const tsxCode = useSignal("// ukázka");
+ *   const set = $((v: string) => {
+ *     tsxCode.value = v;
+ *   });
+ *   return (
+ *     <CodeEdit language="tsx" value={tsxCode.value} onValue$={set} />
+ *   );
+ * });
+ * ```
+ *
+ * @example readOnly
+ * Prop `readOnly` — žádný `textarea`, pouze zvýrazněný výpis.
+ * ```tsx
+ * <CodeEdit
+ *   readOnly
+ *   language="json"
+ *   value={JSON.stringify({ name: "q-ui-lib", version: "1.0.0" }, null, 2)}
+ * />
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, useSignal, sync$, $, type QRL } from "@builder.io/qwik";
@@ -176,7 +226,7 @@ function hlJson(src: string): string {
     if (/\d/.test(src[i]) || (src[i] === "-" && /\d/.test(src[i + 1] ?? ""))) {
       let j = i;
       if (src[j] === "-") j++;
-      while (j < src.length && /[\d.eE+\-]/.test(src[j])) j++;
+      while (j < src.length && /[\d.eE+-]/.test(src[j])) j++;
       html += tok(C.num, src.slice(i, j));
       i = j;
       continue;

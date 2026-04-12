@@ -82,6 +82,14 @@
   dialog.q-dialog-panel:modal:not(.modal-closing) {
     animation: q-ui-dialog-in 0.2s ease-out both;
   }
+
+  /**
+   * List/sidebar links on `bg-grouped-surface`: in light mode `surface-overlay` matches white — no visible hover;
+   * hover would also replace a solid selected fill. Same pattern as `Sidebar.MenuButton`: `fill-secondary` opacities + `data-active` / `aria-current="page"`.
+   */
+  .q-nav-link-on-grouped {
+    @apply hover:bg-fill-secondary/20 data-[active]:bg-fill-secondary/30 data-[active]:hover:bg-fill-secondary/40;
+  }
 }
 
 @keyframes q-ui-sheet-in-right {
@@ -200,7 +208,8 @@
 
   /* Fills (use with /opacity, e.g. bg-fill/20) */
   --fill: 240 6% 50%;
-  --fill-secondary: 240 5% 45%;
+  /* Light UI: high L so solid chips / tracks + text-secondary-label meet contrast (badges, switch, slider). */
+  --fill-secondary: 240 5% 92%;
   --fill-tertiary: 240 4% 65%;
   --fill-quaternary: 240 4% 35%;
 
@@ -232,7 +241,8 @@
 
 .dark {
   --label: 0 0% 100%;
-  --secondary-label: 240 1% 70%;
+  /* Slightly higher L vs fill-secondary on mid grays (badges, muted chips). */
+  --secondary-label: 240 1% 78%;
   --tertiary-label: 240 1% 50%;
   --quaternary-label: 240 1% 40%;
   --placeholder: 240 1% 45%;

@@ -1,74 +1,43 @@
 import { component$ } from "@builder.io/qwik";
+import { Tab } from "~/components/ui/tabs";
+import { TabsGroup } from "~/components/ui/tabs";
 import {
   CodeExample,
   Desc,
   TabCode,
   TabExample,
 } from "~/components/demo/codeexample";
-import { Tab, TabsGroup } from "~/components/ui/tabs";
 
-const sampleTabs = [
-  {
-    value: "overview",
-    label: "Overview",
-    content:
-      "High-level summary of the feature. Tabs follow the WAI-ARIA tabs pattern with keyboard support.",
-  },
-  {
-    value: "details",
-    label: "Details",
-    content:
-      "Implementation uses @qwik-ui/headless for behavior and focus management; styling matches other demo components.",
-  },
-  {
-    value: "access",
-    label: "Accessibility",
-    content:
-      'Tab list exposes role="tablist"; triggers are role="tab" with aria-selected; panels use role="tabpanel" and hidden when inactive.',
-  },
-];
+export default component$(() => {
+  return (
+    <div class="space-y-10">
+      <div>
+        <h1 class="text-title-2 text-label">Tabs</h1>
+      </div>
 
-const withDisabled = [
-  { value: "a", label: "Active A", content: "First panel content." },
-  {
-    value: "b",
-    label: "Disabled",
-    content: "Unreachable when disabled.",
-    disabled: true,
-  },
-  { value: "c", label: "Active C", content: "Third panel still works." },
-];
-
-const codeHorizontal = `import { TabsGroup } from "~/components/ui/tabs";
-
-const tabs = [
-  { value: "overview", label: "Overview", content: "…" },
-  { value: "details", label: "Details", content: "…" },
-  { value: "access", label: "Accessibility", content: "…" },
-];
-
-<TabsGroup tabs={tabs} defaultTabId="overview" />`;
-
-const codeDisabled = `import { TabsGroup } from "~/components/ui/tabs";
-
-const tabs = [
-  { value: "a", label: "Active A", content: "…" },
-  { value: "b", label: "Disabled", content: "…", disabled: true },
-  { value: "c", label: "Active C", content: "…" },
-];
-
-<TabsGroup tabs={tabs} defaultTabId="a" />`;
-
-const codeVertical = `import { TabsGroup } from "~/components/ui/tabs";
-
-const tabs = [
-  { value: "overview", label: "Overview", content: "…" },
-  // …
-];
-
-<TabsGroup tabs={tabs} vertical defaultTabId="overview" />`;
-
-const codeCompound = `import { Tab } from "~/components/ui/tabs";
+      <section class="space-y-3">
+        <h2 class="text-headline text-label">Složené API (stejná data jako TabsGroup)</h2>
+        <CodeExample>
+          <Desc><code class="text-caption-1">key</code> na triggeru a panelu se musí shodovat (headless z něj dělá <code class="text-caption-1">tabId</code> ).</Desc>
+          <TabExample>
+            <Tab.Root selectedTabId="overview" behavior="manual">
+              <Tab.List>
+                <Tab.Tab key="overview">Overview</Tab.Tab>
+                <Tab.Tab key="details">Details</Tab.Tab>
+                <Tab.Tab key="access">Accessibility</Tab.Tab>
+              </Tab.List>
+              <Tab.Panel key="overview">
+                <p>Přehled základních informací o této sekci.</p>
+              </Tab.Panel>
+              <Tab.Panel key="details">
+                <p>Detailní popis a rozšířené možnosti.</p>
+              </Tab.Panel>
+              <Tab.Panel key="access">
+                <p>Tipy pro přístupnost, klávesové zkratky a čtečky obrazovky.</p>
+              </Tab.Panel>
+            </Tab.Root>
+          </TabExample>
+          <TabCode>{`import { Tab } from "~/components/ui/tabs";
 
 <Tab.Root selectedTabId="overview" behavior="manual">
   <Tab.List>
@@ -77,188 +46,162 @@ const codeCompound = `import { Tab } from "~/components/ui/tabs";
     <Tab.Tab key="access">Accessibility</Tab.Tab>
   </Tab.List>
   <Tab.Panel key="overview">
-    <p>…</p>
+    <p>Přehled základních informací o této sekci.</p>
   </Tab.Panel>
-  <Tab.Panel key="details">…</Tab.Panel>
-  <Tab.Panel key="access">…</Tab.Panel>
-</Tab.Root>`;
+  <Tab.Panel key="details">
+    <p>Detailní popis a rozšířené možnosti.</p>
+  </Tab.Panel>
+  <Tab.Panel key="access">
+    <p>Tipy pro přístupnost, klávesové zkratky a čtečky obrazovky.</p>
+  </Tab.Panel>
+</Tab.Root>`}</TabCode>
+        </CodeExample>
+      </section>
 
-const codeCompoundVertical = `import { Tab } from "~/components/ui/tabs";
+      <section class="space-y-3">
+        <h2 class="text-headline text-label">TabsGroup — vodorovně</h2>
+        <CodeExample>
+          <Desc>Datová zkratka <code class="text-caption-1">TabsGroup</code> se stejnými záložkami jako u složeného API.</Desc>
+          <TabExample>
+            {(() => {
+              const tabs = [
+                { value: "overview", label: "Overview", content: "Přehled základních informací o této sekci." },
+                { value: "details", label: "Details", content: "Detailní popis a rozšířené možnosti." },
+                { value: "access", label: "Accessibility", content: "Tipy pro přístupnost, klávesové zkratky a čtečky obrazovky." },
+              ];
+              return (
+                <TabsGroup tabs={tabs} defaultTabId="overview" />
+              );
+            })()}
+          </TabExample>
+          <TabCode>{`import { TabsGroup } from "~/components/ui/tabs";
+
+const tabs = [
+  { value: "overview", label: "Overview", content: "Přehled základních informací o této sekci." },
+  { value: "details", label: "Details", content: "Detailní popis a rozšířené možnosti." },
+  { value: "access", label: "Accessibility", content: "Tipy pro přístupnost, klávesové zkratky a čtečky obrazovky." },
+];
+
+<TabsGroup tabs={tabs} defaultTabId="overview" />`}</TabCode>
+        </CodeExample>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-headline text-label">TabsGroup — zakázaná položka</h2>
+        <CodeExample>
+          <Desc>TabsGroup — zakázaná položka — viz ukázka níže.</Desc>
+          <TabExample>
+            {(() => {
+              const tabs = [
+                { value: "a", label: "Active A", content: "Obsah aktivní záložky A." },
+                { value: "b", label: "Disabled", content: "Tento text se u zakázané záložky stejně nezobrazí.", disabled: true },
+                { value: "c", label: "Active C", content: "Obsah aktivní záložky C." },
+              ];
+              return (
+                <TabsGroup tabs={tabs} defaultTabId="a" />
+              );
+            })()}
+          </TabExample>
+          <TabCode>{`import { TabsGroup } from "~/components/ui/tabs";
+
+const tabs = [
+  { value: "a", label: "Active A", content: "Obsah aktivní záložky A." },
+  { value: "b", label: "Disabled", content: "Tento text se u zakázané záložky stejně nezobrazí.", disabled: true },
+  { value: "c", label: "Active C", content: "Obsah aktivní záložky C." },
+];
+
+<TabsGroup tabs={tabs} defaultTabId="a" />`}</TabCode>
+        </CodeExample>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-headline text-label">TabsGroup — svislý seznam</h2>
+        <CodeExample>
+          <Desc>TabsGroup — svislý seznam — viz ukázka níže.</Desc>
+          <TabExample>
+            {(() => {
+              const tabs = [
+                { value: "overview", label: "Overview", content: "Přehled základních informací o této sekci." },
+                { value: "details", label: "Details", content: "Detailní popis a rozšířené možnosti." },
+                { value: "access", label: "Accessibility", content: "Tipy pro přístupnost, klávesové zkratky a čtečky obrazovky." },
+              ];
+              return (
+                <TabsGroup tabs={tabs} vertical defaultTabId="overview" />
+              );
+            })()}
+          </TabExample>
+          <TabCode>{`import { TabsGroup } from "~/components/ui/tabs";
+
+const tabs = [
+  { value: "overview", label: "Overview", content: "Přehled základních informací o této sekci." },
+  { value: "details", label: "Details", content: "Detailní popis a rozšířené možnosti." },
+  { value: "access", label: "Accessibility", content: "Tipy pro přístupnost, klávesové zkratky a čtečky obrazovky." },
+];
+
+<TabsGroup tabs={tabs} vertical defaultTabId="overview" />`}</TabCode>
+        </CodeExample>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-headline text-label">Varianta line</h2>
+        <CodeExample>
+          <Desc>Podtržené záložky místo výchozích s rámečkem — <code class="text-caption-1">variant="line"</code> na <code class="text-caption-1">Tab.Root</code> nebo <code class="text-caption-1">TabsGroup</code> .</Desc>
+          <TabExample>
+            {(() => {
+              const tabs = [
+                { value: "overview", label: "Overview", content: "Přehled základních informací o této sekci." },
+                { value: "details", label: "Details", content: "Detailní popis a rozšířené možnosti." },
+                { value: "access", label: "Accessibility", content: "Tipy pro přístupnost, klávesové zkratky a čtečky obrazovky." },
+              ];
+              return (
+                <TabsGroup tabs={tabs} defaultTabId="overview" variant="line" />
+              );
+            })()}
+          </TabExample>
+          <TabCode>{`import { TabsGroup } from "~/components/ui/tabs";
+
+const tabs = [
+  { value: "overview", label: "Overview", content: "Přehled základních informací o této sekci." },
+  { value: "details", label: "Details", content: "Detailní popis a rozšířené možnosti." },
+  { value: "access", label: "Accessibility", content: "Tipy pro přístupnost, klávesové zkratky a čtečky obrazovky." },
+];
+
+<TabsGroup tabs={tabs} defaultTabId="overview" variant="line" />`}</TabCode>
+        </CodeExample>
+      </section>
+
+      <section class="space-y-3">
+        <h2 class="text-headline text-label">Složené API — svisle</h2>
+        <CodeExample>
+          <Desc>Na <code class="text-caption-1">Tab.Root</code> nastav <code class="text-caption-1">vertical</code> a na <code class="text-caption-1">Tab.List</code> / <code class="text-caption-1">Tab.Panel</code> prop <code class="text-caption-1">verticalLayout</code> .</Desc>
+          <TabExample>
+            <Tab.Root vertical selectedTabId="overview" behavior="manual">
+              <Tab.List verticalLayout>
+                <Tab.Tab key="overview">Overview</Tab.Tab>
+                <Tab.Tab key="details">Details</Tab.Tab>
+              </Tab.List>
+              <Tab.Panel key="overview" verticalLayout>
+                <p>Přehled základních informací o této sekci.</p>
+              </Tab.Panel>
+              <Tab.Panel key="details" verticalLayout>
+                <p>Detailní popis a rozšířené možnosti.</p>
+              </Tab.Panel>
+            </Tab.Root>
+          </TabExample>
+          <TabCode>{`import { Tab } from "~/components/ui/tabs";
 
 <Tab.Root vertical selectedTabId="overview" behavior="manual">
   <Tab.List verticalLayout>
     <Tab.Tab key="overview">Overview</Tab.Tab>
     <Tab.Tab key="details">Details</Tab.Tab>
   </Tab.List>
-  <Tab.Panel key="overview" verticalLayout>…</Tab.Panel>
-  <Tab.Panel key="details" verticalLayout>…</Tab.Panel>
-</Tab.Root>`;
-
-export default component$(() => {
-  return (
-    <div class="space-y-10">
-      <div>
-        <h1 class="text-2xl font-semibold text-slate-900">Tabs</h1>
-        <p class="mt-2 max-w-prose text-sm text-slate-600">
-          Komponenty z{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-            components/tabs
-          </code>{" "}
-          nad @qwik-ui/headless. Složené API:{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-            Tab.Root
-          </code>
-          ,{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-            Tab.List
-          </code>
-          ,{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-            Tab.Tab
-          </code>
-          ,{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-            Tab.Panel
-          </code>
-          . Zkratka{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-            TabsGroup
-          </code>{" "}
-          pro pole položek.
-        </p>
-        <p class="mt-2 max-w-prose text-sm text-slate-600">
-          Bloky níže používají{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-            CodeExample
-          </code>{" "}
-          — stejný stylovaný{" "}
-          <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">Tab</code>{" "}
-          jako v ukázkách.
-        </p>
-      </div>
-
-      <section class="space-y-3">
-        <h2 class="text-lg font-medium text-slate-800">
-          Složené API (stejná data jako TabsGroup)
-        </h2>
-
-        <CodeExample>
-          <Desc>
-            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">key</code>{" "}
-            na triggeru a panelu se musí shodovat (headless z něj dělá{" "}
-            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-              tabId
-            </code>
-            ).
-          </Desc>
-          <TabExample>
-            <Tab.Root selectedTabId="overview" behavior="manual">
-              <Tab.List>
-                {sampleTabs.map((item) => (
-                  <Tab.Tab key={item.value}>{item.label}</Tab.Tab>
-                ))}
-              </Tab.List>
-              {sampleTabs.map((item) => (
-                <Tab.Panel key={item.value}>
-                  <p>{item.content}</p>
-                </Tab.Panel>
-              ))}
-            </Tab.Root>
-          </TabExample>
-          <TabCode>{codeCompound}</TabCode>
-        </CodeExample>
-      </section>
-
-      <section class="space-y-3">
-        <h2 class="text-lg font-medium text-slate-800">
-          TabsGroup — vodorovně
-        </h2>
-
-        <CodeExample>
-          <Desc>
-            Datová zkratka{" "}
-            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-              TabsGroup
-            </code>{" "}
-            se stejnými záložkami jako u složeného API.
-          </Desc>
-          <TabExample>
-            <TabsGroup tabs={sampleTabs} defaultTabId="overview" />
-          </TabExample>
-          <TabCode>{codeHorizontal}</TabCode>
-        </CodeExample>
-      </section>
-
-      <section class="space-y-3">
-        <h2 class="text-lg font-medium text-slate-800">
-          TabsGroup — zakázaná položka
-        </h2>
-
-        <CodeExample>
-          <Desc>TabsGroup — zakázaná položka — viz ukázka níže.</Desc>
-          <TabExample>
-            <TabsGroup tabs={withDisabled} defaultTabId="a" />
-          </TabExample>
-          <TabCode>{codeDisabled}</TabCode>
-        </CodeExample>
-      </section>
-
-      <section class="space-y-3">
-        <h2 class="text-lg font-medium text-slate-800">
-          TabsGroup — svislý seznam
-        </h2>
-
-        <CodeExample>
-          <Desc>TabsGroup — svislý seznam — viz ukázka níže.</Desc>
-          <TabExample>
-            <TabsGroup tabs={sampleTabs} vertical defaultTabId="overview" />
-          </TabExample>
-          <TabCode>{codeVertical}</TabCode>
-        </CodeExample>
-      </section>
-
-      <section class="space-y-3">
-        <h2 class="text-lg font-medium text-slate-800">Složené API — svisle</h2>
-
-        <CodeExample>
-          <Desc>
-            Na{" "}
-            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-              Tab.Root
-            </code>{" "}
-            nastav{" "}
-            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-              vertical
-            </code>{" "}
-            a na{" "}
-            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-              Tab.List
-            </code>{" "}
-            /{" "}
-            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-              Tab.Panel
-            </code>{" "}
-            prop{" "}
-            <code class="rounded bg-slate-200/80 px-1 py-0.5 text-xs">
-              verticalLayout
-            </code>
-            .
-          </Desc>
-          <TabExample>
-            <Tab.Root vertical selectedTabId="overview" behavior="manual">
-              <Tab.List verticalLayout>
-                {sampleTabs.map((item) => (
-                  <Tab.Tab key={item.value}>{item.label}</Tab.Tab>
-                ))}
-              </Tab.List>
-              {sampleTabs.map((item) => (
-                <Tab.Panel key={item.value} verticalLayout>
-                  <p>{item.content}</p>
-                </Tab.Panel>
-              ))}
-            </Tab.Root>
-          </TabExample>
-          <TabCode>{codeCompoundVertical}</TabCode>
+  <Tab.Panel key="overview" verticalLayout>
+    <p>Přehled základních informací o této sekci.</p>
+  </Tab.Panel>
+  <Tab.Panel key="details" verticalLayout>
+    <p>Detailní popis a rozšířené možnosti.</p>
+  </Tab.Panel>
+</Tab.Root>`}</TabCode>
         </CodeExample>
       </section>
     </div>

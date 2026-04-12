@@ -2,6 +2,42 @@
  * @component button-group
  * @title ButtonGroup
  * @version 1.0.0
+ * @example Vodorovně
+ * Vodorovně — viz ukázka níže.
+ * ```tsx
+ * import { Button } from "~/components/ui/button";
+ * import { ButtonGroup } from "~/components/ui/button-group";
+ * 
+ * <ButtonGroup aria-label="Text actions">
+ *   <Button variant="secondary" onClick$={...}>Left</Button>
+ *   <Button variant="secondary" onClick$={...}>Center</Button>
+ *   <Button variant="secondary" onClick$={...}>Right</Button>
+ * </ButtonGroup>
+ * ```
+ *
+ * @example Svisle
+ * Prop `orientation=&quot;vertical&quot;` .
+ * ```tsx
+ * import { Button } from "~/components/ui/button";
+ * import { ButtonGroup } from "~/components/ui/button-group";
+ * 
+ * <ButtonGroup orientation="vertical" aria-label="Stack">
+ *   <Button variant="secondary" onClick$={...}>One</Button>
+ *   <Button variant="secondary" onClick$={...}>Two</Button>
+ * </ButtonGroup>
+ * ```
+ *
+ * @example Primární varianta
+ * Stejné sloučení okrajů funguje i u `primary` / `danger`.
+ * ```tsx
+ * import { Button } from "~/components/ui/button";
+ * import { ButtonGroup } from "~/components/ui/button-group";
+ * 
+ * <ButtonGroup aria-label="Modes">
+ *   <Button variant="primary" onClick$={...}>A</Button>
+ *   <Button variant="primary" onClick$={...}>B</Button>
+ * </ButtonGroup>
+ * ```
  */
 
 import { component$, Slot } from "@builder.io/qwik";

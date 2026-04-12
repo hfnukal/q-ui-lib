@@ -2,6 +2,42 @@
  * @component kbd-shortcut
  * @title KbdShortcut
  * @version 1.0.0
+ * @example Základní použití
+ * Základní použití — viz ukázka níže.
+ * ```tsx
+ * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * 
+ * <KbdShortcut>⌘K</KbdShortcut>
+ * ```
+ *
+ * @example Více kláves
+ * Více instancí vedle sebe pro víceznakové zkratky.
+ * ```tsx
+ * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * 
+ * <span class="flex items-center gap-1">
+ *   <KbdShortcut>Ctrl</KbdShortcut>
+ *   <KbdShortcut>Shift</KbdShortcut>
+ *   <KbdShortcut>P</KbdShortcut>
+ * </span>
+ * ```
+ *
+ * @example Inline v textu
+ * Zkratky vložené přímo do věty — čitelné vedle běžného textu.
+ * ```tsx
+ * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * 
+ * <p class="text-body text-secondary-label">
+ *   Stiskni <KbdShortcut>⌘S</KbdShortcut> pro uložení nebo{" "}
+ *   <KbdShortcut>Esc</KbdShortcut> pro zrušení.
+ * </p>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

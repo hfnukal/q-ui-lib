@@ -2,28 +2,133 @@
  * @component tabs
  * @title Tabs
  * @version 1.1.1
+ * @example Složené API (stejná data jako TabsGroup)
+ * `key` na triggeru a panelu se musí shodovat (headless z něj dělá `tabId` ).
+ * ```tsx
+ * import { Tab } from "~/components/ui/tabs";
+ * 
+ * <Tab.Root selectedTabId="overview" behavior="manual">
+ *   <Tab.List>
+ *     <Tab.Tab key="overview">Overview</Tab.Tab>
+ *     <Tab.Tab key="details">Details</Tab.Tab>
+ *     <Tab.Tab key="access">Accessibility</Tab.Tab>
+ *   </Tab.List>
+ *   <Tab.Panel key="overview">
+ *     <p>…</p>
+ *   </Tab.Panel>
+ *   <Tab.Panel key="details">…</Tab.Panel>
+ *   <Tab.Panel key="access">…</Tab.Panel>
+ * </Tab.Root>
+ * ```
+ *
+ * @example TabsGroup — vodorovně
+ * Datová zkratka `TabsGroup` se stejnými záložkami jako u složeného API.
+ * ```tsx
+ * import { TabsGroup } from "~/components/ui/tabs";
+ * 
+ * const tabs = [
+ *   { value: "overview", label: "Overview", content: "…" },
+ *   { value: "details", label: "Details", content: "…" },
+ *   { value: "access", label: "Accessibility", content: "…" },
+ * ];
+ * 
+ * <TabsGroup tabs={tabs} defaultTabId="overview" />
+ * ```
+ *
+ * @example TabsGroup — zakázaná položka
+ * TabsGroup — zakázaná položka — viz ukázka níže.
+ * ```tsx
+ * import { TabsGroup } from "~/components/ui/tabs";
+ * 
+ * const tabs = [
+ *   { value: "a", label: "Active A", content: "…" },
+ *   { value: "b", label: "Disabled", content: "…", disabled: true },
+ *   { value: "c", label: "Active C", content: "…" },
+ * ];
+ * 
+ * <TabsGroup tabs={tabs} defaultTabId="a" />
+ * ```
+ *
+ * @example TabsGroup — svislý seznam
+ * TabsGroup — svislý seznam — viz ukázka níže.
+ * ```tsx
+ * import { TabsGroup } from "~/components/ui/tabs";
+ * 
+ * const tabs = [
+ *   { value: "overview", label: "Overview", content: "…" },
+ *   // …
+ * ];
+ * 
+ * <TabsGroup tabs={tabs} vertical defaultTabId="overview" />
+ * ```
+ *
+ * @example Varianta line
+ * Podtržené záložky místo výchozích s rámečkem — `variant=&quot;line&quot;` na `Tab.Root` nebo `TabsGroup` .
+ * ```tsx
+ * import { TabsGroup } from "~/components/ui/tabs";
+ *
+ * const tabs = [
+ *   { value: "overview", label: "Overview", content: "…" },
+ *   { value: "details", label: "Details", content: "…" },
+ *   { value: "access", label: "Accessibility", content: "…" },
+ * ];
+ *
+ * <TabsGroup tabs={tabs} defaultTabId="overview" variant="line" />
+ * ```
+ *
+ * @example Složené API — svisle
+ * Na `Tab.Root` nastav `vertical` a na `Tab.List` / `Tab.Panel` prop `verticalLayout` .
+ * ```tsx
+ * import { Tab } from "~/components/ui/tabs";
+ * 
+ * <Tab.Root vertical selectedTabId="overview" behavior="manual">
+ *   <Tab.List verticalLayout>
+ *     <Tab.Tab key="overview">Overview</Tab.Tab>
+ *     <Tab.Tab key="details">Details</Tab.Tab>
+ *   </Tab.List>
+ *   <Tab.Panel key="overview" verticalLayout>…</Tab.Panel>
+ *   <Tab.Panel key="details" verticalLayout>…</Tab.Panel>
+ * </Tab.Root>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { Tabs as HeadlessTabs } from "@qwik-ui/headless";
 
-/** Vzhled odpovídá {@link https://qwikui.com/docs/styled/tabs | Qwik UI Styled Tabs}; barvy jsou tokeny z COLORS.md. */
+/** Default variant — vzhled odpovídá {@link https://qwikui.com/docs/styled/tabs | Qwik UI Styled Tabs}; barvy jsou tokeny z COLORS.md. */
 const triggerClass =
   "inline-flex items-center justify-center rounded-md border border-transparent px-2 py-1 font-medium whitespace-nowrap text-callout text-secondary-label ring-offset-background transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=selected]:border-separator-opaque data-[state=selected]:bg-surface-overlay data-[state=selected]:text-label data-[state=selected]:shadow-inner";
 
+/** Line variant — podtržené záložky; panel bez rámečku. */
+const triggerClassLine =
+  "inline-flex items-center justify-center relative rounded-none border-0 border-b-2 border-transparent bg-transparent px-3 py-2 font-medium whitespace-nowrap text-callout text-secondary-label ring-offset-background transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=selected]:border-accent data-[state=selected]:text-label data-[state=selected]:bg-transparent data-[state=selected]:shadow-none";
+
 const panelClassBase =
-  "text-body text-secondary-label ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+  "text-body text-secondary-label ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md border border-separator-opaque bg-surface-raised p-4";
 
 const panelClassHorizontal = `${panelClassBase} mt-2`;
+const panelClassHorizontalLine =
+  "text-body text-secondary-label ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 mt-4";
 const panelClassVertical = `${panelClassBase} mt-0 flex-1 min-w-0`;
 
 const listClassHorizontal =
   "inline-flex items-center justify-center rounded-lg border border-separator-opaque bg-surface-raised p-1 text-secondary-label shadow-sm";
+const listClassLine =
+  "flex w-full items-center justify-start gap-0 rounded-none border-0 border-b border-separator bg-transparent p-0 text-secondary-label shadow-none";
 
 const listClassVertical =
   "inline-flex flex-col w-48 shrink-0 rounded-lg border border-separator-opaque bg-surface-raised p-1 text-secondary-label gap-1 shadow-sm";
 
-export type TabRootProps = PropsOf<typeof HeadlessTabs.Root>;
+export type TabRootProps = PropsOf<typeof HeadlessTabs.Root> & {
+  /** `line` — podtržené záložky, obsah bez rámečku; výchozí varianta má rámeček kolem listu i panelu. */
+  variant?: "default" | "line";
+};
 
 export type TabListProps = PropsOf<typeof HeadlessTabs.List> & {
   /** Match {@link TabRootProps.vertical} so list layout aligns with keyboard orientation. */
@@ -37,7 +142,7 @@ export type TabPanelProps = PropsOf<typeof HeadlessTabs.Panel> & {
   verticalLayout?: boolean;
 };
 
-/** Styled tab list (`role="tablist"`). FunctionComponent so HTabs `child.type` matches `tabListComponent`. */
+/** Styled tab list — default variant. FunctionComponent so HTabs `child.type` matches `tabListComponent`. */
 export const TabList: FunctionComponent<TabListProps> = (props) => {
   const { verticalLayout, class: className, ...rest } = props;
   const base = verticalLayout ? listClassVertical : listClassHorizontal;
@@ -45,18 +150,41 @@ export const TabList: FunctionComponent<TabListProps> = (props) => {
   return <HeadlessTabs.List {...rest} class={merged} />;
 };
 
-/** Styled tab trigger (`role="tab"`). FunctionComponent so HTabs matches `tabComponent`. */
+/** Tab list for `variant="line"` — podtržený řádek bez rámečku. */
+export const TabListLine: FunctionComponent<TabListProps> = (props) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { verticalLayout: _, class: className, ...rest } = props;
+  const merged = [listClassLine, className].filter(Boolean).join(" ");
+  return <HeadlessTabs.List {...rest} class={merged} />;
+};
+
+/** Styled tab trigger — default variant. FunctionComponent so HTabs matches `tabComponent`. */
 export const TabTrigger: FunctionComponent<TabTriggerProps> = (props) => {
   const { class: className, ...rest } = props;
   const merged = [triggerClass, className].filter(Boolean).join(" ");
   return <HeadlessTabs.Tab {...rest} class={merged} />;
 };
 
-/** Styled tab panel (`role="tabpanel"`). FunctionComponent so HTabs matches `tabPanelComponent`. */
+/** Tab trigger for `variant="line"` — spodní okraj jako indikátor. */
+export const TabTriggerLine: FunctionComponent<TabTriggerProps> = (props) => {
+  const { class: className, ...rest } = props;
+  const merged = [triggerClassLine, className].filter(Boolean).join(" ");
+  return <HeadlessTabs.Tab {...rest} class={merged} />;
+};
+
+/** Styled tab panel — default variant. FunctionComponent so HTabs matches `tabPanelComponent`. */
 export const TabPanel: FunctionComponent<TabPanelProps> = (props) => {
   const { verticalLayout, class: className, ...rest } = props;
   const base = verticalLayout ? panelClassVertical : panelClassHorizontal;
   const merged = [base, className].filter(Boolean).join(" ");
+  return <HeadlessTabs.Panel {...rest} class={merged} />;
+};
+
+/** Tab panel for `variant="line"` — bez rámečku. */
+export const TabPanelLine: FunctionComponent<TabPanelProps> = (props) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { verticalLayout: _, class: className, ...rest } = props;
+  const merged = [panelClassHorizontalLine, className].filter(Boolean).join(" ");
   return <HeadlessTabs.Panel {...rest} class={merged} />;
 };
 
@@ -65,15 +193,17 @@ export const TabPanel: FunctionComponent<TabPanelProps> = (props) => {
  * FunctionComponent (jako upstream HTabs), aby děti a `tab*Component` zůstaly sladěné s HTabs.
  */
 export const TabRoot: FunctionComponent<TabRootProps> = (props) => {
+  const { variant = "default", class: className, ...rest } = props;
+  const isLine = variant === "line";
   const rootBase = "w-full max-w-xl";
   const rootVertical = props.vertical ? "flex flex-row flex-wrap gap-6 items-start" : "";
-  const merged = [rootBase, rootVertical, props.class].filter(Boolean).join(" ");
+  const merged = [rootBase, rootVertical, className].filter(Boolean).join(" ");
   return (
     <HeadlessTabs.Root
-      {...props}
-      tabListComponent={props.tabListComponent ?? TabList}
-      tabComponent={props.tabComponent ?? TabTrigger}
-      tabPanelComponent={props.tabPanelComponent ?? TabPanel}
+      {...rest}
+      tabListComponent={props.tabListComponent ?? (isLine ? TabListLine : TabList)}
+      tabComponent={props.tabComponent ?? (isLine ? TabTriggerLine : TabTrigger)}
+      tabPanelComponent={props.tabPanelComponent ?? (isLine ? TabPanelLine : TabPanel)}
       class={merged}
     />
   );
@@ -86,8 +216,11 @@ export const TabRoot: FunctionComponent<TabRootProps> = (props) => {
 export const Tab = {
   Root: TabRoot,
   List: TabList,
+  ListLine: TabListLine,
   Tab: TabTrigger,
+  TriggerLine: TabTriggerLine,
   Panel: TabPanel,
+  PanelLine: TabPanelLine,
 };
 
 /** Alias pro `Tab` — stejné API jako `Tabs` v {@link https://qwikui.com/docs/styled/tabs | Qwik UI Styled}. */
@@ -108,6 +241,8 @@ export interface TabsGroupProps {
   behavior?: "automatic" | "manual";
   /** Vertical tab list and arrow-key navigation (Up/Down). */
   vertical?: boolean;
+  /** `line` — podtržené záložky, obsah bez rámečku. */
+  variant?: TabRootProps["variant"];
   class?: string;
 }
 
@@ -124,25 +259,31 @@ export const TabsGroup = component$<TabsGroupProps>((props) => {
       : firstEnabled;
 
   const vertical = props.vertical;
+  const isLine = props.variant === "line";
+
+  const ListComp = isLine ? TabListLine : TabList;
+  const TriggerComp = isLine ? TabTriggerLine : TabTrigger;
+  const PanelComp = isLine ? TabPanelLine : TabPanel;
 
   return (
     <Tab.Root
       class={props.class}
       behavior={props.behavior}
       vertical={vertical}
+      variant={props.variant}
       selectedTabId={initialId}
     >
-      <Tab.List verticalLayout={vertical}>
+      <ListComp verticalLayout={isLine ? false : vertical}>
         {items.map((item) => (
-          <Tab.Tab key={item.value} disabled={item.disabled}>
+          <TriggerComp key={item.value} disabled={item.disabled}>
             {item.label}
-          </Tab.Tab>
+          </TriggerComp>
         ))}
-      </Tab.List>
+      </ListComp>
       {items.map((item) => (
-        <Tab.Panel key={item.value} verticalLayout={vertical} disabled={item.disabled}>
+        <PanelComp key={item.value} verticalLayout={isLine ? false : vertical} disabled={item.disabled}>
           <p>{item.content}</p>
-        </Tab.Panel>
+        </PanelComp>
       ))}
     </Tab.Root>
   );

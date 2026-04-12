@@ -1,0 +1,32 @@
+{
+  "name": "calendar-input",
+  "title": "CalendarInput",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "base",
+  "dependencies": [
+    "calendar",
+    "input-group",
+    "popover"
+  ],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "value": "string",
+      "defaultValue": "string",
+      "onValueChange$": "function",
+      "defaultViewMonth": "string",
+      "minDate": "string",
+      "maxDate": "string",
+      "weekStartsOn": [
+        0,
+        1
+      ],
+      "placeholder": "string",
+      "popoverRootId": "string",
+      "inputId": "string",
+      "class": "string",
+      "aria-label": "string"
+    }
+  }
+}

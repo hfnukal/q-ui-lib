@@ -2,6 +2,90 @@
  * @component item
  * @title Item
  * @version 1.0.0
+ * @example Základ s akcí
+ * Základ s akcí — viz ukázka níže.
+ * ```tsx
+ * import { Button } from "~/components/ui/button";
+ * import { Item } from "~/components/ui/item";
+ * 
+ * <Item.Root variant="outline">
+ *   <Item.Content>
+ *     <Item.Title>Základní položka</Item.Title>
+ *     <Item.Description>Krátký popis pod titulkem.</Item.Description>
+ *   </Item.Content>
+ *   <Item.Actions>
+ *     <Button variant="secondary" size="sm">Akce</Button>
+ *   </Item.Actions>
+ * </Item.Root>
+ * ```
+ *
+ * @example Varianty
+ * Varianty — viz ukázka níže.
+ * ```tsx
+ * import { Item } from "~/components/ui/item";
+ * 
+ * <div class="flex max-w-md flex-col gap-4">
+ *   <Item.Root>
+ *     <Item.Content>
+ *       <Item.Title>Výchozí</Item.Title>
+ *       <Item.Description>Bez ohraničení, průhledné pozadí.</Item.Description>
+ *     </Item.Content>
+ *   </Item.Root>
+ *   <Item.Root variant="outline">
+ *     <Item.Content>
+ *       <Item.Title>Outline</Item.Title>
+ *       <Item.Description>Okraj a zvednutá plocha.</Item.Description>
+ *     </Item.Content>
+ *   </Item.Root>
+ *   <Item.Root variant="muted">
+ *     <Item.Content>
+ *       <Item.Title>Muted</Item.Title>
+ *       <Item.Description>Sekundární pozadí z tokenů.</Item.Description>
+ *     </Item.Content>
+ *   </Item.Root>
+ * </div>
+ * ```
+ *
+ * @example Ikona a odkaz
+ * Ikona a odkaz — viz ukázka níže.
+ * ```tsx
+ * import { LuBadgeCheck } from "@qwikest/icons/lucide";
+ * import { Item } from "~/components/ui/item";
+ * 
+ * <Item.Root variant="outline" size="sm" as="a" href="#" class="no-underline text-inherit">
+ *   <Item.Media variant="icon">
+ *     <LuBadgeCheck aria-hidden="true" />
+ *   </Item.Media>
+ *   <Item.Content>
+ *     <Item.Title>Profil ověřen</Item.Title>
+ *   </Item.Content>
+ *   <Item.Actions>
+ *     <span class="text-tertiary-label" aria-hidden="true">›</span>
+ *   </Item.Actions>
+ * </Item.Root>
+ * ```
+ *
+ * @example Avatar a skupina
+ * Avatar a skupina — viz ukázka níže.
+ * ```tsx
+ * import { Item } from "~/components/ui/item";
+ * 
+ * <Item.Group class="max-w-md">
+ *   <Item.Root variant="outline">
+ *     <Item.Content><Item.Title>První</Item.Title></Item.Content>
+ *   </Item.Root>
+ *   <Item.Separator />
+ *   <Item.Root variant="outline">
+ *     <Item.Content><Item.Title>Druhá</Item.Title></Item.Content>
+ *   </Item.Root>
+ * </Item.Group>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

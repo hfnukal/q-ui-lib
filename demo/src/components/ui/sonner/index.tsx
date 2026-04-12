@@ -2,6 +2,49 @@
  * @component sonner
  * @title Sonner
  * @version 1.0.5
+ * @example Toaster v layoutu
+ * V kořenovém layoutu obal aplikaci kvůli kontextu; `Slot` vykreslí child routes.
+ * ```tsx
+ * import { Slot, component$ } from "@builder.io/qwik";
+ * import { Sonner } from "~/components/ui/sonner";
+ * 
+ * export default component$(() => (
+ *   <Sonner.Toaster>
+ *     <div class="p-4">
+ *       Obsah aplikace… <Slot />
+ *     </div>
+ *   </Sonner.Toaster>
+ * ));
+ * ```
+ *
+ * @example Toast na stránce
+ * `useSonner()` vrací `toast` pro volání z obsahu stránky.
+ * ```tsx
+ * import { component$ } from "@builder.io/qwik";
+ * import { Button } from "~/components/ui/button";
+ * import { useSonner } from "~/components/ui/sonner";
+ * 
+ * export const ToastDemo = component$(() => {
+ *   const { toast } = useSonner();
+ *   return (
+ *     <>
+ *       <Button onClick$={() => toast("Uloženo")}>Toast</Button>
+ *       <Button
+ *         onClick$={() =>
+ *           toast({
+ *             title: "Chyba",
+ *             description: "Zkuste to znovu.",
+ *             type: "error",
+ *             duration: 0,
+ *           })
+ *         }
+ *       >
+ *         Trvalý toast
+ *       </Button>
+ *     </>
+ *   );
+ * });
+ * ```
  */
 
 import {

@@ -2,46 +2,11 @@
   "name": "select",
   "title": "Select",
   "version": "1.2.3",
-  "kind": "compound",
+  "kind": "primitive",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [],
-  "apiTree": {
-    "Root": {
-      "children": {
-        "Label": {},
-        "Trigger": {},
-        "DisplayValue": {},
-        "Popover": {
-          "params": {
-            "align": [
-              "center",
-              "end",
-              "start"
-            ],
-            "position": [
-              "item-aligned",
-              "popper"
-            ]
-          },
-          "slot": true
-        },
-        "Listbox": {},
-        "Group": {
-          "children": {
-            "GroupLabel": {}
-          }
-        },
-        "Item": {
-          "children": {
-            "ItemLabel": {},
-            "ItemIndicator": {}
-          }
-        },
-        "Description": {},
-        "ErrorMessage": {},
-        "HiddenNativeSelect": {}
-      }
-    }
-  }
+  "npmDependencies": [
+    "~"
+  ],
+  "apiTree": {}
 }

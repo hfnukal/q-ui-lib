@@ -2,6 +2,31 @@
  * @component box
  * @title Box
  * @version 1.0.0
+ * @example Předvolby
+ * Tokenové předvolby: `padding`, `background`, okraj a zaoblení.
+ * ```tsx
+ * import { Box } from "~/components/ui/box";
+ * 
+ * <Box padding="md" margin="none" background="raised" border rounded="lg">
+ *   Obsah
+ * </Box>
+ * ```
+ *
+ * @example Rozšíření přes class
+ * Vlastní layout a vzhled jednou třídou přes `class`.
+ * ```tsx
+ * import { Box } from "~/components/ui/box";
+ * 
+ * <Box class="w-64 p-6 bg-surface-overlay rounded-xl border border-separator-opaque">
+ *   Šířka a další styly přes class
+ * </Box>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";

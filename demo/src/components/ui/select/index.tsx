@@ -2,6 +2,167 @@
  * @component select
  * @title Select
  * @version 1.2.3
+ * @example Základní výběr
+ * Základní výběr — viz ukázka níže.
+ * ```tsx
+ * import { Select } from "~/components/ui/select";
+ * 
+ * <Select.Root>
+ *   <Select.Label>Téma</Select.Label>
+ *   <Select.Trigger>
+ *     <Select.DisplayValue placeholder="Vyberte možnost" />
+ *   </Select.Trigger>
+ *   <Select.Popover>
+ *     <Select.Item value="light">
+ *       <Select.ItemLabel>Světlý</Select.ItemLabel>
+ *       <Select.ItemIndicator>✓</Select.ItemIndicator>
+ *     </Select.Item>
+ *     <Select.Item value="dark">
+ *       <Select.ItemLabel>Tmavý</Select.ItemLabel>
+ *       <Select.ItemIndicator>✓</Select.ItemIndicator>
+ *     </Select.Item>
+ *   </Select.Popover>
+ * </Select.Root>
+ * ```
+ *
+ * @example Align item with trigger vs popper
+ * Analogie k Radix/shadcn: `position=&quot;item-aligned&quot;` po otevření posune panel tak, aby řádka s aktuální hodnotou (nebo zvýrazněnou položkou) měla stejnou výšku jako trigger; při jiné volbě se pozice znovu dopočítá. `position=&quot;popper&quot;` to nevynucuje — chová se jako standardní plovoucí menu. Obě varianty mají počáteční hodnotu uprostřed seznamu (1–10).
+ * ```tsx
+ * import { component$ } from "@builder.io/qwik";
+ * import { Select } from "~/components/ui/select";
+ * 
+ * export const ItemAlignCompare = component$(() => {
+ *   const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+ *     <Select.Item key={n} value={String(n)}>
+ *       <Select.ItemLabel>{`Možnost ${n}`}</Select.ItemLabel>
+ *     </Select.Item>
+ *   ));
+ *   return (
+ *     <div class="flex flex-wrap gap-10">
+ *       <div class="w-56 space-y-1">
+ *         <p class="text-caption-1 text-secondary-label">item-aligned (výchozí)</p>
+ *         <Select.Root class="!max-w-none w-full" value="6">
+ *           <Select.Trigger>
+ *             <Select.DisplayValue placeholder="Vyberte" />
+ *           </Select.Trigger>
+ *           <Select.Popover position="item-aligned">{items}</Select.Popover>
+ *         </Select.Root>
+ *       </div>
+ *       <div class="w-56 space-y-1">
+ *         <p class="text-caption-1 text-secondary-label">popper</p>
+ *         <Select.Root class="!max-w-none w-full" value="6">
+ *           <Select.Trigger>
+ *             <Select.DisplayValue placeholder="Vyberte" />
+ *           </Select.Trigger>
+ *           <Select.Popover position="popper">{items}</Select.Popover>
+ *         </Select.Root>
+ *       </div>
+ *     </div>
+ *   );
+ * });
+ * ```
+ *
+ * @example Zarovnání panelu (align)
+ * Prop `align` na `Select.Popover` : `start` (výchozí, odpovídá `bottom-start` ), `center` , `end` . Zde je u všech příkladů `position=&quot;popper&quot;` , aby byl vidět jen horizontální rozdíl. Při vlastním `floating` s příponou `-start` / `-end` se `align` neaplikuje.
+ * ```tsx
+ * import { Select } from "~/components/ui/select";
+ * 
+ * // position="popper" vypne svislé dosednutí na vybranou položku — ukazuje čistě horizontální align.
+ * <div class="flex flex-wrap gap-8">
+ *   <div class="w-56 space-y-1">
+ *     <p class="text-caption-1 text-secondary-label">align="start" (výchozí)</p>
+ *     <Select.Root class="!max-w-none w-full">
+ *       <Select.Trigger>
+ *         <Select.DisplayValue placeholder="Start" />
+ *       </Select.Trigger>
+ *       <Select.Popover position="popper" align="start">
+ *         <Select.Item value="a"><Select.ItemLabel>Ant</Select.ItemLabel></Select.Item>
+ *         <Select.Item value="b"><Select.ItemLabel>Bó</Select.ItemLabel></Select.Item>
+ *       </Select.Popover>
+ *     </Select.Root>
+ *   </div>
+ *   <div class="w-56 space-y-1">
+ *     <p class="text-caption-1 text-secondary-label">align="center"</p>
+ *     <Select.Root class="!max-w-none w-full">
+ *       <Select.Trigger>
+ *         <Select.DisplayValue placeholder="Střed" />
+ *       </Select.Trigger>
+ *       <Select.Popover position="popper" align="center">
+ *         <Select.Item value="a"><Select.ItemLabel>Ant</Select.ItemLabel></Select.Item>
+ *         <Select.Item value="b"><Select.ItemLabel>Bó</Select.ItemLabel></Select.Item>
+ *       </Select.Popover>
+ *     </Select.Root>
+ *   </div>
+ *   <div class="w-56 space-y-1">
+ *     <p class="text-caption-1 text-secondary-label">align="end"</p>
+ *     <Select.Root class="!max-w-none w-full">
+ *       <Select.Trigger>
+ *         <Select.DisplayValue placeholder="Konec" />
+ *       </Select.Trigger>
+ *       <Select.Popover position="popper" align="end">
+ *         <Select.Item value="a"><Select.ItemLabel>Ant</Select.ItemLabel></Select.Item>
+ *         <Select.Item value="b"><Select.ItemLabel>Bó</Select.ItemLabel></Select.Item>
+ *       </Select.Popover>
+ *     </Select.Root>
+ *   </div>
+ * </div>
+ * ```
+ *
+ * @example Skupiny
+ * Rozdělení položek pomocí `Select.Group` a `GroupLabel` (sekce v seznamu).
+ * ```tsx
+ * import { Select } from "~/components/ui/select";
+ * 
+ * <Select.Root>
+ *   <Select.Trigger>
+ *     <Select.DisplayValue placeholder="Framework…" />
+ *   </Select.Trigger>
+ *   <Select.Popover>
+ *     <Select.Group>
+ *       <Select.GroupLabel>Populární</Select.GroupLabel>
+ *       <Select.Item value="qwik">
+ *         <Select.ItemLabel>Qwik</Select.ItemLabel>
+ *       </Select.Item>
+ *     </Select.Group>
+ *     <Select.Group>
+ *       <Select.GroupLabel>Ostatní</Select.GroupLabel>
+ *       <Select.Item value="other">
+ *         <Select.ItemLabel>Jiné</Select.ItemLabel>
+ *       </Select.Item>
+ *     </Select.Group>
+ *   </Select.Popover>
+ * </Select.Root>
+ * ```
+ *
+ * @example Řízená hodnota (bind:value)
+ * Řízená hodnota (bind:value) — viz ukázka níže.
+ * ```tsx
+ * import { component$, useSignal } from "@builder.io/qwik";
+ * import { Select } from "~/components/ui/select";
+ * 
+ * export const Controlled = component$(() => {
+ *   const value = useSignal("banana");
+ * 
+ *   return (
+ *     <>
+ *       <Select.Root bind:value={value}>
+ *         <Select.Trigger>
+ *           <Select.DisplayValue placeholder="Ovoce" />
+ *         </Select.Trigger>
+ *         <Select.Popover>
+ *           <Select.Item value="apple">
+ *             <Select.ItemLabel>Jablko</Select.ItemLabel>
+ *           </Select.Item>
+ *           <Select.Item value="banana">
+ *             <Select.ItemLabel>Banán</Select.ItemLabel>
+ *           </Select.Item>
+ *         </Select.Popover>
+ *       </Select.Root>
+ *       <p class="mt-2 text-caption-1 text-secondary-label">Hodnota: {value.value}</p>
+ *     </>
+ *   );
+ * });
+ * ```
  */
 
 import {
@@ -166,10 +327,11 @@ const SelectItemAlignEffect = component$<{ mode: SelectPosition }>((props) => {
       return parseFloat(getComputedStyle(panel).top);
     };
 
+    // Only align to a selected item. Falling through to highlighted/first option when nothing is
+    // selected causes the popup to jump to center as the user hovers; with no selection the panel
+    // stays at its natural Floating UI position (below the trigger).
     const findAlignItem = (panel: HTMLElement) =>
-      (panel.querySelector("[data-selected]") as HTMLElement | null) ??
-      (panel.querySelector("[data-highlighted]") as HTMLElement | null) ??
-      (panel.querySelector('[role="option"]:not([data-disabled])') as HTMLElement | null);
+      (panel.querySelector("[data-selected]") as HTMLElement | null);
 
     const applyAlign = () => {
       const panel = ctx.popoverRef.value;
@@ -225,10 +387,13 @@ const SelectItemAlignEffect = component$<{ mode: SelectPosition }>((props) => {
           applyAlign();
           requestAnimationFrame(() => {
             applyAlign();
-            const p = ctx.popoverRef.value;
-            if (p && itemAligned && ctx.isListboxOpenSig.value) {
-              p.classList.add("qui-select-item-aligned-ready");
-            }
+            requestAnimationFrame(() => {
+              applyAlign();
+              const p = ctx.popoverRef.value;
+              if (p && itemAligned && ctx.isListboxOpenSig.value) {
+                p.classList.add("qui-select-item-aligned-ready");
+              }
+            });
           });
         });
       };
@@ -364,6 +529,19 @@ export const SelectPopover = component$<SelectPopoverProps>((props) => {
   ]
     .filter(Boolean)
     .join(" ");
+
+  const ctx = useContext(selectAlignContextId);
+
+  useVisibleTask$(({ track }) => {
+    track(() => ctx.isListboxOpenSig.value);
+    track(() => ctx.triggerRef.value);
+    const open = ctx.isListboxOpenSig.value;
+    const panel = ctx.popoverRef.value;
+    const trigger = ctx.triggerRef.value;
+    if (!open || !panel || !trigger) return;
+    const w = trigger.getBoundingClientRect().width;
+    panel.style.minWidth = w > 0 ? `${Math.round(w)}px` : "";
+  });
 
   return (
     <>

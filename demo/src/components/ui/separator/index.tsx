@@ -2,6 +2,44 @@
  * @component separator
  * @title Separator
  * @version 1.0.0
+ * @example Vodorovně
+ * Výchozí `orientation=&quot;horizontal&quot;` — plná šířka kontejneru, výška 1&nbsp;px.
+ * ```tsx
+ * import { Separator } from "~/components/ui/separator";
+ * 
+ * <div class="space-y-3">
+ *   <p class="text-body text-label">Oddíl jedna</p>
+ *   <Separator />
+ *   <p class="text-body text-label">Oddíl dvě</p>
+ * </div>
+ * ```
+ *
+ * @example Svisle
+ * V řádku použij `items-stretch` na flex kontejneru, aby čára měla výšku řádku.
+ * ```tsx
+ * import { Separator } from "~/components/ui/separator";
+ * 
+ * <div class="flex h-12 items-stretch gap-3">
+ *   <span class="flex items-center text-callout text-label">Vlevo</span>
+ *   <Separator orientation="vertical" />
+ *   <span class="flex items-center text-callout text-label">Vpravo</span>
+ * </div>
+ * ```
+ *
+ * @example Dekorativní
+ * `decorative` nastaví `role=&quot;none&quot;` — vhodné, když oddělovač není strukturální landmark.
+ * ```tsx
+ * import { Separator } from "~/components/ui/separator";
+ * 
+ * <Separator decorative />
+ * // role="none" — vypnuto z accessibility stromu (čistě vizuální)
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf } from "@builder.io/qwik";

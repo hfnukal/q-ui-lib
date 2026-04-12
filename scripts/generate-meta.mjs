@@ -575,6 +575,21 @@ function analyzeSourceFile(sf, folderName) {
 }
 
 /**
+ * Derives the `registry` field from a component's absolute path.
+ * - `components/base/<slug>/`        → "base"
+ * - `components/<slug>/` (flat/legacy) → "base"
+ * - `components/<owner>/<set>/<slug>/` → "owner/set"
+ * @param {string} componentDir absolute path to the component folder
+ * @returns {string}
+ */
+function registryFromComponentDir(componentDir) {
+  const rel = path.relative(componentsDir, componentDir);
+  const parts = rel.split(path.sep).filter(Boolean);
+  if (parts.length <= 1 || parts[0] === "base") return "base";
+  return parts.slice(0, -1).join("/"); // e.g. "shanny/eshop"
+}
+
+/**
  * Rekurzivně najde všechny složky s index.tsx pod baseDir.
  * Nepokračuje dovnitř složky, která sama index.tsx obsahuje.
  * @param {string} baseDir
@@ -635,7 +650,7 @@ function main() {
         title: directives.title || kebabToPascal(folderName),
         version: versionFallback,
         kind: "unknown",
-        registry: "base",
+        registry: registryFromComponentDir(componentDir),
         dependencies: collectRelativeImportRoots(sf),
         npmDependencies: collectExtraNpmDependencies(sf, npmBaseline),
         apiTree: {},

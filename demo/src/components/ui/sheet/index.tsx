@@ -2,6 +2,58 @@
  * @component sheet
  * @title Sheet
  * @version 1.0.5
+ * @example Zprava (výchozí)
+ * Zprava (výchozí) — viz ukázka níže.
+ * ```tsx
+ * import { Sheet } from "~/components/ui/sheet";
+ * import { Button } from "~/components/ui/button";
+ * 
+ * <Sheet.Root>
+ *   <Sheet.Trigger>Otevřít panel</Sheet.Trigger>
+ *   <Sheet.Panel>
+ *     <Sheet.Close class="absolute right-4 top-4 z-10" />
+ *     <Sheet.Header>
+ *       <Sheet.Title>Nastavení</Sheet.Title>
+ *       <Sheet.Description>Krátký popis obsahu panelu.</Sheet.Description>
+ *     </Sheet.Header>
+ *     <Sheet.Content>
+ *       <p class="text-callout text-secondary-label">Hlavní obsah sheetu.</p>
+ *     </Sheet.Content>
+ *     <Sheet.Footer>
+ *       <Sheet.Close class="rounded-md border border-separator-opaque bg-surface-raised px-4 py-2 text-callout font-medium text-label shadow-sm hover:bg-surface-overlay">
+ *         Zrušit
+ *       </Sheet.Close>
+ *       <Button>Uložit</Button>
+ *     </Sheet.Footer>
+ *   </Sheet.Panel>
+ * </Sheet.Root>
+ * ```
+ *
+ * @example Strana panelu
+ * Na `Sheet.Panel` nastav `side` : `left` , `right` , `top` , `bottom` .
+ * ```tsx
+ * import { Sheet } from "~/components/ui/sheet";
+ * 
+ * <Sheet.Root>
+ *   <Sheet.Trigger>Zleva</Sheet.Trigger>
+ *   <Sheet.Panel side="left">
+ *     <Sheet.Close class="absolute right-4 top-4 z-10" />
+ *     <Sheet.Header>
+ *       <Sheet.Title>Levý panel</Sheet.Title>
+ *       <Sheet.Description>Prop `side="left"` na Panel.</Sheet.Description>
+ *     </Sheet.Header>
+ *     <Sheet.Content>
+ *       <p class="text-callout text-secondary-label">Obsah…</p>
+ *     </Sheet.Content>
+ *   </Sheet.Panel>
+ * </Sheet.Root>
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";

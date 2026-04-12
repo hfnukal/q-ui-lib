@@ -2,6 +2,89 @@
  * @component pagination
  * @title Pagination
  * @version 1.0.0
+ * @example Základní použití
+ * Props `selectedPage`, `totalPages`, `onPageChange$` — aktuální stránka drž v `useSignal`.
+ * ```tsx
+ * import { $, component$, useSignal } from "@builder.io/qwik";
+ * import { Pagination } from "~/components/ui/pagination";
+ * 
+ * export default component$(() => {
+ *   const page = useSignal(1);
+ *   return (
+ *     <Pagination
+ *       selectedPage={page.value}
+ *       totalPages={10}
+ *       onPageChange$={$((p) => {
+ *         page.value = p;
+ *       })}
+ *     />
+ *   );
+ * });
+ * ```
+ *
+ * @example Více sousedních stránek
+ * Prop `siblingCount` (výchozí 1) rozšiřuje okno kolem aktivní stránky.
+ * ```tsx
+ * import { $, component$, useSignal } from "@builder.io/qwik";
+ * import { Pagination } from "~/components/ui/pagination";
+ * 
+ * export default component$(() => {
+ *   const page = useSignal(5);
+ *   return (
+ *     <Pagination
+ *       selectedPage={page.value}
+ *       totalPages={24}
+ *       siblingCount={2}
+ *       onPageChange$={$((p) => {
+ *         page.value = p;
+ *       })}
+ *     />
+ *   );
+ * });
+ * ```
+ *
+ * @example Vlastní popisky šipek
+ * `customArrowTexts` — krátké texty místo výchozích PREV / NEXT.
+ * ```tsx
+ * import { $, component$, useSignal } from "@builder.io/qwik";
+ * import { Pagination } from "~/components/ui/pagination";
+ * 
+ * export default component$(() => {
+ *   const page = useSignal(1);
+ *   return (
+ *     <Pagination
+ *       selectedPage={page.value}
+ *       totalPages={8}
+ *       customArrowTexts={{ previous: "Zpět", next: "Vpřed" }}
+ *       onPageChange$={$((p) => {
+ *         page.value = p;
+ *       })}
+ *     />
+ *   );
+ * });
+ * ```
+ *
+ * @example Zakázáno
+ * Neinteraktivní stránkování přes prop `disabled`.
+ * ```tsx
+ * import { $, component$ } from "@builder.io/qwik";
+ * import { Pagination } from "~/components/ui/pagination";
+ * 
+ * export default component$(() => (
+ *   <Pagination
+ *     selectedPage={3}
+ *     totalPages={10}
+ *     disabled
+ *     onPageChange$={$(() => {})}
+ *   />
+ * ));
+ * ```
+ 
+ 
+ 
+ 
+ 
+ 
  */
 
 import { component$, type PropsOf } from "@builder.io/qwik";
