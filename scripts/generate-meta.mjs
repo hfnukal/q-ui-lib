@@ -669,7 +669,7 @@ function main() {
       title: directives.title || analyzed.title,
       version: versionFallback,
       kind: analyzed.kind,
-      registry: "base",
+      registry: registryFromComponentDir(componentDir),
       dependencies: collectRelativeImportRoots(sf),
       npmDependencies: collectExtraNpmDependencies(sf, npmBaseline),
       apiTree: analyzed.apiTree,

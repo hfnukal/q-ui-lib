@@ -16,7 +16,9 @@
               "both",
               "horizontal",
               "vertical"
-            ]
+            ],
+            "keepScroll": "boolean",
+            "keepScrollId": "string"
           },
           "slot": true
         },
@@ -27,7 +29,9 @@
               "both",
               "horizontal",
               "vertical"
-            ]
+            ],
+            "keepScroll": "boolean",
+            "keepScrollId": "string"
           },
           "slot": true
         }

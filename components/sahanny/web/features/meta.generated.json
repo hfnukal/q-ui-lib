@@ -1,0 +1,23 @@
+{
+  "name": "features",
+  "title": "Web — vlastnosti / služby",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "sahanny/web",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "eyebrow": "string",
+      "title": "string",
+      "subtitle": "string",
+      "items": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/components/sahanny/web/features/index\").WebFeatureItem[]",
+      "columns": [
+        2,
+        3,
+        4
+      ],
+      "class": "string"
+    }
+  }
+}

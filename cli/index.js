@@ -113,10 +113,10 @@ program
 function copyTemplate(target) {
   const src = path.resolve(__dirname, '..', 'template');
   const dest = path.resolve(target);
-  if (fs.existsSync(dest)) {
-    console.log(chalk.yellow(`Target directory ${dest} already exists.`));
-    process.exit(1);
-  }
+  // if (fs.existsSync(dest)) {
+  //   console.log(chalk.yellow(`Target directory ${dest} already exists.`));
+  //   process.exit(1);
+  // }
   fs.copySync(src, dest);
   console.log(chalk.green(`Template copied to ${dest}`));
   syncUtilitiesToApp(dest);

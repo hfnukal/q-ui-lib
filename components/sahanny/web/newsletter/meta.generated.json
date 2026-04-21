@@ -1,0 +1,19 @@
+{
+  "name": "newsletter",
+  "title": "Web — odběr novinek",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "sahanny/web",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "title": "string",
+      "description": "string",
+      "placeholder": "string",
+      "buttonLabel": "string",
+      "onSubmit$": "function",
+      "class": "string"
+    }
+  }
+}

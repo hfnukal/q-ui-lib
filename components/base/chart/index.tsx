@@ -84,6 +84,8 @@
  
  
  
+ 
+ 
  */
 
 import {
@@ -158,7 +160,7 @@ function resolveChartDataCssVars(data: ChartData, scope: HTMLElement): void {
     "pointHoverBorderColor",
   ] as const;
   for (const ds of datasets) {
-    const row = ds as Record<string, unknown>;
+    const row = ds as unknown as Record<string, unknown>;
     for (const key of colorLikeKeys) {
       if (key in row && row[key] != null) {
         row[key] = resolveColorValue(row[key], scope);

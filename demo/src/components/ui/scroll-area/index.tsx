@@ -9,7 +9,11 @@
  * 
  * <ScrollArea.Root class="h-48 max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised">
  *   <ScrollArea.Viewport class="p-4">
- *     <p class="text-body text-label">… dlouhý obsah …</p>
+ *     {Array.from({ length: 40 }, (_, i) => (
+ *       <p key={i} class="text-body text-label">
+ *         Řádek {i + 1} — ukázkový text, aby byl scroll vidět.
+ *       </p>
+ *     ))}
  *   </ScrollArea.Viewport>
  * </ScrollArea.Root>
  * ```
@@ -23,7 +27,11 @@
  *   class="h-48 max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised"
  *   viewportClass="p-4"
  * >
- *   <p class="text-body text-label">… obsah …</p>
+ *   {Array.from({ length: 40 }, (_, i) => (
+ *     <p key={i} class="text-body text-label">
+ *       Řádek {i + 1} — ukázkový text, aby byl scroll vidět.
+ *     </p>
+ *   ))}
  * </ScrollArea.Pane>
  * ```
  *
@@ -38,10 +46,13 @@
  *   viewportClass="whitespace-nowrap p-4"
  * >
  *   <span class="inline-block min-w-max text-body text-label">
- *     Velmi dlouhý řádek bez zalamování …
+ *     {Array.from({ length: 80 }, (_, i) => `Segment ${i + 1}`).join(" — ")}
  *   </span>
  * </ScrollArea.Pane>
  * ```
+ 
+ 
+ 
  
  
  

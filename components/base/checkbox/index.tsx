@@ -59,7 +59,7 @@
  * ```
  *
  * @example Vlastní řádek (Label + onClick$)
- * Stejné chování ručně: `aria-labelledby` + přepnutí signálu v `onClick$` na štítku (bez `htmlFor` / `for`).
+ * Stejné chování ručně: `aria-labelledby` + přepnutí signálu v `onClick na štítku (bez `htmlFor` / `for`).
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
  * import { CheckboxControl } from "~/components/ui/checkbox";
@@ -79,6 +79,8 @@
  *   );
  * });
  * ```
+ 
+ 
  */
 
 import { $, component$, type PropsOf, Slot, useId } from "@builder.io/qwik";

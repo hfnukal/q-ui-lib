@@ -113,6 +113,43 @@ const DemoShellWithSidebar = component$(() => {
           <ScrollArea.Root class="min-h-0 flex-1">
             <ScrollArea.Viewport direction="vertical" keepScroll keepScrollId="sidebar-nav">
               <Sidebar.Group>
+                <Sidebar.GroupLabel>Design</Sidebar.GroupLabel>
+                <Sidebar.GroupContent>
+                  <Sidebar.Menu>
+                    {(
+                      [{ href: "/theme", label: "Theme Editor" }] as const
+                    ).map(({ href, label }) => {
+                      const active = current === normalizePath(href);
+                      const abbrev = sidebarLabelAbbrev(label);
+                      return (
+                        <Sidebar.MenuItem key={href}>
+                          <a
+                            class={menuLinkClass(active, collapsed)}
+                            href={href}
+                            data-active={active ? "" : undefined}
+                            aria-current={active ? "page" : undefined}
+                          >
+                            {collapsed ? (
+                              <span class="flex min-w-0 flex-1 items-center gap-2">
+                                <span
+                                  class="hidden h-8 w-8 shrink-0 items-center justify-center rounded-md bg-fill-secondary/30 text-caption-1 font-semibold uppercase leading-none text-label md:flex"
+                                  aria-hidden="true"
+                                >
+                                  {abbrev || "?"}
+                                </span>
+                                <span class="max-md:truncate md:sr-only">{label}</span>
+                              </span>
+                            ) : (
+                              <span class="truncate">{label}</span>
+                            )}
+                          </a>
+                        </Sidebar.MenuItem>
+                      );
+                    })}
+                  </Sidebar.Menu>
+                </Sidebar.GroupContent>
+              </Sidebar.Group>
+              <Sidebar.Group>
                 <Sidebar.GroupLabel>Components</Sidebar.GroupLabel>
                 <Sidebar.GroupContent>
                   <Sidebar.Menu>

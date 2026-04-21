@@ -1,0 +1,28 @@
+{
+  "name": "hero-spotlight",
+  "title": "Jabko — hero spotlight",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "sahanny/jabko",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "variant": [
+        "dark",
+        "light"
+      ],
+      "eyebrow": "string",
+      "title": "string",
+      "subtitle": "string",
+      "primaryCta": "{ label: string; href: string; }",
+      "label": "string",
+      "href": "string",
+      "secondaryCta": "{ label: string; href: string; }",
+      "media": "{ src: string; alt: string; }",
+      "src": "string",
+      "alt": "string",
+      "class": "string"
+    }
+  }
+}

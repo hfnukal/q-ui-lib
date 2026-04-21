@@ -1,0 +1,16 @@
+{
+  "name": "subhead-rail",
+  "title": "Jabko — řádek odkazů pod hero",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "sahanny/jabko",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "items": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/components/sahanny/jabko/subhead-rail/index\").JabkoSubheadRailItem[]",
+      "separator": "string",
+      "class": "string"
+    }
+  }
+}
