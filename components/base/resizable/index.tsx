@@ -5,7 +5,7 @@
  * @example Vodorovně
  * Přetahujte oddělovač nebo použijte šipky vlevo/vpravo, když má fokus. Volitelně `withHandle` pro vizuální úchop.
  * ```tsx
- * import { Resizable } from "~/components/ui/resizable";
+ * import { Resizable } from "~/components/ui/base/resizable";
  * 
  * <Resizable.PanelGroup
  *   direction="horizontal"
@@ -25,7 +25,7 @@
  * @example Svisle
  * `direction=&quot;vertical&quot;` — kurzor `row-resize`, klávesy nahoru/dolů. `withHandle` přidá vizuální úchop.
  * ```tsx
- * import { Resizable } from "~/components/ui/resizable";
+ * import { Resizable } from "~/components/ui/base/resizable";
  *
  * <Resizable.PanelGroup
  *   direction="vertical"

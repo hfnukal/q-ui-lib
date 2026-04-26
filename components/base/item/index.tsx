@@ -5,8 +5,8 @@
  * @example Základ s akcí
  * Základ s akcí — viz ukázka níže.
  * ```tsx
- * import { Button } from "~/components/ui/button";
- * import { Item } from "~/components/ui/item";
+ * import { Button } from "~/components/ui/base/button";
+ * import { Item } from "~/components/ui/base/item";
  * 
  * <Item.Root variant="outline">
  *   <Item.Content>
@@ -22,7 +22,7 @@
  * @example Varianty
  * Varianty — viz ukázka níže.
  * ```tsx
- * import { Item } from "~/components/ui/item";
+ * import { Item } from "~/components/ui/base/item";
  * 
  * <div class="flex max-w-md flex-col gap-4">
  *   <Item.Root>
@@ -50,7 +50,7 @@
  * Ikona a odkaz — viz ukázka níže.
  * ```tsx
  * import { LuBadgeCheck } from "@qwikest/icons/lucide";
- * import { Item } from "~/components/ui/item";
+ * import { Item } from "~/components/ui/base/item";
  * 
  * <Item.Root variant="outline" size="sm" as="a" href="#" class="no-underline text-inherit">
  *   <Item.Media variant="icon">
@@ -68,7 +68,7 @@
  * @example Avatar a skupina
  * Avatar a skupina — viz ukázka níže.
  * ```tsx
- * import { Item } from "~/components/ui/item";
+ * import { Item } from "~/components/ui/base/item";
  * 
  * <Item.Group class="max-w-md">
  *   <Item.Root variant="outline">

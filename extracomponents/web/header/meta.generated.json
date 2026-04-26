@@ -1,0 +1,21 @@
+{
+  "name": "header",
+  "title": "Web — hlavička",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "web",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "brand": "string",
+      "navItems": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/components/web/header/index\").WebHeaderNavItem[]",
+      "cta": "{ label: string; href: string; }",
+      "label": "string",
+      "href": "string",
+      "sticky": "boolean",
+      "class": "string"
+    },
+    "slot": true
+  }
+}

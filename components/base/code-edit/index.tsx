@@ -6,7 +6,7 @@
  * Řízená komponenta — hodnota přichází přes `value`, změny jsou hlášeny přes `onValue.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
- * import { CodeEdit } from "~/components/ui/code-edit";
+ * import { CodeEdit } from "~/components/ui/base/code-edit";
  * 
  * export default component$(() => {
  *   const code = useSignal("const hello = 'world';");
@@ -24,7 +24,7 @@
  * Jazyk `tsx` — vhodné pro ukázky Qwik komponent a TypeScriptu. Další jazyky (`json`, `html`, `css`) nastav stejným způsobem přes prop `language`.
  * ```tsx
  * import { component$, useSignal, $ } from "@builder.io/qwik";
- * import { CodeEdit } from "~/components/ui/code-edit";
+ * import { CodeEdit } from "~/components/ui/base/code-edit";
  * 
  * export default component$(() => {
  *   const tsxCode = useSignal("// ukázka");

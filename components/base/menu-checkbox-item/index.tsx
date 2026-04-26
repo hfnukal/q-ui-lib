@@ -5,8 +5,8 @@
  * @example Layout samotný
  * Layout samotný — viz ukázka níže.
  * ```tsx
- * import { MenuCheckboxItem } from "~/components/ui/menu-checkbox-item";
- * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * import { MenuCheckboxItem } from "~/components/ui/base/menu-checkbox-item";
+ * import { KbdShortcut } from "~/components/ui/base/kbd-shortcut";
  * 
  * <MenuCheckboxItem.Root>
  *   <MenuCheckboxItem.Label>Zobrazit panel</MenuCheckboxItem.Label>
@@ -18,8 +18,8 @@
  * Fajfka se zobrazí automaticky. Stav řídí reaktivní signál přes `bind:checked`.
  * ```tsx
  * import { useSignal } from "@builder.io/qwik";
- * import { DropdownMenu } from "~/components/ui/dropdown-menu";
- * import { MenuCheckboxItem } from "~/components/ui/menu-checkbox-item";
+ * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
+ * import { MenuCheckboxItem } from "~/components/ui/base/menu-checkbox-item";
  * 
  * export default component$(() => {
  *   const sidebar = useSignal(true);

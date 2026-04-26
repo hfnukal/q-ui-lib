@@ -5,7 +5,7 @@
  * @example 12 sloupců
  * Dva bloky po šesti sloupcích v mřížce `grid-cols-12`.
  * ```tsx
- * import { Grid } from "~/components/ui/grid";
+ * import { Grid } from "~/components/ui/base/grid";
  * 
  * <Grid columnsClass="grid-cols-12" gap={4} class="w-full max-w-3xl">
  *   <div class="col-span-6 rounded-lg bg-surface-raised p-4 text-callout">6</div>
@@ -16,8 +16,8 @@
  * @example Responzivní
  * `Resizable` + v každém panelu mřížka s `repeat(auto-fill, minmax(8rem, 1fr))` — počet sloupců závisí na šířce panelu.
  * ```tsx
- * import { Grid } from "~/components/ui/grid";
- * import { Resizable } from "~/components/ui/resizable";
+ * import { Grid } from "~/components/ui/base/grid";
+ * import { Resizable } from "~/components/ui/base/resizable";
  *
  * <Resizable.PanelGroup
  *   direction="horizontal"

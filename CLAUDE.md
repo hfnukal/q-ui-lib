@@ -1,21 +1,42 @@
 # CLAUDE.md — q-ui-lib
 
-**What:** Qwik UI components + CLI (`qui`). Users copy sources into their app via `qui add` — not an npm package. Styling: Tailwind + tokens (`COLORS.md`). Behavior: prefer `@qwik-ui/headless` where it fits (`CREATE.md`, `BASE_COMPONENTS.md`).
+**What:** Qwik UI components + CLI **`qui`** shipped as the npm package **`qui-client`**. Apps install sources into a configured `targetPath` via `qui add` / `qui update` / … — not a traditional publishable UI npm. Styling: Tailwind + tokens ([COLORS.md](./COLORS.md)). Behavior: prefer `@qwik-ui/headless` where it fits ([docs/BASE_COMPONENTS.md](./docs/BASE_COMPONENTS.md), [CREATE.md](./CREATE.md)).
 
-**Layout:** `components/<kebab-name>/` (`index.tsx`, `meta.generated.json`), `components/utilities/`, `cli/`, `scripts/`, `template/`, `demo/` (synced `src/components/ui/`, routes under `demo/src/routes/…`).
+**Layout**
 
-**Commands** (repo root):
+- **`components/<uilib>/<slug>/`** — each component: `index.tsx` (or `index.ts`), `meta.generated.json` (generated). Example: `components/base/button/`.
+- **`components/base/utilities/`** — shared helpers used by base components (not a separate top-level `components/utilities/` in the current tree).
+- **`packages/qui-client/`** — canonical CLI (`qui`); tests and `scripts/generate-meta.mjs`.
+- **`demo/`** — Qwik workspace used as a sample app; synced UI under `demo/src/components/ui/…`.
+- **`template/`** — optional workspace; **`cli/index.js`** — legacy Commander flow still present for older workflows; new work should use **`qui-client`**.
+
+**Commands** (repo root unless noted)
 
 ```bash
-npm run qui -- init|add|update|sync-template ./path [components…]
-npm run sync:directives && npm run generate:meta
+# Run qui from PATH (workspace installs devDependency qui-client)
+npm run qui -- <command> [options]
 ```
 
-**Creating or updating components** — patterns, compound vs primitive, demo steps, pitfalls: **[CREATE.md](CREATE.md)**. Supporting refs: `COLORS.md` (tokens), `META_GEN.md` (metadata).
+`qui` expects **`qui.config.json`** in the **current working directory** (typically your app root, e.g. `cd demo` before `update` / `add`).
 
-**Demo:** After changes, `npm run qui -- update ./demo <slug>`; import from `~/components/ui/…` only, not from `components/` at repo root.
+```bash
+npm run test:qui-client
+npm run publish:qui-client
+```
 
-**More:** `Q_UI_LIB.md`, `REGISTRY.md`.
+**Metadata (`meta.generated.json`)** on library sources under `components/`:
+
+```bash
+npm run generate-meta -w qui-client
+```
+
+In a consumer app (cwd = app with `qui.config.json`): `qui generate`.
+
+**Creating or updating components** — workflow, headless pitfalls, metadata rules: **[CREATE.md](./CREATE.md)**. Metadata pipeline details: **[docs/META_GEN.md](./docs/META_GEN.md)** (some npm names there may still say `generate:meta`; the wired script is `generate-meta` in `qui-client`). Registry / API tree: **[docs/REGISTRY.md](./docs/REGISTRY.md)**.
+
+**CLI / config contract:** [README.md](./README.md), [docs/CLI_MIGRATION.md](./docs/CLI_MIGRATION.md), [docs/MIGRATION_FROM_LEGACY_CLI.md](./docs/MIGRATION_FROM_LEGACY_CLI.md), [packages/qui-client/README.md](./packages/qui-client/README.md).
+
+**Overview:** [docs/Q_UI_LIB.md](./docs/Q_UI_LIB.md).
 
 ---
 
@@ -23,18 +44,18 @@ npm run sync:directives && npm run generate:meta
 
 **Before reading**
 
-- Open **only** files the task needs. Do not preload long docs (`BASE_COMPONENTS.md`, big demo routes, whole `node_modules` trees).
-- Prefer **search** (`grep`, codebase search) to find a symbol or string, then read **a slice** of the file (`offset`/`limit`), not the entire file.
-- Component work: **`CREATE.md`** + `components/<slug>/index.tsx` first; add `BASE_COMPONENTS.md` / `COLORS.md` **when** structure, headless usage, or tokens are unclear.
+- Open **only** files the task needs. Do not preload long docs or whole demo routes.
+- Prefer **search** (`grep`, codebase search), then read a **slice** of a file (`offset`/`limit`).
+- Component work: **[CREATE.md](./CREATE.md)** + `components/<uilib>/<slug>/index.tsx` first; open **docs/BASE_COMPONENTS.md** / **COLORS.md** when headless shape or tokens are unclear.
 
 **While editing**
 
 - **Smallest viable change** — no drive-by refactors or doc edits the user did not ask for.
-- **Reply output:** show **diffs or snippets** only; do not dump whole files. Link paths (`path/to/file`) instead of pasting hundreds of lines.
+- **Reply:** diffs or short snippets; link paths instead of dumping whole files.
 
 **Avoid unless necessary**
 
-- Reading `meta.generated.json` in full (large) — use when changing metadata pipeline or API surface.
+- Reading `meta.generated.json` in full — use when changing the metadata pipeline or public API surface.
 - Re-reading the same file in one turn without edits.
 - Images, logs, build artifacts, lockfiles.
 

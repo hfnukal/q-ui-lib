@@ -5,7 +5,7 @@
  * @example Základní použití
  * Najetí na trigger otevře panel; chování vychází z headlessu (včetně omezení oproti plnému „bezpečnému mostu“ mezi triggerem a panelem u některých knihoven).
  * ```tsx
- * import { HoverCard } from "~/components/ui/hover-card";
+ * import { HoverCard } from "~/components/ui/base/hover-card";
  * 
  * <HoverCard.Root>
  *   <HoverCard.Trigger>@uživatel</HoverCard.Trigger>
@@ -23,7 +23,7 @@
  * @example Umístění (floating)
  * Prop `floating` pro směr panelu (např. zobrazení nad triggerem).
  * ```tsx
- * import { HoverCard } from "~/components/ui/hover-card";
+ * import { HoverCard } from "~/components/ui/base/hover-card";
  * 
  * <HoverCard.Root floating="top">
  *   <HoverCard.Trigger>Panel nahoře</HoverCard.Trigger>
@@ -36,7 +36,7 @@
  * @example Šipka
  * Šipka — viz ukázka níže.
  * ```tsx
- * import { HoverCard } from "~/components/ui/hover-card";
+ * import { HoverCard } from "~/components/ui/base/hover-card";
  * 
  * <HoverCard.Root gutter={8} arrow>
  *   <HoverCard.Trigger>Se šipkou</HoverCard.Trigger>

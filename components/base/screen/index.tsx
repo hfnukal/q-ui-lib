@@ -5,7 +5,7 @@
  * @example Základ
  * Náhled je omezený výškou — komponenta sama je na celý viewport.
  * ```tsx
- * import { Screen } from "~/components/ui/screen";
+ * import { Screen } from "~/components/ui/base/screen";
  * 
  * <Screen class="bg-background max-h-[22rem]">
  *   <header class="shrink-0 border-b border-separator-opaque px-4 py-3">Header</header>
@@ -18,11 +18,11 @@
  * @example Skladba Layout
  * `Screen` + `Split` + `Stack` + `ScrollArea` + `Box` — v náhledu omez výšku (např. `class="h-[32rem]"`); dlouhý obsah + `keepScroll` na `ScrollArea.Pane`.
  * ```tsx
- * import { Box } from "~/components/ui/box";
- * import { ScrollArea } from "~/components/ui/scroll-area";
- * import { Screen } from "~/components/ui/screen";
- * import { Split } from "~/components/ui/split";
- * import { Stack } from "~/components/ui/stack";
+ * import { Box } from "~/components/ui/base/box";
+ * import { ScrollArea } from "~/components/ui/base/scroll-area";
+ * import { Screen } from "~/components/ui/base/screen";
+ * import { Split } from "~/components/ui/base/split";
+ * import { Stack } from "~/components/ui/base/stack";
  * 
  * <Screen class="h-[22rem]">
  *   <Split.Root direction="horizontal" class="min-h-0 flex-1">

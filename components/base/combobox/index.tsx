@@ -5,7 +5,7 @@
  * @example Filtrování a prázdný stav
  * Headless ve výchozím stavu zapíná `filter` — při psaní se schovávají nevyhovující položky. S `Combobox.Empty` zobrazíš hlášku, když nic nezůstane.
  * ```tsx
- * import { Combobox } from "~/components/ui/combobox";
+ * import { Combobox } from "~/components/ui/base/combobox";
  * 
  * <Combobox.Root filter placeholder="Hledej framework…">
  *   <Combobox.Label>Framework</Combobox.Label>
@@ -29,7 +29,7 @@
  * Vybraná hodnota v signálu přes `bind:value` (řízený combobox).
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
- * import { Combobox } from "~/components/ui/combobox";
+ * import { Combobox } from "~/components/ui/base/combobox";
  * 
  * export const Controlled = component$(() => {
  *   const value = useSignal("praha");
@@ -66,7 +66,7 @@
  *   Combobox,
  *   comboboxMultiselectControlClass,
  *   comboboxMultiselectInputClass,
- * } from "~/components/ui/combobox";
+ * } from "~/components/ui/base/combobox";
  * 
  * const LANGS = [
  *   { value: "ts", label: "TypeScript" },
@@ -129,7 +129,7 @@
  * @example showOnFocus — otevření při fokusu
  * Prop `showOnFocus` na `Combobox.Input` otevře seznam automaticky při fokusu bez nutnosti psát.
  * ```tsx
- * import { Combobox } from "~/components/ui/combobox";
+ * import { Combobox } from "~/components/ui/base/combobox";
  *
  * <Combobox.Root filter placeholder="Vyber nebo piš…">
  *   <Combobox.Label>Výběr</Combobox.Label>

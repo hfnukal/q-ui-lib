@@ -6,7 +6,7 @@
  * `Menubar.Root` → pro každé menu `Menubar.Menu` + `Menubar.useMenu("id")` → `Menubar.Trigger` + `Menubar.Content` s položkami.
  * ```tsx
  * import { component$ } from "@builder.io/qwik";
- * import { Menubar } from "~/components/ui/menubar";
+ * import { Menubar } from "~/components/ui/base/menubar";
  * 
  * export default component$(() => {
  *   const fileMenu = Menubar.useMenu("file");

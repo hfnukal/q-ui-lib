@@ -5,8 +5,8 @@
  * @example Úplná skladba
  * Složené API: `Card.Root`, `Media`, `Header`, `Title`, `Description`, `Action`, `Content`, `Footer`.
  * ```tsx
- * import { Button } from "~/components/ui/button";
- * import { Card } from "~/components/ui/card";
+ * import { Button } from "~/components/ui/base/button";
+ * import { Card } from "~/components/ui/base/card";
  * 
  * <Card.Root class="max-w-md">
  *   <Card.Header>
@@ -32,8 +32,8 @@
  * @example Hlavička s akcí
  * `Card.Action` zapne v hlavičce dvousloupcové rozložení (titulek a popis vlevo, akce vpravo).
  * ```tsx
- * import { Button } from "~/components/ui/button";
- * import { Card } from "~/components/ui/card";
+ * import { Button } from "~/components/ui/base/button";
+ * import { Card } from "~/components/ui/base/card";
  * 
  * <Card.Root class="max-w-md">
  *   <Card.Header>
@@ -58,9 +58,9 @@
  * @example Média nahoře
  * `Card.Media` s `variant=&quot;image&quot;` pro poměr stran a vyplnění obrázku; kořen karty má `overflow-hidden`.
  * ```tsx
- * import { Badge } from "~/components/ui/badge";
- * import { Button } from "~/components/ui/button";
- * import { Card } from "~/components/ui/card";
+ * import { Badge } from "~/components/ui/base/badge";
+ * import { Button } from "~/components/ui/base/button";
+ * import { Card } from "~/components/ui/base/card";
  * 
  * <Card.Root class="max-w-sm">
  *   <Card.Media variant="image">
@@ -89,7 +89,7 @@
  * @example Jen obsah
  * Minimální karta jen s `Card.Content` a vlastním odsazením přes `class`.
  * ```tsx
- * import { Card } from "~/components/ui/card";
+ * import { Card } from "~/components/ui/base/card";
  * 
  * <Card.Root class="max-w-sm">
  *   <Card.Content class="pt-6">

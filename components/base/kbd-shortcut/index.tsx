@@ -5,7 +5,7 @@
  * @example Základní použití
  * Základní použití — viz ukázka níže.
  * ```tsx
- * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * import { KbdShortcut } from "~/components/ui/base/kbd-shortcut";
  * 
  * <KbdShortcut>⌘K</KbdShortcut>
  * ```
@@ -13,7 +13,7 @@
  * @example Více kláves
  * Více instancí vedle sebe pro víceznakové zkratky.
  * ```tsx
- * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * import { KbdShortcut } from "~/components/ui/base/kbd-shortcut";
  * 
  * <span class="flex items-center gap-1">
  *   <KbdShortcut>Ctrl</KbdShortcut>
@@ -25,7 +25,7 @@
  * @example Inline v textu
  * Zkratky vložené přímo do věty — čitelné vedle běžného textu.
  * ```tsx
- * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * import { KbdShortcut } from "~/components/ui/base/kbd-shortcut";
  * 
  * <p class="text-body text-secondary-label">
  *   Stiskni <KbdShortcut>⌘S</KbdShortcut> pro uložení nebo{" "}

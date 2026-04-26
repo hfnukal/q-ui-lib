@@ -5,7 +5,7 @@
  * @example Velikosti
  * Velikosti — viz ukázka níže.
  * ```tsx
- * import { Spinner } from "~/components/ui/spinner";
+ * import { Spinner } from "~/components/ui/base/spinner";
  *
  * <div class="flex items-center gap-6">
  *   <Spinner size="sm" />
@@ -17,7 +17,7 @@
  * @example Varianty
  * `variant`: mimo jiné `ring`, `dash`, `dots`, `wave`, `stack`, `square`, `ripple`, `needle`, … (výchozí je `arc`).
  * ```tsx
- * import { Spinner } from "~/components/ui/spinner";
+ * import { Spinner } from "~/components/ui/base/spinner";
  *
  * <div class="flex flex-wrap items-center gap-x-6 gap-y-8">
  *   <Spinner variant="ring" />
@@ -45,7 +45,7 @@
  * @example Styl macOS (Activity)
  * `activity` — paprsky jako indikátor činnosti; `duo` — dva soustředné oblouky proti sobě; `chase` — segmenty po obvodu s vlnou pulzu.
  * ```tsx
- * import { Spinner } from "~/components/ui/spinner";
+ * import { Spinner } from "~/components/ui/base/spinner";
  *
  * <div class="flex flex-wrap items-center gap-8">
  *   <Spinner variant="activity" size="lg" />
@@ -57,7 +57,7 @@
  * @example S popiskem pro čtečky
  * Prop `label` přidá `role=&quot;status&quot;` a skrytý text ( `sr-only` ).
  * ```tsx
- * import { Spinner } from "~/components/ui/spinner";
+ * import { Spinner } from "~/components/ui/base/spinner";
  *
  * <Spinner size="md" label="Načítám data" />
  * ```
@@ -65,7 +65,7 @@
  * @example Vlastní barva
  * U `ring` / `dash` / `duo` / `square` přepiš okraje přes `class`. U `arc` použij `text-*`. U výplňových a „čárových“ variant (`dots`, `wave`, `stack`, `needle`, `ripple`, …) použij `text-*` (`currentColor`).
  * ```tsx
- * import { Spinner } from "~/components/ui/spinner";
+ * import { Spinner } from "~/components/ui/base/spinner";
  *
  * <div class="flex gap-6">
  *   <Spinner class="border-t-system-green" variant="ring" size="lg" />

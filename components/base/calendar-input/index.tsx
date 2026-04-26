@@ -5,7 +5,7 @@
  * @example Základ
  * Vstup s textem data (`LL`, locale z dayjs), ikonou kalendáře a panelem `Calendar.Panel` v popoveru.
  * ```tsx
- * import { CalendarInput } from "~/components/ui/calendar-input";
+ * import { CalendarInput } from "~/components/ui/base/calendar-input";
  *
  * <CalendarInput
  *   defaultValue="2026-04-12"

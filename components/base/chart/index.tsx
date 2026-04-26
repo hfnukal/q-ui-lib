@@ -5,7 +5,7 @@
  * @example Čára (line)
  * Export `Chart` je alias pro `ChartCanvas`.
  * ```tsx
- * import { Chart } from "~/components/ui/chart";
+ * import { Chart } from "~/components/ui/base/chart";
  * 
  * <Chart
  *   type="line"
@@ -29,7 +29,7 @@
  * @example Sloupce (bar)
  * Graf typu `bar` — srovnání kategorií vedle sebe.
  * ```tsx
- * import { ChartCanvas } from "~/components/ui/chart";
+ * import { ChartCanvas } from "~/components/ui/base/chart";
  * 
  * <ChartCanvas
  *   type="bar"
@@ -55,7 +55,7 @@
  * @example Doughnut
  * Doughnut — viz ukázka níže.
  * ```tsx
- * import { Chart } from "~/components/ui/chart";
+ * import { Chart } from "~/components/ui/base/chart";
  * 
  * <Chart
  *   type="doughnut"

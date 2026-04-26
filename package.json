@@ -2,25 +2,28 @@
   "name": "q-ui-lib",
   "version": "0.1.0",
   "description": "Custom Qwik UI component library with CLI",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "demo",
+    "template"
+  ],
   "main": "index.js",
   "exports": {
     "./utilities": "./components/utilities/index.ts",
-    "./utilities/*": "./components/utilities/*.ts"
+    "./utilities/*": "./components/utilities/*.ts",
+    "./cli": "./cli/index.js"
   },
   "bin": {
-    "q-ui-lib": "./cli/index.js"
+    "q-ui-lib": "./cli/index.js",
+    "qui": "./cli/index.js"
   },
   "scripts": {
+    "test:qui-client": "npm test -w qui-client",
+    "publish:qui-client": "npm publish -w qui-client --access public",
     "build": "echo 'No build step needed for library'",
-    "qui": "node cli/index.js",
-    "qui:sync": "node scripts/sync-component-directives.mjs",
-    "qui:meta": "node scripts/generate-meta.mjs",
-    "qui:demo": "node scripts/generate-demo.mjs --target ./demo",
-    "qui:migrate": "node scripts/migrate-demo-to-jsdoc.mjs",
-    "qui:build": "npm run qui:sync && npm run qui:meta && npm run qui:demo",
-    "qui:add": "node cli/index.js add ./demo",
-    "qui:update": "node cli/index.js update ./demo",
-    "qui:update:all": "node cli/index.js update ./demo --all"
+    "qui": "qui",
+    "qui:createdemo": "qui init demo && (cd demo && qui add --all base --force && qui generate-demo) && echo \"\nDemo created. Run:\\ncd demo\\nnpm run dev\""
   },
   "author": "",
   "license": "MIT",
@@ -37,6 +40,7 @@
     "ts-morph": "^27.0.2"
   },
   "devDependencies": {
-    "@qwikest/icons": "^0.0.13"
+    "@qwikest/icons": "^0.0.13",
+    "qui-client": "^0.1.0"
   }
 }

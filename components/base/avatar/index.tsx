@@ -5,7 +5,7 @@
  * @example Obrázek + fallback
  * Obrázek + fallback — viz ukázka níže.
  * ```tsx
- * import { Avatar } from "~/components/ui/avatar";
+ * import { Avatar } from "~/components/ui/base/avatar";
  * 
  * <Avatar.Root>
  *   <Avatar.Image src="…" alt="Náhled" />
@@ -16,7 +16,7 @@
  * @example Velikosti
  * Prop `size` na `Avatar.Root`: `sm`, `md` (výchozí), `lg`.
  * ```tsx
- * import { Avatar } from "~/components/ui/avatar";
+ * import { Avatar } from "~/components/ui/base/avatar";
  * 
  * <div class="flex items-center gap-3">
  *   <Avatar.Root size="sm">
@@ -37,7 +37,7 @@
  * @example Jen fallback
  * Bez `Avatar.Image` nebo bez `src` zůstane iniciála / placeholder.
  * ```tsx
- * import { Avatar } from "~/components/ui/avatar";
+ * import { Avatar } from "~/components/ui/base/avatar";
  * 
  * <Avatar.Root>
  *   <Avatar.Fallback>AB</Avatar.Fallback>
@@ -47,7 +47,7 @@
  * @example Chyba načtení obrázku
  * Neplatná URL zobrazí znovu `Avatar.Fallback`.
  * ```tsx
- * import { Avatar } from "~/components/ui/avatar";
+ * import { Avatar } from "~/components/ui/base/avatar";
  * 
  * <Avatar.Root>
  *   <Avatar.Image src="https://example.invalid/does-not-exist.jpg" alt="" />

@@ -1,10 +1,10 @@
 # Dependencies (root, template, demo)
-node_modules/
+node_modules
 
 # Build — Qwik (demo, template)
-dist/
-lib/
-lib-types/
+# dist/
+# lib/
+# lib-types/
 # Adapter SSR output only; **/src/server stays tracked
 demo/server/
 template/server/
@@ -31,6 +31,7 @@ lerna-debug.log*
 # Editor
 .vscode/*
 !.vscode/launch.json
+!.vscode/settings.json
 !.vscode/*.code-snippets
 .idea/
 .DS_Store

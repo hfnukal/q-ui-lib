@@ -5,7 +5,7 @@
  * @example Základní použití
  * Otevření na hover a na fokus klávesnicí; zavření Escape (chování headlessu).
  * ```tsx
- * import { Tooltip } from "~/components/ui/tooltip";
+ * import { Tooltip } from "~/components/ui/base/tooltip";
  * 
  * <Tooltip.Root>
  *   <Tooltip.Trigger>Najet myší nebo fokus</Tooltip.Trigger>
@@ -16,7 +16,7 @@
  * @example Umístění
  * Prop `placement` na kořeni odpovídá Floating UI (výchozí `top` ).
  * ```tsx
- * import { Tooltip } from "~/components/ui/tooltip";
+ * import { Tooltip } from "~/components/ui/base/tooltip";
  * 
  * <Tooltip.Root placement="bottom">
  *   <Tooltip.Trigger>Panel dole</Tooltip.Trigger>
@@ -27,7 +27,7 @@
  * @example Zpoždění
  * Prop `delayDuration` (ms) — prodleva před otevřením, vhodná pro husté rozhraní.
  * ```tsx
- * import { Tooltip } from "~/components/ui/tooltip";
+ * import { Tooltip } from "~/components/ui/base/tooltip";
  * 
  * <Tooltip.Root delayDuration={400}>
  *   <Tooltip.Trigger>Zpoždění 400 ms</Tooltip.Trigger>
@@ -38,7 +38,7 @@
  * @example Šipka (volitelná)
  * `Tooltip.Arrow` sleduje skutečnou polohu panelu (i po flipu při skrolování) — stačí přidat do panelu a přidat padding dle strany.
  * ```tsx
- * import { Tooltip } from "~/components/ui/tooltip";
+ * import { Tooltip } from "~/components/ui/base/tooltip";
  *
  * <div class="flex flex-wrap gap-6">
  *   <Tooltip.Root placement="top">

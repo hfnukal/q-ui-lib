@@ -6,7 +6,7 @@
  * Hodnotu drž v `useSignal` a předej ji jako `value` spolu s `onChange.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
- * import { Slider } from "~/components/ui/slider";
+ * import { Slider } from "~/components/ui/base/slider";
  * 
  * export default component$(() => {
  *   const level = useSignal(40);
@@ -26,7 +26,7 @@
  * Props `min`, `max` a `step` pro rozsah a krok posuvníku.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
- * import { Slider } from "~/components/ui/slider";
+ * import { Slider } from "~/components/ui/base/slider";
  * 
  * export default component$(() => {
  *   const price = useSignal(100);
@@ -48,7 +48,7 @@
  * @example Velikost ukazatele (thumbSize)
  * Prop `thumbSize` mění velikost ukazatele i výšku dráhy: `sm`, `md` (výchozí), `lg`.
  * ```tsx
- * import { Slider } from "~/components/ui/slider";
+ * import { Slider } from "~/components/ui/base/slider";
  *
  * <div class="flex max-w-md flex-col gap-6">
  *   <Slider label="Malý (sm)" thumbSize="sm" value={30} />
@@ -61,7 +61,7 @@
  * Props `color` a `backgroundColor` berou Tailwind třídy ( `accent-*`, `bg-*` z palety v `COLORS.md`).
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
- * import { Slider } from "~/components/ui/slider";
+ * import { Slider } from "~/components/ui/base/slider";
  * 
  * export default component$(() => {
  *   const warmth = useSignal(50);

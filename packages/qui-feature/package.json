@@ -1,0 +1,36 @@
+{
+  "name": "qui-feature",
+  "version": "0.0.1",
+  "description": "Qwik starter feature: Tailwind v4, design tokens, and shared global styles (q-ui / qui-client template).",
+  "private": true,
+  "type": "module",
+  "files": [
+    "src",
+    "tailwind.config.js",
+    "prettier.config.js"
+  ],
+  "__qwik__": {
+    "displayName": "Integration: qui-feature (Tailwind v4 + tokens)",
+    "priority": -10,
+    "viteConfig": {
+      "imports": [
+        {
+          "defaultImport": "tailwindcss",
+          "importPath": "@tailwindcss/vite"
+        }
+      ],
+      "vitePlugins": ["tailwindcss()"]
+    },
+    "docs": [
+      "https://qwik.dev/integrations/tailwind/",
+      "https://tailwindcss.com/docs/utility-first",
+      "https://github.com/QwikDev/qwik/tree/main/starters/features/tailwind"
+    ]
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.4",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "qui-client": "file:../qui-client",
+    "tailwindcss": "^4.1.4"
+  }
+}

@@ -6,7 +6,7 @@
  * Základ — viz ukázka níže.
  * ```tsx
  * import { component$ } from "@builder.io/qwik";
- * import { Textarea } from "~/components/ui/textarea";
+ * import { Textarea } from "~/components/ui/base/textarea";
  * 
  * export default component$(() => (
  *   <Textarea placeholder="Napište zprávu…" rows={4} />
@@ -16,8 +16,8 @@
  * @example Se štítkem
  * Se štítkem — viz ukázka níže.
  * ```tsx
- * import { Textarea } from "~/components/ui/textarea";
- * import { Label } from "~/components/ui/label";
+ * import { Textarea } from "~/components/ui/base/textarea";
+ * import { Label } from "~/components/ui/base/label";
  * 
  * <div class="flex max-w-md flex-col gap-2">
  *   <Label for="msg">Zpráva</Label>
@@ -28,8 +28,8 @@
  * @example Zakázané přetahování (disableResize)
  * Prop `disableResize` zakáže nativní přetahování rohu — vhodné pro fixní výšku nebo layout s flexem.
  * ```tsx
- * import { Textarea } from "~/components/ui/textarea";
- * import { Label } from "~/components/ui/label";
+ * import { Textarea } from "~/components/ui/base/textarea";
+ * import { Label } from "~/components/ui/base/label";
  *
  * <div class="flex max-w-md flex-col gap-2">
  *   <Label for="fixed">Zpráva (fixní výška)</Label>
@@ -40,7 +40,7 @@
  * @example Stavy
  * `disabled` a `readOnly` — chybové stavy řeš přes `class` nebo obal.
  * ```tsx
- * import { Textarea } from "~/components/ui/textarea";
+ * import { Textarea } from "~/components/ui/base/textarea";
  * 
  * <div class="flex max-w-md flex-col gap-3">
  *   <Textarea placeholder="Běžný stav" rows={3} />

@@ -6,7 +6,7 @@
  * Stav přes `bind:pressed` a textová nápověda vedle přepínače.
  * ```tsx
  * import { useSignal } from "@builder.io/qwik";
- * import { Switch } from "~/components/ui/switch";
+ * import { Switch } from "~/components/ui/base/switch";
  * 
  * export default component$(() => {
  *   const on = useSignal(false);
@@ -22,8 +22,8 @@
  * @example Výchozí hodnota a disabled
  * Viditelné popisky přes `Label` v řádku s přepínačem (`flex`).
  * ```tsx
- * import { Label } from "~/components/ui/label";
- * import { Switch } from "~/components/ui/switch";
+ * import { Label } from "~/components/ui/base/label";
+ * import { Switch } from "~/components/ui/base/switch";
  * 
  * <div class="flex max-w-md flex-col gap-4">
  *   <div class="flex items-center justify-between gap-4">

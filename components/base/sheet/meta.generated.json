@@ -5,7 +5,7 @@
   "kind": "compound",
   "registry": "base",
   "dependencies": [
-    "utilities"
+    "base/utilities"
   ],
   "npmDependencies": [],
   "apiTree": {

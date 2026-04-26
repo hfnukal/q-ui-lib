@@ -5,7 +5,7 @@
  * @example Složené API (stejná data jako TabsGroup)
  * `key` na triggeru a panelu se musí shodovat (headless z něj dělá `tabId` ).
  * ```tsx
- * import { Tab } from "~/components/ui/tabs";
+ * import { Tab } from "~/components/ui/base/tabs";
  * 
  * <Tab.Root selectedTabId="overview" behavior="manual">
  *   <Tab.List>
@@ -28,7 +28,7 @@
  * @example TabsGroup — vodorovně
  * Datová zkratka `TabsGroup` se stejnými záložkami jako u složeného API.
  * ```tsx
- * import { TabsGroup } from "~/components/ui/tabs";
+ * import { TabsGroup } from "~/components/ui/base/tabs";
  * 
  * const tabs = [
  *   { value: "overview", label: "Overview", content: "Přehled základních informací o této sekci." },
@@ -42,7 +42,7 @@
  * @example TabsGroup — zakázaná položka
  * TabsGroup — zakázaná položka — viz ukázka níže.
  * ```tsx
- * import { TabsGroup } from "~/components/ui/tabs";
+ * import { TabsGroup } from "~/components/ui/base/tabs";
  * 
  * const tabs = [
  *   { value: "a", label: "Active A", content: "Obsah aktivní záložky A." },
@@ -56,7 +56,7 @@
  * @example TabsGroup — svislý seznam
  * TabsGroup — svislý seznam — viz ukázka níže.
  * ```tsx
- * import { TabsGroup } from "~/components/ui/tabs";
+ * import { TabsGroup } from "~/components/ui/base/tabs";
  * 
  * const tabs = [
  *   { value: "overview", label: "Overview", content: "Přehled základních informací o této sekci." },
@@ -70,7 +70,7 @@
  * @example Varianta line
  * Podtržené záložky místo výchozích s rámečkem — `variant=&quot;line&quot;` na `Tab.Root` nebo `TabsGroup` .
  * ```tsx
- * import { TabsGroup } from "~/components/ui/tabs";
+ * import { TabsGroup } from "~/components/ui/base/tabs";
  *
  * const tabs = [
  *   { value: "overview", label: "Overview", content: "Přehled základních informací o této sekci." },
@@ -84,7 +84,7 @@
  * @example Složené API — svisle
  * Na `Tab.Root` nastav `vertical` a na `Tab.List` / `Tab.Panel` prop `verticalLayout` .
  * ```tsx
- * import { Tab } from "~/components/ui/tabs";
+ * import { Tab } from "~/components/ui/base/tabs";
  * 
  * <Tab.Root vertical selectedTabId="overview" behavior="manual">
  *   <Tab.List verticalLayout>

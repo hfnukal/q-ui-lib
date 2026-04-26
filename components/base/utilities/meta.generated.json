@@ -1,0 +1,10 @@
+{
+  "name": "utilities",
+  "title": "Utilities",
+  "version": "0.0.0",
+  "kind": "utilities",
+  "registry": "base",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {}
+}

@@ -5,8 +5,8 @@
  * @example Zprava (výchozí)
  * Zprava (výchozí) — viz ukázka níže.
  * ```tsx
- * import { Sheet } from "~/components/ui/sheet";
- * import { Button } from "~/components/ui/button";
+ * import { Sheet } from "~/components/ui/base/sheet";
+ * import { Button } from "~/components/ui/base/button";
  * 
  * <Sheet.Root>
  *   <Sheet.Trigger>Otevřít panel</Sheet.Trigger>
@@ -32,7 +32,7 @@
  * @example Strana panelu
  * Na `Sheet.Panel` nastav `side` : `left` , `right` , `top` , `bottom` .
  * ```tsx
- * import { Sheet } from "~/components/ui/sheet";
+ * import { Sheet } from "~/components/ui/base/sheet";
  * 
  * <Sheet.Root>
  *   <Sheet.Trigger>Zleva</Sheet.Trigger>

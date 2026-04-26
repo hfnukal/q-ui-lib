@@ -5,7 +5,7 @@
  * @example Varianty
  * Varianty — viz ukázka níže.
  * ```tsx
- * import { Badge } from "~/components/ui/badge";
+ * import { Badge } from "~/components/ui/base/badge";
  * 
  * <div class="flex flex-wrap gap-2">
  *   <Badge variant="default">Default</Badge>
@@ -18,7 +18,7 @@
  * @example Velikosti
  * Velikosti — viz ukázka níže.
  * ```tsx
- * import { Badge } from "~/components/ui/badge";
+ * import { Badge } from "~/components/ui/base/badge";
  * 
  * <div class="flex flex-wrap items-center gap-2">
  *   <Badge size="sm">Small</Badge>
@@ -29,7 +29,7 @@
  * @example V řádku s textem
  * Doplňkové třídy (např. `align-middle`, `ml-2`) sloučíš přes `class`.
  * ```tsx
- * import { Badge } from "~/components/ui/badge";
+ * import { Badge } from "~/components/ui/base/badge";
  * 
  * <p class="text-body text-label">
  *   Verze 2.1

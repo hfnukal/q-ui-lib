@@ -5,7 +5,7 @@
  * @example Základní použití
  * Základní použití — viz ukázka níže.
  * ```tsx
- * import { RadioGroup } from "~/components/ui/radio-group";
+ * import { RadioGroup } from "~/components/ui/base/radio-group";
  * 
  * <RadioGroup.Root>
  *   <RadioGroup.Item name="plan" value="free" label="Free" />

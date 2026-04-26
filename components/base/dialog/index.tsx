@@ -5,8 +5,8 @@
  * @example Základní dialog
  * Základní dialog — viz ukázka níže.
  * ```tsx
- * import { Dialog } from "~/components/ui/dialog";
- * import { Button } from "~/components/ui/button";
+ * import { Dialog } from "~/components/ui/base/dialog";
+ * import { Button } from "~/components/ui/base/button";
  * 
  * <Dialog.Root>
  *   <Dialog.Trigger>Otevřít dialog</Dialog.Trigger>
@@ -34,7 +34,7 @@
  * @example Alert dialog
  * Na `Dialog.Root` nastav `alert` — headless nastaví `role=&quot;alertdialog&quot;` a vypne zavření klikem na pozadí.
  * ```tsx
- * import { Dialog } from "~/components/ui/dialog";
+ * import { Dialog } from "~/components/ui/base/dialog";
  * 
  * <Dialog.Root alert>
  *   <Dialog.Trigger>Smazat účet</Dialog.Trigger>

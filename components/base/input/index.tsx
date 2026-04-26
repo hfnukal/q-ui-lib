@@ -6,7 +6,7 @@
  * Základ — viz ukázka níže.
  * ```tsx
  * import { component$ } from "@builder.io/qwik";
- * import { Input } from "~/components/ui/input";
+ * import { Input } from "~/components/ui/base/input";
  * 
  * export default component$(() => (
  *   <Input type="text" placeholder="Zadejte text…" />
@@ -16,8 +16,8 @@
  * @example Se štítkem
  * Se štítkem — viz ukázka níže.
  * ```tsx
- * import { Input } from "~/components/ui/input";
- * import { Label } from "~/components/ui/label";
+ * import { Input } from "~/components/ui/base/input";
+ * import { Label } from "~/components/ui/base/label";
  * 
  * <div class="flex max-w-md flex-col gap-2">
  *   <Label for="user-email">E-mail</Label>
@@ -28,7 +28,7 @@
  * @example Stavy
  * `disabled` a `readOnly` — vlastní chybové zobrazení řeš přes `class` nebo obal (např. border-destructive).
  * ```tsx
- * import { Input } from "~/components/ui/input";
+ * import { Input } from "~/components/ui/base/input";
  * 
  * <div class="flex max-w-md flex-col gap-3">
  *   <Input placeholder="Běžný stav" />

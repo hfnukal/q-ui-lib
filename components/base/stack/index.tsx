@@ -5,7 +5,7 @@
  * @example Sloupec
  * Sloupec ( `direction=&quot;column&quot;` ), mezery přes `gap`.
  * ```tsx
- * import { Stack } from "~/components/ui/stack";
+ * import { Stack } from "~/components/ui/base/stack";
  * 
  * <Stack direction="column" gap={4} align="stretch">
  *   <div class="h-8 rounded bg-fill-secondary" />
@@ -16,7 +16,7 @@
  * @example Řádek
  * Řádek se zarovnáním na střed a rozložením `justify=&quot;between&quot;`.
  * ```tsx
- * import { Stack } from "~/components/ui/stack";
+ * import { Stack } from "~/components/ui/base/stack";
  * 
  * <Stack direction="row" gap={2} align="center" justify="between" class="w-full max-w-md">
  *   <span class="text-callout">Vlevo</span>

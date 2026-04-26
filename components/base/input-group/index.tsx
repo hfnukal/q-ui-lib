@@ -5,7 +5,7 @@
  * @example Prefix
  * Prefix — viz ukázka níže.
  * ```tsx
- * import { InputGroup } from "~/components/ui/input-group";
+ * import { InputGroup } from "~/components/ui/base/input-group";
  * 
  * <InputGroup.Root aria-label="URL">
  *   <InputGroup.Addon>https://</InputGroup.Addon>
@@ -16,7 +16,7 @@
  * @example Suffix
  * Suffix — viz ukázka níže.
  * ```tsx
- * import { InputGroup } from "~/components/ui/input-group";
+ * import { InputGroup } from "~/components/ui/base/input-group";
  * 
  * <InputGroup.Root aria-label="E-mail">
  *   <InputGroup.Input type="email" placeholder="jméno" />
@@ -27,8 +27,8 @@
  * @example Pole a tlačítko
  * Přímé dítě `Button` dostane zarovnání a oddělovací okraj od skupiny.
  * ```tsx
- * import { Button } from "~/components/ui/button";
- * import { InputGroup } from "~/components/ui/input-group";
+ * import { Button } from "~/components/ui/base/button";
+ * import { InputGroup } from "~/components/ui/base/input-group";
  * 
  * <InputGroup.Root aria-label="Hledat">
  *   <InputGroup.Input placeholder="Hledat…" />
@@ -40,7 +40,7 @@
  * Ikony z `@qwikest/icons/lucide` (např. `LuSearch`) — velikost přes `{"[&_svg]:size-4"}` na addonu.
  * ```tsx
  * import { LuSearch } from "@qwikest/icons/lucide";
- * import { InputGroup } from "~/components/ui/input-group";
+ * import { InputGroup } from "~/components/ui/base/input-group";
  * 
  * <InputGroup.Root aria-label="Hledat">
  *   <InputGroup.Addon class="[&_svg]:size-4">

@@ -1,0 +1,15 @@
+{
+  "name": "demo-component-props",
+  "title": "ComponentPropsTable",
+  "version": "0.0.0",
+  "kind": "primitive",
+  "registry": "qui-demo",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "filePath": "string",
+      "class": "string"
+    }
+  }
+}

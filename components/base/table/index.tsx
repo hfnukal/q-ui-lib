@@ -5,7 +5,7 @@
  * @example Základní tabulka
  * Základní tabulka — viz ukázka níže.
  * ```tsx
- * import { Table } from "~/components/ui/table";
+ * import { Table } from "~/components/ui/base/table";
  * 
  * <Table.Root class="max-w-2xl rounded-lg border border-separator-opaque">
  *   <Table.Header>
@@ -37,7 +37,7 @@
  * @example Caption a Footer
  * Caption a Footer — viz ukázka níže.
  * ```tsx
- * import { Table } from "~/components/ui/table";
+ * import { Table } from "~/components/ui/base/table";
  * 
  * <Table.Root class="max-w-2xl rounded-lg border border-separator-opaque">
  *   <Table.Caption>Fakturace za období Q1</Table.Caption>
@@ -69,7 +69,7 @@
  * @example Stav řádku
  * Pro zvýraznění vybraného řádku nastav na `Table.Row` atribut `data-state=&quot;selected&quot;`.
  * ```tsx
- * import { Table } from "~/components/ui/table";
+ * import { Table } from "~/components/ui/base/table";
  * 
  * <Table.Root class="max-w-xl rounded-lg border border-separator-opaque">
  *   <Table.Body>

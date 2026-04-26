@@ -5,7 +5,7 @@
  * @example Základní složení
  * `Item value` je potřeba u dvojice `Trigger` + `Content`. Přímé odkazy použij `Link`.
  * ```tsx
- * import { NavigationMenu } from "~/components/ui/navigation-menu";
+ * import { NavigationMenu } from "~/components/ui/base/navigation-menu";
  * 
  * <NavigationMenu.Root class="justify-start">
  *   <NavigationMenu.List>
@@ -36,7 +36,7 @@
  * @example Oddělovač v liště
  * Oddělovač mezi položkami vodorovné lišty — `NavigationMenu.Separator`.
  * ```tsx
- * import { NavigationMenu } from "~/components/ui/navigation-menu";
+ * import { NavigationMenu } from "~/components/ui/base/navigation-menu";
  * 
  * <NavigationMenu.Root>
  *   <NavigationMenu.List>
@@ -60,7 +60,7 @@
  * @example Vlastní vzhled a barvy
  * Hlavní řádek: „Více“ s `contentAlign="start"` (panel pod levým okrajem triggeru). Pod tím další lišty — **kompaktní** velikost vs. **větší**, palety **teal** / **oranžová** / **fialová** (tokeny z COLORS).
  * ```tsx
- * import { NavigationMenu } from "~/components/ui/navigation-menu";
+ * import { NavigationMenu } from "~/components/ui/base/navigation-menu";
  *
  * <div class="flex flex-col gap-6 overflow-visible">
  *   <div class="flex flex-wrap items-center gap-3 rounded-xl border border-system-indigo/30 bg-system-indigo/10 px-3 py-2 shadow-sm">
@@ -238,7 +238,7 @@
  * @example Varianty contentAlign
  * `start` — pod levým okrajem triggeru; `end` — pod pravým okrajem (vhodné pro tlačítko vpravo); `center` — pod středem; `inlineEnd` — flyout **napravo** od triggeru (vodorovně).
  * ```tsx
- * import { NavigationMenu } from "~/components/ui/navigation-menu";
+ * import { NavigationMenu } from "~/components/ui/base/navigation-menu";
  *
  * <div class="flex flex-col gap-8 overflow-visible">
  *   <div>

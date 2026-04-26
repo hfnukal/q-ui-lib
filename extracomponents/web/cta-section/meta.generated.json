@@ -1,0 +1,22 @@
+{
+  "name": "cta-section",
+  "title": "Web — výzva k akci (pruh)",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "web",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "title": "string",
+      "description": "string",
+      "ctaLabel": "string",
+      "ctaHref": "string",
+      "variant": [
+        "accent",
+        "default"
+      ],
+      "class": "string"
+    }
+  }
+}

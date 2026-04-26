@@ -5,7 +5,7 @@
  * @example Základní menu
  * Základní menu — viz ukázka níže.
  * ```tsx
- * import { DropdownMenu } from "~/components/ui/dropdown-menu";
+ * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
  * 
  * <DropdownMenu.Root>
  *   <DropdownMenu.Trigger>Otevřít menu</DropdownMenu.Trigger>
@@ -21,7 +21,7 @@
  * @example Skupiny a popisky
  * Skupiny a popisky — viz ukázka níže.
  * ```tsx
- * import { DropdownMenu } from "~/components/ui/dropdown-menu";
+ * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
  * 
  * <DropdownMenu.Root>
  *   <DropdownMenu.Trigger>Účet</DropdownMenu.Trigger>
@@ -44,7 +44,7 @@
  * Pro vícenásobný výběr použij `CheckboxItem` s `bind:checked` ; pro jednu hodnotu `RadioGroup` s `bind:value` a `RadioItem` .
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
- * import { DropdownMenu } from "~/components/ui/dropdown-menu";
+ * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
  * 
  * export const MenuWithSelection = component$(() => {
  *   const notifications = useSignal(true);
@@ -72,7 +72,7 @@
  * @example Podmenu
  * Vnořené menu je druhý `Dropdown` kontext: `Sub` , `SubTrigger` , `SubContent` . Uvnitř panelu používej jen `SubItem` (případně `SubCheckboxItem` / `SubRadioItem` ), ne hlavní `Item` — jinak by headless walker sloučil indexy s hlavním menu.
  * ```tsx
- * import { DropdownMenu } from "~/components/ui/dropdown-menu";
+ * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
  * 
  * <DropdownMenu.Root>
  *   <DropdownMenu.Trigger>Soubor</DropdownMenu.Trigger>

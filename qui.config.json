@@ -1,0 +1,14 @@
+{
+  "configSchemaVersion": "qui-config/v1",
+  "targetPath": "components",
+  "repos": {
+    "local": {
+      "url": "file://./",
+      "componentsRoot": "components",
+      "uilibs": [
+        "base", "qui-demo"
+      ],
+      "connected": true
+    }
+  }
+}

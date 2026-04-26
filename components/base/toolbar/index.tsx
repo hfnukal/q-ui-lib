@@ -5,7 +5,7 @@
  * @example Složené API — skupiny, oddělovač, spacer
  * `Toolbar.Group` dává `role=&quot;group&quot;` a volitelný `aria-label`.
  * ```tsx
- * import { Toolbar } from "~/components/ui/toolbar";
+ * import { Toolbar } from "~/components/ui/base/toolbar";
  * 
  * <Toolbar.Root aria-label="Formátování">
  *   <Toolbar.Group aria-label="Historie">
@@ -24,8 +24,8 @@
  * @example S ToggleGroup
  * Headless toggle skupinu vlož jako dítě kořene; styl kořene ToggleGroup se zjemní, aby seděl uvnitř lišty.
  * ```tsx
- * import { Toolbar } from "~/components/ui/toolbar";
- * import { ToggleGroup } from "~/components/ui/toggle-group";
+ * import { Toolbar } from "~/components/ui/base/toolbar";
+ * import { ToggleGroup } from "~/components/ui/base/toggle-group";
  * 
  * <Toolbar.Root aria-label="Text" class="w-full max-w-xl">
  *   <ToggleGroup.Root value="b" aria-label="Styl" class="border-0 bg-transparent p-0 shadow-none">
@@ -41,7 +41,7 @@
  * @example Svislá orientace
  * U `orientation=&quot;vertical&quot;` použij u oddělovače `orientation=&quot;horizontal&quot;` .
  * ```tsx
- * import { Toolbar } from "~/components/ui/toolbar";
+ * import { Toolbar } from "~/components/ui/base/toolbar";
  * 
  * <Toolbar.Root orientation="vertical" aria-label="Postranní nástroje">
  *   <Toolbar.Button>Výběr</Toolbar.Button>

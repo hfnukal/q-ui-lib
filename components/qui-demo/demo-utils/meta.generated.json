@@ -1,0 +1,10 @@
+{
+  "name": "demo-utils",
+  "title": "DemoUtils",
+  "version": "0.0.0",
+  "kind": "utilities",
+  "registry": "qui-demo",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {}
+}

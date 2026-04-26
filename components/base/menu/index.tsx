@@ -5,7 +5,7 @@
  * @example Základní použití
  * Základní použití — viz ukázka níže.
  * ```tsx
- * import { Menu } from "~/components/ui/menu";
+ * import { Menu } from "~/components/ui/base/menu";
  * 
  * <Menu.Root>
  *   <Menu.Trigger>Akce</Menu.Trigger>
@@ -22,9 +22,9 @@
  * S MenuItem layoutem — viz ukázka níže.
  * ```tsx
  * import { LuCopy, LuSave, LuTrash } from "@qwikest/icons/lucide";
- * import { Menu } from "~/components/ui/menu";
- * import { MenuItem } from "~/components/ui/menu-item";
- * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * import { Menu } from "~/components/ui/base/menu";
+ * import { MenuItem } from "~/components/ui/base/menu-item";
+ * import { KbdShortcut } from "~/components/ui/base/kbd-shortcut";
  * 
  * <Menu.Root>
  *   <Menu.Trigger>Soubor</Menu.Trigger>
@@ -58,8 +58,8 @@
  * Zaškrtnutí se zobrazí jako fajfka vlevo. Stav řídí `bind:checked`.
  * ```tsx
  * import { useSignal } from "@builder.io/qwik";
- * import { Menu } from "~/components/ui/menu";
- * import { MenuCheckboxItem } from "~/components/ui/menu-checkbox-item";
+ * import { Menu } from "~/components/ui/base/menu";
+ * import { MenuCheckboxItem } from "~/components/ui/base/menu-checkbox-item";
  * 
  * export default component$(() => {
  *   const sidebar = useSignal(true);
@@ -89,8 +89,8 @@
  * Vybraná položka se označí tečkou. Stav řídí `bind:value` na `RadioGroup`.
  * ```tsx
  * import { useSignal } from "@builder.io/qwik";
- * import { Menu } from "~/components/ui/menu";
- * import { MenuRadioItem } from "~/components/ui/menu-radio-item";
+ * import { Menu } from "~/components/ui/base/menu";
+ * import { MenuRadioItem } from "~/components/ui/base/menu-radio-item";
  * 
  * export default component$(() => {
  *   const theme = useSignal("light");
@@ -127,8 +127,8 @@
  * Vnořené menu: `Menu.Sub`, `SubTrigger` a položky se šipkou doprava.
  * ```tsx
  * import { LuChevronRight, LuSettings } from "@qwikest/icons/lucide";
- * import { Menu } from "~/components/ui/menu";
- * import { MenuItem } from "~/components/ui/menu-item";
+ * import { Menu } from "~/components/ui/base/menu";
+ * import { MenuItem } from "~/components/ui/base/menu-item";
  * 
  * <Menu.Root>
  *   <Menu.Trigger>Možnosti</Menu.Trigger>
@@ -169,7 +169,7 @@
  *
  * Použití:
  * ```tsx
- * import { Menu } from "~/components/ui/menu";
+ * import { Menu } from "~/components/ui/base/menu";
  *
  * <Menu.Root>
  *   <Menu.Trigger>Otevřít</Menu.Trigger>

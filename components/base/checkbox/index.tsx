@@ -6,7 +6,7 @@
  * `Checkbox.Root` + `Checkbox.Indicator`.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
- * import { Checkbox, CheckboxCheckIcon } from "~/components/ui/checkbox";
+ * import { Checkbox, CheckboxCheckIcon } from "~/components/ui/base/checkbox";
  *
  * export default component$(() => {
  *   const checked = useSignal(false);
@@ -29,7 +29,7 @@
  * Jedna komponenta s ikonou; vždy s přímým headless stromem uvnitř (vhodné s `bind:checked`).
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
- * import { CheckboxControl } from "~/components/ui/checkbox";
+ * import { CheckboxControl } from "~/components/ui/base/checkbox";
  *
  * export default component$(() => {
  *   const ok = useSignal(false);
@@ -48,7 +48,7 @@
  * Kombinuje `CheckboxControl` a `Label`; klik na text přepne stejný signál jako checkbox.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
- * import { CheckboxField } from "~/components/ui/checkbox";
+ * import { CheckboxField } from "~/components/ui/base/checkbox";
  *
  * export default component$(() => {
  *   const accepted = useSignal(false);
@@ -62,8 +62,8 @@
  * Stejné chování ručně: `aria-labelledby` + přepnutí signálu v `onClick na štítku (bez `htmlFor` / `for`).
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
- * import { CheckboxControl } from "~/components/ui/checkbox";
- * import { Label } from "~/components/ui/label";
+ * import { CheckboxControl } from "~/components/ui/base/checkbox";
+ * import { Label } from "~/components/ui/base/label";
  *
  * export default component$(() => {
  *   const v = useSignal(false);

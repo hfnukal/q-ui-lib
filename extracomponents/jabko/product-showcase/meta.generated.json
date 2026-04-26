@@ -1,0 +1,27 @@
+{
+  "name": "product-showcase",
+  "title": "Jabko — produktový blok",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "jabko",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "align": [
+        "image-left",
+        "image-right"
+      ],
+      "eyebrow": "string",
+      "title": "string",
+      "description": "string",
+      "image": "{ src: string; alt: string; }",
+      "src": "string",
+      "alt": "string",
+      "links": "{ label: string; href: string; }[]",
+      "label": "string",
+      "href": "string",
+      "class": "string"
+    }
+  }
+}

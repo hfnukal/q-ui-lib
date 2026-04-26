@@ -5,7 +5,7 @@
  * @example Základní výběr
  * Základní výběr — viz ukázka níže.
  * ```tsx
- * import { Select } from "~/components/ui/select";
+ * import { Select } from "~/components/ui/base/select";
  * 
  * <Select.Root>
  *   <Select.Label>Téma</Select.Label>
@@ -29,7 +29,7 @@
  * Analogie k Radix/shadcn: `position=&quot;item-aligned&quot;` po otevření posune panel tak, aby řádka s aktuální hodnotou (nebo zvýrazněnou položkou) měla stejnou výšku jako trigger; při jiné volbě se pozice znovu dopočítá. `position=&quot;popper&quot;` to nevynucuje — chová se jako standardní plovoucí menu. Obě varianty mají počáteční hodnotu uprostřed seznamu (1–10).
  * ```tsx
  * import { component$ } from "@builder.io/qwik";
- * import { Select } from "~/components/ui/select";
+ * import { Select } from "~/components/ui/base/select";
  * 
  * export const ItemAlignCompare = component$(() => {
  *   const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
@@ -65,7 +65,7 @@
  * @example Zarovnání panelu (align)
  * Prop `align` na `Select.Popover` : `start` (výchozí, odpovídá `bottom-start` ), `center` , `end` . Zde je u všech příkladů `position=&quot;popper&quot;` , aby byl vidět jen horizontální rozdíl. Při vlastním `floating` s příponou `-start` / `-end` se `align` neaplikuje.
  * ```tsx
- * import { Select } from "~/components/ui/select";
+ * import { Select } from "~/components/ui/base/select";
  * 
  * // position="popper" vypne svislé dosednutí na vybranou položku — ukazuje čistě horizontální align.
  * <div class="flex flex-wrap gap-8">
@@ -111,7 +111,7 @@
  * @example Skupiny
  * Rozdělení položek pomocí `Select.Group` a `GroupLabel` (sekce v seznamu).
  * ```tsx
- * import { Select } from "~/components/ui/select";
+ * import { Select } from "~/components/ui/base/select";
  * 
  * <Select.Root>
  *   <Select.Trigger>
@@ -138,7 +138,7 @@
  * Řízená hodnota (bind:value) — viz ukázka níže.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
- * import { Select } from "~/components/ui/select";
+ * import { Select } from "~/components/ui/base/select";
  * 
  * export const Controlled = component$(() => {
  *   const value = useSignal("banana");

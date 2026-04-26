@@ -1,0 +1,18 @@
+{
+  "name": "blog-news",
+  "title": "Web — blog / novinky",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "web",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "title": "string",
+      "subtitle": "string",
+      "posts": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/components/web/blog-news/index\").WebBlogPost[]",
+      "readMoreLabel": "string",
+      "class": "string"
+    }
+  }
+}

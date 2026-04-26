@@ -6,7 +6,7 @@
  * Props `selectedPage`, `totalPages`, `onPageChange — aktuální stránka drž v `useSignal`.
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
- * import { Pagination } from "~/components/ui/pagination";
+ * import { Pagination } from "~/components/ui/base/pagination";
  * 
  * export default component$(() => {
  *   const page = useSignal(1);
@@ -26,7 +26,7 @@
  * Prop `siblingCount` (výchozí 1) rozšiřuje okno kolem aktivní stránky.
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
- * import { Pagination } from "~/components/ui/pagination";
+ * import { Pagination } from "~/components/ui/base/pagination";
  * 
  * export default component$(() => {
  *   const page = useSignal(5);
@@ -47,7 +47,7 @@
  * `customArrowTexts` — krátké texty místo výchozích PREV / NEXT.
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
- * import { Pagination } from "~/components/ui/pagination";
+ * import { Pagination } from "~/components/ui/base/pagination";
  * 
  * export default component$(() => {
  *   const page = useSignal(1);
@@ -68,7 +68,7 @@
  * Neinteraktivní stránkování přes prop `disabled`.
  * ```tsx
  * import { $, component$ } from "@builder.io/qwik";
- * import { Pagination } from "~/components/ui/pagination";
+ * import { Pagination } from "~/components/ui/base/pagination";
  * 
  * export default component$(() => (
  *   <Pagination

@@ -5,7 +5,7 @@
  * @example Předvolby
  * Tokenové předvolby: `padding`, `background`, okraj a zaoblení.
  * ```tsx
- * import { Box } from "~/components/ui/box";
+ * import { Box } from "~/components/ui/base/box";
  * 
  * <Box padding="md" margin="none" background="raised" border rounded="lg">
  *   Obsah
@@ -15,7 +15,7 @@
  * @example Rozšíření přes class
  * Vlastní layout a vzhled jednou třídou přes `class`.
  * ```tsx
- * import { Box } from "~/components/ui/box";
+ * import { Box } from "~/components/ui/base/box";
  * 
  * <Box class="w-64 p-6 bg-surface-overlay rounded-xl border border-separator-opaque">
  *   Šířka a další styly přes class

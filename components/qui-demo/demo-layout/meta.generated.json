@@ -1,0 +1,19 @@
+{
+  "name": "demo-layout",
+  "title": "DemoLayout",
+  "version": "0.0.0",
+  "kind": "primitive",
+  "registry": "qui-demo",
+  "dependencies": [
+    "base/input",
+    "base/screen",
+    "base/scroll-area",
+    "base/sidebar",
+    "base/sonner",
+    "qui-demo/demo-component-props"
+  ],
+  "npmDependencies": [],
+  "apiTree": {
+    "slot": true
+  }
+}

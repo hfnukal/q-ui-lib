@@ -1,131 +1,135 @@
 # Q UI Library
 
-A Qwik component library distributed as **source** — components are copied directly into your app rather than installed as a package. Styling via Tailwind CSS + design tokens; behavior via [`@qwik-ui/headless`](https://qwikui.com/docs/headless/install) where available.
+Qwik UI komponenty distribuovane jako source kod. Integrace do aplikace probiha pres `qui` CLI (balicek `qui-client`), ktere kopiruje komponenty do projektu a spravuje jejich synchronizaci z Git repozitare.
 
 ## Quick start
 
 ```bash
-# From the library root
-npm install
+# In your app
+npm i -D qui-client
 
-# Bootstrap a new Qwik app
-npm run qui -- init ./my-app
+# Initialize config + template files
+npx qui init
 
-# Add components to an existing app
-npm run qui -- add ./my-app button accordion input
+# Add source components
+npx qui add button input
 ```
 
-## CLI — `qui`
-
-The CLI is exposed as the `qui` npm script. Pass arguments after `--`:
+V tomto monorepu je dostupny passthrough skript:
 
 ```bash
 npm run qui -- <command> [options]
-# or directly:
-node cli/index.js <command> [options]
 ```
 
-### Commands
+## CLI (`qui-client`)
 
-| Command | Description |
-|---------|-------------|
-| `init <target>` | Bootstrap a new Qwik + Tailwind app from the built-in template. Copies shared `utilities/` into the app. |
-| `add <target> <components...>` | Copy components into `<target>/src/components/ui/`. Resolves transitive dependencies automatically. Warns about missing npm packages. |
-| `update <target> [components...]` | Interactively sync components to newer library versions. Regenerates demo routes if target has `src/routes/components/`. |
-| `generate` | Regenerate all `meta.generated.json` files from component JSDoc. |
-| `generate-demo <target> [slugs...]` | Generate demo routes from component JSDoc `@example` tags into `<target>/src/routes/components/`. |
-| `sync-template <target>` | Merge template files into an existing app (non-destructive). |
-| `registry add <git-url> <owner> <set>` | Clone a remote component set into `components/<owner>/<set>/` and register it in `components/registry.json`. |
-| `registry sync [owner/set]` | Re-fetch and update registered external sets. |
-| `clone <src-id> <dest-id>` | Copy a component within the library workspace for local customization (e.g. `clone base/input shanny/myapp/input`). |
+Aktualni prikazy:
 
-#### Conflict flags for `add`
+- `init` - vytvori/aktualizuje `qui.config.json` a synchronizuje app template soubory.
+- `connect` - prida nebo upravi repozitare v `qui.config.json`.
+- `verify` - overi konfiguraci a stav pripojeni vybraneho repozitare.
+- `diff` - zatim minimalni diff report (stav migrace).
+- `add` - prida komponenty do `targetPath` a doplni zavislosti (vcetne npm deps).
+- `update` - prepise nainstalovane komponenty novejsim zdrojem.
+- `remove` - odstrani komponenty a pripadne odebere nepouzivane npm zavislosti.
+- `generate` - regeneruje `meta.generated.json` pro komponenty v `targetPath` (podle `index.tsx`/`index.ts`).
+- `generate-demo` - synchronizuje demo template soubory a vygeneruje/aktualizuje demo routes v `src/routes/<route-base>/components/...` pro nainstalovane komponenty.
+- `clone` - naklonuje lokalne nainstalovanou komponentu pod novym jmenem.
+- `push` - pushne upravene komponenty z aplikace zpet do remote Git repozitare.
 
-| Flag | Behavior |
-|------|----------|
-| *(default)* | `--abort` — stop immediately if any destination file exists |
-| `--skip` | Leave existing files untouched, copy only new ones |
-| `--force` | Overwrite existing files |
+## `qui.config.json` (schema `qui-config/v1`)
 
-### Component IDs
+CLI pracuje nad konfiguraci v koreni aplikace:
 
-Components are addressed as **`owner/set/slug`** (three-level) or flat **`slug`** for base components:
+```json
+{
+  "configSchemaVersion": "qui-config/v1",
+  "targetPath": "src/components/ui",
+  "repos": {
+    "local-dev": {
+      "url": "file://../",
+      "componentsRoot": "components",
+      "uilibs": ["base"],
+      "connected": true
+    }
+  }
+}
+```
+
+Poznamky:
+
+- `targetPath` musi byt relativni cesta.
+- `repos.<name>.url` podporuje `file://`, `http(s)://`, `ssh://` a `git@...`.
+- Vyber zdroje probiha pres `--repo <repo>` nebo `--repo <repo>/<uilib>` (u `push` povinne `<repo>/<uilib>`).
+- Kazdy `repo` muze obsahovat vice `uilib` (pole `repos.<name>.uilibs`).
+
+## Repo vs ui-lib + vyhledavani komponent
+
+- `repo` je zdrojovy Git repozitar (odkud se komponenty ctou).
+- `uilib` je namespace/sada komponent uvnitr jednoho repo (napr. `base`, `web`).
+- Kdyz zavolas `qui add button` bez `--repo`, CLI pouzije prvni repo z konfigurace a v nem prvni `uilib`, kde komponentu najde.
+- Kdyz zavolas `qui add web/button`, komponenta se hleda primo v `uilib` `web` (v ramci vybraneho repo).
+- Kdyz zavolas `qui add --repo mycommon web/button`, urcis zaroven repo (`mycommon`) i `uilib` (`web`).
+- Pri `add` se zavislosti z `meta.generated.json` (`dependencies` a `npmDependencies`) doplni automaticky.
+- Stejny princip specifikace komponent (`button` vs `web/button`) i vyberu zdroje (`--repo`) plati i pro `update` a `remove`.
+
+## `base`, `qui-demo` a generovana demo aplikace
+
+- **`base`** je zakladni `uilib` (komponenty ve stylu shadcn) — ocekava se, ze na nem mohou stavet dalsi sady (`qui-demo`, vlastni `uilib`). Pro **plnou referencni demo** proto dava smysl mit v cilove aplikaci **cely `base`** (ne jen vyber).
+- **`qui-demo`** obsahuje podpurne komponenty pro generovanou demo (layout, index prikladu atd.) a **vazi se na `base`**. Do `qui.config.json` v danem repu proto patří oba namespace v `repos.<name>.uilibs`, napr. `["base", "qui-demo"]`.
+- **`packages/qui-client/templates/demo`** nejsou „hotova demo aplikace“, ale **podklady pro CLI** — z nich `generate-demo` sklada soubory v cilove Qwik aplikaci.
+- **`generate-demo`** z komponent uz pridanych v `targetPath` vytvori demo routy a priklady; **texty prikladu** bere z **JSDoc** u komponent (kde to generator podporuje).
+
+### Typicka sekvence: init → vsechny komponenty pro demo → generate-demo
+
+1. **`qui init`** — `qui.config.json` + synchronizace sablon do aplikace (viz `init` vyse).
+2. **`qui add --repo <repo> --all`** — prida **vsechny** komponenty ze **vsech** `uilib` uvedenych u toho repa v konfiguraci. Pro demo s celym `base` a shellem z `qui-demo` nejprve nastavte `uilibs` na `base` i `qui-demo`, pak spuste `add --all`. **Povinny je flag `--repo`** (bez nej `--all` neprojde). Alternativa: pridavat jen vybrane komponenty, napr. `qui add button input`.
+3. **`qui generate-demo`** — napr. s `--route-base /qui-demo` vygeneruje/aktualizuje demo routy pro jiz nainstalovane komponenty.
+
+Pro udrzeni prehlednosti zde zustavaji **kanonicke CLI prikazy**; volitelne npm skripty v tomto monorepu (napr. jednim prikazem regenerovat `demo/` a spustit dev server) mohou tyto kroky obalit **jen pro vyvoj v tomto repozitari** — viz [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Nejbeznejsi priklady
 
 ```bash
-npm run qui -- add ./my-app base/button          # three-level
-npm run qui -- add ./my-app button               # flat (resolves to base/button)
-npm run qui -- add ./my-app shanny/eshop/cart    # external set
+# 1) Initialize config
+npx qui init --repo local-dev --url file://../ --target-path src/components/ui
+
+# 2) Connect remote repo
+npx qui connect --repo acme --url https://github.com/acme/ui-kit.git
+
+# 3) Add/update/remove components
+npx qui add button accordion
+npx qui update --all
+npx qui remove accordion
+
+# 4) Metadata + demo routes
+npx qui generate
+npx qui generate-demo --route-base /qui-demo
+
+# 5) Verify / diff
+npx qui verify --repo acme
+npx qui diff --repo acme --ci
 ```
 
-## Components
+## Global flags
 
-55+ components live under `components/base/`. Each folder contains:
-- `index.tsx` — component source with JSDoc (`@title`, `@description`, `@example`)
-- `meta.generated.json` — generated metadata (props, dependencies, version)
+Podporovane globalni flagy v aktualnim parseru:
 
-Components include: accordion, avatar, badge, button, calendar, card, carousel, chart, checkbox, combobox, dialog, dropdown-menu, field, file-input, input, input-group, label, navigation-menu, pagination, popover, progress, select, separator, sheet, sidebar, slider, spinner, table, tabs, textarea, toggle-group, tooltip, and more.
+- Bool: `--auto`, `--force`, `--dry-run`, `--yes`, `--json`, `--all`, `--ci`
+- Value: `--on-error`, `--repo`, `--url`, `--target-path`, `--components-root`, `--uilibs`, `--connected`, `--base-branch`, `--title`, `--route-base`, `--branch`, `--routes-dir`, `--components-dir`
 
-## npm scripts
+## Monorepo scripts
 
-### Metadata & demo pipeline
+V root `package.json` jsou aktualne jen tyto relevantni skripty:
 
-| Script | Description |
-|--------|-------------|
-| `npm run qui:sync` | Sync `@component` / `@title` / `@version` directives in all component files |
-| `npm run qui:meta` | Regenerate all `meta.generated.json` from component JSDoc |
-| `npm run qui:demo` | Generate all demo routes (`./demo`) from component JSDoc |
-| `npm run qui:build` | Full pipeline: `qui:sync` → `qui:meta` → `qui:demo` |
-| `npm run qui:migrate` | One-time: extract demo route content → component JSDoc `@example` blocks |
+- `npm run qui -- ...` - spusti `qui` CLI.
+- `npm run test:qui-client` - spusti testy `qui-client`.
+- `npm run publish:qui-client` - publikuje npm balicek `qui-client`.
 
-### Working with the demo app
+## Related docs
 
-| Script | Equivalent CLI | Description |
-|--------|---------------|-------------|
-| `npm run qui:add -- button input` | `qui add ./demo button input` | Add components to the demo app |
-| `npm run qui:update -- button` | `qui update ./demo button` | Sync specific components into the demo |
-| `npm run qui:update:all` | `qui update ./demo --all` | Update all demo components from library |
-
-### CLI passthrough
-
-```bash
-# Any qui command targeting ./demo (shorter to type):
-npm run qui:add -- accordion slider
-npm run qui:update -- input label
-
-# Any qui command with full control:
-npm run qui -- add ./my-app button --skip
-npm run qui -- registry add https://github.com/... owner myset
-```
-
-## Workflow: creating or updating a component
-
-See **[CREATE.md](CREATE.md)** for full details. Short version:
-
-1. Edit `components/base/<slug>/index.tsx` — bump `@version`, update `@description` / `@example`.
-2. Run `npm run qui:build` (sync directives → regenerate meta → regenerate all demo routes).
-   Or for a single component: `npm run qui:update -- <slug>`.
-
-## Registry (external sets)
-
-Share components via Git — no package registry required:
-
-```bash
-# Add a remote set
-npm run qui -- registry add https://github.com/you/components.git you/myset
-
-# Sync later
-npm run qui -- registry sync you/myset
-```
-
-External sets land in `components/<owner>/<set>/` and are tracked in `components/registry.json`. The `base/` tree is never touched by registry operations.
-
-## Related documents
-
-- **[CREATE.md](CREATE.md)** — creating and updating components
-- **[REGISTRY.md](REGISTRY.md)** — registry system, sets, metadata
-- **[META_GEN.md](META_GEN.md)** — metadata generator internals
-- **[COLORS.md](COLORS.md)** — design tokens
-
----
-
-© 2026 Q UI Library — Qwik · Tailwind CSS · [@qwik-ui/headless](https://www.npmjs.com/package/@qwik-ui/headless)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [packages/qui-client/README.md](packages/qui-client/README.md)
+- [docs/CLI_MIGRATION.md](docs/CLI_MIGRATION.md)
+- [docs/MIGRATION_FROM_LEGACY_CLI.md](docs/MIGRATION_FROM_LEGACY_CLI.md)
+- [docs/QUI_CLIENT.md](docs/QUI_CLIENT.md)

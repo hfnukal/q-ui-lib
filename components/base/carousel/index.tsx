@@ -5,8 +5,8 @@
  * @example Tečky uprostřed (pagination)
  * Pod karuselem jsou vystředěné tečky: aktivní snímek je vyplněný, ostatní jen obrysové. Kliknutím na tečku přejdeš na daný snímek. Šipky jsou textové (‹ ›), bez ikon. Uvnitř každého snímku je kompletní `Card` s titulkem, popisem a obsahem; na `Carousel.Slide` je `border-0 bg-transparent p-0` , aby se nepletly dva rámečky.
  * ```tsx
- * import { Card } from "~/components/ui/card";
- * import { Carousel } from "~/components/ui/carousel";
+ * import { Card } from "~/components/ui/base/card";
+ * import { Carousel } from "~/components/ui/base/carousel";
  * 
  * <Carousel.Root class="max-w-xl" rewind>
  *   <Carousel.Title>Karusel</Carousel.Title>
@@ -50,8 +50,8 @@
  * `bind:autoplay` a `Carousel.Player` — u uživatelů s `prefers-reduced-motion` se tlačítko přehrávače skryje (headless CSS). Snímky jsou opět karty s obsahem.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
- * import { Card } from "~/components/ui/card";
- * import { Carousel } from "~/components/ui/carousel";
+ * import { Card } from "~/components/ui/base/card";
+ * import { Carousel } from "~/components/ui/base/carousel";
  * 
  * export default component$(() => {
  *   const autoplay = useSignal(false);
@@ -98,8 +98,8 @@
  * @example Stepper (číslované kroky)
  * `Carousel.Stepper` a `Carousel.Step` — karty v snímcích, skok přímo podle čísla.
  * ```tsx
- * import { Card } from "~/components/ui/card";
- * import { Carousel } from "~/components/ui/carousel";
+ * import { Card } from "~/components/ui/base/card";
+ * import { Carousel } from "~/components/ui/base/carousel";
  * 
  * <Carousel.Root class="max-w-md" rewind>
  *   <Carousel.Title>Kroky</Carousel.Title>

@@ -5,7 +5,7 @@
  * @example Compound API (střídavě `Trigger` / `Content`)
  * Compound API (střídavě Trigger / Content) — viz ukázka níže.
  * ```tsx
- * import { Accordion } from "~/components/ui/accordion";
+ * import { Accordion } from "~/components/ui/base/accordion";
  * 
  * <Accordion.Root>
  *   <Accordion.Trigger>Základní informace</Accordion.Trigger>
@@ -22,7 +22,7 @@
  * @example Single open panel
  * Single open panel — viz ukázka níže.
  * ```tsx
- * import { AccordionList } from "~/components/ui/accordion";
+ * import { AccordionList } from "~/components/ui/base/accordion";
  * 
  * const items = [
  *   {
@@ -48,7 +48,7 @@
  * @example Multiple open panels
  * Multiple open panels — viz ukázka níže.
  * ```tsx
- * import { AccordionList } from "~/components/ui/accordion";
+ * import { AccordionList } from "~/components/ui/base/accordion";
  * 
  * const items = [
  *   {

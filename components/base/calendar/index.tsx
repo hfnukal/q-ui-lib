@@ -6,7 +6,7 @@
  * Zkratka nad stejnými díly — navigace, titulek, záhlaví týdne a mřížka.
  * ```tsx
  * import { $, useSignal } from "@builder.io/qwik";
- * import { Calendar } from "~/components/ui/calendar";
+ * import { Calendar } from "~/components/ui/base/calendar";
  * 
  * export default component$(() => {
  *   const selected = useSignal<string | undefined>(undefined);
@@ -25,7 +25,7 @@
  * @example Složené API
  * `Calendar.Root` s vlastním rozložením (stejné podkomponenty jako u Panel).
  * ```tsx
- * import { Calendar } from "~/components/ui/calendar";
+ * import { Calendar } from "~/components/ui/base/calendar";
  * 
  * <Calendar.Root defaultViewMonth="2026-04-01" weekStartsOn={1}>
  *   <div class="flex flex-col gap-2">
@@ -48,7 +48,7 @@
  * `viewMonth` + `onViewMonthChange, omezení rozsahu `minDate` / `maxDate` (řetězce `YYYY-MM-DD`).
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
- * import { Calendar } from "~/components/ui/calendar";
+ * import { Calendar } from "~/components/ui/base/calendar";
  * 
  * const viewMonth = useSignal("2026-04-01");
  * const selected = useSignal<string | undefined>(undefined);
@@ -71,9 +71,9 @@
  * Vstup s textem `LL`, popover a `Calendar.Panel` — komponenta `CalendarInput` (`calendar-input`). Lze obalit `Field` / `Label`.
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
- * import { CalendarInput } from "~/components/ui/calendar-input";
- * import { Field } from "~/components/ui/field";
- * import { Label } from "~/components/ui/label";
+ * import { CalendarInput } from "~/components/ui/base/calendar-input";
+ * import { Field } from "~/components/ui/base/field";
+ * import { Label } from "~/components/ui/base/label";
  *
  * export const Demo = component$(() => {
  *   const picked = useSignal("2026-04-12");

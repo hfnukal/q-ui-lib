@@ -5,7 +5,7 @@
  * @example Single — ToggleGroupGroup
  * V jednu chvíli je aktivní nejvýše jedna položka; šipky mění fokus podle orientace.
  * ```tsx
- * import { ToggleGroupGroup } from "~/components/ui/toggle-group";
+ * import { ToggleGroupGroup } from "~/components/ui/base/toggle-group";
  * 
  * const items = [
  *   { value: "left", label: "Left" },
@@ -19,7 +19,7 @@
  * @example Multiple
  * Více současných aktivních hodnot (např. tučné i kurzíva najednou).
  * ```tsx
- * import { ToggleGroupGroup } from "~/components/ui/toggle-group";
+ * import { ToggleGroupGroup } from "~/components/ui/base/toggle-group";
  * 
  * const items = [
  *   { value: "bold", label: "Bold" },
@@ -33,7 +33,7 @@
  * @example Vertical
  * Svislé uspořádání přes `orientation=&quot;vertical&quot;`.
  * ```tsx
- * import { ToggleGroupGroup } from "~/components/ui/toggle-group";
+ * import { ToggleGroupGroup } from "~/components/ui/base/toggle-group";
  * 
  * const items = [
  *   { value: "left", label: "Left" },
@@ -51,7 +51,7 @@
  * @example Compound API
  * Pro řízený stav použij `bind:value` na `ToggleGroup.Root` (viz dokumentace Qwik UI Toggle Group).
  * ```tsx
- * import { ToggleGroup } from "~/components/ui/toggle-group";
+ * import { ToggleGroup } from "~/components/ui/base/toggle-group";
  * 
  * <ToggleGroup.Root multiple value={["a"]} aria-label="Tools">
  *   <ToggleGroup.Item value="a">A</ToggleGroup.Item>

@@ -5,8 +5,8 @@
  * @example Layout samotný
  * Layout samotný — viz ukázka níže.
  * ```tsx
- * import { MenuItem } from "~/components/ui/menu-item";
- * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * import { MenuItem } from "~/components/ui/base/menu-item";
+ * import { KbdShortcut } from "~/components/ui/base/kbd-shortcut";
  * import { LuSave, LuSettings, LuTrash } from "@qwikest/icons/lucide";
  * 
  * // Vizuální layout — uvnitř DropdownMenu.Item
@@ -21,9 +21,9 @@
  * V DropdownMenu — viz ukázka níže.
  * ```tsx
  * import { LuSave, LuSettings, LuTrash } from "@qwikest/icons/lucide";
- * import { DropdownMenu } from "~/components/ui/dropdown-menu";
- * import { MenuItem } from "~/components/ui/menu-item";
- * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
+ * import { MenuItem } from "~/components/ui/base/menu-item";
+ * import { KbdShortcut } from "~/components/ui/base/kbd-shortcut";
  * 
  * <DropdownMenu.Root>
  *   <DropdownMenu.Trigger>Soubor</DropdownMenu.Trigger>

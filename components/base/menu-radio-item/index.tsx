@@ -5,8 +5,8 @@
  * @example V DropdownMenu.RadioGroup
  * Skupina radio položek — první ukázka v demu.
  * ```tsx
- * import { DropdownMenu } from "~/components/ui/dropdown-menu";
- * import { MenuRadioItem } from "~/components/ui/menu-radio-item";
+ * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
+ * import { MenuRadioItem } from "~/components/ui/base/menu-radio-item";
  * 
  * <DropdownMenu.Root>
  *   <DropdownMenu.Trigger>Motiv</DropdownMenu.Trigger>
@@ -37,8 +37,8 @@
  * @example Layout samotný
  * Samostatný řádek bez `RadioGroup` — jen vzhled.
  * ```tsx
- * import { MenuRadioItem } from "~/components/ui/menu-radio-item";
- * import { KbdShortcut } from "~/components/ui/kbd-shortcut";
+ * import { MenuRadioItem } from "~/components/ui/base/menu-radio-item";
+ * import { KbdShortcut } from "~/components/ui/base/kbd-shortcut";
  * 
  * <MenuRadioItem.Root>
  *   <MenuRadioItem.Label>Světlý motiv</MenuRadioItem.Label>

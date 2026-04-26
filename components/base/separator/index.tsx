@@ -5,7 +5,7 @@
  * @example Vodorovně
  * Výchozí `orientation=&quot;horizontal&quot;` — plná šířka kontejneru, výška 1&nbsp;px.
  * ```tsx
- * import { Separator } from "~/components/ui/separator";
+ * import { Separator } from "~/components/ui/base/separator";
  * 
  * <div class="space-y-3">
  *   <p class="text-body text-label">Oddíl jedna</p>
@@ -17,7 +17,7 @@
  * @example Svisle
  * V řádku použij `items-stretch` na flex kontejneru, aby čára měla výšku řádku.
  * ```tsx
- * import { Separator } from "~/components/ui/separator";
+ * import { Separator } from "~/components/ui/base/separator";
  * 
  * <div class="flex h-12 items-stretch gap-3">
  *   <span class="flex items-center text-callout text-label">Vlevo</span>
@@ -29,7 +29,7 @@
  * @example Dekorativní
  * `decorative` nastaví `role=&quot;none&quot;` — vhodné, když oddělovač není strukturální landmark.
  * ```tsx
- * import { Separator } from "~/components/ui/separator";
+ * import { Separator } from "~/components/ui/base/separator";
  * 
  * <Separator decorative />
  * // role="none" — vypnuto z accessibility stromu (čistě vizuální)

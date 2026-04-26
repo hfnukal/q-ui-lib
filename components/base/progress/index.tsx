@@ -6,7 +6,7 @@
  * `Progress.Root` + `Progress.Indicator` — ukázka s periodickou změnou hodnoty (simulace načítání).
  * ```tsx
  * import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
- * import { Progress } from "~/components/ui/progress";
+ * import { Progress } from "~/components/ui/base/progress";
  * 
  * export default component$(() => {
  *   const v = useSignal(0);
@@ -28,7 +28,7 @@
  * @example ProgressBar
  * Zkratka se stejným vzhledem — vnitřně kořen + indikátor.
  * ```tsx
- * import { ProgressBar } from "~/components/ui/progress";
+ * import { ProgressBar } from "~/components/ui/base/progress";
  * 
  * <ProgressBar value={66} class="max-w-md" />
  * ```
@@ -36,7 +36,7 @@
  * @example Neurčitý stav
  * `value=&#123;null&#125;` → `data-progress=&quot;indeterminate&quot;` a zkrácený segment s pulzováním.
  * ```tsx
- * import { ProgressBar } from "~/components/ui/progress";
+ * import { ProgressBar } from "~/components/ui/base/progress";
  * 
  * <ProgressBar value={null} class="max-w-md" />
  * ```
@@ -45,8 +45,8 @@
  * `bind:value` na signál spolu se `Slider`.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
- * import { ProgressBar } from "~/components/ui/progress";
- * import { Slider } from "~/components/ui/slider";
+ * import { ProgressBar } from "~/components/ui/base/progress";
+ * import { Slider } from "~/components/ui/base/slider";
  * 
  * export default component$(() => {
  *   const v = useSignal(35);

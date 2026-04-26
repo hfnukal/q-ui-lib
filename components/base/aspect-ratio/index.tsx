@@ -5,7 +5,7 @@
  * @example Výchozí 16∶9
  * Prop `ratio` vynecháno — použije se `16 / 9`.
  * ```tsx
- * import { AspectRatio } from "~/components/ui/aspect-ratio";
+ * import { AspectRatio } from "~/components/ui/base/aspect-ratio";
  * 
  * <AspectRatio class="max-w-md rounded-lg border border-separator-opaque/40">
  *   <img
@@ -21,7 +21,7 @@
  * @example Čtverec
  * `ratio={"{1}"}` pro poměr 1∶1.
  * ```tsx
- * import { AspectRatio } from "~/components/ui/aspect-ratio";
+ * import { AspectRatio } from "~/components/ui/base/aspect-ratio";
  * 
  * <AspectRatio ratio={1} class="max-w-xs rounded-lg border border-separator-opaque/40">
  *   <img
@@ -37,11 +37,11 @@
  * @example Vlastní poměr
  * Libovolné číslo = šířka / výška (zde široké plátno `2.39`).
  * ```tsx
- * import { AspectRatio } from "~/components/ui/aspect-ratio";
+ * import { AspectRatio } from "~/components/ui/base/aspect-ratio";
  * 
  * @example Kinematografický poměr 2.39 : 1 
  * ```tsx
- * import { AspectRatio } from "~/components/ui/aspect-ratio";
+ * import { AspectRatio } from "~/components/ui/base/aspect-ratio";
  * 
  * <AspectRatio ratio={2.39} class="max-w-2xl rounded-lg border border-separator-opaque/40">
  *   <div class="flex h-full w-full items-center justify-center bg-fill-tertiary/50 text-callout text-secondary-label">

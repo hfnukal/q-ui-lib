@@ -5,8 +5,8 @@
   "kind": "compound",
   "registry": "base",
   "dependencies": [
-    "dropdown-menu",
-    "toolbar"
+    "base/dropdown-menu",
+    "base/toolbar"
   ],
   "npmDependencies": [],
   "apiTree": {

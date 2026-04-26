@@ -1,0 +1,22 @@
+{
+  "name": "ribbon",
+  "title": "Jabko — promo lišta (ribbon)",
+  "version": "1.0.0",
+  "kind": "primitive",
+  "registry": "jabko",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "message": "string",
+      "link": "{ label: string; href: string; }",
+      "label": "string",
+      "href": "string",
+      "tone": [
+        "neutral",
+        "promo"
+      ],
+      "class": "string"
+    }
+  }
+}

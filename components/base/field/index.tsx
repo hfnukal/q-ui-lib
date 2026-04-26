@@ -5,9 +5,9 @@
  * @example Základ (Label + Input)
  * Základ (Label + Input) — viz ukázka níže.
  * ```tsx
- * import { Field } from "~/components/ui/field";
- * import { Input } from "~/components/ui/input";
- * import { Label } from "~/components/ui/label";
+ * import { Field } from "~/components/ui/base/field";
+ * import { Input } from "~/components/ui/base/input";
+ * import { Label } from "~/components/ui/base/label";
  * 
  * <Field.Root>
  *   <Label for="user-email">E-mail</Label>
@@ -18,9 +18,9 @@
  * @example S popisem
  * S popisem — viz ukázka níže.
  * ```tsx
- * import { Field } from "~/components/ui/field";
- * import { Input } from "~/components/ui/input";
- * import { Label } from "~/components/ui/label";
+ * import { Field } from "~/components/ui/base/field";
+ * import { Input } from "~/components/ui/base/input";
+ * import { Label } from "~/components/ui/base/label";
  * 
  * <Field.Root>
  *   <Label for="display-name">Zobrazované jméno</Label>
@@ -39,9 +39,9 @@
  * @example Chybový stav
  * Chybový stav — viz ukázka níže.
  * ```tsx
- * import { Field } from "~/components/ui/field";
- * import { Input } from "~/components/ui/input";
- * import { Label } from "~/components/ui/label";
+ * import { Field } from "~/components/ui/base/field";
+ * import { Input } from "~/components/ui/base/input";
+ * import { Label } from "~/components/ui/base/label";
  * 
  * <Field.Root>
  *   <Label for="invite-code">Pozvánkový kód</Label>

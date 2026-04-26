@@ -5,8 +5,8 @@
  * @example Vodorovně
  * Vodorovně — viz ukázka níže.
  * ```tsx
- * import { Button } from "~/components/ui/button";
- * import { ButtonGroup } from "~/components/ui/button-group";
+ * import { Button } from "~/components/ui/base/button";
+ * import { ButtonGroup } from "~/components/ui/base/button-group";
  * 
  * <ButtonGroup aria-label="Text actions">
  *   <Button variant="secondary" onClick$={...}>Left</Button>
@@ -18,8 +18,8 @@
  * @example Svisle
  * Prop `orientation=&quot;vertical&quot;` .
  * ```tsx
- * import { Button } from "~/components/ui/button";
- * import { ButtonGroup } from "~/components/ui/button-group";
+ * import { Button } from "~/components/ui/base/button";
+ * import { ButtonGroup } from "~/components/ui/base/button-group";
  * 
  * <ButtonGroup orientation="vertical" aria-label="Stack">
  *   <Button variant="secondary" onClick$={...}>One</Button>
@@ -30,8 +30,8 @@
  * @example Primární varianta
  * Stejné sloučení okrajů funguje i u `primary` / `danger`.
  * ```tsx
- * import { Button } from "~/components/ui/button";
- * import { ButtonGroup } from "~/components/ui/button-group";
+ * import { Button } from "~/components/ui/base/button";
+ * import { ButtonGroup } from "~/components/ui/base/button-group";
  * 
  * <ButtonGroup aria-label="Modes">
  *   <Button variant="primary" onClick$={...}>A</Button>

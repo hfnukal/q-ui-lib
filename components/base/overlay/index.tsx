@@ -6,8 +6,8 @@
  * Kliknutím na overlay nebo tlačítko ho zavřeš.
  * ```tsx
  * import { useSignal } from "@builder.io/qwik";
- * import { Overlay } from "~/components/ui/overlay";
- * import { Button } from "~/components/ui/button";
+ * import { Overlay } from "~/components/ui/base/overlay";
+ * import { Button } from "~/components/ui/base/button";
  * 
  * export default component$(() => {
  *   const open = useSignal(false);

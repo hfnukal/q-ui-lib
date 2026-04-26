@@ -5,9 +5,9 @@
   "kind": "primitive",
   "registry": "base",
   "dependencies": [
-    "calendar",
-    "input-group",
-    "popover"
+    "base/calendar",
+    "base/input-group",
+    "base/popover"
   ],
   "npmDependencies": [],
   "apiTree": {

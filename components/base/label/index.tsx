@@ -6,8 +6,8 @@
  * Prop `for` (nebo `htmlFor`) spáruje štítek s `id` vstupu.
  * ```tsx
  * import { component$ } from "@builder.io/qwik";
- * import { Input } from "~/components/ui/input";
- * import { Label } from "~/components/ui/label";
+ * import { Input } from "~/components/ui/base/input";
+ * import { Label } from "~/components/ui/base/label";
  * 
  * export default component$(() => (
  *   <div class="flex flex-col gap-2">
@@ -20,8 +20,8 @@
  * @example Peer + disabled
  * Třída `peer` patří na vstup; `peer-disabled:*` na štítku reaguje jen když je v DOM vstup před štítkem — layout můžeš srovnat gridem (řádky 2 / 1).
  * ```tsx
- * import { Input } from "~/components/ui/input";
- * import { Label } from "~/components/ui/label";
+ * import { Input } from "~/components/ui/base/input";
+ * import { Label } from "~/components/ui/base/label";
  * 
  * // V DOM musí být .peer dřív než Label (kvůli Tailwind peer-*).
  * <div class="grid grid-cols-1 gap-2">

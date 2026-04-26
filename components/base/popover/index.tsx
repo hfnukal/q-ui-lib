@@ -5,7 +5,7 @@
  * @example Základní použití
  * Základní použití — viz ukázka níže.
  * ```tsx
- * import { Popover } from "~/components/ui/popover";
+ * import { Popover } from "~/components/ui/base/popover";
  * 
  * <Popover.Root>
  *   <Popover.Trigger>Otevřít</Popover.Trigger>
@@ -23,7 +23,7 @@
  * @example Umístění (floating)
  * Prop `floating` na kořeni předává umístění Floating UI (např. `"top"` , `"bottom-end"` ).
  * ```tsx
- * import { Popover } from "~/components/ui/popover";
+ * import { Popover } from "~/components/ui/base/popover";
  * 
  * <Popover.Root floating="top">
  *   <Popover.Trigger>Nahoru</Popover.Trigger>
@@ -36,7 +36,7 @@
  * @example Šipka (arrow)
  * Na `Popover.Root` nastav `arrow` a do panelu vlož `Popover.PanelArrow` .
  * ```tsx
- * import { Popover } from "~/components/ui/popover";
+ * import { Popover } from "~/components/ui/base/popover";
  * 
  * <Popover.Root gutter={8} arrow floating="left">
  *   <Popover.Trigger>Se šipkou</Popover.Trigger>

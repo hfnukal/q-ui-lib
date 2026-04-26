@@ -7,7 +7,7 @@
  * Na stránce s více zónami ho zapínejte podmíněně (např. checkbox), jinak přepíše celou stránku.
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
- * import { FileInput } from "~/components/ui/file-input";
+ * import { FileInput } from "~/components/ui/base/file-input";
  *
  * export default component$(() => {
  *   const enabled = useSignal(false);
@@ -37,7 +37,7 @@
  * @example Drop zóna + skrytý input
  * Při drag over se změní okraj a pozadí; přes zónu je text z `dropLabel`.
  * ```tsx
- * import { FileInput } from "~/components/ui/file-input";
+ * import { FileInput } from "~/components/ui/base/file-input";
  * 
  * <FileInput.DropArea dropLabel="Pusťte soubor sem" class="max-w-lg">
  *   <FileInput.Input name="doc" hidden accept=".pdf,.png" />
@@ -47,7 +47,7 @@
  * @example Více souborů (skrytý input)
  * Více souborů přes `multiple` na skrytém inputu.
  * ```tsx
- * import { FileInput } from "~/components/ui/file-input";
+ * import { FileInput } from "~/components/ui/base/file-input";
  * 
  * <FileInput.DropArea dropLabel="Pusťte jeden nebo více souborů" class="max-w-lg">
  *   <FileInput.Input name="demo-multi" hidden multiple />
@@ -57,7 +57,7 @@
  * @example Více souborů (viditelný input)
  * Stejné rozhraní s viditelným file inputem v obsahu zóny.
  * ```tsx
- * import { FileInput } from "~/components/ui/file-input";
+ * import { FileInput } from "~/components/ui/base/file-input";
  *
  * <FileInput.DropArea dropLabel="Pusťte jeden nebo více souborů" class="max-w-lg">
  *   <FileInput.Input name="demo-multi" multiple />
@@ -67,7 +67,7 @@
  * @example Bez překrytí (noDropOverlay)
  * `noDropOverlay` zvýrazní jen okraj při dragu — bez poloprůhledné plochy s textem.
  * ```tsx
- * import { FileInput } from "~/components/ui/file-input";
+ * import { FileInput } from "~/components/ui/base/file-input";
  *
  * <FileInput.DropArea noDropOverlay class="max-w-lg">
  *   <p class="mb-3 text-callout text-secondary-label">Přetáhněte soubor nebo klikněte níže.</p>
@@ -78,7 +78,7 @@
  * @example Bez rámečku (noDropBorder)
  * `noDropBorder` odstraní rámeček i padding — jen obsah v čisté ploše; overlay je automaticky vypnutý.
  * ```tsx
- * import { FileInput } from "~/components/ui/file-input";
+ * import { FileInput } from "~/components/ui/base/file-input";
  *
  * <FileInput.DropArea noDropBorder class="max-w-lg">
  *   <p class="text-callout text-secondary-label">Sem přetáhněte soubor, nebo klikněte níže.</p>

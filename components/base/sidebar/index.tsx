@@ -5,7 +5,7 @@
  * @example Základní skladba
  * `Provider` → `Root` (panel) + `Inset` (hlavní plocha). `Rail` je úzký klikací pruh na vnitřním kraji panelu (desktop) — zobrazí se ve sbaleném stavu a rozbalí panel; v příkladu je `defaultCollapsed`, aby byl `Rail` vidět. Ikony v `MenuIcon`: jednotný obal `h-8 w-8` + SVG `h-5 w-5`. V záhlaví `Sidebar.HeaderTitle` schová „Aplikace“ při sbalení (`md:sr-only`); `Sidebar.Header` při sbalení vycentruje řádek (`md:justify-center`).
  * ```tsx
- * import { Sidebar } from "~/components/ui/sidebar";
+ * import { Sidebar } from "~/components/ui/base/sidebar";
  * 
  * <Sidebar.Provider defaultCollapsed class="min-h-[28rem] overflow-hidden rounded-xl border border-separator-opaque">
  *   <Sidebar.Root>
@@ -71,7 +71,7 @@
  * @example Výchozí sbalený stav
  * Prop `defaultCollapsed` na `Provider` — užitečné pro úzké panely s ikonami; popisky v `GroupLabel` jsou na desktopu ve sbaleném režimu skryté ( `sr-only`).
  * ```tsx
- * import { Sidebar } from "~/components/ui/sidebar";
+ * import { Sidebar } from "~/components/ui/base/sidebar";
  * 
  * <Sidebar.Provider defaultCollapsed class="min-h-[28rem] overflow-hidden rounded-xl border border-separator-opaque">
  *   <Sidebar.Root>
@@ -144,8 +144,8 @@
  * @example MenuIcon + MenuLabel + MenuAction
  * `Sidebar.MenuIcon` / `Sidebar.MenuLabel` — viz výše. Rozbalovací řádkové menu: `DropdownMenu.Root` + `DropdownMenu.Trigger variant="icon"` (tečky). `Sidebar.Trigger` v `Inset` přepíná sbalený panel na desktopu — ikona „sbalit postranní panel“ (šipka do panelu). V `DropdownMenu.Item` lze vložit ikonu + text (`text-label` na SVG).
  * ```tsx
- * import { DropdownMenu } from "~/components/ui/dropdown-menu";
- * import { Sidebar } from "~/components/ui/sidebar";
+ * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
+ * import { Sidebar } from "~/components/ui/base/sidebar";
  *
  * <Sidebar.Provider class="min-h-[28rem] overflow-hidden rounded-xl border border-separator-opaque">
  *   <Sidebar.Root>
@@ -257,7 +257,7 @@
  * @example Sbalený panel: ikony nebo zkratka
  * Bez `Sidebar.MenuIcon` doplň na `Sidebar.MenuLabel` prop `abbrevSource`, nebo použij `Sidebar.MenuButton` s `itemLabel` (zkratka v avataru `rounded-md`).
  * ```tsx
- * import { Sidebar } from "~/components/ui/sidebar";
+ * import { Sidebar } from "~/components/ui/base/sidebar";
  *
  * <Sidebar.Provider defaultCollapsed class="min-h-[28rem] overflow-hidden rounded-xl border border-separator-opaque">
  *   <Sidebar.Root>

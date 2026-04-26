@@ -5,7 +5,7 @@
  * @example Složené API
  * `ScrollArea.Root` drží výšku a ořízne rohy; `ScrollArea.Viewport` scroluje obsah.
  * ```tsx
- * import { ScrollArea } from "~/components/ui/scroll-area";
+ * import { ScrollArea } from "~/components/ui/base/scroll-area";
  * 
  * <ScrollArea.Root class="h-48 max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised">
  *   <ScrollArea.Viewport class="p-4">
@@ -21,7 +21,7 @@
  * @example Zkratka Pane
  * `ScrollArea.Pane` = Root + Viewport + slot; padding dejte přes `viewportClass`.
  * ```tsx
- * import { ScrollArea } from "~/components/ui/scroll-area";
+ * import { ScrollArea } from "~/components/ui/base/scroll-area";
  * 
  * <ScrollArea.Pane
  *   class="h-48 max-w-md rounded-lg border border-separator-opaque/40 bg-surface-raised"
@@ -38,7 +38,7 @@
  * @example Vodorovný scroll
  * Prop `direction=&quot;horizontal&quot;` na Viewport / Pane ( `LAYOUT.md` ).
  * ```tsx
- * import { ScrollArea } from "~/components/ui/scroll-area";
+ * import { ScrollArea } from "~/components/ui/base/scroll-area";
  * 
  * <ScrollArea.Pane
  *   direction="horizontal"

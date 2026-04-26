@@ -6,7 +6,7 @@
  * V kořenovém layoutu obal aplikaci kvůli kontextu; `Slot` vykreslí child routes.
  * ```tsx
  * import { Slot, component$ } from "@builder.io/qwik";
- * import { Sonner } from "~/components/ui/sonner";
+ * import { Sonner } from "~/components/ui/base/sonner";
  * 
  * export default component$(() => (
  *   <Sonner.Toaster>
@@ -21,8 +21,8 @@
  * `useSonner()` vrací `toast` pro volání z obsahu stránky.
  * ```tsx
  * import { component$ } from "@builder.io/qwik";
- * import { Button } from "~/components/ui/button";
- * import { useSonner } from "~/components/ui/sonner";
+ * import { Button } from "~/components/ui/base/button";
+ * import { useSonner } from "~/components/ui/base/sonner";
  * 
  * export const ToastDemo = component$(() => {
  *   const { toast } = useSonner();
