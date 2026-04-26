@@ -1,6 +1,6 @@
 # Migrace z legacy `cli/index.js` na `qui-client`
 
-V monorepu `q-ui-lib` je **canonical** CLI balicek **`packages/qui-client`** (prikaz `qui`). Korenovy soubor **`cli/index.js`** (Commander, stary tok) slouzi jako legacy; nove projekty a skripty smerovat na `qui-client`.
+V tomto repozitáři je **canonical** CLI balíček **`qui-client` v kořeni** (příkaz `qui`). Soubor **`cli/index.js`** (Commander, starý tok) byl odstraněn; veškerá práce směřuje na `bin/qui.js` → `src/cli.js`.
 
 ## Konfigurace
 
@@ -25,4 +25,4 @@ Podrobny schema kontrakt: **[CLI_MIGRATION.md](./CLI_MIGRATION.md)**.
 ## Dokumentace
 
 - Navrh architektury (castecne zastarale): **[QUI_CLIENT.md](./QUI_CLIENT.md)** — canonical popis je v **§ 1.1** a v aktualizovanem **§ 5–6**.
-- Testy balicku: z korene `npm run test:qui-client`.
+- Testy balíčku: z kořene repa `npm test`.

@@ -7,7 +7,10 @@
   "dependencies": [
     "base/utilities"
   ],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@builder.io/qwik",
+    "@qwik-ui/headless"
+  ],
   "apiTree": {
     "Root": {
       "children": {
@@ -43,7 +46,7 @@
               "params": {
                 "class": "string",
                 "value": "string",
-                "onRemove$": "function"
+                "onRemove$": "any"
               },
               "slot": true
             },
@@ -67,7 +70,7 @@
           "params": {
             "class": "string",
             "value": "string",
-            "onRemove$": "function"
+            "onRemove$": "any"
           },
           "slot": true
         },

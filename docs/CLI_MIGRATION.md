@@ -135,10 +135,9 @@ Kontrakt:
 - doplnit/aktualizovat source metadata (`quiSource.repo/url/ref/sourcePath/installedAt`),
 - zachovat konzistenci tak, aby slo komponentu nasledne `qui push`nout bez rucnich oprav.
 
-## Architektura balicku `packages/qui-client`
+## Architektura balíčku `qui-client` (kořen repozitáře)
 
 ```text
-packages/qui-client/
   package.json
   bin/
     qui.js
@@ -167,7 +166,7 @@ packages/qui-client/
 ## Implementacni faze
 
 1. **Core bootstrap**
-   - `packages/qui-client/src/cli.js` jako jediny entrypoint.
+   - `src/cli.js` jako jediny entrypoint.
    - zrusit zavislost na root `cli/index.js`.
 2. **Config-first flow**
    - plna validace a cteni `qui.config.json`.
@@ -201,13 +200,13 @@ Migrace je hotova, pokud plati:
 9. `repo` selector (`repo` nebo `repo/uilib`) funguje pro oba source (`file://` i git URL).
 10. `url` s `#ref` je plne podporovany v configu i CLI.
 
-## Stav vuci `QUI_CLIENT.md` a aktualnimu `packages/qui-client`
+## Stav vuci `QUI_CLIENT.md` a aktualnímu `qui-client`
 
 Aktualni stav implementace:
 
-- `packages/qui-client/bin/qui.js` je bootstrap wrapper, ktery zatim deleguje na `q-ui-lib/cli` (resp. fallback na root `cli/index.js`).
-- `packages/qui-client` zatim nema vlastni `src/cli.js` ani command handlery.
-- Tento dokument je tedy implementacni cilovy kontrakt pro migraci, ne popis uz hotoveho kodu.
+- `bin/qui.js` načítá `src/cli.js` (canonical entrypoint).
+- Legacy root `cli/index.js` byl z repozitáře odstraněn.
+- Tento dokument popisuje kontrakt CLI (`qui-config/v1`, exit kody, flagy); zdroj je v `src/` v kořeni repa.
 
 Rozdily vuci puvodnimu `QUI_CLIENT.md`:
 
@@ -681,7 +680,7 @@ Bezpecnost/scope:
 ## Umisteni instalace
 
 - `qui-client` se instaluje jako `devDependency` v `demo/package.json`.
-- Root balicek `q-ui-lib` nema byt zavisly na `qui-client` jako runtime dependency.
+- Kořenový balíček je **`qui-client`**; runtime závislosti CLI jsou minimální (např. `ts-morph`). Komponenty v `components/` nejsou součástí publikovaného tarballu (`files` v `package.json`), pokud je výslovně nerozšíříte.
 - Root muze poskytovat pouze pomocne skripty, ktere deleguji do demo workspace (napr. update flow).
 
 ## Doplneni k `QUI_CLIENT.md` (co aktualizovat)

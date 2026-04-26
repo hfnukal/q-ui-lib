@@ -4,8 +4,13 @@
   "version": "0.0.0",
   "kind": "primitive",
   "registry": "qui-demo",
-  "dependencies": [],
-  "npmDependencies": [],
+  "dependencies": [
+    "qui-demo/demo-component-props"
+  ],
+  "npmDependencies": [
+    "@builder.io/qwik",
+    "@builder.io/qwik-city"
+  ],
   "apiTree": {
     "params": {
       "filePath": "string",

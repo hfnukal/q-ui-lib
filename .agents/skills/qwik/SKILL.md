@@ -55,6 +55,10 @@ This skill provides comprehensive instructions for building high-performance, re
 4. **Fine-grained Reactivity**: Pass Signals/Stores to children instead of raw values if you want the child to update independently without re-rendering the parent.
 5. **Slots**: Use named slots (`<Slot name="header" />`) for complex component architectures.
 
+## This repository (`qui-client`)
+
+The workspace root is the **`qui-client`** npm package: CLI entry `bin/qui.js` → `src/cli.js`. Canonical Qwik component **sources** for the library live under **`components/<uilib>/<slug>/`**. Optional workspace package **`packages/qui-feature`** adds Tailwind v4 + tokens for Qwik apps. For component authoring rules in this repo, use root **`CREATE.md`** and **`CLAUDE.md`**.
+
 ## Checklist for Qwik Development
 - [ ] Is every event handler suffixed with `$`?
 - [ ] Are all components defined with `component$`?

@@ -79,9 +79,12 @@ const rootClass = "contents";
 
 const triggerClass = modalOutlineTriggerClass;
 
-/** `q-dialog-panel` — v global.css je :modal display:flex, skrytý stav a zoom animace (headless čeká na animationend při zavírání). */
+/**
+ * `q-dialog-panel` — v global.css je :modal šířka, `display:flex`, `margin:auto` a animace (headless čeká na animationend).
+ * Centrování přes `inset-0` + `m-auto`; šířka je v CSS kvůli headless `dialog:modal { max-width: unset }`.
+ */
 const panelBaseClass =
-  "q-dialog-panel fixed left-1/2 top-1/2 z-50 m-0 min-w-0 w-[calc(100%-2rem)] max-w-lg max-h-[min(90dvh,40rem)] -translate-x-1/2 -translate-y-1/2 overflow-hidden border border-separator-opaque bg-surface-raised p-0 shadow-lg outline-none ring-offset-background backdrop:bg-black/40 rounded-lg";
+  "q-dialog-panel fixed inset-0 z-50 m-auto h-fit min-w-0 max-h-[min(90dvh,40rem)] overflow-hidden border border-separator-opaque bg-surface-raised p-0 shadow-lg outline-none ring-offset-background backdrop:bg-black/40 rounded-lg";
 
 const contentClass =
   "flex min-w-0 flex-1 flex-col gap-4 overflow-y-auto p-6 text-body text-label ring-offset-background";

@@ -1,7 +1,7 @@
 {
-  "eslint.ignorePatterns": ["packages/qui-client/templates/**"],
+  "eslint.ignorePatterns": ["templates/**"],
   "files.associations": {
-    "**/packages/qui-client/templates/**/*.ts": "plaintext",
-    "**/packages/qui-client/templates/**/*.tsx": "plaintext"
+    "**/templates/**/*.ts": "plaintext",
+    "**/templates/**/*.tsx": "plaintext"
   }
 }

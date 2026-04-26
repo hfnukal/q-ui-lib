@@ -91,9 +91,16 @@ const rootClass = "inline-block";
 const triggerClass =
   "inline-flex max-w-full cursor-default items-center justify-center rounded-sm border-0 bg-transparent p-0 font-inherit text-inherit shadow-none ring-offset-background transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
-/** Panel — inverzní plocha (`bg-label` / `text-background`) jako typický tooltip; `relative` pro absolutní šipku. */
-const panelClass =
-  "relative z-50 max-w-[min(20rem,calc(100vw-2rem))] overflow-visible rounded-md border border-separator-opaque bg-label px-3 py-1.5 text-caption-1 text-background shadow-md outline-none ring-offset-background";
+/**
+ * Vnější panel — `data-floating` z headlessu; reset padding/border/overflow na tomto uzlu (viz popover.css v @qwik-ui/headless).
+ * Vizuál je na vnitřním `div`u (`panelInnerClass`), aby `px-3` / `py-1.5` a uživatelské `class` na panelu nešly do prázdna.
+ */
+const panelOuterClass =
+  "z-50 max-w-[min(20rem,calc(100vw-2rem))] outline-none ring-offset-background";
+
+/** Vnitřní plocha tooltipu — inverzní (`bg-label` / `text-background`); `relative` pro absolutní šipku. */
+const panelInnerClass =
+  "relative overflow-visible rounded-md border border-separator-opaque bg-label px-3 py-1.5 text-caption-1 text-background shadow-md";
 
 /**
  * Základní třída šipky — border-b border-r s bg-label (inverzní). Polohu a rotaci přidává
@@ -133,8 +140,13 @@ export const TooltipTrigger: FunctionComponent<TooltipTriggerProps> = (props) =>
 };
 
 export const TooltipPanel: FunctionComponent<TooltipPanelProps> = (props) => {
-  const merged = [panelClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessTooltip.Panel {...props} class={merged} />;
+  const { class: userClass, children, ...rest } = props;
+  const innerMerged = [panelInnerClass, userClass].filter(Boolean).join(" ");
+  return (
+    <HeadlessTooltip.Panel {...rest} class={panelOuterClass}>
+      <div class={innerMerged}>{children}</div>
+    </HeadlessTooltip.Panel>
+  );
 };
 
 const arrowSize = 8;

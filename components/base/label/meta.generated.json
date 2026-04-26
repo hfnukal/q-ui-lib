@@ -5,7 +5,10 @@
   "kind": "primitive",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@builder.io/qwik",
+    "@qwik-ui/headless"
+  ],
   "apiTree": {
     "slot": true
   }

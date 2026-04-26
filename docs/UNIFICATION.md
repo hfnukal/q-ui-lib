@@ -91,19 +91,19 @@ Konvence **pojmenování** `Root` / `Trigger` / `Panel` / jednoduchý `component
 
 Závislosti mezi komponentami lze odvodit z pole `dependencies` v `meta.generated.json` nebo statickou analýzou importů v `index.tsx`.
 
-### CLI v kořeni repozitáře (`npm run qui`)
+### CLI v kořeni repozitáře (`qui-client`)
 
-V **`package.json`** je binárka / skript **`qui`** → `node cli/index.js`. Typické příkazy:
+V **`package.json`** je binárka **`qui`** → `bin/qui.js` → `src/cli.js`. Typické příkazy (aktuální kontrakt viz [CLI_MIGRATION.md](./CLI_MIGRATION.md)):
 
 | Příkaz | Účel |
 | --- | --- |
-| `qui init <cíl>` | Zkopíruje **`template/`** do nové složky aplikace (základ Qwik). |
-| `qui add <cíl> <komponenty...>` | Zkopíruje uvedené složky z **`components/`** do `<cíl>/src/components/ui/`. |
-| `qui update <cíl> [komponenty...]` | Buď synchronizuje **jménem uvedené** komponenty z knihovny do aplikace, nebo při absenci jmen projde **`meta.generated.json`** a interaktivně nabídne aktualizaci při nesouladu verzí. |
-| `qui sync-template <cíl>` | Zarovnání souborů aplikace se **`template/`** (diff / potvrzení, případně `--yes`). |
-| `qui verify-meta [komponenty…]` *(plánováno)* | Ověří rozšířená metadata (`cssVariables`, `composition`, …) vůči implementaci v `index.tsx`, případně vypíše diff nebo nabídne doplnění. |
+| `qui init` | `qui.config.json` + synchronizace šablon z balíčku do cílové aplikace. |
+| `qui add …` | Zkopíruje komponenty ze zdroje v `qui.config.json` do `targetPath`. |
+| `qui update …` | Přepíše / synchronizuje komponenty podle zdroje. |
+| `qui generate` | Regeneruje `meta.generated.json` v `targetPath`. |
+| `qui generate-demo` | Demo routy a podpůrné soubory pro dokumentační UI. |
 
-Z kořene `q-ui-lib` lze volat např. `npm run qui -- add ./demo button` (přes `npm` je potřeba oddělovač `--` před argumenty příkazu). Globálně též `npx q-ui-lib …`, pokud je balíček nalinkovaný.
+Z kořene repa lze volat např. `npm run qui -- add button` (oddělovač `--` před argumenty příkazu). Po instalaci z npm: `npx qui …`.
 
 **Očekávané chování při `add` / `update` (cíl pro implementaci):**
 

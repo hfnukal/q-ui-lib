@@ -5,16 +5,19 @@
   "kind": "compound",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@builder.io/qwik",
+    "dayjs"
+  ],
   "apiTree": {
     "Root": {
       "params": {
         "selected": "string",
         "defaultSelected": "string",
-        "onSelect$": "function",
+        "onSelect$": "any",
         "viewMonth": "string",
         "defaultViewMonth": "string",
-        "onViewMonthChange$": "function",
+        "onViewMonthChange$": "any",
         "weekStartsOn": [
           0,
           1
@@ -28,10 +31,10 @@
           "params": {
             "selected": "string",
             "defaultSelected": "string",
-            "onSelect$": "function",
+            "onSelect$": "any",
             "viewMonth": "string",
             "defaultViewMonth": "string",
-            "onViewMonthChange$": "function",
+            "onViewMonthChange$": "any",
             "weekStartsOn": [
               0,
               1

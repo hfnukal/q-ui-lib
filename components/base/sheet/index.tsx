@@ -1,7 +1,7 @@
 /**
  * @component sheet
  * @title Sheet
- * @version 1.0.5
+ * @version 1.1.0
  * @example Zprava (výchozí)
  * Zprava (výchozí) — viz ukázka níže.
  * ```tsx
@@ -31,6 +31,17 @@
  *
  * @example Strana panelu
  * Na `Sheet.Panel` nastav `side` : `left` , `right` , `top` , `bottom` .
+ *
+ * @example Fullscreen
+ * Prop `fullScreen` — panel přes celý viewport; směr slide určuje `side` .
+ * ```tsx
+ * <Sheet.Root>
+ *   <Sheet.Trigger>Fullscreen zprava</Sheet.Trigger>
+ *   <Sheet.Panel side="right" fullScreen>
+ *     …
+ *   </Sheet.Panel>
+ * </Sheet.Root>
+ * ```
  * ```tsx
  * import { Sheet } from "~/components/ui/base/sheet";
  * 
@@ -81,12 +92,23 @@ const triggerClass = modalOutlineTriggerClass;
 const panelBaseClass =
   "q-sheet-panel fixed z-50 m-0 max-h-none max-w-none border-0 border-separator-opaque bg-surface-raised p-0 shadow-lg outline-none ring-offset-background backdrop:bg-black/40";
 
-const panelSideClass: Record<SheetSide, string> = {
-  right: "inset-y-0 right-0 left-auto h-full w-full max-w-sm border-l translate-x-0",
-  left: "inset-y-0 left-0 right-auto h-full w-full max-w-sm border-r translate-x-0",
-  top: "inset-x-0 bottom-auto top-0 max-h-[85vh] w-full border-b translate-y-0",
-  bottom: "inset-x-0 top-auto bottom-0 max-h-[85vh] w-full border-t translate-y-0",
+/**
+ * Výchozí ~⅓ viewportu — `dialog:modal { max-width: unset }` z headlessu ruší `max-w-*`; rozměry drž přes `w-[…]` / `h-[…]`.
+ */
+const panelSideDefaultClass: Record<SheetSide, string> = {
+  /* 100% = layout viewport (bez klasického posunu od 100vw + scrollbaru); šířka jen z right/left. */
+  right:
+    "top-0 bottom-0 right-0 left-auto h-dvh w-[min(100%,max(18rem,33vw))] max-w-none border-l translate-x-0",
+  left:
+    "top-0 bottom-0 left-0 right-auto h-dvh w-[min(100%,max(18rem,33vw))] max-w-none border-r translate-x-0",
+  top:
+    "left-0 right-0 top-0 bottom-auto h-[min(100dvh,max(12rem,33dvh))] w-auto max-w-none border-b translate-y-0",
+  bottom:
+    "left-0 right-0 top-auto bottom-0 h-[min(100dvh,max(12rem,33dvh))] w-auto max-w-none border-t translate-y-0",
 };
+
+/** Rozměry fullscreen řeší `dialog.q-sheet-panel…:modal` v global.css — zde jen značka + insets jako fallback. */
+const panelFullscreenClass = "q-sheet-fullscreen inset-0 max-w-none border-0";
 
 const contentClass =
   "flex flex-1 flex-col gap-4 overflow-y-auto p-6 text-body text-label ring-offset-background";
@@ -111,6 +133,8 @@ export type SheetTriggerProps = PropsOf<typeof HeadlessModal.Trigger>;
 export type SheetPanelProps = PropsOf<typeof HeadlessModal.Panel> & {
   /** Kraj, ze kterého panel vyjíždí (výchozí `right`). */
   side?: SheetSide;
+  /** Celý viewport (slide zvoleným `side`); výchozí je ~⅓ šířky / výšky. */
+  fullScreen?: boolean;
 };
 
 export type SheetContentProps = PropsOf<typeof HeadlessModal.Content>;
@@ -136,9 +160,17 @@ export const SheetTrigger: FunctionComponent<SheetTriggerProps> = (props) => {
 };
 
 export const SheetPanel: FunctionComponent<SheetPanelProps> = (props) => {
-  const { side = "right", class: className, ...rest } = props;
-  const merged = [panelBaseClass, panelSideClass[side], "relative", className].filter(Boolean).join(" ");
-  return <HeadlessModal.Panel {...rest} class={merged} data-sheet-side={side} />;
+  const { side = "right", fullScreen = false, class: className, ...rest } = props;
+  const sideLayout = fullScreen ? panelFullscreenClass : panelSideDefaultClass[side];
+  const merged = [panelBaseClass, sideLayout, "relative", className].filter(Boolean).join(" ");
+  return (
+    <HeadlessModal.Panel
+      {...rest}
+      class={merged}
+      data-sheet-side={side}
+      data-sheet-fullscreen={fullScreen ? "" : undefined}
+    />
+  );
 };
 
 export const SheetContent: FunctionComponent<SheetContentProps> = (props) => {

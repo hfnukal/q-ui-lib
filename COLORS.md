@@ -1,5 +1,7 @@
 # Palette and typography — mapping to Apple HIG / UIKit (web)
 
+**Repo context:** this repository is the **`qui-client`** npm package at its root; component sources live under `components/`. Tokens below align with Tailwind usage in those components and in apps that sync them via `qui`.
+
 This document summarizes **semantic** colors and **text styles** from the Apple ecosystem (referenced from [Human Interface Guidelines — Color](https://developer.apple.com/design/human-interface-guidelines/color) to [UI element colors](https://developer.apple.com/documentation/uikit/uicolor/ui_element_colors) and related APIs). For web apps we only pick **semantic tokens** (not fixed RGB from UIKit) so they can be wired to **light/dark** and Tailwind.
 
 ---

@@ -9,12 +9,17 @@
     "base/input-group",
     "base/popover"
   ],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@builder.io/qwik",
+    "@qwik-ui/headless",
+    "@qwikest/icons",
+    "dayjs"
+  ],
   "apiTree": {
     "params": {
       "value": "string",
       "defaultValue": "string",
-      "onValueChange$": "function",
+      "onValueChange$": "any",
       "defaultViewMonth": "string",
       "minDate": "string",
       "maxDate": "string",

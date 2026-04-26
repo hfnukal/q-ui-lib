@@ -1,40 +1,39 @@
-# CLAUDE.md — q-ui-lib
+# CLAUDE.md — qui-client (monorepo root)
 
-**What:** Qwik UI components + CLI **`qui`** shipped as the npm package **`qui-client`**. Apps install sources into a configured `targetPath` via `qui add` / `qui update` / … — not a traditional publishable UI npm. Styling: Tailwind + tokens ([COLORS.md](./COLORS.md)). Behavior: prefer `@qwik-ui/headless` where it fits ([docs/BASE_COMPONENTS.md](./docs/BASE_COMPONENTS.md), [CREATE.md](./CREATE.md)).
+**What:** This repository root **is** the npm package **`qui-client`**: the **`qui`** CLI plus canonical Qwik UI **source components** under `components/`. Apps install copies into a configured `targetPath` via `qui add` / `qui update` / … — not a traditional publishable UI-only npm. Styling: Tailwind + tokens ([COLORS.md](./COLORS.md)). Behavior: prefer `@qwik-ui/headless` where it fits ([docs/BASE_COMPONENTS.md](./docs/BASE_COMPONENTS.md), [CREATE.md](./CREATE.md)).
 
 **Layout**
 
 - **`components/<uilib>/<slug>/`** — each component: `index.tsx` (or `index.ts`), `meta.generated.json` (generated). Example: `components/base/button/`.
 - **`components/base/utilities/`** — shared helpers used by base components (not a separate top-level `components/utilities/` in the current tree).
-- **`packages/qui-client/`** — canonical CLI (`qui`); tests and `scripts/generate-meta.mjs`.
-- **`demo/`** — Qwik workspace used as a sample app; synced UI under `demo/src/components/ui/…`.
-- **`template/`** — optional workspace; **`cli/index.js`** — legacy Commander flow still present for older workflows; new work should use **`qui-client`**.
+- **`bin/`**, **`src/`**, **`scripts/`**, **`templates/`** — canonical CLI (`qui`); tests under `test/`; `scripts/generate-meta.mjs`.
+- **`packages/qui-feature/`** — Qwik starter feature (Tailwind v4, tokens); `qui init` can add it as a `file:` devDependency when present in this monorepo layout.
 
-**Commands** (repo root unless noted)
+**Commands** (repo root)
 
 ```bash
-# Run qui from PATH (workspace installs devDependency qui-client)
+# Run qui (same entry as npx qui after npm i -D qui-client)
 npm run qui -- <command> [options]
 ```
 
 `qui` expects **`qui.config.json`** in the **current working directory** (typically your app root, e.g. `cd demo` before `update` / `add`).
 
 ```bash
-npm run test:qui-client
-npm run publish:qui-client
+npm test
+npm publish
 ```
 
 **Metadata (`meta.generated.json`)** on library sources under `components/`:
 
 ```bash
-npm run generate-meta -w qui-client
+npm run generate-meta
 ```
 
 In a consumer app (cwd = app with `qui.config.json`): `qui generate`.
 
-**Creating or updating components** — workflow, headless pitfalls, metadata rules: **[CREATE.md](./CREATE.md)**. Metadata pipeline details: **[docs/META_GEN.md](./docs/META_GEN.md)** (some npm names there may still say `generate:meta`; the wired script is `generate-meta` in `qui-client`). Registry / API tree: **[docs/REGISTRY.md](./docs/REGISTRY.md)**.
+**Creating or updating components** — workflow, headless pitfalls, metadata rules: **[CREATE.md](./CREATE.md)**. Metadata pipeline details: **[docs/META_GEN.md](./docs/META_GEN.md)** (the wired script is `generate-meta` at repo root). Registry / API tree: **[docs/REGISTRY.md](./docs/REGISTRY.md)**.
 
-**CLI / config contract:** [README.md](./README.md), [docs/CLI_MIGRATION.md](./docs/CLI_MIGRATION.md), [docs/MIGRATION_FROM_LEGACY_CLI.md](./docs/MIGRATION_FROM_LEGACY_CLI.md), [packages/qui-client/README.md](./packages/qui-client/README.md).
+**CLI / config contract:** [README.md](./README.md), [docs/CLI_MIGRATION.md](./docs/CLI_MIGRATION.md), [docs/MIGRATION_FROM_LEGACY_CLI.md](./docs/MIGRATION_FROM_LEGACY_CLI.md).
 
 **Overview:** [docs/Q_UI_LIB.md](./docs/Q_UI_LIB.md).
 

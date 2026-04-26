@@ -16,9 +16,9 @@ Tento dokument popisuje, jak vytvorit minimalni npm balicek `qui-client` (CLI kl
 - **Bezpecne zmeny**: pred kazdym prepisem se ukaze diff a uzivatel potvrdi aplikaci zmen.
 - **Contribution flow**: opravy komponent jde snadno pushnout zpet do zdrojoveho repo jako PR.
 
-### 1.1) Implementace v `packages/qui-client` (canonical)
+### 1.1) Implementace v kořeni repozitáře (canonical)
 
-V tomto repozitari je zdroj pravdy pro CLI balicek adresar **`packages/qui-client`**: binarka **`qui`** (`bin/qui.js` → `src/cli.js`), bez runtime zavislosti na legacy `cli/index.js` v koreni monorepa.
+V tomto repozitáři je zdroj pravdy pro CLI balíček **`qui-client` přímo v kořeni** (npm `name`: `qui-client`): binárka **`qui`** (`bin/qui.js` → `src/cli.js`). Legacy `cli/index.js` v kořeni byl odstraněn.
 
 **Konfigurace** — soubor **`qui.config.json`** ve schema **`qui-config/v1`**: povinne `configSchemaVersion`, `targetPath` (relativni), `repos` (min. jeden zaznam). Volitelne `policy` (`onError`, `interactive`, `npmInstallMode`, …). Kazdy zaznam v `repos` ma `url`, `componentsRoot`, `uilibs`, `connected`. Vetve nebo tag u Git URL se uvadeji jako **`#ref` primo v retezci `url`** (napr. `https://github.com/org/repo.git#main`); samostatny prepinac **`--ref` neni podporovan** a CLI ho odmitne.
 
@@ -28,7 +28,7 @@ V tomto repozitari je zdroj pravdy pro CLI balicek adresar **`packages/qui-clien
 
 **`--dry-run`** (orientacne): u **`connect`** se konfigurace neprepise (pouze plan v reportu; pri kolizi existujiciho `--repo` a `onError=ask` se v dry-run neinteraktivne nepromptuje). U **`init`**, **`generate`** (ts-morph v `scripts/generate-meta.mjs`) a **`generate-demo`** plati chovani popsane v implementaci; u operaci s npm zavislostmi se instalace / odinstalace v dry-run typicky neprovede.
 
-**Testy** — z korene monorepa: **`npm run test:qui-client`**. Prehled ukolu migrace: **`QUI_MIGRATION_TASKLIST.md`**. Migrace z legacy CLI: **`docs/MIGRATION_FROM_LEGACY_CLI.md`**.
+**Testy** — z kořene repozitáře: **`npm test`**. Přehled úkolů migrace: **`QUI_MIGRATION_TASKLIST.md`**. Historie / legacy: **`docs/MIGRATION_FROM_LEGACY_CLI.md`**.
 
 ## 2) Doporucena struktura balicku
 
@@ -160,7 +160,7 @@ Poznamka:
 
 - **`targetPath`**: relativni cesta vuci project root (kam se kopiruji komponenty); absolutni cesta je chyba validace.
 - **`repos.<name>.url`**: `file://`, `https://`, `ssh://`, nebo `git@host:path`; volitelna vetev/tag jako **`#ref`** na konci URL (samostatny CLI flag `--ref` neexistuje).
-- **`policy`**: volitelne; klice jako v `CLI_MIGRATION.md` / validace v `packages/qui-client`.
+- **`policy`**: volitelne; klice jako v `CLI_MIGRATION.md` / validace v `src/`.
 
 Doporuceny lokalni config soubor — **starsi navrhovy tvar** (nekoresponduje s aktualnim `qui-client`):
 
@@ -207,7 +207,7 @@ Umisteni souboru:
 
 ### 5.2) Legacy navrh (historicky popis; neni implementace `qui-client`)
 
-Nize uvedeny model s **`root`**, **`defaultRepo`** a samostatnym **`ref`** u repo **není** pouzivan v aktualnim CLI v `packages/qui-client`. Zachovano pro srovnani se starsi texty dokumentace.
+Nize uvedeny model s **`root`**, **`defaultRepo`** a samostatnym **`ref`** u repo **není** pouzivan v aktualnim CLI. Zachovano pro srovnani se starsi texty dokumentace.
 
 - Puvodne se predpokladalo, ze `root` je povinny objekt a obsahuje mimo jine `url`, `ref`, `targetPath`, `sourceType`.
 - `defaultRepo` vybiral vychozi zaznam v `repos`.
@@ -237,7 +237,7 @@ Priklad:
 
 ## 6) Prikazy CLI
 
-> **Canonical chovani** odpovida **`packages/qui-client`** a dokumentu **`CLI_MIGRATION.md`**. Rozdily vuci legacy **`cli/index.js`** a zastaralym prikladum s `--ref` / `root`: viz **`docs/MIGRATION_FROM_LEGACY_CLI.md`**.
+> **Canonical chovani** odpovida **kořenovému balíčku `qui-client`** a dokumentu **`CLI_MIGRATION.md`**. Rozdily vuci legacy **`cli/index.js`** a zastaralym prikladum s `--ref` / `root`: viz **`docs/MIGRATION_FROM_LEGACY_CLI.md`**.
 
 ### 6.1) Prehled prikazu (`qui-client`)
 
@@ -311,7 +311,7 @@ Monorepo neni specialni rezim CLI. `qui init` i `qui connect` se vzdy tykaji kon
 
 ## 7.2) Hledani komponenty bez `--repo` (first match wins)
 
-V **`qui-config/v1`** neni objekt **`root`** — vyber zdroje probiha v ramci **`repos`** (viz `resolveRepo` / `resolveSourceContext` v `packages/qui-client`).
+V **`qui-config/v1`** neni objekt **`root`** — vyber zdroje probiha v ramci **`repos`** (viz `resolveRepo` / `resolveSourceContext` v `src/services/source-resolver.js`).
 
 Priklad logiky pro `qui add button` bez `--repo`:
 
@@ -486,7 +486,7 @@ Kroky:
 
 ### 8.3) UX priklady vystupu (zavislosti a cykly)
 
-> **Poznamka:** Nasledujici bloky jsou **ilustrativni** (navrhovy UX). Skutecny vystup **`qui-client`** je typicky jednoradkovy stav + pri **`--json`** obalka **`qui-report/v1`**; presne texty se ridí implementaci v `packages/qui-client`.
+> **Poznamka:** Nasledujici bloky jsou **ilustrativni** (navrhovy UX). Skutecny vystup **`qui-client`** je typicky jednoradkovy stav + pri **`--json`** obalka **`qui-report/v1`**; presne texty se ridí implementaci v `src/`.
 
 #### A) Chybejici npm zavislosti (`ask`)
 
@@ -763,7 +763,7 @@ Priorita urceni zdroje pro `update` je popsana v **sekci 6** (canonical `qui-cli
 
 ## 10) `push` flow pro opravy komponent
 
-> **Canonical (`qui-client`):** `qui push` vyzaduje **`--repo <repo>/<uilib>`** (prave jedno `/`) a aspon jeden argument komponenty. Cilova cesta komponent v aplikaci je **`targetPath`** z `qui.config.json` (sdilene pro cely config), ne per-repo `targetPath`. Detail: **`CLI_MIGRATION.md`**, implementace: `packages/qui-client/src/commands/push.js`.
+> **Canonical (`qui-client`):** `qui push` vyzaduje **`--repo <repo>/<uilib>`** (prave jedno `/`) a aspon jeden argument komponenty. Cilova cesta komponent v aplikaci je **`targetPath`** z `qui.config.json` (sdilene pro cely config), ne per-repo `targetPath`. Detail: **`CLI_MIGRATION.md`**, implementace: `src/commands/push.js`.
 
 `qui push` by mel delat:
 
@@ -898,7 +898,7 @@ Pri kolizich sablon (`src` i `public`) CLI postupuje soubor po souboru:
 
 ## 11) Instalace klienta primo z gitu
 
-Pro publikovany balicek **`qui-client`** viz take **`packages/qui-client/README.md`** (npm stranka po vydani).
+Pro publikovany balicek **`qui-client`** viz take **`README.md`** (npm stranka po vydani).
 
 Moznosti:
 
@@ -985,7 +985,7 @@ Tento navrh drzi balicek maly (jen CLI) a vsechen obsah komponent bere az za beh
 
 ## 15) Implementation contract (MVP)
 
-> Pro **skutecnou** implementaci v tomto repu plati **`CLI_MIGRATION.md`** a kod v **`packages/qui-client`**. Tato sekce je historicky navrh; kde se lisi (napr. parser `connect`), vyhrava migracni dokument.
+> Pro **skutecnou** implementaci v tomto repu plati **`CLI_MIGRATION.md`** a kód v **`src/`**. Tato sekce je historicky navrh; kde se lisi (napr. parser `connect`), vyhrava migracni dokument.
 
 Tato sekce popisovala zavazny kontrakt pro puvodni MVP. Pri konfliktu s **`CLI_MIGRATION.md`** / **`qui-client`** pouzijte migracni dokumenty.
 
@@ -1000,7 +1000,7 @@ Podporovane globalni prepinace:
 
 Prikaz `connect` (**aktualni `qui-client`**):
 - pouze opakovane **striktni dvojice** `--repo <id> --url <url>` (kazda `url` muze obsahovat `#ref`).
-- flag **`--repos`**, globalni **`--ref`** a **`--source`** z teto tabulky **nejsou** v `packages/qui-client` implementovany — detail a exit kody: **`CLI_MIGRATION.md`**, zdrojovy parser: `packages/qui-client/src/parser.js` (`parseConnectPairs`).
+- flag **`--repos`**, globalni **`--ref`** a **`--source`** z teto tabulky **nejsou** v `qui-client` implementovany — detail a exit kody: **`CLI_MIGRATION.md`**, zdrojovy parser: `src/parser.js` (`parseConnectPairs`).
 
 Prikazy `add`, `update`, `diff`, `remove`, `verify`, `push`:
 - `--repo` prijima:
@@ -1161,7 +1161,7 @@ MVP implementace musi garantovat:
 
 ## 16) Povinne MVP integracni testy
 
-> **Aktualne:** automatizovane testy **`qui-client`** spustite **`npm run test:qui-client`** (parser, config, policy, smoke `init`/`connect`/`demo`, atd.). Tabulka nize je puvodni MVP wishlist; nektere body jeste nemusi mit 1:1 integracni test v CI.
+> **Aktualne:** automatizovane testy **`qui-client`** spustite **`npm test`** (parser, config, policy, smoke `init`/`connect`/`demo`, atd.). Tabulka nize je puvodni MVP wishlist; nektere body jeste nemusi mit 1:1 integracni test v CI.
 
 Minimalni test matrix (historicky navrh):
 

@@ -1,6 +1,6 @@
-# Q UI Library
+# qui-client
 
-Qwik UI komponenty distribuovane jako source kod. Integrace do aplikace probiha pres `qui` CLI (balicek `qui-client`), ktere kopiruje komponenty do projektu a spravuje jejich synchronizaci z Git repozitare.
+**Kořen tohoto repozitáře je npm balíček `qui-client`:** CLI **`qui`** a kanonické zdroje Qwik UI komponent v **`components/`**. Do aplikace se komponenty berou jako **zdrojový kód** (kopie do `targetPath`), synchronizace probíhá z Git repozitářů podle `qui.config.json`.
 
 ## Quick start
 
@@ -15,13 +15,14 @@ npx qui init
 npx qui add button input
 ```
 
-V tomto monorepu je dostupny passthrough skript:
+Při vývoji **v tomto repozitáři** (clone monorepa):
 
 ```bash
+npm install
 npm run qui -- <command> [options]
 ```
 
-## CLI (`qui-client`)
+## CLI (`qui`)
 
 Aktualni prikazy:
 
@@ -77,7 +78,7 @@ Poznamky:
 
 - **`base`** je zakladni `uilib` (komponenty ve stylu shadcn) — ocekava se, ze na nem mohou stavet dalsi sady (`qui-demo`, vlastni `uilib`). Pro **plnou referencni demo** proto dava smysl mit v cilove aplikaci **cely `base`** (ne jen vyber).
 - **`qui-demo`** obsahuje podpurne komponenty pro generovanou demo (layout, index prikladu atd.) a **vazi se na `base`**. Do `qui.config.json` v danem repu proto patří oba namespace v `repos.<name>.uilibs`, napr. `["base", "qui-demo"]`.
-- **`packages/qui-client/templates/demo`** nejsou „hotova demo aplikace“, ale **podklady pro CLI** — z nich `generate-demo` sklada soubory v cilove Qwik aplikaci.
+- **`templates/demo`** (v tomto repu u kořene balíčku) nejsou „hotova demo aplikace“, ale **podklady pro CLI** — z nich `generate-demo` sklada soubory v cilove Qwik aplikaci.
 - **`generate-demo`** z komponent uz pridanych v `targetPath` vytvori demo routy a priklady; **texty prikladu** bere z **JSDoc** u komponent (kde to generator podporuje).
 
 ### Typicka sekvence: init → vsechny komponenty pro demo → generate-demo
@@ -86,7 +87,7 @@ Poznamky:
 2. **`qui add --repo <repo> --all`** — prida **vsechny** komponenty ze **vsech** `uilib` uvedenych u toho repa v konfiguraci. Pro demo s celym `base` a shellem z `qui-demo` nejprve nastavte `uilibs` na `base` i `qui-demo`, pak spuste `add --all`. **Povinny je flag `--repo`** (bez nej `--all` neprojde). Alternativa: pridavat jen vybrane komponenty, napr. `qui add button input`.
 3. **`qui generate-demo`** — napr. s `--route-base /qui-demo` vygeneruje/aktualizuje demo routy pro jiz nainstalovane komponenty.
 
-Pro udrzeni prehlednosti zde zustavaji **kanonicke CLI prikazy**; volitelne npm skripty v tomto monorepu (napr. jednim prikazem regenerovat `demo/` a spustit dev server) mohou tyto kroky obalit **jen pro vyvoj v tomto repozitari** — viz [CONTRIBUTING.md](CONTRIBUTING.md).
+Pro udrzeni prehlednosti zde zustavaji **kanonicke CLI prikazy**; volitelne npm skripty (napr. jednim prikazem regenerovat ukazkovou aplikaci) mohou tyto kroky obalit **jen pro vyvoj v tomto repozitari** — viz [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Nejbeznejsi priklady
 
@@ -118,18 +119,19 @@ Podporovane globalni flagy v aktualnim parseru:
 - Bool: `--auto`, `--force`, `--dry-run`, `--yes`, `--json`, `--all`, `--ci`
 - Value: `--on-error`, `--repo`, `--url`, `--target-path`, `--components-root`, `--uilibs`, `--connected`, `--base-branch`, `--title`, `--route-base`, `--branch`, `--routes-dir`, `--components-dir`
 
-## Monorepo scripts
+## Skripty v tomto repozitáři
 
-V root `package.json` jsou aktualne jen tyto relevantni skripty:
+V kořenovém `package.json`:
 
-- `npm run qui -- ...` - spusti `qui` CLI.
-- `npm run test:qui-client` - spusti testy `qui-client`.
-- `npm run publish:qui-client` - publikuje npm balicek `qui-client`.
+- `npm run qui -- ...` — spustí `qui` CLI (`node ./bin/qui.js`).
+- `npm test` — testy CLI (`test/*.test.js`).
+- `npm run generate-meta` — regenerace `meta.generated.json` pro zdroje v `./components`.
+- `npm publish` — publikace balíčku `qui-client` (obsah tarballu řídí pole `files` v `package.json`).
 
 ## Related docs
 
 - [CONTRIBUTING.md](CONTRIBUTING.md)
-- [packages/qui-client/README.md](packages/qui-client/README.md)
+- [CLAUDE.md](CLAUDE.md)
 - [docs/CLI_MIGRATION.md](docs/CLI_MIGRATION.md)
 - [docs/MIGRATION_FROM_LEGACY_CLI.md](docs/MIGRATION_FROM_LEGACY_CLI.md)
 - [docs/QUI_CLIENT.md](docs/QUI_CLIENT.md)

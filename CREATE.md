@@ -10,7 +10,7 @@
 2. **Behavior** — Prefer `@qwik-ui/headless`; thin wrapper + Tailwind. Without headless: HTML + ARIA. Compound = one exported object with parts (`Root`, `List`, …); types from headless (`PropsOf<typeof …>`). Examples in this repo: `components/base/tabs/index.tsx`, `components/base/accordion/index.tsx`.
 3. **File** — `components/<uilib>/<slug>/index.tsx`, leading JSDoc `@component` (slug = **leaf** folder name), `@title`, `@version`, **`@example`** — one short usage example (typically JSX in a fenced `` ```tsx `` block), matching the exported API (compound or primitive); no unnecessary app context.
 4. **Meta** — Regenerate `meta.generated.json` (never hand-write; treat structure as opaque):
-   - **In this monorepo** (sources under `components/`): `npm run generate-meta -w qui-client`
+   - **In this repo** (sources under `components/`): `npm run generate-meta`
    - **In an app** with `qui.config.json` (cwd = app root): `qui generate`
 5. **Headless** — Do not pass children props that headless overwrites at runtime (Qwik getter error). In `node_modules/@qwik-ui/headless`, verify assignments to `props`; often `key` is enough instead of a manual ID.
 6. **Demo / app sync** — From the **app root** that contains `qui.config.json` (e.g. `demo/`): `qui update <slug>` or `qui update <uilib>/<slug>` (see [README.md](./README.md) for `--repo` and resolution rules). **`qui`** uses `process.cwd()` — do not assume repo root unless you `cd` into the app first. Installed layout is **`targetPath/<uilib>/<slug>/`** (e.g. `src/components/ui/base/button/`); imports follow that path (with your app’s `paths` alias, often `~/…`). Regenerate demo routes: `qui generate-demo` (optional `--route-base /qui-demo`). Example route files live under `src/routes/<route-base>/components/…` (and may include a `<uilib>` segment when present); use **`CodeExample`** (and helpers) from `~/components/demo/codeexample`. Sidebars that list component routes often use `import.meta.glob("./components/*/index.tsx")` **relative to that route folder** — e.g. `demo/src/routes/layout.tsx` vs `demo/src/routes/qui-demo/`; follow the existing pattern for the route tree you touch.
@@ -45,7 +45,7 @@ Full rules: [docs/REGISTRY.md](./docs/REGISTRY.md).
 ## Prompt (copy)
 
 ```
-Task: in q-ui-lib {{ACTION}} component{{OPTIONAL_NAME}}. Workflow and rules: CREATE.md. At the end, briefly summarize changes and paths.
+Task: in qui-client repo {{ACTION}} component{{OPTIONAL_NAME}}. Workflow and rules: CREATE.md. At the end, briefly summarize changes and paths.
 ```
 
 `{{ACTION}}` = create new / update existing; `{{OPTIONAL_NAME}}` or empty; folder **`components/<uilib>/<kebab-slug>/`**.

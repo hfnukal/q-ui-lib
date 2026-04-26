@@ -6,22 +6,14 @@
   "registry": "base",
   "dependencies": [],
   "npmDependencies": [
+    "@builder.io/qwik",
     "chart.js"
   ],
   "apiTree": {
     "params": {
-      "type": [
-        "bar",
-        "bubble",
-        "doughnut",
-        "line",
-        "pie",
-        "polarArea",
-        "radar",
-        "scatter"
-      ],
-      "data": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/chart.js/dist/types/index\").ChartData<keyof import(\"/Us...",
-      "options": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/chart.js/dist/types/utils\")._DeepPartialObject<import(\"...",
+      "type": "ChartType",
+      "data": "ChartData",
+      "options": "any",
       "class": "string",
       "canvasClass": "string"
     }

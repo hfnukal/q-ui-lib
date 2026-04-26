@@ -5,7 +5,7 @@ Format je zamerne issue-ready: kazdy blok lze vzit jako samostatny PR nebo issue
 
 ## 0) Guardrails a startovni rozhodnuti
 
-- [x] Potvrdit, ze canonical implementace je pouze v `packages/qui-client` (bez kompat vrstvy na `cli/index.js`).
+- [x] Potvrdit, ze canonical implementace je v kořeni repa jako balíček `qui-client` (bez legacy `cli/index.js`).
 - [x] Potvrdit, ze canonical config je `qui.config.json` ve schema `qui-config/v1` (repos-only).
 - [x] Potvrdit, ze canonical JSON vystup je envelope `qui-report/v1` (Varianta A).
 - [ ] Potvrdit breaking changes do release notes (`--ref` removal, `--path` removal, nove route base, atd.).
@@ -16,25 +16,25 @@ Akceptace:
 ## 1) Bootstrap `qui-client` jako samostatne CLI
 
 Soubory:
-- `packages/qui-client/bin/qui.js`
-- `packages/qui-client/src/cli.js` (novy)
-- `packages/qui-client/package.json`
+- `bin/qui.js`
+- `src/cli.js` (novy)
+- `package.json`
 
 Ukoly:
-- [x] Pridat realny entrypoint `packages/qui-client/src/cli.js`.
+- [x] Pridat realny entrypoint `src/cli.js`.
 - [x] Upravit `bin/qui.js`, aby volal pouze lokalni `src/cli.js` (zadna delegace do root CLI).
 - [x] Dodat parser zakladnich globalnich prepinacu (`--on-error`, `--auto`, `--force`, `--dry-run`, `--yes`, `--json` kde relevantni).
 - [x] Zavest jednotnou error boundary vracejici definovane exit kody.
 
 Akceptace:
-- [x] `npx qui --help` funguje z `packages/qui-client`.
+- [x] `npx qui --help` funguje z kořene repozitáře po `npm install`.
 - [x] Neni zadny runtime import na `cli/index.js`.
 
 ## 2) Config vrstva (`qui.config.json` v1)
 
 Soubory:
-- `packages/qui-client/src/services/config.js` (novy)
-- `packages/qui-client/src/services/source-resolver.js` (novy)
+- `src/services/config.js` (novy)
+- `src/services/source-resolver.js` (novy)
 
 Ukoly:
 - [x] Implementovat nacitani, validaci a zapis `qui.config.json` podle schema v `CLI_MIGRATION.md`.
@@ -51,7 +51,7 @@ Akceptace:
 ## 3) Source resolution a selection pravidla
 
 Soubory:
-- `packages/qui-client/src/services/source-resolver.js`
+- `src/services/source-resolver.js`
 
 Ukoly:
 - [x] Implementovat selector `--repo <repo|repo/uilib>`.
@@ -63,7 +63,7 @@ Ukoly:
 Akceptace:
 - [x] Vyber source funguje stejne pro `file://` i git URL.
 
-## 4) Migrace commandu do `packages/qui-client/src/commands`
+## 4) Migrace commandu do `src/commands`
 
 Soubory (nove):
 - `init.js`
@@ -92,7 +92,7 @@ Akceptace:
 ## 5) `init` sjednoceni se `sync-template`
 
 Soubory:
-- `packages/qui-client/src/commands/init.js`
+- `src/commands/init.js`
 - sdilena plan/apply vrstva
 
 Ukoly:
@@ -107,8 +107,8 @@ Akceptace:
 ## 6) Dependency automation (`npmDependencies`)
 
 Soubory:
-- `packages/qui-client/src/services/dependency-graph.js`
-- `packages/qui-client/src/services/npm-dependencies.js`
+- `src/services/dependency-graph.js`
+- `src/services/npm-dependencies.js`
 
 Ukoly:
 - [x] Cist `npmDependencies` z `meta.generated.json` vcetne transitivnich vazeb.
@@ -124,8 +124,8 @@ Akceptace:
 ## 7) `generate` a `generate-demo`
 
 Soubory:
-- `packages/qui-client/src/commands/generate.js`
-- `packages/qui-client/src/commands/generate-demo.js`
+- `src/commands/generate.js`
+- `src/commands/generate-demo.js`
 
 Ukoly:
 - [x] Prenest `generate` do `qui-client` a zajistit deterministicky vystup.
@@ -134,13 +134,13 @@ Ukoly:
 - [x] Zajistit idempotenci opakovaneho behu.
 
 Akceptace:
-- [x] `generate` vola `packages/qui-client/scripts/generate-meta.mjs` (ts-morph, stejna logika jako drive); `--dry-run` propaguje se do skriptu.
+- [x] `generate` vola `scripts/generate-meta.mjs` (ts-morph, stejna logika jako drive); `--dry-run` propaguje se do skriptu.
 - [ ] Vystup `generate-demo` a dalsi kontrakty dle `CLI_MIGRATION.md` (audit).
 
 ## 8) `clone` metadata kontrakt
 
 Soubory:
-- `packages/qui-client/src/commands/clone.js`
+- `src/commands/clone.js`
 - metadata update utility
 
 Ukoly:
@@ -185,7 +185,7 @@ Akceptace:
 ## 11) Testy
 
 Minimalni test matrix (zkracena implementacni verze):
-- [x] Parser a config validace (`connect` parovani, schema, `targetPath`) — `packages/qui-client/test/parser.test.js`, `config.test.js`.
+- [x] Parser a config validace (`connect` parovani, schema, `targetPath`) — `test/parser.test.js`, `config.test.js`.
 - [x] Source precedence (zaklad: `--repo`, fallback prvni repo, `url#ref`) — `source-resolver.test.js`.
 - [x] Policy flow (`resolvePolicy`: `--auto`, `--force`, merge s config) — `policy.test.js`.
 - [ ] Command smoke plne pokryti (`add`, `update`, `remove`, `clone`, `push`).
@@ -206,16 +206,16 @@ Soubory:
 - release notes/changelog
 
 Ukoly:
-- [x] Doplnit do `QUI_CLIENT.md` sekci **1.1** (canonical `packages/qui-client`, `qui-config/v1`, `--json`, `--dry-run` u `connect`, odkaz na `CLI_MIGRATION.md`) a upozorneni u legacy prikladu v § 5.
+- [x] Doplnit do `QUI_CLIENT.md` sekci **1.1** (canonical kořenový `qui-client`, `qui-config/v1`, `--json`, `--dry-run` u `connect`, odkaz na `CLI_MIGRATION.md`) a upozorneni u legacy prikladu v § 5.
 - [x] Priklad a validace `qui-config/v1` v `QUI_CLIENT.md` § 5 + legacy v § 5.2; terminologie § 5.3.
 - [x] `QUI_CLIENT.md` § 6–6.3 canonical, § 7 krok 6, § 8, § 13 roadmap, § 14 priklady, § 15 disclaimer + `connect` parser — doplneno; zbytek dlouheho dokumentu muze jeste obsahovat stare formulace (grep `--ref` / `defaultRepo`).
 - [x] **`docs/MIGRATION_FROM_LEGACY_CLI.md`** (tabulka config, odkaz na testy).
-- [x] `packages/qui-client/CHANGELOG.md` (0.1.0, breaking vs legacy CLI, odkaz na `CLI_MIGRATION.md`).
+- [x] `CHANGELOG.md` (0.1.0, breaking vs legacy CLI, odkaz na `CLI_MIGRATION.md`).
 - [x] **`docs/CHANGELOG.md`** (odkaz na `qui-client` changelog + `CLI_MIGRATION` + `MIGRATION_FROM_LEGACY_CLI`).
 - [x] **§ 7.2** v `QUI_CLIENT.md` — bez `root.uilibs`, odkaz na resolver v `qui-client`.
 - [x] Migration notes pro uzivatele legacy CLI: **`docs/MIGRATION_FROM_LEGACY_CLI.md`** (doplnit dle potreby pri vydani).
 - [x] `QUI_CLIENT.md` § 10 (`push`) sjednoceno s `qui-config/v1` a `push.js`.
-- [x] **`packages/qui-client/README.md`** (instalace, odkazy na `docs/CLI_MIGRATION.md` / `docs/MIGRATION_FROM_LEGACY_CLI.md`).
+- [x] **`README.md`** (instalace, odkazy na `docs/CLI_MIGRATION.md` / `docs/MIGRATION_FROM_LEGACY_CLI.md`).
 
 Akceptace:
 - [ ] Dokumentace jako celek odpovida realne implementaci.

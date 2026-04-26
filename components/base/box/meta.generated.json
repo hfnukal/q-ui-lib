@@ -5,7 +5,9 @@
   "kind": "primitive",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@builder.io/qwik"
+  ],
   "apiTree": {
     "params": {
       "padding": [

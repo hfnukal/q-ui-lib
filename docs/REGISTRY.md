@@ -137,8 +137,8 @@ The generator derives this value from the component's path relative to `componen
 
 ```bash
 npm run qui -- generate
-# or
-node cli/index.js generate
+# or (repo root)
+node bin/qui.js generate
 ```
 
 Runs the meta generator (see `scripts/generate-meta.mjs` and META_GEN.md).

@@ -8,7 +8,9 @@
     "base/code-edit",
     "base/tabs"
   ],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@builder.io/qwik"
+  ],
   "apiTree": {
     "params": {
       "class": "string"

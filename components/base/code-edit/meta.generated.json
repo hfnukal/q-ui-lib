@@ -5,11 +5,13 @@
   "kind": "primitive",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@builder.io/qwik"
+  ],
   "apiTree": {
     "params": {
       "value": "string",
-      "onValue$": "function",
+      "onValue$": "any",
       "language": [
         "css",
         "html",

@@ -12,6 +12,8 @@
     "base/switch",
     "qui-demo/demo-utils"
   ],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@builder.io/qwik"
+  ],
   "apiTree": {}
 }

@@ -13,7 +13,7 @@ node scripts/generate-meta.mjs
 nebo:
 
 ```bash
-npm run generate:meta
+npm run generate-meta
 ```
 
 Úvodní direktivy v `index.tsx` (normalizace bloku `@component` / `@title` / `@version` z existujícího JSDoc; výchozí titulek PascalCase ze složky, výchozí verze `1.0.0` pokud chybí):
@@ -32,7 +32,7 @@ Blok na začátku souboru:
  */
 ```
 
-`@component` musí odpovídat **názvu složky** (slug). `@title` a `@version` generátor čte pro pole `title` a `version` v `meta.generated.json` (viz výše). Verzi knihovny měň v tomto JSDoc (`@version`); po změně je vhodné spustit `npm run generate:meta`. Volitelně před generátorem `sync:directives` pro sjednocení formátu bloku.
+`@component` musí odpovídat **názvu složky** (slug). `@title` a `@version` generátor čte pro pole `title` a `version` v `meta.generated.json` (viz výše). Verzi knihovny měň v tomto JSDoc (`@version`); po změně je vhodné spustit `npm run generate-meta`. Volitelně před generátorem `sync:directives` pro sjednocení formátu bloku.
 
 Závislosti: `ts-morph` (již v projektu), Node.js s podporou ES modulů (`"type": "module"` není nutné — skript je `.mjs`).
 

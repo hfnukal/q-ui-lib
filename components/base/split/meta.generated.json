@@ -5,7 +5,9 @@
   "kind": "compound",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@builder.io/qwik"
+  ],
   "apiTree": {
     "Root": {
       "params": {
