@@ -1,7 +1,7 @@
 /**
  * @component tabs
  * @title Tabs
- * @version 1.1.1
+ * @version 1.1.2
  * @example Složené API (stejná data jako TabsGroup)
  * `tabId` na triggeru a panelu se musí shodovat.
  * ```tsx
@@ -111,6 +111,7 @@
  */
 
 import {
+  $,
   component$,
   createContextId,
   Slot,
@@ -118,6 +119,7 @@ import {
   useContext,
   useContextProvider,
   useSignal,
+  useTask$,
   useVisibleTask$,
   type Signal,
 } from "@builder.io/qwik";
@@ -202,22 +204,32 @@ export const TabRoot = component$<TabRootProps>((props) => {
     class: className,
     selectedTabId,
     "bind:selectedTabId": bindSelectedTabId,
-    behavior: _behavior,
+    behavior = "automatic",
     ...rest
   } = props;
-  const rootBase = "w-full max-w-xl";
+  const rootBase = "w-full";
   const rootVertical = props.vertical ? "flex flex-row flex-wrap gap-6 items-start" : "";
   const merged = [rootBase, rootVertical, className].filter(Boolean).join(" ");
   const localSelectedTabIdSig = useSignal<string | undefined>(selectedTabId);
   const selectedTabIdSig = bindSelectedTabId ?? localSelectedTabIdSig;
   const tabIdsSig = useSignal<string[]>([]);
   const verticalSig = useSignal(Boolean(props.vertical));
-  const behaviorSig = useSignal(props.behavior ?? "automatic");
+  const behaviorSig = useSignal(behavior);
   const autoTabIdSig = useSignal(0);
   const autoPanelIdSig = useSignal(0);
   const prefixSig = useSignal(
     props.id && typeof props.id === "string" ? `${props.id}` : `tabs-${Math.random().toString(36).slice(2, 10)}`,
   );
+  // Keep internal selection in sync when the parent passes a new `selectedTabId` (uncontrolled + prop updates).
+  useTask$(({ track }) => {
+    if (bindSelectedTabId) {
+      return;
+    }
+    const next = track(() => props.selectedTabId);
+    if (next !== undefined) {
+      selectedTabIdSig.value = next;
+    }
+  });
   useContextProvider(selectedTabIdContext, selectedTabIdSig);
   useContextProvider(tabIdsContext, tabIdsSig);
   useContextProvider(verticalContext, verticalSig);
@@ -244,16 +256,10 @@ export const TabRoot = component$<TabRootProps>((props) => {
   );
 });
 
-const resolveTabId = (props: { tabId?: string; _tabId?: string }, autoIdSig: Signal<number>) => {
-  if (props.tabId) {
-    return props.tabId;
-  }
-  if (props._tabId) {
-    return props._tabId;
-  }
-  autoIdSig.value += 1;
-  return `tab-${autoIdSig.value}`;
-};
+/** Returns explicit tab id only — auto ids are assigned in {@link useTask$} to avoid mutating signals during render. */
+function explicitTabId(props: { tabId?: string; _tabId?: string }): string | undefined {
+  return props.tabId ?? props._tabId;
+}
 
 export const TabTrigger = component$<TabTriggerProps>((props) => {
   const selectedTabIdSig = useContext(selectedTabIdContext);
@@ -262,8 +268,21 @@ export const TabTrigger = component$<TabTriggerProps>((props) => {
   const behaviorSig = useContext(behaviorContext);
   const prefixSig = useContext(idPrefixContext);
   const autoIdSig = useContext(autoTabIdContext);
-  const resolvedTabIdSig = useSignal<string>(resolveTabId(props, autoIdSig));
-  const { class: className, disabled, ...rest } = props;
+  const resolvedTabIdSig = useSignal<string>(explicitTabId(props) ?? "");
+  useTask$(({ track }) => {
+    track(() => props.tabId);
+    track(() => props._tabId);
+    const explicit = explicitTabId(props);
+    if (explicit) {
+      resolvedTabIdSig.value = explicit;
+      return;
+    }
+    if (!resolvedTabIdSig.value) {
+      autoIdSig.value += 1;
+      resolvedTabIdSig.value = `tab-${autoIdSig.value}`;
+    }
+  });
+  const { class: className, disabled, onClick$: userOnClick$, ...rest } = props;
   const merged = [triggerClass, className].filter(Boolean).join(" ");
   const isSelected = selectedTabIdSig.value === resolvedTabIdSig.value;
 
@@ -287,9 +306,13 @@ export const TabTrigger = component$<TabTriggerProps>((props) => {
       tabIndex={isSelected ? 0 : -1}
       disabled={disabled}
       class={merged}
-      onClick$={() => {
+      onClick$={$((event, element) => {
         selectedTabIdSig.value = resolvedTabIdSig.value;
-      }}
+        const extra = userOnClick$;
+        if (extra && typeof extra === "function") {
+          void (extra as (e: PointerEvent, el: HTMLButtonElement) => unknown)(event, element);
+        }
+      })}
       onKeyDown$={(event, element) => {
         const ids = tabIdsSig.value;
         const currentIndex = ids.indexOf(resolvedTabIdSig.value);
@@ -357,8 +380,21 @@ export const TabTriggerLine = component$<TabTriggerProps>((props) => {
   const behaviorSig = useContext(behaviorContext);
   const prefixSig = useContext(idPrefixContext);
   const autoIdSig = useContext(autoTabIdContext);
-  const resolvedTabIdSig = useSignal<string>(resolveTabId(props, autoIdSig));
-  const { class: className, disabled, ...rest } = props;
+  const resolvedTabIdSig = useSignal<string>(explicitTabId(props) ?? "");
+  useTask$(({ track }) => {
+    track(() => props.tabId);
+    track(() => props._tabId);
+    const explicit = explicitTabId(props);
+    if (explicit) {
+      resolvedTabIdSig.value = explicit;
+      return;
+    }
+    if (!resolvedTabIdSig.value) {
+      autoIdSig.value += 1;
+      resolvedTabIdSig.value = `tab-${autoIdSig.value}`;
+    }
+  });
+  const { class: className, disabled, onClick$: userOnClick$, ...rest } = props;
   const merged = [triggerClassLine, className].filter(Boolean).join(" ");
   const isSelected = selectedTabIdSig.value === resolvedTabIdSig.value;
 
@@ -382,9 +418,13 @@ export const TabTriggerLine = component$<TabTriggerProps>((props) => {
       tabIndex={isSelected ? 0 : -1}
       disabled={disabled}
       class={merged}
-      onClick$={() => {
+      onClick$={$((event, element) => {
         selectedTabIdSig.value = resolvedTabIdSig.value;
-      }}
+        const extra = userOnClick$;
+        if (extra && typeof extra === "function") {
+          void (extra as (e: PointerEvent, el: HTMLButtonElement) => unknown)(event, element);
+        }
+      })}
       onKeyDown$={(event, element) => {
         const ids = tabIdsSig.value;
         const currentIndex = ids.indexOf(resolvedTabIdSig.value);
@@ -464,17 +504,24 @@ export const TabPanel = component$<TabPanelProps>((props) => {
   const selectedTabIdSig = useContext(selectedTabIdContext);
   const prefixSig = useContext(idPrefixContext);
   const autoIdSig = useContext(autoPanelIdContext);
-  const {
-    tabId,
-    _tabId,
-    verticalLayout: _verticalLayout,
-    class: className,
-    hidden,
-    ...rest
-  } = props;
-  const resolvedTabIdSig = useSignal<string>(
-    tabId ?? _tabId ?? resolveTabId({ tabId, _tabId }, autoIdSig),
-  );
+  const resolvedTabIdSig = useSignal<string>(explicitTabId(props) ?? "");
+  useTask$(({ track }) => {
+    track(() => props.tabId);
+    track(() => props._tabId);
+    const explicit = explicitTabId(props);
+    if (explicit) {
+      resolvedTabIdSig.value = explicit;
+      return;
+    }
+    if (!resolvedTabIdSig.value) {
+      autoIdSig.value += 1;
+      resolvedTabIdSig.value = `tab-${autoIdSig.value}`;
+    }
+  });
+  const { verticalLayout, class: className, hidden, tabId, _tabId, ...rest } = props;
+  void verticalLayout;
+  void tabId;
+  void _tabId;
   const merged = [panelClassHorizontal, className].filter(Boolean).join(" ");
   const isSelected =
     selectedTabIdSig.value === resolvedTabIdSig.value;
@@ -499,17 +546,24 @@ export const TabPanelLine = component$<TabPanelProps>((props) => {
   const selectedTabIdSig = useContext(selectedTabIdContext);
   const prefixSig = useContext(idPrefixContext);
   const autoIdSig = useContext(autoPanelIdContext);
-  const {
-    tabId,
-    _tabId,
-    verticalLayout: _verticalLayout,
-    class: className,
-    hidden,
-    ...rest
-  } = props;
-  const resolvedTabIdSig = useSignal<string>(
-    tabId ?? _tabId ?? resolveTabId({ tabId, _tabId }, autoIdSig),
-  );
+  const resolvedTabIdSig = useSignal<string>(explicitTabId(props) ?? "");
+  useTask$(({ track }) => {
+    track(() => props.tabId);
+    track(() => props._tabId);
+    const explicit = explicitTabId(props);
+    if (explicit) {
+      resolvedTabIdSig.value = explicit;
+      return;
+    }
+    if (!resolvedTabIdSig.value) {
+      autoIdSig.value += 1;
+      resolvedTabIdSig.value = `tab-${autoIdSig.value}`;
+    }
+  });
+  const { verticalLayout, class: className, hidden, tabId, _tabId, ...rest } = props;
+  void verticalLayout;
+  void tabId;
+  void _tabId;
   const merged = [panelClassHorizontalLine, className].filter(Boolean).join(" ");
   const isSelected =
     selectedTabIdSig.value === resolvedTabIdSig.value;

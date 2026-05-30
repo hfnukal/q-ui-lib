@@ -8,9 +8,7 @@
     "base/separator",
     "base/utilities"
   ],
-  "npmDependencies": [
-    "@qwik-ui/headless"
-  ],
+  "npmDependencies": [],
   "apiTree": {
     "Root": {
       "slot": true,

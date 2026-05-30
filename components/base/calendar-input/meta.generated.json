@@ -9,9 +9,7 @@
     "base/input-group",
     "base/popover"
   ],
-  "npmDependencies": [
-    "@qwik-ui/headless"
-  ],
+  "npmDependencies": [],
   "apiTree": {
     "params": {
       "value": "string",

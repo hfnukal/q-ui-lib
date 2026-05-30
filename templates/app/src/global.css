@@ -80,6 +80,48 @@
     flex-direction: column;
   }
 
+  /**
+   * `Dialog.Panel variant={…}` → `data-dialog-size`.
+   * `!important` přebije utilitu `max-h-[…]` z `Dialog.Panel` u větších variant.
+   * `Dialog.Content` má `overflow-y-auto` — scroll jen když obsah překročí výšku.
+   */
+  dialog.q-dialog-panel[data-dialog-size="xs"]:modal {
+    width: min(calc(100vw - 2rem), 20rem) !important;
+    max-height: min(90dvh, 40rem) !important;
+    max-block-size: min(90dvh, 40rem) !important;
+  }
+  dialog.q-dialog-panel[data-dialog-size="sm"]:modal {
+    width: min(calc(100vw - 2rem), 24rem) !important;
+    max-height: min(90dvh, 40rem) !important;
+    max-block-size: min(90dvh, 40rem) !important;
+  }
+  dialog.q-dialog-panel[data-dialog-size="md"]:modal {
+    width: min(calc(100vw - 2rem), 36rem) !important;
+    max-height: min(92dvh, 48rem) !important;
+    max-block-size: min(92dvh, 48rem) !important;
+  }
+  dialog.q-dialog-panel[data-dialog-size="lg"]:modal {
+    width: min(calc(100vw - 2rem), 48rem) !important;
+    max-height: min(98dvh, 120rem) !important;
+    max-block-size: min(98dvh, 120rem) !important;
+  }
+  dialog.q-dialog-panel[data-dialog-size="xl"]:modal {
+    width: min(calc(100vw - 2rem), 64rem) !important;
+    max-height: min(98dvh, 120rem) !important;
+    max-block-size: min(98dvh, 120rem) !important;
+  }
+  dialog.q-dialog-panel[data-dialog-size="xxl"]:modal {
+    width: min(calc(100vw - 2rem), 90rem) !important;
+    max-height: min(98dvh, 120rem) !important;
+    max-block-size: min(98dvh, 120rem) !important;
+  }
+  dialog.q-dialog-panel[data-dialog-size="full"]:modal {
+    width: calc(100vw - 2rem) !important;
+    max-width: calc(100vw - 2rem) !important;
+    max-height: min(98dvh, 100dvh) !important;
+    max-block-size: min(98dvh, 100dvh) !important;
+  }
+
   dialog.q-dialog-panel.modal-closing {
     animation: q-ui-dialog-out 0.15s ease-in forwards !important;
   }

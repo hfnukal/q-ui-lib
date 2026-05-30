@@ -65,10 +65,10 @@ import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 import { Separator } from "../separator";
 
 const rootHorizontal =
-  "flex min-h-10 w-fit max-w-full flex-row flex-wrap items-center gap-1 rounded-md border border-separator-opaque bg-surface-raised p-1 shadow-sm ring-offset-background";
+  "flex min-h-10 max-w-full flex-row flex-wrap items-center gap-1 rounded-md border border-separator-opaque bg-surface-raised p-1 shadow-sm ring-offset-background";
 
 const rootVertical =
-  "flex min-h-0 w-fit min-w-40 flex-col items-stretch gap-1 rounded-md border border-separator-opaque bg-surface-raised p-1 shadow-sm ring-offset-background";
+  "flex min-h-0 min-w-40 flex-col items-stretch gap-1 rounded-md border border-separator-opaque bg-surface-raised p-1 shadow-sm ring-offset-background";
 
 const groupClass =
   "inline-flex items-center gap-1 [&:empty]:hidden";

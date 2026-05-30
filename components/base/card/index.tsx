@@ -151,7 +151,7 @@ export type CardHeaderProps = PropsOf<"div">;
 export const CardHeader = component$<CardHeaderProps>((props) => {
   const { class: className, ...rest } = props;
   const base =
-    "@container/card-header grid auto-rows-min grid-cols-1 gap-1.5 p-6 has-[[data-slot=card-action]]:grid-cols-[1fr_auto]";
+    "@container/card-header grid auto-rows-min grid-cols-1 gap-1.5 p-3 has-[[data-slot=card-action]]:grid-cols-[1fr_auto]";
   const merged = [base, className].filter(Boolean).join(" ");
 
   return (
@@ -236,7 +236,7 @@ export type CardContentProps = PropsOf<"div">;
 /** Hlavní obsah (typicky pod hlavičkou). */
 export const CardContent = component$<CardContentProps>((props) => {
   const { class: className, ...rest } = props;
-  const base = "p-6 pt-0";
+  const base = "p-3 pt-0";
   const merged = [base, className].filter(Boolean).join(" ");
 
   return (

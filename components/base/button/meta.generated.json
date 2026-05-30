@@ -1,15 +1,22 @@
 {
   "name": "button",
   "title": "Button",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "kind": "primitive",
   "registry": "base",
   "dependencies": [],
   "npmDependencies": [],
   "apiTree": {
     "params": {
-      "onClick$": "function",
       "variant": [
+        "contained",
+        "danger",
+        "outline",
+        "primary",
+        "secondary",
+        "text"
+      ],
+      "intent": [
         "danger",
         "primary",
         "secondary"
@@ -18,9 +25,7 @@
         "lg",
         "md",
         "sm"
-      ],
-      "disabled": "boolean",
-      "class": "string"
+      ]
     },
     "slot": true
   }

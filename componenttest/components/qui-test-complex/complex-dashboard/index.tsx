@@ -26,8 +26,7 @@ import { Field } from "../../base/field";
 import { InputGroup } from "../../base/input-group";
 import { Input } from "../../base/input";
 import { Item } from "../../base/item";
-import { MenuItem } from "../../base/menu-item";
-import { Menu } from "../../base/menu";
+import { Menu, MenuItem } from "../../base/menu";
 import { Popover } from "../../base/popover";
 import { ProgressBar } from "../../base/progress";
 import { RadioGroup } from "../../base/radio-group";
@@ -83,7 +82,7 @@ const DashboardToastActions = component$(() => {
             })
           }
         >
-          Loading toast
+          Loading
         </Toolbar.Button>
       </Toolbar.Group>
     </Toolbar.Root>
@@ -119,14 +118,14 @@ const ToastButton = component$<ToastButtonProps>((props) => {
   );
 });
 
-const HeaderToolbarMenus = component$(() => {
+const HeaderToolbarMenus = component$<{ title: string }>((props) => {
   const { toast } = useSonner();
   const showSidebar = useSignal(true);
   const showGrid = useSignal(false);
   const density = useSignal("comfortable");
   return (
     <Toolbar.Root aria-label="Header toolbar dashboardu" class="w-full">
-      <div class="text-callout text-label">Demo text</div>
+      <div class="text-callout text-label">{props.title}</div>
       <Toolbar.Spacer />
       <Toolbar.Group aria-label="Navigace">
         <Toolbar.Button
@@ -486,8 +485,7 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
       <LayoutShell.Root>
         <LayoutShell.Header>
           <div class="flex w-full items-center justify-between gap-3">
-            <span>{props.title}</span>
-            <HeaderToolbarMenus />
+            <HeaderToolbarMenus title={props.title} />
           </div>
         </LayoutShell.Header>
         <LayoutShell.Content>
@@ -505,14 +503,15 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                   <Card.Description>Ukázka skládání Field + InputGroup + Button.</Card.Description>
                 </Card.Header>
                 <Card.Content class="space-y-3">
-                  <Field.Root as="div">
+                  <Field.Root as="div" size="sm">
                     <Field.Description id="dashboard-search-help">
                       Filtrování podle názvu úkolu
                     </Field.Description>
-                    <InputGroup.Root as="div" aria-label="Filtrování úkolů">
+                    <InputGroup.Root as="div" size="sm" aria-label="Filtrování úkolů">
                       <InputGroup.Input
                         placeholder="Hledat položku..."
                         aria-describedby="dashboard-search-help"
+                        variant="sm"
                       />
                       <ToastButton
                         variant="secondary"

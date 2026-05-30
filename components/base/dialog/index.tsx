@@ -1,7 +1,7 @@
 /**
  * @component dialog
  * @title Dialog
- * @version 1.0.2
+ * @version 1.0.3
  * @example Základní dialog
  * Základní dialog — viz ukázka níže.
  * ```tsx
@@ -55,12 +55,31 @@
  *   </Dialog.Panel>
  * </Dialog.Root>
  * ```
- 
- 
- 
- 
- 
- 
+ *
+ * @example Velikost panelu (variant)
+ * Na `Dialog.Panel` nastav `variant` (`"xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "full"`) — rozměry řeší `data-dialog-size` v global.css. Bez `variant` platí výchozí šířka.
+ * ```tsx
+ * import { Dialog } from "~/components/ui/base/dialog";
+ *
+ * <Dialog.Root>
+ *   <Dialog.Trigger>Otevřít velký dialog</Dialog.Trigger>
+ *   <Dialog.Panel variant="lg">
+ *     <Dialog.Close class="absolute right-4 top-4 z-10" />
+ *     <Dialog.Header>
+ *       <Dialog.Title>Velký dialog</Dialog.Title>
+ *       <Dialog.Description>Panel s variantou `lg`.</Dialog.Description>
+ *     </Dialog.Header>
+ *     <Dialog.Content>
+ *       <p class="text-callout text-secondary-label">Více prostoru pro obsah.</p>
+ *     </Dialog.Content>
+ *   </Dialog.Panel>
+ * </Dialog.Root>
+ * ```
+
+
+
+
+
  
  
  
@@ -110,7 +129,12 @@ export type DialogRootProps = PropsOf<typeof HeadlessModal.Root>;
 
 export type DialogTriggerProps = PropsOf<typeof HeadlessModal.Trigger>;
 
-export type DialogPanelProps = PropsOf<typeof HeadlessModal.Panel>;
+/** Velikost panelu — šířka/výška jsou v `global.css` u `dialog.q-dialog-panel[data-dialog-size=…]:modal`. Bez `variant` platí výchozí rozměry. */
+export type DialogPanelVariant = "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "full";
+
+export type DialogPanelProps = PropsOf<typeof HeadlessModal.Panel> & {
+  variant?: DialogPanelVariant;
+};
 
 export type DialogContentProps = PropsOf<typeof HeadlessModal.Content>;
 
@@ -135,8 +159,15 @@ export const DialogTrigger: FunctionComponent<DialogTriggerProps> = (props) => {
 };
 
 export const DialogPanel: FunctionComponent<DialogPanelProps> = (props) => {
-  const merged = [panelBaseClass, "relative", props.class].filter(Boolean).join(" ");
-  return <HeadlessModal.Panel {...props} class={merged} />;
+  const { variant, class: className, ...rest } = props;
+  const merged = [panelBaseClass, "relative", className].filter(Boolean).join(" ");
+  return (
+    <HeadlessModal.Panel
+      {...rest}
+      class={merged}
+      {...(variant ? { "data-dialog-size": variant } : {})}
+    />
+  );
 };
 
 export const DialogContent: FunctionComponent<DialogContentProps> = (props) => {

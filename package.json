@@ -55,7 +55,8 @@
     "@qwikest/icons": "^0.0.13",
     "chart.js": "^4.5.1",
     "dayjs": "^1.11.13",
-    "vite": "^7.3.2"
+    "vite": "^7.3.2",
+    "qui-client": "file:./"
   },
   "files": [
     "bin",

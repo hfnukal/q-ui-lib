@@ -9,18 +9,16 @@ import { Input } from "../../base/input";
 
 /** Vite: seznam route modulů bez čtení disku za běhu (funguje i v prohlížeči po bundlu). */
 const COMPONENT_SLUGS: string[] = Object.keys(
-  import.meta.glob("../../*/*/index.tsx"),
+  import.meta.glob(["../../*/*/index.tsx", "!../../qui-demo/**"]),
 )
   .map((file) =>
     file
-      // .replace(/^\.\/components\//, "")
       .replace(/^(\.\.\/)+/, "")
       .replace(/\/index\.tsx$/, "")
       .split("/")
       .slice(-2)
       .join("/"),
   )
-  .filter((slug) => !slug.includes("qui-demo"))
   .sort((a, b) => a.localeCompare(b));
 
 type MetaGeneratedLite = { title?: string };

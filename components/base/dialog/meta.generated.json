@@ -1,15 +1,13 @@
 {
   "name": "dialog",
   "title": "Dialog",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "kind": "compound",
   "registry": "base",
   "dependencies": [
     "base/utilities"
   ],
-  "npmDependencies": [
-    "@qwik-ui/headless"
-  ],
+  "npmDependencies": [],
   "apiTree": {
     "Root": {
       "children": {
