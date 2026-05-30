@@ -3,7 +3,7 @@ export type TokenGroup = { label: string; tokens: ThemeToken[] };
 
 export const TOKEN_GROUPS: TokenGroup[] = [
   {
-    label: "Text & Akcent",
+    label: "Text & Accent",
     tokens: [
       { name: "--label",            default: "0 0% 0%" },
       { name: "--secondary-label",  default: "240 2% 25%" },
@@ -16,7 +16,7 @@ export const TOKEN_GROUPS: TokenGroup[] = [
     ],
   },
   {
-    label: "Plochy — flat",
+    label: "Surfaces — flat",
     tokens: [
       { name: "--background",      default: "0 0% 100%" },
       { name: "--surface-raised",  default: "240 5% 96%" },
@@ -24,7 +24,7 @@ export const TOKEN_GROUPS: TokenGroup[] = [
     ],
   },
   {
-    label: "Plochy — grouped",
+    label: "Surfaces — grouped",
     tokens: [
       { name: "--grouped-background",    default: "240 6% 96%" },
       { name: "--grouped-surface",       default: "0 0% 100%" },
@@ -41,14 +41,14 @@ export const TOKEN_GROUPS: TokenGroup[] = [
     ],
   },
   {
-    label: "Separátory",
+    label: "Separators",
     tokens: [
       { name: "--separator",        default: "240 6% 50%" },
       { name: "--separator-opaque", default: "240 5% 82%" },
     ],
   },
   {
-    label: "Systémové barvy",
+    label: "System colors",
     tokens: [
       { name: "--system-blue",   default: "211 100% 50%" },
       { name: "--system-brown",  default: "28 35% 48%" },
@@ -65,7 +65,7 @@ export const TOKEN_GROUPS: TokenGroup[] = [
     ],
   },
   {
-    label: "Šedá stupnice",
+    label: "Gray scale",
     tokens: [
       { name: "--system-gray",   default: "240 2% 50%" },
       { name: "--system-gray-2", default: "240 2% 55%" },

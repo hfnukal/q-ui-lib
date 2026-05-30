@@ -2,15 +2,16 @@
  * @component layout-shell
  * @title LayoutShell
  * @version 0.0.1
- * @example Zakladni rozlozeni
+ * @example Basic layout
+ * Basic layout example
  * ```tsx
  * import { LayoutShell } from "~/components/ui/qui-test-layout/layout-shell";
  *
  * <LayoutShell.Root>
  *   <LayoutShell.Header>Admin</LayoutShell.Header>
  *   <LayoutShell.Content>
- *     <LayoutShell.Sidebar>Filtry</LayoutShell.Sidebar>
- *     <LayoutShell.Main>Obsah stranky</LayoutShell.Main>
+ *     <LayoutShell.Sidebar>Filters</LayoutShell.Sidebar>
+ *     <LayoutShell.Main>Page content</LayoutShell.Main>
  *   </LayoutShell.Content>
  * </LayoutShell.Root>
  * ```

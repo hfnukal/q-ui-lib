@@ -2,61 +2,61 @@
  * @component card
  * @title Card
  * @version 1.0.1
- * @example Úplná skladba
- * Složené API: `Card.Root`, `Media`, `Header`, `Title`, `Description`, `Action`, `Content`, `Footer`.
+ * @example Full composition
+ * Compound API: `Card.Root`, `Media`, `Header`, `Title`, `Description`, `Action`, `Content`, `Footer`.
  * ```tsx
  * import { Button } from "~/components/ui/base/button";
  * import { Card } from "~/components/ui/base/card";
  * 
  * <Card.Root class="max-w-md">
  *   <Card.Header>
- *     <Card.Title>Oznámení</Card.Title>
+ *     <Card.Title>Notifications</Card.Title>
  *     <Card.Description>
- *       Shrnutí změn za poslední týden.
+ *       A summary of changes over the past week.
  *     </Card.Description>
  *   </Card.Header>
  *   <Card.Content>
  *     <p class="text-body text-secondary-label">
- *       Máte 3 nepřečtené zprávy a 1 naplánovanou událost.
+ *       You have 3 unread messages and 1 scheduled event.
  *     </p>
  *   </Card.Content>
  *   <Card.Footer class="gap-2">
  *     <Button variant="secondary" size="sm">
- *       Později
+ *       Later
  *     </Button>
- *     <Button size="sm">Otevřít</Button>
+ *     <Button size="sm">Open</Button>
  *   </Card.Footer>
  * </Card.Root>
  * ```
  *
- * @example Hlavička s akcí
- * `Card.Action` zapne v hlavičce dvousloupcové rozložení (titulek a popis vlevo, akce vpravo).
+ * @example Header with action
+ * `Card.Action` enables a two-column layout in the header (title and description on the left, action on the right).
  * ```tsx
  * import { Button } from "~/components/ui/base/button";
  * import { Card } from "~/components/ui/base/card";
  * 
  * <Card.Root class="max-w-md">
  *   <Card.Header>
- *     <Card.Title>Účet</Card.Title>
- *     <Card.Description>Přihlášení e-mailem a heslem.</Card.Description>
+ *     <Card.Title>Account</Card.Title>
+ *     <Card.Description>Sign in with email and password.</Card.Description>
  *     <Card.Action>
  *       <Button
  *         variant="secondary"
  *         size="sm"
  *         class="border-0 bg-transparent px-2 text-link shadow-none hover:bg-transparent hover:underline"
  *       >
- *         Registrace
+ *         Sign up
  *       </Button>
  *     </Card.Action>
  *   </Card.Header>
  *   <Card.Content>
- *     <p class="text-body text-secondary-label">… formulář …</p>
+ *     <p class="text-body text-secondary-label">… form …</p>
  *   </Card.Content>
  * </Card.Root>
  * ```
  *
- * @example Média nahoře
- * `Card.Media` s `variant=&quot;image&quot;` pro poměr stran a vyplnění obrázku; kořen karty má `overflow-hidden`.
+ * @example Media on top
+ * `Card.Media` with `variant=&quot;image&quot;` for aspect ratio and image fill; the card root has `overflow-hidden`.
  * ```tsx
  * import { Badge } from "~/components/ui/base/badge";
  * import { Button } from "~/components/ui/base/button";
@@ -68,33 +68,33 @@
  *       src="https://picsum.photos/seed/qcard/640/360"
  *       width={640}
  *       height={360}
- *       alt="Ilustrace události"
+ *       alt="Event illustration"
  *     />
  *   </Card.Media>
  *   <Card.Header>
- *     <Card.Title>Meetup design systémů</Card.Title>
+ *     <Card.Title>Design systems meetup</Card.Title>
  *     <Card.Description>
- *       Komponenty, přístupnost a rychlejší dodávky.
+ *       Components, accessibility and faster delivery.
  *     </Card.Description>
  *     <Card.Action>
- *       <Badge variant="secondary">Vybrané</Badge>
+ *       <Badge variant="secondary">Featured</Badge>
  *     </Card.Action>
  *   </Card.Header>
  *   <Card.Footer>
- *     <Button class="w-full">Detail akce</Button>
+ *     <Button class="w-full">Event details</Button>
  *   </Card.Footer>
  * </Card.Root>
  * ```
  *
- * @example Jen obsah
- * Minimální karta jen s `Card.Content` a vlastním odsazením přes `class`.
+ * @example Content only
+ * A minimal card with only `Card.Content` and custom padding via `class`.
  * ```tsx
  * import { Card } from "~/components/ui/base/card";
  * 
  * <Card.Root class="max-w-sm">
  *   <Card.Content class="pt-6">
  *     <p class="text-body text-label">
- *       Karta jen s obsahem — vlastní odsazení přes{" "}
+ *       A content-only card — custom padding via{" "}
  *       <code class="text-caption-1">class</code> na{" "}
  *       <code class="text-caption-1">Card.Content</code>.
  *     </p>
@@ -117,17 +117,17 @@ import { Polymorphic } from "@qwik-ui/headless";
 
 export type CardRootProps = Omit<PropsOf<"div">, "as"> & {
   /**
-   * Root element. Default je `span` kvůli bezpečnému vložení do textových parentů (`p`/`pre`).
-   * Pro blokové použití nastavte `as="div"`.
+   * Root element. Default is `span` for safe insertion into text parents (`p`/`pre`).
+   * For block usage set `as="div"`.
    */
   as?: "div" | "span";
 };
 
 /**
- * Kontejner karty — `grouped-surface`, okraj a stín (COLORS.md). Bez @qwik-ui/headless.
- * Přes `as` můžete přepnout root mezi `span` (výchozí) a `div`.
- * Do `<p>`/`<pre>` vkládejte jen variantu `as="span"` a jen s phrasing obsahem;
- * pro běžný blokový obsah použijte parent `<div>/<section>` nebo `as="div"`.
+ * Card container — `grouped-surface`, border and shadow (COLORS.md). Without @qwik-ui/headless.
+ * Via `as` you can switch the root between `span` (default) and `div`.
+ * Into `<p>`/`<pre>` insert only the `as="span"` variant and only with phrasing content;
+ * for regular block content use a parent `<div>/<section>` or `as="div"`.
  */
 export const CardRoot = component$<CardRootProps>((props) => {
   const { class: className, as = "span", ...rest } = props;
@@ -145,8 +145,8 @@ export const CardRoot = component$<CardRootProps>((props) => {
 export type CardHeaderProps = PropsOf<"div">;
 
 /**
- * Horní blok (titulek, popis, volitelně {@link CardAction}).
- * S `Card.Action` použije mřížku — akce vpravo nahoře (shadcn CardHeader).
+ * Top block (title, description, optionally {@link CardAction}).
+ * With `Card.Action` it uses a grid — action at the top right (shadcn CardHeader).
  */
 export const CardHeader = component$<CardHeaderProps>((props) => {
   const { class: className, ...rest } = props;
@@ -163,7 +163,7 @@ export const CardHeader = component$<CardHeaderProps>((props) => {
 
 export type CardTitleProps = PropsOf<"h3">;
 
-/** Nadpis sekce karty. */
+/** Card section heading. */
 export const CardTitle = component$<CardTitleProps>((props) => {
   const { class: className, ...rest } = props;
   const base =
@@ -179,7 +179,7 @@ export const CardTitle = component$<CardTitleProps>((props) => {
 
 export type CardDescriptionProps = PropsOf<"p">;
 
-/** Sekundární text pod titulkem. */
+/** Secondary text below the title. */
 export const CardDescription = component$<CardDescriptionProps>((props) => {
   const { class: className, ...rest } = props;
   const base = "col-start-1 row-start-2 text-caption-1 text-secondary-label";
@@ -194,7 +194,7 @@ export const CardDescription = component$<CardDescriptionProps>((props) => {
 
 export type CardActionProps = PropsOf<"div">;
 
-/** Akce v hlavičce vpravo (menu, odkaz, badge). Vyžaduje `data-slot` pro rozložení mřížky. */
+/** Action in the header on the right (menu, link, badge). Requires `data-slot` for the grid layout. */
 export const CardAction = component$<CardActionProps>((props) => {
   const { class: className, ...rest } = props;
   const base =
@@ -209,11 +209,11 @@ export const CardAction = component$<CardActionProps>((props) => {
 });
 
 export type CardMediaProps = PropsOf<"div"> & {
-  /** `image` — poměr stran a vyplnění pro `<img>` jako u přebalu karty. */
+  /** `image` — aspect ratio and fill for `<img>` like a card cover. */
   variant?: "default" | "image";
 };
 
-/** Horní (nebo vlastní) média — obrázek, ilustrace. Kořen karty má `overflow-hidden` kvůli oříznutí rohů. */
+/** Top (or custom) media — image, illustration. The card root has `overflow-hidden` to clip the corners. */
 export const CardMedia = component$<CardMediaProps>((props) => {
   const { variant = "default", class: className, ...rest } = props;
   const byVariant = {
@@ -233,7 +233,7 @@ export const CardMedia = component$<CardMediaProps>((props) => {
 
 export type CardContentProps = PropsOf<"div">;
 
-/** Hlavní obsah (typicky pod hlavičkou). */
+/** Main content (typically below the header). */
 export const CardContent = component$<CardContentProps>((props) => {
   const { class: className, ...rest } = props;
   const base = "p-3 pt-0";
@@ -248,7 +248,7 @@ export const CardContent = component$<CardContentProps>((props) => {
 
 export type CardFooterProps = PropsOf<"div">;
 
-/** Akce nebo metadata pod obsahem. */
+/** Actions or metadata below the content. */
 export const CardFooter = component$<CardFooterProps>((props) => {
   const { class: className, ...rest } = props;
   const base = "flex flex-row items-center p-6 pt-0";

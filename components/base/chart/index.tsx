@@ -2,8 +2,8 @@
  * @component chart
  * @title Chart
  * @version 1.0.0
- * @example Čára (line)
- * Export `Chart` je alias pro `ChartCanvas`.
+ * @example Line
+ * The `Chart` export is an alias for `ChartCanvas`.
  * ```tsx
  * import { Chart } from "~/components/ui/base/chart";
  * 
@@ -11,10 +11,10 @@
  *   type="line"
  *   class="max-w-2xl"
  *   data={{
- *     labels: ["Po", "Út", "St", "Čt", "Pá"],
+ *     labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
  *     datasets: [
  *       {
- *         label: "Návštěvy",
+ *         label: "Visits",
  *         data: [12, 19, 15, 25, 22],
  *         borderColor: "hsl(var(--accent))",
  *         backgroundColor: "hsl(var(--accent) / 0.15)",
@@ -26,8 +26,8 @@
  * />
  * ```
  *
- * @example Sloupce (bar)
- * Graf typu `bar` — srovnání kategorií vedle sebe.
+ * @example Bars (bar)
+ * A `bar` chart — comparing categories side by side.
  * ```tsx
  * import { ChartCanvas } from "~/components/ui/base/chart";
  * 
@@ -38,7 +38,7 @@
  *     labels: ["Q1", "Q2", "Q3", "Q4"],
  *     datasets: [
  *       {
- *         label: "Tržby",
+ *         label: "Revenue",
  *         data: [48, 62, 55, 71],
  *         backgroundColor: [
  *           "hsl(var(--system-blue))",
@@ -53,7 +53,7 @@
  * ```
  *
  * @example Doughnut
- * Doughnut — viz ukázka níže.
+ * Doughnut — see the example below.
  * ```tsx
  * import { Chart } from "~/components/ui/base/chart";
  * 
@@ -61,7 +61,7 @@
  *   type="doughnut"
  *   class="mx-auto max-w-sm"
  *   data={{
- *     labels: ["Hotovo", "Probíhá", "Čeká"],
+ *     labels: ["Done", "In progress", "Waiting"],
  *     datasets: [
  *       {
  *         data: [62, 23, 15],
@@ -97,11 +97,11 @@ import {
 import type { ChartData, ChartOptions, ChartType } from "chart.js";
 
 export type ChartCanvasProps = Omit<PropsOf<"div">, "class"> & {
-  /** Typ grafu (Chart.js). */
+  /** Chart type (Chart.js). */
   type: ChartType;
-  /** Data grafu — musí být serializovatelné (bez funkcí v objektech pro SSR). */
+  /** Chart data — must be serializable (no functions in objects for SSR). */
   data: ChartData;
-  /** Volitelné Chart.js options; funkce v options fungují jen při definici v klientském kontextu. */
+  /** Optional Chart.js options; functions in options only work when defined in a client context. */
   options?: ChartOptions;
   class?: string;
   canvasClass?: string;
@@ -114,8 +114,8 @@ function cloneData(data: ChartData): ChartData {
 }
 
 /**
- * Canvas / Chart.js barvy musí být už „vyčíslené“ (rgb/hsl), ne řetězce s `var(...)`.
- * Jinak kontext canvasu často nenačte CSS proměnné a dataset skončí černě / šedě.
+ * Canvas / Chart.js colors must already be "resolved" (rgb/hsl), not strings with `var(...)`.
+ * Otherwise the canvas context often does not read CSS variables and the dataset ends up black / gray.
  */
 function resolveCssColorForCanvas(raw: string, scope: HTMLElement): string {
   if (!raw.includes("var(")) {
@@ -143,7 +143,7 @@ function resolveColorValue(value: unknown, scope: HTMLElement): unknown {
   return value;
 }
 
-/** Projde vlastnosti datasetu a nahradí barvy s `var(` rozlišenými hodnotami. */
+/** Iterates over dataset properties and replaces colors with `var(` with resolved values. */
 function resolveChartDataCssVars(data: ChartData, scope: HTMLElement): void {
   const datasets = data.datasets;
   if (!datasets?.length) {
@@ -170,9 +170,9 @@ function resolveChartDataCssVars(data: ChartData, scope: HTMLElement): void {
 }
 
 /**
- * Canvas graf nad [Chart.js](https://www.chartjs.org/), inicializace v prohlížeči přes `useVisibleTask$`
- * (dynamický import `chart.js`, bez vykonávání na serveru). Registrace přes vestavěné `registerables`
- * (všechny běžné typy grafů a škály).
+ * Canvas chart over [Chart.js](https://www.chartjs.org/), initialized in the browser via `useVisibleTask$`
+ * (dynamic import of `chart.js`, without running on the server). Registration via the built-in `registerables`
+ * (all common chart types and scales).
  */
 export const ChartCanvas = component$<ChartCanvasProps>((props) => {
   const canvasRef = useSignal<HTMLCanvasElement>();
@@ -282,7 +282,7 @@ export const ChartCanvas = component$<ChartCanvasProps>((props) => {
   );
 });
 
-/** Alias pro sjednocení s názvem komponenty v dokumentaci. */
+/** Alias to align with the component name in the documentation. */
 export const Chart = ChartCanvas;
 
 export type ChartProps = ChartCanvasProps;

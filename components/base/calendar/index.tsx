@@ -3,7 +3,7 @@
  * @title Calendar
  * @version 1.0.0
  * @example Calendar.Panel
- * Zkratka nad stejnými díly — navigace, titulek, záhlaví týdne a mřížka.
+ * Shortcut over the same parts — navigation, caption, weekday header and grid.
  * ```tsx
  * import { $, useSignal } from "@builder.io/qwik";
  * import { Calendar } from "~/components/ui/base/calendar";
@@ -22,8 +22,8 @@
  * });
  * ```
  *
- * @example Složené API
- * `Calendar.Root` s vlastním rozložením (stejné podkomponenty jako u Panel).
+ * @example Compound API
+ * `Calendar.Root` with custom layout (the same subcomponents as Panel).
  * ```tsx
  * import { Calendar } from "~/components/ui/base/calendar";
  * 
@@ -44,16 +44,17 @@
  * </Calendar.Root>
  * ```
  *
- * @example Controlled měsíc a min / max
- * `viewMonth` + `onViewMonthChange, omezení rozsahu `minDate` / `maxDate` (řetězce `YYYY-MM-DD`).
+ * @example Controlled month and min / max
+ * `viewMonth` + `onViewMonthChange, range limiting `minDate` / `maxDate` (`YYYY-MM-DD` strings).
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
  * import { Calendar } from "~/components/ui/base/calendar";
  * 
+ * export default component$(() => {
  * const viewMonth = useSignal("2026-04-01");
  * const selected = useSignal<string | undefined>(undefined);
  * 
- * <Calendar.Panel
+ * return <Calendar.Panel
  *   viewMonth={viewMonth.value}
  *   onViewMonthChange$={$((iso) => {
  *     viewMonth.value = iso;
@@ -65,10 +66,11 @@
  *   minDate="2026-04-05"
  *   maxDate="2026-04-25"
  * />
+ * });
  * ```
  *
- * @example Pole data (CalendarInput)
- * Vstup s textem `LL`, popover a `Calendar.Panel` — komponenta `CalendarInput` (`calendar-input`). Lze obalit `Field` / `Label`.
+ * @example Date field (CalendarInput)
+ * Input with `LL` text, popover and `Calendar.Panel` — the `CalendarInput` component (`calendar-input`). Can be wrapped with `Field` / `Label`.
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
  * import { CalendarInput } from "~/components/ui/base/calendar-input";
@@ -79,11 +81,11 @@
  *   const picked = useSignal("2026-04-12");
  *   return (
  *     <Field.Root>
- *       <Label for="cal-demo">Datum</Label>
+ *       <Label for="cal-demo">Date</Label>
  *       <CalendarInput
  *         inputId="cal-demo"
  *         value={picked.value}
- *         placeholder="např. 12. dubna 2026"
+ *         placeholder="e.g. April 12, 2026"
  *         onValueChange$={$((iso) => {
  *           picked.value = iso;
  *         })}
@@ -172,24 +174,24 @@ export interface CalendarContextState {
 export const calendarContextId = createContextId<CalendarContextState>("q-ui-calendar");
 
 export type CalendarRootProps = Omit<PropsOf<"div">, "children"> & {
-  /** Vybraný den `YYYY-MM-DD` (controlled s `onSelect$`). */
+  /** Selected day `YYYY-MM-DD` (controlled with `onSelect$`). */
   selected?: string;
-  /** Výchozí výběr (uncontrolled). */
+  /** Default selection (uncontrolled). */
   defaultSelected?: string;
   onSelect$?: PropFunction<(iso: string) => void>;
-  /** Zobrazený měsíc — první den v `YYYY-MM-DD` (controlled s `onViewMonthChange$`). */
+  /** Displayed month — the first day in `YYYY-MM-DD` (controlled with `onViewMonthChange$`). */
   viewMonth?: string;
   defaultViewMonth?: string;
   onViewMonthChange$?: PropFunction<(iso: string) => void>;
-  /** 0 = neděle, 1 = pondělí jako začátek týdne. */
+  /** 0 = Sunday, 1 = Monday as the start of the week. */
   weekStartsOn?: 0 | 1;
   minDate?: string;
   maxDate?: string;
 };
 
 /**
- * Kořen kalendáře — stav měsíce a výběr; používá dayjs pro výpočty dní.
- * Skládej s {@link Calendar.PrevButton}, {@link Calendar.Caption}, {@link Calendar.Grid}, …
+ * Calendar root — month state and selection; uses dayjs for day calculations.
+ * Compose with {@link Calendar.PrevButton}, {@link Calendar.Caption}, {@link Calendar.Grid}, …
  */
 export const CalendarRoot = component$<CalendarRootProps>((props) => {
   const weekStartsOn = props.weekStartsOn ?? 1;
@@ -250,7 +252,7 @@ export const CalendarRoot = component$<CalendarRootProps>((props) => {
   const merged = twMerge(base, className);
 
   return (
-    <div {...rest} class={merged} role="application" aria-label="Kalendář">
+    <div {...rest} class={merged} role="application" aria-label="Calendar">
       <Slot />
     </div>
   );
@@ -258,7 +260,7 @@ export const CalendarRoot = component$<CalendarRootProps>((props) => {
 
 export type CalendarNavButtonProps = Omit<PropsOf<"button">, "type" | "onClick$">;
 
-/** Předchozí měsíc. */
+/** Previous month. */
 export const CalendarPrevButton = component$<CalendarNavButtonProps>((props) => {
   const ctx = useContext(calendarContextId);
   const { class: className, disabled, ...rest } = props;
@@ -273,7 +275,7 @@ export const CalendarPrevButton = component$<CalendarNavButtonProps>((props) => 
       type="button"
       class={btnClass}
       disabled={disabled}
-      aria-label="Předchozí měsíc"
+      aria-label="Previous month"
       onClick$={async () => {
         const next = dayjs(ctx.viewMonthIso.value).subtract(1, "month");
         const iso = monthStartIso(next);
@@ -289,7 +291,7 @@ export const CalendarPrevButton = component$<CalendarNavButtonProps>((props) => 
   );
 });
 
-/** Následující měsíc. */
+/** Next month. */
 export const CalendarNextButton = component$<CalendarNavButtonProps>((props) => {
   const ctx = useContext(calendarContextId);
   const { class: className, disabled, ...rest } = props;
@@ -304,7 +306,7 @@ export const CalendarNextButton = component$<CalendarNavButtonProps>((props) => 
       type="button"
       class={btnClass}
       disabled={disabled}
-      aria-label="Následující měsíc"
+      aria-label="Next month"
       onClick$={async () => {
         const next = dayjs(ctx.viewMonthIso.value).add(1, "month");
         const iso = monthStartIso(next);
@@ -322,7 +324,7 @@ export const CalendarNextButton = component$<CalendarNavButtonProps>((props) => 
 
 export type CalendarCaptionProps = PropsOf<"div">;
 
-/** Titulek měsíce a roku (dayjs `format`, výchozí `MMMM YYYY`). */
+/** Month and year caption (dayjs `format`, default `MMMM YYYY`). */
 export const CalendarCaption = component$<CalendarCaptionProps & { format?: string }>((props) => {
   const ctx = useContext(calendarContextId);
   const { class: className, format: fmt = "MMMM YYYY", ...rest } = props;
@@ -338,7 +340,7 @@ export const CalendarCaption = component$<CalendarCaptionProps & { format?: stri
 
 export type CalendarWeekdaysProps = PropsOf<"div">;
 
-/** Řádek zkratek dnů v týdnu podle `weekStartsOn` a dayjs locale. */
+/** Row of weekday abbreviations based on `weekStartsOn` and the dayjs locale. */
 export const CalendarWeekdays = component$<CalendarWeekdaysProps>((props) => {
   const ctx = useContext(calendarContextId);
   const { class: className, ...rest } = props;
@@ -367,7 +369,7 @@ export const CalendarWeekdays = component$<CalendarWeekdaysProps>((props) => {
 
 export type CalendarGridProps = PropsOf<"div">;
 
-/** Mřížka 6×7 dnů; dny mimo měsíc jsou vizuálně ztlumené. */
+/** 6×7 day grid; days outside the month are visually dimmed. */
 export const CalendarGrid = component$<CalendarGridProps>((props) => {
   const ctx = useContext(calendarContextId);
   const { class: className, ...rest } = props;
@@ -437,7 +439,7 @@ const CalendarDayCell = component$<{
 export type CalendarPanelProps = CalendarRootProps;
 
 /**
- * Výchozí rozložení: navigace, titulek, dny v týdnu a mřížka (stejné díly jako u manuálního skládání).
+ * Default layout: navigation, caption, weekdays and grid (the same parts as with manual composition).
  */
 export const CalendarPanel = component$<CalendarPanelProps>((props) => {
   return (

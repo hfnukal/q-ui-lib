@@ -1,6 +1,6 @@
 # qui-client
 
-**Kořen tohoto repozitáře je npm balíček `qui-client`:** CLI **`qui`** a kanonické zdroje Qwik UI komponent v **`components/`**. Do aplikace se komponenty berou jako **zdrojový kód** (kopie do `targetPath`), synchronizace probíhá z Git repozitářů podle `qui.config.json`.
+**The root of this repository is the npm package `qui-client`:** the **`qui`** CLI plus the canonical Qwik UI component sources in **`components/`**. Components are pulled into an app as **source code** (copied into `targetPath`); synchronization happens from Git repositories according to `qui.config.json`.
 
 ## Quick start
 
@@ -15,7 +15,7 @@ npx qui init
 npx qui add button input
 ```
 
-Při vývoji **v tomto repozitáři** (clone monorepa):
+When developing **inside this repository** (a clone of the monorepo):
 
 ```bash
 npm install
@@ -24,23 +24,23 @@ npm run qui -- <command> [options]
 
 ## CLI (`qui`)
 
-Aktualni prikazy:
+Current commands:
 
-- `init` - vytvori/aktualizuje `qui.config.json` a synchronizuje app template soubory.
-- `connect` - prida nebo upravi repozitare v `qui.config.json`.
-- `verify` - overi konfiguraci a stav pripojeni vybraneho repozitare.
-- `diff` - zatim minimalni diff report (stav migrace).
-- `add` - prida komponenty do `targetPath` a doplni zavislosti (vcetne npm deps).
-- `update` - prepise nainstalovane komponenty novejsim zdrojem.
-- `remove` - odstrani komponenty a pripadne odebere nepouzivane npm zavislosti.
-- `generate` - regeneruje `meta.generated.json` pro komponenty v `targetPath` (podle `index.tsx`/`index.ts`).
-- `generate-demo` - synchronizuje demo template soubory a vygeneruje/aktualizuje demo routes v `src/routes/<route-base>/components/...` pro nainstalovane komponenty.
-- `clone` - naklonuje lokalne nainstalovanou komponentu pod novym jmenem.
-- `push` - pushne upravene komponenty z aplikace zpet do remote Git repozitare.
+- `init` - creates/updates `qui.config.json` and syncs the app template files.
+- `connect` - adds or edits repositories in `qui.config.json`.
+- `verify` - verifies the configuration and the connection state of the selected repository.
+- `diff` - currently a minimal diff report (migration status).
+- `add` - adds components into `targetPath` and pulls in dependencies (including npm deps).
+- `update` - overwrites installed components with a newer source.
+- `remove` - removes components and, where applicable, drops unused npm dependencies.
+- `generate` - regenerates `meta.generated.json` for components in `targetPath` (based on `index.tsx`/`index.ts`).
+- `generate-demo` - syncs the demo template files and generates/updates demo routes in `src/routes/<route-base>/components/...` for the installed components.
+- `clone` - clones a locally installed component under a new name.
+- `push` - pushes modified components from the app back to the remote Git repository.
 
 ## `qui.config.json` (schema `qui-config/v1`)
 
-CLI pracuje nad konfiguraci v koreni aplikace:
+The CLI works against the configuration in the app root:
 
 ```json
 {
@@ -57,39 +57,39 @@ CLI pracuje nad konfiguraci v koreni aplikace:
 }
 ```
 
-Poznamky:
+Notes:
 
-- `targetPath` musi byt relativni cesta.
-- `repos.<name>.url` podporuje `file://`, `http(s)://`, `ssh://` a `git@...`.
-- Vyber zdroje probiha pres `--repo <repo>` nebo `--repo <repo>/<uilib>` (u `push` povinne `<repo>/<uilib>`).
-- Kazdy `repo` muze obsahovat vice `uilib` (pole `repos.<name>.uilibs`).
+- `targetPath` must be a relative path.
+- `repos.<name>.url` supports `file://`, `http(s)://`, `ssh://` and `git@...`.
+- Source selection happens via `--repo <repo>` or `--repo <repo>/<uilib>` (for `push`, `<repo>/<uilib>` is required).
+- Each `repo` may contain multiple `uilib`s (the `repos.<name>.uilibs` array).
 
-## Repo vs ui-lib + vyhledavani komponent
+## Repo vs ui-lib + component lookup
 
-- `repo` je zdrojovy Git repozitar (odkud se komponenty ctou).
-- `uilib` je namespace/sada komponent uvnitr jednoho repo (napr. `base`, `web`).
-- Kdyz zavolas `qui add button` bez `--repo`, CLI pouzije prvni repo z konfigurace a v nem prvni `uilib`, kde komponentu najde.
-- Kdyz zavolas `qui add web/button`, komponenta se hleda primo v `uilib` `web` (v ramci vybraneho repo).
-- Kdyz zavolas `qui add --repo mycommon web/button`, urcis zaroven repo (`mycommon`) i `uilib` (`web`).
-- Pri `add` se zavislosti z `meta.generated.json` (`dependencies` a `npmDependencies`) doplni automaticky.
-- Stejny princip specifikace komponent (`button` vs `web/button`) i vyberu zdroje (`--repo`) plati i pro `update` a `remove`.
+- A `repo` is a source Git repository (where components are read from).
+- A `uilib` is a namespace/set of components inside a single repo (e.g. `base`, `web`).
+- When you call `qui add button` without `--repo`, the CLI uses the first repo in the config and, within it, the first `uilib` where the component is found.
+- When you call `qui add web/button`, the component is looked up directly in the `uilib` `web` (within the selected repo).
+- When you call `qui add --repo mycommon web/button`, you specify both the repo (`mycommon`) and the `uilib` (`web`).
+- During `add`, the dependencies from `meta.generated.json` (`dependencies` and `npmDependencies`) are added automatically.
+- The same principle for specifying components (`button` vs `web/button`) and selecting the source (`--repo`) also applies to `update` and `remove`.
 
-## `base`, `qui-demo` a generovana demo aplikace
+## `base`, `qui-demo` and the generated demo app
 
-- **`base`** je zakladni `uilib` (komponenty ve stylu shadcn) — ocekava se, ze na nem mohou stavet dalsi sady (`qui-demo`, vlastni `uilib`). Pro **plnou referencni demo** proto dava smysl mit v cilove aplikaci **cely `base`** (ne jen vyber).
-- **`qui-demo`** obsahuje podpurne komponenty pro generovanou demo (layout, index prikladu atd.) a **vazi se na `base`**. Do `qui.config.json` v danem repu proto patří oba namespace v `repos.<name>.uilibs`, napr. `["base", "qui-demo"]`.
-- **`templates/demo`** (v tomto repu u kořene balíčku) nejsou „hotova demo aplikace“, ale **podklady pro CLI** — z nich `generate-demo` sklada soubory v cilove Qwik aplikaci.
-- **`generate-demo`** z komponent uz pridanych v `targetPath` vytvori demo routy a priklady; **texty prikladu** bere z **JSDoc** u komponent (kde to generator podporuje).
+- **`base`** is the foundational `uilib` (shadcn-style components) — other sets (`qui-demo`, your own `uilib`) are expected to build on it. For a **full reference demo** it therefore makes sense to have the **entire `base`** in the target app (not just a subset).
+- **`qui-demo`** contains supporting components for the generated demo (layout, example index, etc.) and **depends on `base`**. In a given repo's `qui.config.json`, both namespaces therefore belong in `repos.<name>.uilibs`, e.g. `["base", "qui-demo"]`.
+- **`templates/demo`** (in this repo, next to the package root) is not a "finished demo app" but the **inputs for the CLI** — `generate-demo` assembles files in the target Qwik app from them.
+- **`generate-demo`** creates demo routes and examples from the components already added in `targetPath`; the **example texts** come from the components' **JSDoc** (where the generator supports it).
 
-### Typicka sekvence: init → vsechny komponenty pro demo → generate-demo
+### Typical sequence: init → all components for the demo → generate-demo
 
-1. **`qui init`** — `qui.config.json` + synchronizace sablon do aplikace (viz `init` vyse).
-2. **`qui add --repo <repo> --all`** — prida **vsechny** komponenty ze **vsech** `uilib` uvedenych u toho repa v konfiguraci. Pro demo s celym `base` a shellem z `qui-demo` nejprve nastavte `uilibs` na `base` i `qui-demo`, pak spuste `add --all`. **Povinny je flag `--repo`** (bez nej `--all` neprojde). Alternativa: pridavat jen vybrane komponenty, napr. `qui add button input`.
-3. **`qui generate-demo`** — napr. s `--route-base /qui-demo` vygeneruje/aktualizuje demo routy pro jiz nainstalovane komponenty.
+1. **`qui init`** — `qui.config.json` + syncing templates into the app (see `init` above).
+2. **`qui add --repo <repo> --all`** — adds **all** components from **all** `uilib`s listed for that repo in the config. For a demo with the full `base` and the shell from `qui-demo`, first set `uilibs` to both `base` and `qui-demo`, then run `add --all`. **The `--repo` flag is required** (without it, `--all` will not run). Alternative: add only selected components, e.g. `qui add button input`.
+3. **`qui generate-demo`** — e.g. with `--route-base /qui-demo` generates/updates the demo routes for the already-installed components.
 
-Pro udrzeni prehlednosti zde zustavaji **kanonicke CLI prikazy**; volitelne npm skripty (napr. jednim prikazem regenerovat ukazkovou aplikaci) mohou tyto kroky obalit **jen pro vyvoj v tomto repozitari** — viz [CONTRIBUTING.md](CONTRIBUTING.md).
+To keep things clear, the **canonical CLI commands** remain here; optional npm scripts (e.g. regenerating the example app with a single command) may wrap these steps **only for development in this repository** — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Nejbeznejsi priklady
+## Most common examples
 
 ```bash
 # 1) Initialize config
@@ -114,19 +114,19 @@ npx qui diff --repo acme --ci
 
 ## Global flags
 
-Podporovane globalni flagy v aktualnim parseru:
+Global flags supported by the current parser:
 
 - Bool: `--auto`, `--force`, `--dry-run`, `--yes`, `--json`, `--all`, `--ci`
 - Value: `--on-error`, `--repo`, `--url`, `--target-path`, `--components-root`, `--uilibs`, `--connected`, `--base-branch`, `--title`, `--route-base`, `--branch`, `--routes-dir`, `--components-dir`
 
-## Skripty v tomto repozitáři
+## Scripts in this repository
 
-V kořenovém `package.json`:
+In the root `package.json`:
 
-- `npm run qui -- ...` — spustí `qui` CLI (`node ./bin/qui.js`).
-- `npm test` — testy CLI (`test/*.test.js`).
-- `npm run generate-meta` — regenerace `meta.generated.json` pro zdroje v `./components`.
-- `npm publish` — publikace balíčku `qui-client` (obsah tarballu řídí pole `files` v `package.json`).
+- `npm run qui -- ...` — runs the `qui` CLI (`node ./bin/qui.js`).
+- `npm test` — CLI tests (`test/*.test.js`).
+- `npm run generate-meta` — regenerates `meta.generated.json` for the sources in `./components`.
+- `npm publish` — publishes the `qui-client` package (the tarball contents are controlled by the `files` field in `package.json`).
 
 ## Related docs
 

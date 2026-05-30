@@ -2,8 +2,8 @@
  * @component tabs
  * @title Tabs
  * @version 1.1.2
- * @example Složené API (stejná data jako TabsGroup)
- * `tabId` na triggeru a panelu se musí shodovat.
+ * @example Compound API (same data as TabsGroup)
+ * `tabId` on the trigger and panel must match.
  * ```tsx
  * import { Tab } from "~/components/ui/base/tabs";
  * 
@@ -14,75 +14,75 @@
  *     <Tab.Tab key="access">Accessibility</Tab.Tab>
  *   </Tab.List>
  *   <Tab.Panel key="overview">
- *     <p>Přehled základních informací o této sekci.</p>
+ *     <p>Overview of the basic information about this section.</p>
  *   </Tab.Panel>
  *   <Tab.Panel key="details">
- *     <p>Detailní popis a rozšířené možnosti.</p>
+ *     <p>Detailed description and advanced options.</p>
  *   </Tab.Panel>
  *   <Tab.Panel key="access">
- *     <p>Tipy pro přístupnost, klávesové zkratky a čtečky obrazovky.</p>
+ *     <p>Accessibility tips, keyboard shortcuts and screen readers.</p>
  *   </Tab.Panel>
  * </Tab.Root>
  * ```
  *
- * @example TabsGroup — vodorovně
- * Datová zkratka `TabsGroup` se stejnými záložkami jako u složeného API.
+ * @example TabsGroup — horizontal
+ * Data-driven shortcut `TabsGroup` with the same tabs as the compound API.
  * ```tsx
  * import { TabsGroup } from "~/components/ui/base/tabs";
  * 
  * const tabs = [
- *   { value: "overview", label: "Overview", content: "Přehled základních informací o této sekci." },
- *   { value: "details", label: "Details", content: "Detailní popis a rozšířené možnosti." },
- *   { value: "access", label: "Accessibility", content: "Tipy pro přístupnost, klávesové zkratky a čtečky obrazovky." },
+ *   { value: "overview", label: "Overview", content: "Overview of the basic information about this section." },
+ *   { value: "details", label: "Details", content: "Detailed description and advanced options." },
+ *   { value: "access", label: "Accessibility", content: "Accessibility tips, keyboard shortcuts and screen readers." },
  * ];
  * 
  * <TabsGroup tabs={tabs} defaultTabId="overview" />
  * ```
  *
- * @example TabsGroup — zakázaná položka
- * TabsGroup — zakázaná položka — viz ukázka níže.
+ * @example TabsGroup — disabled item
+ * TabsGroup — disabled item — see the example below.
  * ```tsx
  * import { TabsGroup } from "~/components/ui/base/tabs";
  * 
  * const tabs = [
- *   { value: "a", label: "Active A", content: "Obsah aktivní záložky A." },
- *   { value: "b", label: "Disabled", content: "Tento text se u zakázané záložky stejně nezobrazí.", disabled: true },
- *   { value: "c", label: "Active C", content: "Obsah aktivní záložky C." },
+ *   { value: "a", label: "Active A", content: "Content of active tab A." },
+ *   { value: "b", label: "Disabled", content: "This text won't be shown for a disabled tab anyway.", disabled: true },
+ *   { value: "c", label: "Active C", content: "Content of active tab C." },
  * ];
  * 
  * <TabsGroup tabs={tabs} defaultTabId="a" />
  * ```
  *
- * @example TabsGroup — svislý seznam
- * TabsGroup — svislý seznam — viz ukázka níže.
+ * @example TabsGroup — vertical list
+ * TabsGroup — vertical list — see the example below.
  * ```tsx
  * import { TabsGroup } from "~/components/ui/base/tabs";
  * 
  * const tabs = [
- *   { value: "overview", label: "Overview", content: "Přehled základních informací o této sekci." },
- *   { value: "details", label: "Details", content: "Detailní popis a rozšířené možnosti." },
- *   { value: "access", label: "Accessibility", content: "Tipy pro přístupnost, klávesové zkratky a čtečky obrazovky." },
+ *   { value: "overview", label: "Overview", content: "Overview of the basic information about this section." },
+ *   { value: "details", label: "Details", content: "Detailed description and advanced options." },
+ *   { value: "access", label: "Accessibility", content: "Accessibility tips, keyboard shortcuts and screen readers." },
  * ];
  * 
  * <TabsGroup tabs={tabs} vertical defaultTabId="overview" />
  * ```
  *
- * @example Varianta line
- * Podtržené záložky místo výchozích s rámečkem — `variant=&quot;line&quot;` na `Tab.Root` nebo `TabsGroup` .
+ * @example Line variant
+ * Underlined tabs instead of the default bordered ones — `variant=&quot;line&quot;` on `Tab.Root` or `TabsGroup` .
  * ```tsx
  * import { TabsGroup } from "~/components/ui/base/tabs";
  *
  * const tabs = [
- *   { value: "overview", label: "Overview", content: "Přehled základních informací o této sekci." },
- *   { value: "details", label: "Details", content: "Detailní popis a rozšířené možnosti." },
- *   { value: "access", label: "Accessibility", content: "Tipy pro přístupnost, klávesové zkratky a čtečky obrazovky." },
+ *   { value: "overview", label: "Overview", content: "Overview of the basic information about this section." },
+ *   { value: "details", label: "Details", content: "Detailed description and advanced options." },
+ *   { value: "access", label: "Accessibility", content: "Accessibility tips, keyboard shortcuts and screen readers." },
  * ];
  *
  * <TabsGroup tabs={tabs} defaultTabId="overview" variant="line" />
  * ```
  *
- * @example Složené API — svisle
- * Na `Tab.Root` nastav `vertical` a na `Tab.List` / `Tab.Panel` prop `verticalLayout` .
+ * @example Compound API — vertical
+ * Set `vertical` on `Tab.Root` and the `verticalLayout` prop on `Tab.List` / `Tab.Panel`.
  * ```tsx
  * import { Tab } from "~/components/ui/base/tabs";
  * 
@@ -92,10 +92,10 @@
  *     <Tab.Tab key="details">Details</Tab.Tab>
  *   </Tab.List>
  *   <Tab.Panel key="overview" verticalLayout>
- *     <p>Přehled základních informací o této sekci.</p>
+ *     <p>Overview of the basic information about this section.</p>
  *   </Tab.Panel>
  *   <Tab.Panel key="details" verticalLayout>
- *     <p>Detailní popis a rozšířené možnosti.</p>
+ *     <p>Detailed description and advanced options.</p>
  *   </Tab.Panel>
  * </Tab.Root>
  * ```
@@ -124,11 +124,11 @@ import {
   type Signal,
 } from "@builder.io/qwik";
 
-/** Default variant — vzhled odpovídá {@link https://qwikui.com/docs/styled/tabs | Qwik UI Styled Tabs}; barvy jsou tokeny z COLORS.md. */
+/** Default variant — appearance matches {@link https://qwikui.com/docs/styled/tabs | Qwik UI Styled Tabs}; colors are tokens from COLORS.md. */
 const triggerClass =
   "inline-flex items-center justify-center rounded-md border border-transparent px-2 py-1 font-medium whitespace-nowrap text-callout text-secondary-label ring-offset-background transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=selected]:border-separator-opaque data-[state=selected]:bg-surface-overlay data-[state=selected]:text-label data-[state=selected]:shadow-inner";
 
-/** Line variant — podtržené záložky; panel bez rámečku. */
+/** Line variant — underlined tabs; panel without a border. */
 const triggerClassLine =
   "inline-flex items-center justify-center relative rounded-none border-0 border-b-2 border-transparent bg-transparent px-3 py-2 font-medium whitespace-nowrap text-callout text-secondary-label ring-offset-background transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=selected]:border-accent data-[state=selected]:text-label data-[state=selected]:bg-transparent data-[state=selected]:shadow-none";
 
@@ -149,7 +149,7 @@ const listClassVertical =
   "inline-flex flex-col w-48 shrink-0 rounded-lg border border-separator-opaque bg-surface-raised p-1 text-secondary-label gap-1 shadow-sm";
 
 export type TabRootProps = Omit<PropsOf<"div">, "role"> & {
-  /** `line` — podtržené záložky, obsah bez rámečku; výchozí varianta má rámeček kolem listu i panelu. */
+  /** `line` — underlined tabs, content without a border; the default variant has a border around both the list and the panel. */
   variant?: "default" | "line";
   /** Controlled selected tab id. */
   selectedTabId?: string;
@@ -196,7 +196,7 @@ const autoTabIdContext = createContextId<Signal<number>>("q-ui-lib.tabs.auto-tab
 const autoPanelIdContext = createContextId<Signal<number>>("q-ui-lib.tabs.auto-panel-id");
 
 /**
- * Styled Tabs root — layout, tokeny z COLORS.md.
+ * Styled Tabs root — layout, tokens from COLORS.md.
  */
 export const TabRoot = component$<TabRootProps>((props) => {
   const {
@@ -585,8 +585,8 @@ export const TabPanelLine = component$<TabPanelProps>((props) => {
 });
 
 /**
- * Složené API ve stylu Qwik UI: {@link TabRoot}, {@link TabList}, {@link TabTrigger}, {@link TabPanel}
- * (v dokumentaci často `Tabs.*` — použij alias {@link Tabs}).
+ * Compound API in the Qwik UI style: {@link TabRoot}, {@link TabList}, {@link TabTrigger}, {@link TabPanel}
+ * (often `Tabs.*` in the documentation — use the {@link Tabs} alias).
  */
 export const Tab = {
   Root: TabRoot,
@@ -598,7 +598,7 @@ export const Tab = {
   PanelLine: TabPanelLine,
 };
 
-/** Alias pro `Tab` — stejné API jako `Tabs` v {@link https://qwikui.com/docs/styled/tabs | Qwik UI Styled}. */
+/** Alias for `Tab` — same API as `Tabs` in {@link https://qwikui.com/docs/styled/tabs | Qwik UI Styled}. */
 export const Tabs = Tab;
 
 export type TabItemData = {
@@ -616,7 +616,7 @@ export interface TabsGroupProps {
   behavior?: "automatic" | "manual";
   /** Vertical tab list and arrow-key navigation (Up/Down). */
   vertical?: boolean;
-  /** `line` — podtržené záložky, obsah bez rámečku. */
+  /** `line` — underlined tabs, content without a border. */
   variant?: TabRootProps["variant"];
   class?: string;
 }

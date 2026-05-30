@@ -2,37 +2,37 @@
  * @component separator
  * @title Separator
  * @version 1.0.0
- * @example Vodorovně
- * Výchozí `orientation=&quot;horizontal&quot;` — plná šířka kontejneru, výška 1&nbsp;px.
+ * @example Horizontal
+ * Default `orientation=&quot;horizontal&quot;` — full container width, height 1&nbsp;px.
  * ```tsx
  * import { Separator } from "~/components/ui/base/separator";
  * 
  * <div class="space-y-3">
- *   <p class="text-body text-label">Oddíl jedna</p>
+ *   <p class="text-body text-label">Section one</p>
  *   <Separator />
- *   <p class="text-body text-label">Oddíl dvě</p>
+ *   <p class="text-body text-label">Section two</p>
  * </div>
  * ```
  *
- * @example Svisle
- * V řádku použij `items-stretch` na flex kontejneru, aby čára měla výšku řádku.
+ * @example Vertical
+ * In a row use `items-stretch` on the flex container so the line has the row height.
  * ```tsx
  * import { Separator } from "~/components/ui/base/separator";
  * 
  * <div class="flex h-12 items-stretch gap-3">
- *   <span class="flex items-center text-callout text-label">Vlevo</span>
+ *   <span class="flex items-center text-callout text-label">Left</span>
  *   <Separator orientation="vertical" />
- *   <span class="flex items-center text-callout text-label">Vpravo</span>
+ *   <span class="flex items-center text-callout text-label">Right</span>
  * </div>
  * ```
  *
- * @example Dekorativní
- * `decorative` nastaví `role=&quot;none&quot;` — vhodné, když oddělovač není strukturální landmark.
+ * @example Decorative
+ * `decorative` sets `role=&quot;none&quot;` — suitable when the separator is not a structural landmark.
  * ```tsx
  * import { Separator } from "~/components/ui/base/separator";
  * 
  * <Separator decorative />
- * // role="none" — vypnuto z accessibility stromu (čistě vizuální)
+ * // role="none" — removed from the accessibility tree (purely visual)
  * ```
  
  
@@ -51,8 +51,8 @@ import { Separator as HeadlessSeparator } from "@qwik-ui/headless";
 export type SeparatorProps = PropsOf<typeof HeadlessSeparator>;
 
 /**
- * Vizuální oddělovač na {@link https://qwikui.com/docs/headless/separator | @qwik-ui/headless} s tokenem `bg-separator` (COLORS.md).
- * Výchozí je vodorovná čára; `orientation="vertical"` pro svislou v flex layoutu (ideálně s `items-stretch` na rodiči).
+ * Visual separator on {@link https://qwikui.com/docs/headless/separator | @qwik-ui/headless} with the `bg-separator` token (COLORS.md).
+ * The default is a horizontal line; `orientation="vertical"` for a vertical one in a flex layout (ideally with `items-stretch` on the parent).
  */
 export const Separator = component$<SeparatorProps>((props) => {
   const base =

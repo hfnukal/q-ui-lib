@@ -12,7 +12,7 @@ export default component$(() => {
   const copied = useSignal(false);
   const switchOn = useSignal(false);
 
-  // Aplikuj tokeny na <html> při každé změně
+  // Apply the tokens to <html> on every change
   useTask$(({ track }) => {
     const vals = track(() => values.value);
     if (typeof document === "undefined") return;
@@ -21,7 +21,7 @@ export default component$(() => {
     }
   });
 
-  // Cleanup — odeber inline styly při opuštění stránky
+  // Cleanup — remove the inline styles when leaving the page
   useVisibleTask$(({ cleanup }) => {
     cleanup(() => {
       for (const name of Object.keys(DEFAULT_VALUES)) {
@@ -48,12 +48,12 @@ export default component$(() => {
 
   return (
     <div class="space-y-6">
-      {/* Záhlaví */}
+      {/* Header */}
       <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 class="text-title-2 font-bold text-label">Theme Editor</h1>
           <p class="mt-1 text-callout text-secondary-label">
-            Upravuj CSS tokeny a okamžitě sleduj výsledek. Zkopíruj CSS blok do svého{" "}
+            Edit the CSS tokens and watch the result instantly. Copy the CSS block into your{" "}
             <code class="text-caption-1">global.css</code>.
           </p>
         </div>
@@ -61,7 +61,7 @@ export default component$(() => {
           <Button variant="secondary" onClick$={reset}>
             Reset
           </Button>
-          <Button onClick$={copyCss}>{copied.value ? "Zkopírováno!" : "Kopírovat CSS"}</Button>
+          <Button onClick$={copyCss}>{copied.value ? "Copied!" : "Copy CSS"}</Button>
         </div>
       </div>
 
@@ -82,7 +82,7 @@ export default component$(() => {
                         i !== 0 ? "border-t border-separator-opaque" : "",
                       ].join(" ")}
                     >
-                      {/* Color swatch — kliknutím otevře nativní picker */}
+                      {/* Color swatch — clicking opens the native picker */}
                       <label class="relative h-7 w-7 shrink-0 cursor-pointer overflow-hidden rounded-md border border-separator-opaque shadow-sm">
                         <span
                           class="absolute inset-0"
@@ -118,7 +118,7 @@ export default component$(() => {
                             [token.name]: (e.target as HTMLInputElement).value,
                           };
                         }}
-                        aria-label={`Hodnota tokenu ${token.name}`}
+                        aria-label={`Value of token ${token.name}`}
                       />
                     </div>
                   );
@@ -134,8 +134,8 @@ export default component$(() => {
 
           <Card.Root>
             <Card.Header>
-              <Card.Title>Ukázka komponent</Card.Title>
-              <Card.Description>Reagují živě na změny tokenů.</Card.Description>
+              <Card.Title>Component preview</Card.Title>
+              <Card.Description>They react live to token changes.</Card.Description>
             </Card.Header>
             <Card.Content class="space-y-4">
               {/* Buttons */}
@@ -154,13 +154,13 @@ export default component$(() => {
               </div>
 
               {/* Input */}
-              <Input placeholder="Ukázkový vstup…" />
+              <Input placeholder="Sample input…" />
 
               {/* Switch */}
               <div class="flex items-center gap-3">
-                <Switch bind:pressed={switchOn} aria-label="Ukázkový přepínač" />
+                <Switch bind:pressed={switchOn} aria-label="Sample switch" />
                 <span class="text-callout text-label">
-                  {switchOn.value ? "Zapnuto" : "Vypnuto"}
+                  {switchOn.value ? "On" : "Off"}
                 </span>
               </div>
             </Card.Content>
@@ -169,7 +169,7 @@ export default component$(() => {
           {/* Color palette swatch */}
           <div class="overflow-hidden rounded-xl border border-separator-opaque">
             <div class="px-4 py-3 text-caption-1 font-medium text-secondary-label">
-              Barevná paleta
+              Color palette
             </div>
             <div class="grid grid-cols-6 gap-0">
               {[
@@ -199,7 +199,7 @@ export default component$(() => {
           {/* Grays */}
           <div class="overflow-hidden rounded-xl border border-separator-opaque">
             <div class="px-4 py-3 text-caption-1 font-medium text-secondary-label">
-              Šedá stupnice
+              Gray scale
             </div>
             <div class="flex">
               {[

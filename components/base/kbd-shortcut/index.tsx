@@ -2,16 +2,16 @@
  * @component kbd-shortcut
  * @title KbdShortcut
  * @version 1.0.0
- * @example Základní použití
- * Základní použití — viz ukázka níže.
+ * @example Basic usage
+ * Basic usage — see the example below.
  * ```tsx
  * import { KbdShortcut } from "~/components/ui/base/kbd-shortcut";
  * 
  * <KbdShortcut>⌘K</KbdShortcut>
  * ```
  *
- * @example Více kláves
- * Více instancí vedle sebe pro víceznakové zkratky.
+ * @example Multiple keys
+ * Multiple instances side by side for multi-key shortcuts.
  * ```tsx
  * import { KbdShortcut } from "~/components/ui/base/kbd-shortcut";
  * 
@@ -22,14 +22,14 @@
  * </span>
  * ```
  *
- * @example Inline v textu
- * Zkratky vložené přímo do věty — čitelné vedle běžného textu.
+ * @example Inline in text
+ * Shortcuts placed directly into a sentence — readable alongside regular text.
  * ```tsx
  * import { KbdShortcut } from "~/components/ui/base/kbd-shortcut";
  * 
  * <p class="text-body text-secondary-label">
- *   Stiskni <KbdShortcut>⌘S</KbdShortcut> pro uložení nebo{" "}
- *   <KbdShortcut>Esc</KbdShortcut> pro zrušení.
+ *   Press <KbdShortcut>⌘S</KbdShortcut> to save or{" "}
+ *   <KbdShortcut>Esc</KbdShortcut> to cancel.
  * </p>
  * ```
  
@@ -48,8 +48,8 @@ import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 export type KbdShortcutProps = PropsOf<"kbd">;
 
 /**
- * Stylovaný `<kbd>` prvek pro zobrazení klávesových zkratek.
- * Obsah vkládej přes slot: `⌘K`, `Ctrl+S`, nebo více `<kbd>` vedle sebe.
+ * Styled `<kbd>` element for displaying keyboard shortcuts.
+ * Pass content via the slot: `⌘K`, `Ctrl+S`, or multiple `<kbd>` side by side.
  */
 export const KbdShortcut = component$<KbdShortcutProps>((props) => {
   const base =

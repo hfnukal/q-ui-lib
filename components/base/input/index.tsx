@@ -2,19 +2,19 @@
  * @component input
  * @title Input
  * @version 1.0.0
- * @example Základ
- * Základ — viz ukázka níže.
+ * @example Basics
+ * Basics — see the example below.
  * ```tsx
  * import { component$ } from "@builder.io/qwik";
  * import { Input } from "~/components/ui/base/input";
  * 
  * export default component$(() => (
- *   <Input type="text" placeholder="Zadejte text…" />
+ *   <Input type="text" placeholder="Enter text…" />
  * ));
  * ```
  *
- * @example Se štítkem
- * Se štítkem — viz ukázka níže.
+ * @example With label
+ * With label — see the example below.
  * ```tsx
  * import { Input } from "~/components/ui/base/input";
  * import { Label } from "~/components/ui/base/label";
@@ -25,19 +25,19 @@
  * </div>
  * ```
  *
- * @example Stavy
- * `disabled` a `readOnly` — vlastní chybové zobrazení řeš přes `class` nebo obal (např. border-destructive).
+ * @example States
+ * `disabled` and `readOnly` — handle custom error display via `class` or a wrapper (e.g. border-destructive).
  * ```tsx
  * import { Input } from "~/components/ui/base/input";
  * 
  * <div class="flex max-w-md flex-col gap-3">
- *   <Input placeholder="Běžný stav" />
+ *   <Input placeholder="Normal state" />
  *   <Input disabled value="Disabled" />
- *   <Input readOnly value="Jen ke čtení" />
+ *   <Input readOnly value="Read only" />
  * </div>
  * ```
- * @example Velikosti (variant)
- * Prop `variant`: `xl`, `lg`, `md` (výchozí), `sm`, `xs`.
+ * @example Sizes (variant)
+ * Prop `variant`: `xl`, `lg`, `md` (default), `sm`, `xs`.
  * ```tsx
  * import { Input } from "~/components/ui/base/input";
  *

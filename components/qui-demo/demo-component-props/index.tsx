@@ -20,7 +20,7 @@ function formatParamValue(v: unknown): string {
   return String(v);
 }
 
-/** Povrch apiTree jen s `params` / `slot` (primitive v meta). */
+/** apiTree surface with only `params` / `slot` (primitive in meta). */
 function isPrimitiveApiSurface(tree: Record<string, unknown>): boolean {
   const keys = Object.keys(tree);
   return keys.every((k) => k === "params" || k === "slot");
@@ -55,7 +55,7 @@ const ParamsTable = component$<{
             ].join(" ")}
           >
             <th class="py-1.5 pr-3 font-medium">Prop</th>
-            <th class="py-1.5 font-medium">Typ / hodnoty</th>
+            <th class="py-1.5 font-medium">Type / values</th>
           </tr>
         </thead>
         <tbody>
@@ -76,7 +76,7 @@ const ParamsTable = component$<{
   );
 });
 
-/** Jedna větev compound API — bez `slot`, vizuální strom. */
+/** One branch of the compound API — without `slot`, a visual tree. */
 const StructurePart = component$<{
   name: string;
   node: Record<string, unknown>;
@@ -155,7 +155,7 @@ const CompoundStructure = component$<{ apiTree: Record<string, unknown> }>(
     if (roots.length === 0) {
       return (
         <p class="text-caption-1 text-tertiary-label">
-          Ve struktuře nejsou žádné díly.
+          There are no parts in the structure.
         </p>
       );
     }
@@ -199,14 +199,14 @@ const ApiStructureBlock = component$<{ meta: MetaGenerated }>((props) => {
     return (
       <div>
         <h4 class="text-caption-1 font-medium text-secondary-label">
-          Veřejné props
+          Public props
         </h4>
         <div class="mt-2 rounded-xl border border-separator-opaque bg-surface-raised/40 p-4 shadow-sm">
           {hasParams ? (
             <ParamsTable params={paramsOnly!} />
           ) : (
             <p class="text-caption-1 text-tertiary-label">
-              V meta není tabulka props (prázdné{" "}
+              There is no props table in meta (empty{" "}
               <code class="text-caption-1">params</code>).
             </p>
           )}
@@ -218,10 +218,10 @@ const ApiStructureBlock = component$<{ meta: MetaGenerated }>((props) => {
   return (
     <div>
       <h4 class="text-caption-1 font-medium text-secondary-label">
-        Složení (compound)
+        Composition (compound)
       </h4>
       <p class="mt-1 text-caption-1 text-tertiary-label">
-        Díly API bez generátorových položek typu <code class="text-caption-1">slot</code>.
+        API parts without generator items of type <code class="text-caption-1">slot</code>.
       </p>
       <div class="mt-3">
         <CompoundStructure apiTree={tree} />
@@ -280,7 +280,7 @@ const MetaResolved = component$<{ meta: MetaGenerated }>((props) => {
 
 export interface ComponentPropsTableProps {
   /**
-   * Cesta k `.tsx` relativně ke kořenu dema, např.
+   * Path to the `.tsx` relative to the demo root, e.g.
    * `src/components/ui/button/index.tsx`.
    */
   filePath: string;
@@ -288,7 +288,7 @@ export interface ComponentPropsTableProps {
 }
 
 /**
- * Načte `meta.generated.json` vedle komponenty a zobrazí registry metadata (apiTree, verze, …).
+ * Loads `meta.generated.json` next to the component and displays the registry metadata (apiTree, version, …).
  */
 export const ComponentPropsTable = component$<ComponentPropsTableProps>(
   (props) => {
@@ -302,13 +302,13 @@ export const ComponentPropsTable = component$<ComponentPropsTableProps>(
       <div class={props.class}>
         <h3 class="text-base font-semibold text-label">Metadata</h3>
         <p class="mt-1 text-callout text-secondary-label">
-          Zdroj: <code class="text-xs">meta.generated.json</code> (viz{" "}
+          Source: <code class="text-xs">meta.generated.json</code> (see{" "}
           <code class="text-xs">npm run generate</code>)
         </p>
         <Resource
           value={resource}
           onPending={() => (
-            <p class="mt-3 text-sm text-tertiary-label">Načítám metadata…</p>
+            <p class="mt-3 text-sm text-tertiary-label">Loading metadata…</p>
           )}
           onRejected={(err) => (
             <p class="mt-3 text-sm text-system-red">{err.message}</p>
@@ -318,11 +318,11 @@ export const ComponentPropsTable = component$<ComponentPropsTableProps>(
               <MetaResolved meta={meta} />
             ) : (
               <p class="mt-3 text-sm text-tertiary-label">
-                Soubor{" "}
+                File{" "}
                 <code class="text-xs">
                   {props.filePath.replace(/index\.tsx$/, "meta.generated.json")}
                 </code>{" "}
-                nenalezen nebo nepovolená cesta.
+                not found or path not allowed.
               </p>
             )
           }

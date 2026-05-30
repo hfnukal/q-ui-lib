@@ -2,9 +2,9 @@
  * @component file-input
  * @title FileInput
  * @version 1.0.0
- * @example Celá obrazovka (fullScreen)
- * Překryje viewport (`fixed`), implicitně `noDropBorder`. Overlay jen při přetahování souborů z OS (ne textu odkudkoliv).
- * Na stránce s více zónami ho zapínejte podmíněně (např. checkbox), jinak přepíše celou stránku.
+ * @example Full screen (fullScreen)
+ * Covers the viewport (`fixed`), implicitly `noDropBorder`. Overlay only when dragging files from the OS (not text from anywhere).
+ * On a page with multiple zones, enable it conditionally (e.g. a checkbox), otherwise it will override the whole page.
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
  * import { FileInput } from "~/components/ui/base/file-input";
@@ -22,10 +22,10 @@
  *             enabled.value = el.checked;
  *           })}
  *         />
- *         Zapnout celoplošný drop (překryje náhledy níže)
+ *         Enable full-screen drop (overlays the previews below)
  *       </label>
  *       {enabled.value ? (
- *         <FileInput.DropArea fullScreen dropLabel="Pusťte soubory">
+ *         <FileInput.DropArea fullScreen dropLabel="Drop files">
  *           <FileInput.Input name="fullscreen-demo" hidden multiple />
  *         </FileInput.DropArea>
  *       ) : null}
@@ -34,70 +34,70 @@
  * });
  * ```
  *
- * @example Drop zóna + skrytý input
- * Při drag over se změní okraj a pozadí; přes zónu je text z `dropLabel`.
+ * @example Drop zone + hidden input
+ * On drag over the border and background change; the text from `dropLabel` appears over the zone.
  * ```tsx
  * import { FileInput } from "~/components/ui/base/file-input";
  * 
- * <FileInput.DropArea dropLabel="Pusťte soubor sem" class="max-w-lg">
+ * <FileInput.DropArea dropLabel="Drop a file here" class="max-w-lg">
  *   <FileInput.Input name="doc" hidden accept=".pdf,.png" />
  * </FileInput.DropArea>
  * ```
  *
- * @example Více souborů (skrytý input)
- * Více souborů přes `multiple` na skrytém inputu.
+ * @example Multiple files (hidden input)
+ * Multiple files via `multiple` on the hidden input.
  * ```tsx
  * import { FileInput } from "~/components/ui/base/file-input";
  * 
- * <FileInput.DropArea dropLabel="Pusťte jeden nebo více souborů" class="max-w-lg">
+ * <FileInput.DropArea dropLabel="Drop one or more files" class="max-w-lg">
  *   <FileInput.Input name="demo-multi" hidden multiple />
  * </FileInput.DropArea>
  * ```
  *
- * @example Více souborů (viditelný input)
- * Stejné rozhraní s viditelným file inputem v obsahu zóny.
+ * @example Multiple files (visible input)
+ * The same interface with a visible file input in the zone content.
  * ```tsx
  * import { FileInput } from "~/components/ui/base/file-input";
  *
- * <FileInput.DropArea dropLabel="Pusťte jeden nebo více souborů" class="max-w-lg">
+ * <FileInput.DropArea dropLabel="Drop one or more files" class="max-w-lg">
  *   <FileInput.Input name="demo-multi" multiple />
  * </FileInput.DropArea>
  * ```
  *
- * @example Bez překrytí (noDropOverlay)
- * `noDropOverlay` zvýrazní jen okraj při dragu — bez poloprůhledné plochy s textem.
+ * @example Without overlay (noDropOverlay)
+ * `noDropOverlay` highlights only the border during a drag — without the semi-transparent area with text.
  * ```tsx
  * import { FileInput } from "~/components/ui/base/file-input";
  *
  * <FileInput.DropArea noDropOverlay class="max-w-lg">
- *   <p class="mb-3 text-callout text-secondary-label">Přetáhněte soubor nebo klikněte níže.</p>
+ *   <p class="mb-3 text-callout text-secondary-label">Drag a file here or click below.</p>
  *   <FileInput.Input name="nodrop-overlay" hidden />
  * </FileInput.DropArea>
  * ```
  *
- * @example Bez rámečku (noDropBorder)
- * `noDropBorder` odstraní rámeček i padding — jen obsah v čisté ploše; overlay je automaticky vypnutý.
+ * @example Without border (noDropBorder)
+ * `noDropBorder` removes the border and padding — just the content in a clean area; the overlay is turned off automatically.
  * ```tsx
  * import { FileInput } from "~/components/ui/base/file-input";
  *
  * <FileInput.DropArea noDropBorder class="max-w-lg">
- *   <p class="text-callout text-secondary-label">Sem přetáhněte soubor, nebo klikněte níže.</p>
+ *   <p class="text-callout text-secondary-label">Drag a file here, or click below.</p>
  *   <FileInput.Input name="nodrop-border" hidden />
  * </FileInput.DropArea>
  * ```
  *
- * @example Velikosti (variant)
- * Prop `variant`: `xl`, `lg`, `md` (výchozí), `sm`, `xs`.
+ * @example Sizes (variant)
+ * Prop `variant`: `xl`, `lg`, `md` (default), `sm`, `xs`. `FileInput.Input` reads context from `FileInput.DropArea`, so wrap it in a `DropArea` (`noDropBorder` keeps it frameless).
  * ```tsx
  * import { FileInput } from "~/components/ui/base/file-input";
  *
- * <div class="flex flex-col gap-4">
- *   <FileInput.Input variant="xl" placeholder="Extra Large" />
- *   <FileInput.Input variant="lg" placeholder="Large" />
- *   <FileInput.Input variant="md" placeholder="Medium (Default)" />
- *   <FileInput.Input variant="sm" placeholder="Small" />
- *   <FileInput.Input variant="xs" placeholder="Extra Small" />
- * </div>
+ * <FileInput.DropArea noDropBorder class="flex flex-col gap-4">
+ *   <FileInput.Input variant="xl" />
+ *   <FileInput.Input variant="lg" />
+ *   <FileInput.Input variant="md" />
+ *   <FileInput.Input variant="sm" />
+ *   <FileInput.Input variant="xs" />
+ * </FileInput.DropArea>
  * ```
  */
 
@@ -118,9 +118,9 @@ import {
 } from "@builder.io/qwik";
 
 export interface FileInputContextValue {
-  /** Ref na `<input type="file">` uvnitř DropArea — při dropu se sem nastaví soubory. */
+  /** Ref to the `<input type="file">` inside DropArea — files are set here on drop. */
   inputRef: Signal<HTMLInputElement | undefined>;
-  /** Názvy souborů z posledního dropu — spolehlivá alternativa k `input.files` (které může prohlížeč blokovat). */
+  /** File names from the last drop — a reliable alternative to `input.files` (which the browser may block). */
   droppedLabel: Signal<string>;
 }
 
@@ -131,12 +131,12 @@ function formatFileList(files: FileList | null | undefined): string {
   return Array.from(files, (f) => f.name).join(", ");
 }
 
-/** Selektor hosta `DropArea` s `fullScreen` — `sync$` smí používat jen literály, ne importy. */
+/** Selector for the `DropArea` host with `fullScreen` — `sync$` may use only literals, not imports. */
 const FILE_INPUT_FS_HOST_SEL = "[data-q-ui-file-input-fullscreen]";
 
 /**
- * Pro `fullScreen`: posluchače na `document` a `window`, aby šlo soubor pustit kdekoli na stránce
- * (ne jen na uzel uvnitř Tabu / oříznutého kontejneru). Bez toho může `fixed` host dostat jen část viewportu.
+ * For `fullScreen`: listeners on `document` and `window` so a file can be dropped anywhere on the page
+ * (not just on a node inside a Tab / clipped container). Without this, the `fixed` host may receive only part of the viewport.
  */
 const FileInputFullscreenDocumentHooks = component$<{
   dragDepth: Signal<number>;
@@ -223,33 +223,33 @@ const FileInputFullscreenDocumentHooks = component$<{
 });
 
 export type FileInputDropAreaProps = Omit<PropsOf<"div">, "class"> & {
-  /** Text při přetažení nad zónou (překrytí). */
+  /** Text shown when dragging over the zone (overlay). */
   dropLabel?: string;
   noFrame?: boolean;
   /**
-   * Zóna přes celý viewport (`fixed inset-0`, vysoký `z-index`). Nastaví se `noDropBorder`.
-   * Přidá posluchače na `document` a `window`, aby šlo soubor pustit kdekoli na stránce (ne jen na uzel v oříznutém rodiči).
-   * Overlay (pokud není `noDropOverlay`) jen při dragu souborů (`Files` v `dataTransfer.types`).
+   * Zone covering the whole viewport (`fixed inset-0`, high `z-index`). Sets `noDropBorder`.
+   * Adds listeners on `document` and `window` so a file can be dropped anywhere on the page (not just on a node in a clipped parent).
+   * Overlay (unless `noDropOverlay`) only when dragging files (`Files` in `dataTransfer.types`).
    */
   fullScreen?: boolean;
   /**
-   * Skryje poloprůhledné překrytí s textem při dragu — zvýrazní jen okraj.
-   * Nahrazuje `dropOverlay={false}`.
+   * Hides the semi-transparent overlay with text during a drag — highlights only the border.
+   * Replaces `dropOverlay={false}`.
    */
   noDropOverlay?: boolean;
   /**
-   * Skryje rámeček a padding zóny — čistá plocha bez vizuálního ohraničení.
-   * Automaticky aktivuje `noDropOverlay`.
+   * Hides the zone's border and padding — a clean area without a visual boundary.
+   * Automatically enables `noDropOverlay`.
    */
   noDropBorder?: boolean;
-  /** @deprecated Použij `noDropOverlay`. */
+  /** @deprecated Use `noDropOverlay`. */
   dropOverlay?: boolean;
   class?: string;
 };
 
 /**
- * Zóna drag-and-drop; poskytuje kontext pro {@link FileInputInput}.
- * Při `dragover` zvýrazní okraj a pozadí a zobrazí `dropLabel` (u `fullScreen` jen při dragu souborů z OS).
+ * Drag-and-drop zone; provides context for {@link FileInputInput}.
+ * On `dragover` it highlights the border and background and shows `dropLabel` (for `fullScreen` only when dragging files from the OS).
  */
 export const FileInputDropArea = component$<FileInputDropAreaProps>((props) => {
   const {
@@ -263,14 +263,14 @@ export const FileInputDropArea = component$<FileInputDropAreaProps>((props) => {
     ...rest
   } = props;
   const effectiveNoDropBorder = !!noDropBorder || !!fullScreen;
-  /** Klasická zóna: overlay při jakémkoli dragu. fullScreen: overlay jen při dragu souborů (viz `fileTypesDrag`). */
+  /** Classic zone: overlay on any drag. fullScreen: overlay only when dragging files (see `fileTypesDrag`). */
   const overlayAllowedNonFs = !noDropOverlay && !noDropBorder && dropOverlay !== false;
   const overlayAllowedFs = !!fullScreen && !noDropOverlay && dropOverlay !== false;
 
   const inputRef = useSignal<HTMLInputElement | undefined>();
   const droppedLabel = useSignal("");
   const dragDepth = useSignal(0);
-  /** Jen při `fullScreen`: true když `dataTransfer` nese soubory (typ `Files`). */
+  /** Only for `fullScreen`: true when `dataTransfer` carries files (type `Files`). */
   const fileTypesDrag = useSignal(false);
 
   useContextProvider(fileInputContextId, { inputRef, droppedLabel });
@@ -317,9 +317,9 @@ export const FileInputDropArea = component$<FileInputDropAreaProps>((props) => {
                 if (dragDepth.value === 0) fileTypesDrag.value = false;
               }),
               /**
-               * Qwik spouští handlery asynchronně — `dataTransfer.files` pak často není k dispozici.
-               * Soubory musíme přečíst a přiřadit inputu synchronně (`sync$`); viz cookbook Drag & Drop.
-               * `sync$` nesmí volat importované funkce — logika přiřazení je zde inline.
+               * Qwik runs handlers asynchronously — `dataTransfer.files` is then often unavailable.
+               * We must read the files and assign them to the input synchronously (`sync$`); see the Drag & Drop cookbook.
+               * `sync$` must not call imported functions — the assignment logic is inline here.
                */
               onDrop$: [
                 sync$((e: DragEvent, currentTarget: HTMLElement) => {
@@ -368,9 +368,9 @@ export const FileInputDropArea = component$<FileInputDropAreaProps>((props) => {
 
 export type FileInputInputProps = Omit<PropsOf<"input">, "type" | "class"> & {
   type?: "file";
-  /** Skryje vizuálně input (`sr-only`); vybrané soubory zobrazí jako text pod ním (i po dropu). */
+  /** Visually hides the input (`sr-only`); shows the selected files as text below it (also after a drop). */
   hidden?: boolean;
-  /** Zobrazí název souboru pod inputem. */
+  /** Shows the file name below the input. */
   hideFileName?: boolean;
   class?: string;
   /**
@@ -399,12 +399,15 @@ const fileInputVariants = {
 const srOnlyClass = "sr-only";
 
 /**
- * Nativní `input type="file"` ve stylu Input; uvnitř {@link FileInputDropArea} při dropu přijme soubory.
- * S `hidden` zůstane přístupný pro AT a formulář; název souboru se zobrazí pod ním.
+ * Native `input type="file"` styled like Input; inside {@link FileInputDropArea} it accepts files on drop.
+ * With `hidden` it stays accessible to AT and the form; the file name is shown below it.
+ * Must be rendered inside a {@link FileInputDropArea}, which provides its context.
  *
- * @example Velikosti (variant)
+ * @example Sizes (variant)
  * ```tsx
- * <FileInput.Input variant="sm" />
+ * <FileInput.DropArea noDropBorder>
+ *   <FileInput.Input variant="sm" />
+ * </FileInput.DropArea>
  * ```
  */
 export const FileInputInput = component$<FileInputInputProps>((props) => {
@@ -475,7 +478,7 @@ export const FileInputInput = component$<FileInputInputProps>((props) => {
   );
 });
 
-/** Složené API: `FileInput.DropArea` + `FileInput.Input`. */
+/** Compound API: `FileInput.DropArea` + `FileInput.Input`. */
 export const FileInput = {
   DropArea: FileInputDropArea,
   Input: FileInputInput,

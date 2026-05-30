@@ -2,8 +2,8 @@
  * @component stack
  * @title Stack
  * @version 1.0.0
- * @example Sloupec
- * Sloupec ( `direction=&quot;column&quot;` ), mezery přes `gap`.
+ * @example Column
+ * Column ( `direction=&quot;column&quot;` ), spacing via `gap`.
  * ```tsx
  * import { Stack } from "~/components/ui/base/stack";
  * 
@@ -13,14 +13,14 @@
  * </Stack>
  * ```
  *
- * @example Řádek
- * Řádek se zarovnáním na střed a rozložením `justify=&quot;between&quot;`.
+ * @example Row
+ * A row aligned to the center and distributed with `justify=&quot;between&quot;`.
  * ```tsx
  * import { Stack } from "~/components/ui/base/stack";
  * 
  * <Stack direction="row" gap={2} align="center" justify="between" class="w-full max-w-md">
- *   <span class="text-callout">Vlevo</span>
- *   <span class="text-callout">Vpravo</span>
+ *   <span class="text-callout">Left</span>
+ *   <span class="text-callout">Right</span>
  * </Stack>
  * ```
  

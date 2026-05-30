@@ -2,8 +2,8 @@
  * @component progress
  * @title Progress
  * @version 1.0.0
- * @example Složené API
- * `Progress.Root` + `Progress.Indicator` — ukázka s periodickou změnou hodnoty (simulace načítání).
+ * @example Composite API
+ * `Progress.Root` + `Progress.Indicator` — an example with a periodically changing value (simulating loading).
  * ```tsx
  * import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
  * import { Progress } from "~/components/ui/base/progress";
@@ -26,23 +26,23 @@
  * ```
  *
  * @example ProgressBar
- * Zkratka se stejným vzhledem — vnitřně kořen + indikátor.
+ * A shortcut with the same look — internally root + indicator.
  * ```tsx
  * import { ProgressBar } from "~/components/ui/base/progress";
  * 
  * <ProgressBar value={66} class="max-w-md" />
  * ```
  *
- * @example Neurčitý stav
- * `value=&#123;null&#125;` → `data-progress=&quot;indeterminate&quot;` a zkrácený segment s pulzováním.
+ * @example Indeterminate state
+ * `value=&#123;null&#125;` → `data-progress=&quot;indeterminate&quot;` and a shortened pulsing segment.
  * ```tsx
  * import { ProgressBar } from "~/components/ui/base/progress";
  * 
  * <ProgressBar value={null} class="max-w-md" />
  * ```
  *
- * @example Vázaná hodnota
- * `bind:value` na signál spolu se `Slider`.
+ * @example Bound value
+ * `bind:value` to a signal together with a `Slider`.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
  * import { ProgressBar } from "~/components/ui/base/progress";
@@ -54,7 +54,7 @@
  *     <div class="max-w-md space-y-4">
  *       <ProgressBar bind:value={v} />
  *       <Slider
- *         label="Hodnota"
+ *         label="Value"
  *         value={v.value}
  *         onChange$={(n) => {
  *           v.value = n;
@@ -94,7 +94,7 @@ export type ProgressRootProps = PropsOf<typeof HeadlessProgress.Root>;
 export type ProgressIndicatorProps = PropsOf<typeof HeadlessProgress.Indicator>;
 
 /**
- * {@link https://qwikui.com/docs/headless/progress | Progress.Root} — role `progressbar`, `value` / `bind:value`, `null` = neurčitý stav.
+ * {@link https://qwikui.com/docs/headless/progress | Progress.Root} — role `progressbar`, `value` / `bind:value`, `null` = indeterminate state.
  */
 export const ProgressRoot = component$<ProgressRootProps>((props) => {
   const merged = [rootClass, props.class].filter(Boolean).join(" ");
@@ -106,8 +106,8 @@ export const ProgressRoot = component$<ProgressRootProps>((props) => {
 });
 
 /**
- * Výplň pruhu; šířku určuje headless přes `transform` (kromě `data-progress=indeterminate`, kde je užší segment s `animate-pulse`).
- * {@link https://github.com/QwikDev/qwik/issues/3531 | Context + Slot}: samostatný `component$` pod `Progress.Root` v Qwiku často nedostane `ProgressContext` z headless kořene — proto `FunctionComponent` (jako u `Tab.List` v `components/tabs`).
+ * Bar fill; the width is set by headless via `transform` (except `data-progress=indeterminate`, where there is a narrower segment with `animate-pulse`).
+ * {@link https://github.com/QwikDev/qwik/issues/3531 | Context + Slot}: a standalone `component$` under `Progress.Root` in Qwik often does not receive `ProgressContext` from the headless root — hence `FunctionComponent` (as with `Tab.List` in `components/tabs`).
  */
 export const ProgressIndicator: FunctionComponent<ProgressIndicatorProps> = (
   props,
@@ -124,7 +124,7 @@ export const Progress = {
 export type ProgressBarProps = ProgressRootProps;
 
 /**
- * Kořen + indikátor v jednom `component$` přímo nad headlessem — spolehlivý kontext pro `bind:value` a vnoření ve skrytých tab panelech (bez `ProgressRoot` → `Slot` → další `component$`).
+ * Root + indicator in a single `component$` directly over headless — reliable context for `bind:value` and nesting inside hidden tab panels (without `ProgressRoot` → `Slot` → another `component$`).
  */
 export const ProgressBar = component$<ProgressBarProps>((props) => {
   const { class: className, ...rest } = props;

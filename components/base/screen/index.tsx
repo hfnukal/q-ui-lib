@@ -2,8 +2,8 @@
  * @component screen
  * @title Screen
  * @version 1.0.0
- * @example Základ
- * Náhled je omezený výškou — komponenta sama je na celý viewport.
+ * @example Basic
+ * The preview is height-constrained — the component itself spans the full viewport.
  * ```tsx
  * import { Screen } from "~/components/ui/base/screen";
  * 
@@ -15,8 +15,8 @@
  * </Screen>
  * ```
  *
- * @example Skladba Layout
- * `Screen` + `Split` + `Stack` + `ScrollArea` + `Box` — v náhledu omez výšku (např. `class="h-[32rem]"`); dlouhý obsah + `keepScroll` na `ScrollArea.Pane`.
+ * @example Layout composition
+ * `Screen` + `Split` + `Stack` + `ScrollArea` + `Box` — in the preview constrain the height (e.g. `class="h-[32rem]"`); long content + `keepScroll` on `ScrollArea.Pane`.
  * ```tsx
  * import { Box } from "~/components/ui/base/box";
  * import { ScrollArea } from "~/components/ui/base/scroll-area";
@@ -44,7 +44,7 @@
  *           keepScrollId="screen-layout-demo"
  *         >
  *           <Box padding="md" background="grouped" rounded="lg" class="space-y-3">
- *             <p>Hlavní obsah — odstavec 1.</p>
+ *             <p>Main content — paragraph 1.</p>
  *             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
  *             <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
  *             <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
@@ -55,7 +55,7 @@
  *             <p>Fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae.</p>
  *             <p>Ultricies eget, tempor sit amet, ante. Donec eu libero sit amet.</p>
  *             <p>Quam blandit euismod. Risus condimentum orci, eget eleifend nibh.</p>
- *             <p>Poslední blok — měl by být po scrollu vidět až sem.</p>
+ *             <p>Last block — it should be visible all the way down here after scrolling.</p>
  *           </Box>
  *         </ScrollArea.Pane>
  *       </Stack>
@@ -81,8 +81,8 @@ export type ScreenProps = PropsOf<"div">;
 /**
  * Viewport root: full screen, no body scroll, column flex (LAYOUT.md).
  * Compose with {@link ScrollArea} for inner scroll.
- * Root je pevně `<div>` (`PropsOf<"div">`) a nepodporuje změnu tagu.
- * Nevkládejte do `<p>` ani `<pre>`.
+ * The root is fixed to `<div>` (`PropsOf<"div">`) and does not support changing the tag.
+ * Do not place inside `<p>` or `<pre>`.
  */
 export const Screen = component$<ScreenProps>((props) => {
   const { class: className, ...rest } = props;

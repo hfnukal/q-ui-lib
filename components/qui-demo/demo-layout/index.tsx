@@ -7,7 +7,7 @@ import { ComponentPropsTable } from "../demo-component-props";
 import { Screen } from "../../base/screen";
 import { Input } from "../../base/input";
 
-/** Vite: seznam route modulů bez čtení disku za běhu (funguje i v prohlížeči po bundlu). */
+/** Vite: list of route modules without reading the disk at runtime (works in the browser after bundling too). */
 const COMPONENT_SLUGS: string[] = Object.keys(
   import.meta.glob(["../../*/*/index.tsx", "!../../qui-demo/**"]),
 )
@@ -75,7 +75,7 @@ const menuTriggerIcon = (
 );
 
 /**
- * Tělo layoutu uvnitř `Sidebar.Provider` — potřebuje `useSidebar()` pro zkratky ve sbaleném panelu.
+ * Layout body inside `Sidebar.Provider` — needs `useSidebar()` for abbreviations in the collapsed panel.
  */
 const DemoShellWithSidebar = component$(() => {
   const loc = useLocation();
@@ -111,8 +111,8 @@ const DemoShellWithSidebar = component$(() => {
           <div class={collapsed ? "md:hidden" : ""}>
             <Input
               type="search"
-              aria-label="Filtrovat komponenty podle názvu"
-              placeholder="Hledat komponentu…"
+              aria-label="Filter components by name"
+              placeholder="Search component…"
               value={componentFilter.value}
               class="h-9 w-full min-w-0 text-caption"
               onInput$={(e) => {
@@ -233,7 +233,7 @@ export default component$(() => {
   const loc = useLocation();
   const current = normalizePath(loc.url.pathname);
 
-  /** `/design` a `/dsgn` mají vlastní full-screen shell — bez demo postranního panelu. */
+  /** `/design` and `/dsgn` have their own full-screen shell — without the demo side panel. */
   if (current === "/design" || current === "/dsgn") {
     return <Slot />;
   }
@@ -242,7 +242,7 @@ export default component$(() => {
     <Screen>
       <Sonner.Toaster>
         <Sidebar.Provider class="min-h-screen bg-background text-label md:min-h-svh">
-          {/* Router outlet musí být předán jako child — vnitřní <Slot /> v DemoShellWithSidebar jinak nic nepromítne. */}
+          {/* The router outlet must be passed as a child — the inner <Slot /> in DemoShellWithSidebar otherwise renders nothing. */}
           <DemoShellWithSidebar>
             <Slot />
           </DemoShellWithSidebar>

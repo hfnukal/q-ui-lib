@@ -2,8 +2,8 @@
  * @component radio-group
  * @title RadioGroup
  * @version 1.0.0
- * @example Základní použití
- * Základní použití — viz ukázka níže.
+ * @example Basic usage
+ * Basic usage — see the example below.
  * ```tsx
  * import { RadioGroup } from "~/components/ui/base/radio-group";
  * 
@@ -14,8 +14,8 @@
  * </RadioGroup.Root>
  * ```
  *
- * @example Vodorovné rozložení
- * Přidej `class="flex-row flex-wrap gap-4"` na Root.
+ * @example Horizontal layout
+ * Add `class="flex-row flex-wrap gap-4"` on the Root.
  * ```tsx
  * <RadioGroup.Root class="flex-row flex-wrap gap-4">
  *   <RadioGroup.Item name="size" value="sm" label="Small" />
@@ -24,8 +24,8 @@
  * </RadioGroup.Root>
  * ```
  *
- * @example Disabled položka
- * Jedna z položek může být nedostupná přes `disabled`.
+ * @example Disabled item
+ * One of the items can be made unavailable via `disabled`.
  * ```tsx
  * <RadioGroup.Root>
  *   <RadioGroup.Item name="tier" value="basic" label="Basic" />
@@ -48,7 +48,7 @@ import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 
 export type RadioGroupRootProps = PropsOf<"div">;
 
-/** Kontejner skupiny radio tlačítek (`role="radiogroup"`). */
+/** Container for a group of radio buttons (`role="radiogroup"`). */
 export const RadioGroupRoot = component$<RadioGroupRootProps>((props) => {
   const { class: className, ...rest } = props;
   const base = "flex flex-col gap-2";
@@ -61,13 +61,13 @@ export const RadioGroupRoot = component$<RadioGroupRootProps>((props) => {
 });
 
 export interface RadioGroupItemProps extends Omit<PropsOf<"input">, "type"> {
-  /** Viditelný popisek vedle radio vstupu. */
+  /** Visible label next to the radio input. */
   label?: string;
 }
 
 /**
- * Nativní `<input type="radio">` s volitelným `label`. Pro sdílení `name` mezi
- * položkami předej `name` přímo každé `Item` nebo přes HTML `<form>`.
+ * Native `<input type="radio">` with an optional `label`. To share `name` between
+ * items, pass `name` directly to each `Item` or via an HTML `<form>`.
  */
 export const RadioGroupItem = component$<RadioGroupItemProps>((props) => {
   const { label, class: className, id, ...rest } = props;
@@ -92,7 +92,7 @@ export const RadioGroupItem = component$<RadioGroupItemProps>((props) => {
   );
 });
 
-/** Složené API: `RadioGroup.Root` + `RadioGroup.Item`. */
+/** Composite API: `RadioGroup.Root` + `RadioGroup.Item`. */
 export const RadioGroup = {
   Root: RadioGroupRoot,
   Item: RadioGroupItem,

@@ -2,75 +2,75 @@
  * @component dialog
  * @title Dialog
  * @version 1.0.3
- * @example Základní dialog
- * Základní dialog — viz ukázka níže.
+ * @example Basic dialog
+ * Basic dialog — see the example below.
  * ```tsx
  * import { Dialog } from "~/components/ui/base/dialog";
  * import { Button } from "~/components/ui/base/button";
  * 
  * <Dialog.Root>
- *   <Dialog.Trigger>Otevřít dialog</Dialog.Trigger>
+ *   <Dialog.Trigger>Open dialog</Dialog.Trigger>
  *   <Dialog.Panel>
  *     <Dialog.Close class="absolute right-4 top-4 z-10" />
  *     <Dialog.Header>
- *       <Dialog.Title>Upravit profil</Dialog.Title>
+ *       <Dialog.Title>Edit profile</Dialog.Title>
  *       <Dialog.Description>
- *         Zde můžeš změnit údaje zobrazené ostatním uživatelům.
+ *         Here you can change the details shown to other users.
  *       </Dialog.Description>
  *     </Dialog.Header>
  *     <Dialog.Content>
- *       <p class="text-callout text-secondary-label">Hlavní obsah dialogu.</p>
+ *       <p class="text-callout text-secondary-label">Main dialog content.</p>
  *     </Dialog.Content>
  *     <Dialog.Footer>
  *       <Dialog.Close class="rounded-md border border-separator-opaque bg-surface-raised px-4 py-2 text-callout font-medium text-label shadow-sm hover:bg-surface-overlay">
- *         Zrušit
+ *         Cancel
  *       </Dialog.Close>
- *       <Button>Uložit</Button>
+ *       <Button>Save</Button>
  *     </Dialog.Footer>
  *   </Dialog.Panel>
  * </Dialog.Root>
  * ```
  *
  * @example Alert dialog
- * Na `Dialog.Root` nastav `alert` — headless nastaví `role=&quot;alertdialog&quot;` a vypne zavření klikem na pozadí.
+ * Set `alert` on `Dialog.Root` — headless sets `role=&quot;alertdialog&quot;` and disables closing by clicking the backdrop.
  * ```tsx
  * import { Dialog } from "~/components/ui/base/dialog";
  * 
  * <Dialog.Root alert>
- *   <Dialog.Trigger>Smazat účet</Dialog.Trigger>
+ *   <Dialog.Trigger>Delete account</Dialog.Trigger>
  *   <Dialog.Panel>
  *     <Dialog.Close class="absolute right-4 top-4 z-10" />
  *     <Dialog.Header>
- *       <Dialog.Title>Opravdu smazat?</Dialog.Title>
- *       <Dialog.Description>Tuto akci nelze vrátit zpět.</Dialog.Description>
+ *       <Dialog.Title>Really delete?</Dialog.Title>
+ *       <Dialog.Description>This action cannot be undone.</Dialog.Description>
  *     </Dialog.Header>
  *     <Dialog.Footer>
  *       <Dialog.Close class="rounded-md border border-separator-opaque px-4 py-2 text-callout">
- *         Zrušit
+ *         Cancel
  *       </Dialog.Close>
  *       <Dialog.Close class="rounded-md bg-system-red px-4 py-2 text-callout font-medium text-white">
- *         Smazat
+ *         Delete
  *       </Dialog.Close>
  *     </Dialog.Footer>
  *   </Dialog.Panel>
  * </Dialog.Root>
  * ```
  *
- * @example Velikost panelu (variant)
- * Na `Dialog.Panel` nastav `variant` (`"xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "full"`) — rozměry řeší `data-dialog-size` v global.css. Bez `variant` platí výchozí šířka.
+ * @example Panel size (variant)
+ * Set `variant` on `Dialog.Panel` (`"xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "full"`) — dimensions are handled by `data-dialog-size` in global.css. Without `variant` the default width applies.
  * ```tsx
  * import { Dialog } from "~/components/ui/base/dialog";
  *
  * <Dialog.Root>
- *   <Dialog.Trigger>Otevřít velký dialog</Dialog.Trigger>
+ *   <Dialog.Trigger>Open large dialog</Dialog.Trigger>
  *   <Dialog.Panel variant="lg">
  *     <Dialog.Close class="absolute right-4 top-4 z-10" />
  *     <Dialog.Header>
- *       <Dialog.Title>Velký dialog</Dialog.Title>
- *       <Dialog.Description>Panel s variantou `lg`.</Dialog.Description>
+ *       <Dialog.Title>Large dialog</Dialog.Title>
+ *       <Dialog.Description>Panel with the `lg` variant.</Dialog.Description>
  *     </Dialog.Header>
  *     <Dialog.Content>
- *       <p class="text-callout text-secondary-label">Více prostoru pro obsah.</p>
+ *       <p class="text-callout text-secondary-label">More space for content.</p>
  *     </Dialog.Content>
  *   </Dialog.Panel>
  * </Dialog.Root>
@@ -99,8 +99,8 @@ const rootClass = "contents";
 const triggerClass = modalOutlineTriggerClass;
 
 /**
- * `q-dialog-panel` — v global.css je :modal šířka, `display:flex`, `margin:auto` a animace (headless čeká na animationend).
- * Centrování přes `inset-0` + `m-auto`; šířka je v CSS kvůli headless `dialog:modal { max-width: unset }`.
+ * `q-dialog-panel` — in global.css there is the :modal width, `display:flex`, `margin:auto` and animation (headless waits for animationend).
+ * Centered via `inset-0` + `m-auto`; the width is in CSS because of the headless `dialog:modal { max-width: unset }`.
  */
 const panelBaseClass =
   "q-dialog-panel fixed inset-0 z-50 m-auto h-fit min-w-0 max-h-[min(90dvh,40rem)] overflow-hidden border border-separator-opaque bg-surface-raised p-0 shadow-lg outline-none ring-offset-background backdrop:bg-black/40 rounded-lg";
@@ -118,10 +118,10 @@ const titleClass = modalTitleClass;
 
 const descriptionClass = modalDescriptionClass;
 
-/** Ikona v rohu — pevná velikost; neslučovat s textovými akcemi v patičce (size-8 by roztrhalo label). */
+/** Corner icon — fixed size; do not merge with text actions in the footer (size-8 would stretch the label). */
 const closeClass = modalIconCloseButtonClass;
 
-/** Zavírací tlačítko s vlastním obsahem (např. „Zrušit“) — bez size-8. */
+/** Close button with custom content (e.g. "Cancel") — without size-8. */
 const closeWithContentClass =
   "inline-flex min-w-0 items-center justify-center rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none";
 
@@ -129,7 +129,7 @@ export type DialogRootProps = PropsOf<typeof HeadlessModal.Root>;
 
 export type DialogTriggerProps = PropsOf<typeof HeadlessModal.Trigger>;
 
-/** Velikost panelu — šířka/výška jsou v `global.css` u `dialog.q-dialog-panel[data-dialog-size=…]:modal`. Bez `variant` platí výchozí rozměry. */
+/** Panel size — width/height are in `global.css` for `dialog.q-dialog-panel[data-dialog-size=…]:modal`. Without `variant` the default dimensions apply. */
 export type DialogPanelVariant = "xs" | "sm" | "md" | "lg" | "xl" | "xxl" | "full";
 
 export type DialogPanelProps = PropsOf<typeof HeadlessModal.Panel> & {
@@ -222,7 +222,7 @@ export const DialogClose: FunctionComponent<DialogCloseProps> = (props) => {
     <HeadlessModal.Close
       {...rest}
       class={merged}
-      aria-label={rest["aria-label"] ?? (children === undefined ? "Zavřít" : undefined)}
+      aria-label={rest["aria-label"] ?? (children === undefined ? "Close" : undefined)}
     >
       {children ?? closeIcon}
     </HeadlessModal.Close>
@@ -230,8 +230,8 @@ export const DialogClose: FunctionComponent<DialogCloseProps> = (props) => {
 };
 
 /**
- * Modální dialog (shadcn Dialog) nad {@link https://qwikui.com/docs/headless/modal | @qwik-ui/headless Modal} —
- * vycentrovaný panel s backdropem, tokeny z COLORS.md. Od Sheetu se liší pozicí a animací (viz `q-dialog-panel` v global.css).
+ * Modal dialog (shadcn Dialog) over {@link https://qwikui.com/docs/headless/modal | @qwik-ui/headless Modal} —
+ * a centered panel with a backdrop, tokens from COLORS.md. It differs from Sheet in position and animation (see `q-dialog-panel` in global.css).
  */
 export const Dialog = {
   Root: DialogRoot,

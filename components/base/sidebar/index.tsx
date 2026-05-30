@@ -2,8 +2,8 @@
  * @component sidebar
  * @title Sidebar
  * @version 1.0.0
- * @example Základní skladba
- * `Provider` → `Root` (panel) + `Inset` (hlavní plocha). `Rail` je úzký klikací pruh na vnitřním kraji panelu (desktop) — zobrazí se ve sbaleném stavu a rozbalí panel; v příkladu je `defaultCollapsed`, aby byl `Rail` vidět. Ikony v `MenuIcon`: jednotný obal `h-8 w-8` + SVG `h-5 w-5`. V záhlaví `Sidebar.HeaderTitle` schová „Aplikace“ při sbalení (`md:sr-only`); `Sidebar.Header` při sbalení vycentruje řádek (`md:justify-center`).
+ * @example Basic composition
+ * `Provider` → `Root` (panel) + `Inset` (main area). `Rail` is a narrow clickable strip on the inner edge of the panel (desktop) — it appears in the collapsed state and expands the panel; the example uses `defaultCollapsed` so the `Rail` is visible. Icons in `MenuIcon`: a uniform `h-8 w-8` wrapper + SVG `h-5 w-5`. In the header `Sidebar.HeaderTitle` hides "Application" when collapsed (`md:sr-only`); `Sidebar.Header` centers the row when collapsed (`md:justify-center`).
  * ```tsx
  * import { Sidebar } from "~/components/ui/base/sidebar";
  * 
@@ -19,7 +19,7 @@
  *           <rect x="14" y="14" width="7" height="7" rx="1.5" />
  *         </svg>
  *       </span>
- *       <Sidebar.HeaderTitle>Aplikace</Sidebar.HeaderTitle>
+ *       <Sidebar.HeaderTitle>Application</Sidebar.HeaderTitle>
  *     </Sidebar.Header>
  *     <Sidebar.Content>
  *       <Sidebar.Group>
@@ -36,7 +36,7 @@
  *                     </svg>
  *                   </span>
  *                 </Sidebar.MenuIcon>
- *                 <Sidebar.MenuLabel>Přehled</Sidebar.MenuLabel>
+ *                 <Sidebar.MenuLabel>Overview</Sidebar.MenuLabel>
  *               </Sidebar.MenuButton>
  *             </Sidebar.MenuItem>
  *             <Sidebar.MenuItem>
@@ -48,7 +48,7 @@
  *                     </svg>
  *                   </span>
  *                 </Sidebar.MenuIcon>
- *                 <Sidebar.MenuLabel>Projekty</Sidebar.MenuLabel>
+ *                 <Sidebar.MenuLabel>Projects</Sidebar.MenuLabel>
  *               </Sidebar.MenuButton>
  *             </Sidebar.MenuItem>
  *           </Sidebar.Menu>
@@ -59,17 +59,17 @@
  *   <Sidebar.Inset>
  *     <header class="flex items-center gap-2 border-b p-3">
  *       <Sidebar.Trigger aria-label="Panel">☰</Sidebar.Trigger>
- *       <span class="text-callout font-medium text-label">Hlavní obsah</span>
+ *       <span class="text-callout font-medium text-label">Main content</span>
  *     </header>
  *     <div class="p-4 text-body text-secondary-label">
- *       Klik na <code class="rounded bg-fill-secondary/40 px-1 py-0.5 text-caption-1">Rail</code> u pravého okraje sbaleného panelu nebo na trigger rozbalí navigaci.
+ *       Clicking <code class="rounded bg-fill-secondary/40 px-1 py-0.5 text-caption-1">Rail</code> at the right edge of the collapsed panel or the trigger expands the navigation.
  *     </div>
  *   </Sidebar.Inset>
  * </Sidebar.Provider>
  * ```
  *
- * @example Výchozí sbalený stav
- * Prop `defaultCollapsed` na `Provider` — užitečné pro úzké panely s ikonami; popisky v `GroupLabel` jsou na desktopu ve sbaleném režimu skryté ( `sr-only`).
+ * @example Default collapsed state
+ * The `defaultCollapsed` prop on `Provider` — useful for narrow panels with icons; labels in `GroupLabel` are hidden on desktop in collapsed mode ( `sr-only`).
  * ```tsx
  * import { Sidebar } from "~/components/ui/base/sidebar";
  * 
@@ -85,7 +85,7 @@
  *           <rect x="14" y="14" width="7" height="7" rx="1.5" />
  *         </svg>
  *       </span>
- *       <Sidebar.HeaderTitle>Aplikace</Sidebar.HeaderTitle>
+ *       <Sidebar.HeaderTitle>Application</Sidebar.HeaderTitle>
  *     </Sidebar.Header>
  *     <Sidebar.Content>
  *       <Sidebar.Group>
@@ -97,7 +97,7 @@
  *                 <Sidebar.MenuIcon>
  *                   <span class="text-base leading-none">◉</span>
  *                 </Sidebar.MenuIcon>
- *                 <Sidebar.MenuLabel>Přehled</Sidebar.MenuLabel>
+ *                 <Sidebar.MenuLabel>Overview</Sidebar.MenuLabel>
  *               </Sidebar.MenuButton>
  *             </Sidebar.MenuItem>
  *             <Sidebar.MenuItem>
@@ -105,7 +105,7 @@
  *                 <Sidebar.MenuIcon>
  *                   <span class="text-base leading-none">◇</span>
  *                 </Sidebar.MenuIcon>
- *                 <Sidebar.MenuLabel>Projekty</Sidebar.MenuLabel>
+ *                 <Sidebar.MenuLabel>Projects</Sidebar.MenuLabel>
  *               </Sidebar.MenuButton>
  *             </Sidebar.MenuItem>
  *             <Sidebar.MenuItem>
@@ -113,7 +113,7 @@
  *                 <Sidebar.MenuIcon>
  *                   <span class="text-base leading-none">▤</span>
  *                 </Sidebar.MenuIcon>
- *                 <Sidebar.MenuLabel>Dokumenty</Sidebar.MenuLabel>
+ *                 <Sidebar.MenuLabel>Documents</Sidebar.MenuLabel>
  *               </Sidebar.MenuButton>
  *             </Sidebar.MenuItem>
  *             <Sidebar.MenuItem>
@@ -121,7 +121,7 @@
  *                 <Sidebar.MenuIcon>
  *                   <span class="text-base leading-none">⚙</span>
  *                 </Sidebar.MenuIcon>
- *                 <Sidebar.MenuLabel>Nastavení</Sidebar.MenuLabel>
+ *                 <Sidebar.MenuLabel>Settings</Sidebar.MenuLabel>
  *               </Sidebar.MenuButton>
  *             </Sidebar.MenuItem>
  *           </Sidebar.Menu>
@@ -132,17 +132,17 @@
  *   <Sidebar.Inset>
  *     <header class="flex items-center gap-2 border-b p-3">
  *       <Sidebar.Trigger aria-label="Panel">☰</Sidebar.Trigger>
- *       <span class="text-callout font-medium text-label">Hlavní obsah</span>
+ *       <span class="text-callout font-medium text-label">Main content</span>
  *     </header>
  *     <div class="p-4 text-body text-secondary-label">
- *       Ve sbaleném režimu zůstávají vidět ikony; nápisy položek a skupiny jsou pro čtečky (`sr-only`), po rozbalení se zobrazí vedle ikon.
+ *       In collapsed mode the icons stay visible; the item and group labels are for screen readers (`sr-only`), and after expanding they appear next to the icons.
  *     </div>
  *   </Sidebar.Inset>
  * </Sidebar.Provider>
  * ```
  *
  * @example MenuIcon + MenuLabel + MenuAction
- * `Sidebar.MenuIcon` / `Sidebar.MenuLabel` — viz výše. Rozbalovací řádkové menu: `DropdownMenu.Root` + `DropdownMenu.Trigger variant="icon"` (tečky). `Sidebar.Trigger` v `Inset` přepíná sbalený panel na desktopu — ikona „sbalit postranní panel“ (šipka do panelu). V `DropdownMenu.Item` lze vložit ikonu + text (`text-label` na SVG).
+ * `Sidebar.MenuIcon` / `Sidebar.MenuLabel` — see above. Inline dropdown menu: `DropdownMenu.Root` + `DropdownMenu.Trigger variant="icon"` (dots). `Sidebar.Trigger` in `Inset` toggles the collapsed panel on desktop — a "collapse sidebar" icon (arrow into the panel). In `DropdownMenu.Item` you can insert an icon + text (`text-label` on the SVG).
  * ```tsx
  * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
  * import { Sidebar } from "~/components/ui/base/sidebar";
@@ -156,39 +156,39 @@
  *           <Sidebar.MenuButton>
  *             <Sidebar.MenuIcon>
  *               <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-fill-accent/25 text-caption-1 font-semibold text-label">
- *                 AK
+ *                 AS
  *               </span>
  *             </Sidebar.MenuIcon>
- *             <Sidebar.MenuLabel>Anna Kovářová</Sidebar.MenuLabel>
+ *             <Sidebar.MenuLabel>Anna Smith</Sidebar.MenuLabel>
  *           </Sidebar.MenuButton>
- *           <DropdownMenu.Root class="absolute right-1 top-1.5 z-20 inline-block md:[aside[data-collapsed]_&]:hidden">
- *             <DropdownMenu.Trigger variant="icon" aria-label="Akce kontaktu" data-q-sidebar-menu-action="">
+ *           <DropdownMenu.Root gutter={4} class="absolute right-1 top-1.5 z-20 inline-block md:[aside[data-collapsed]_&]:hidden">
+ *             <DropdownMenu.Trigger aria-label="Contact actions" data-q-sidebar-menu-action="">
  *               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="opacity-90">
  *                 <circle cx="12" cy="6" r="1.75" />
  *                 <circle cx="12" cy="12" r="1.75" />
  *                 <circle cx="12" cy="18" r="1.75" />
  *               </svg>
  *             </DropdownMenu.Trigger>
- *             <DropdownMenu.Popover gutter={4}>
+ *             <DropdownMenu.Popover>
  *               <DropdownMenu.Item>
  *                 <svg class="h-4 w-4 shrink-0 text-label" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
  *                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
  *                   <path d="m22 6-10 7L2 6" />
  *                 </svg>
- *                 Zpráva
+ *                 Message
  *               </DropdownMenu.Item>
  *               <DropdownMenu.Item>
  *                 <svg class="h-4 w-4 shrink-0 text-label" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
  *                   <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
  *                 </svg>
- *                 Upravit
+ *                 Edit
  *               </DropdownMenu.Item>
  *               <DropdownMenu.Separator />
  *               <DropdownMenu.Item>
  *                 <svg class="h-4 w-4 shrink-0 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
  *                   <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
  *                 </svg>
- *                 Odebrat
+ *                 Remove
  *               </DropdownMenu.Item>
  *             </DropdownMenu.Popover>
  *           </DropdownMenu.Root>
@@ -197,39 +197,39 @@
  *           <Sidebar.MenuButton>
  *             <Sidebar.MenuIcon>
  *               <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-fill-secondary/40 text-caption-1 font-semibold text-label">
- *                 MP
+ *                 MJ
  *               </span>
  *             </Sidebar.MenuIcon>
- *             <Sidebar.MenuLabel>Marek Procházka</Sidebar.MenuLabel>
+ *             <Sidebar.MenuLabel>Mark Johnson</Sidebar.MenuLabel>
  *           </Sidebar.MenuButton>
- *           <DropdownMenu.Root class="absolute right-1 top-1.5 z-20 inline-block md:[aside[data-collapsed]_&]:hidden">
- *             <DropdownMenu.Trigger variant="icon" aria-label="Akce kontaktu" data-q-sidebar-menu-action="">
+ *           <DropdownMenu.Root gutter={4} class="absolute right-1 top-1.5 z-20 inline-block md:[aside[data-collapsed]_&]:hidden">
+ *             <DropdownMenu.Trigger aria-label="Contact actions" data-q-sidebar-menu-action="">
  *               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="opacity-90">
  *                 <circle cx="12" cy="6" r="1.75" />
  *                 <circle cx="12" cy="12" r="1.75" />
  *                 <circle cx="12" cy="18" r="1.75" />
  *               </svg>
  *             </DropdownMenu.Trigger>
- *             <DropdownMenu.Popover gutter={4}>
+ *             <DropdownMenu.Popover>
  *               <DropdownMenu.Item>
  *                 <svg class="h-4 w-4 shrink-0 text-label" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
  *                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
  *                   <path d="m22 6-10 7L2 6" />
  *                 </svg>
- *                 Zpráva
+ *                 Message
  *               </DropdownMenu.Item>
  *               <DropdownMenu.Item>
  *                 <svg class="h-4 w-4 shrink-0 text-label" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
  *                   <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
  *                 </svg>
- *                 Upravit
+ *                 Edit
  *               </DropdownMenu.Item>
  *               <DropdownMenu.Separator />
  *               <DropdownMenu.Item>
  *                 <svg class="h-4 w-4 shrink-0 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
  *                   <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
  *                 </svg>
- *                 Odebrat
+ *                 Remove
  *               </DropdownMenu.Item>
  *             </DropdownMenu.Popover>
  *           </DropdownMenu.Root>
@@ -239,23 +239,23 @@
  *   </Sidebar.Root>
  *   <Sidebar.Inset>
  *     <header class="flex items-center gap-2 border-b p-3">
- *       <Sidebar.Trigger aria-label="Sbalit nebo rozbalit postranní panel">
+ *       <Sidebar.Trigger aria-label="Collapse or expand the sidebar">
  *         <svg class="h-5 w-5 shrink-0 text-label" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
  *           <path d="m11 17-5-5 5-5" />
  *           <path d="m18 17-5-5 5-5" />
  *         </svg>
  *       </Sidebar.Trigger>
- *       <span class="text-callout font-medium text-label">Hlavní obsah</span>
+ *       <span class="text-callout font-medium text-label">Main content</span>
  *     </header>
  *     <div class="p-4 text-body text-secondary-label">
- *       Oba řádky mají stejné <code class="rounded bg-fill-secondary/40 px-1 py-0.5 text-caption-1">DropdownMenu</code> u položky; v záhlaví <code class="rounded bg-fill-secondary/40 px-1 py-0.5 text-caption-1">Sidebar.Trigger</code> s ikonou pro přepnutí šířky panelu (desktop).
+ *       Both rows have the same <code class="rounded bg-fill-secondary/40 px-1 py-0.5 text-caption-1">DropdownMenu</code> on the item; in the header a <code class="rounded bg-fill-secondary/40 px-1 py-0.5 text-caption-1">Sidebar.Trigger</code> with an icon to toggle the panel width (desktop).
  *     </div>
  *   </Sidebar.Inset>
  * </Sidebar.Provider>
  * ```
  *
- * @example Sbalený panel: ikony nebo zkratka
- * Bez `Sidebar.MenuIcon` doplň na `Sidebar.MenuLabel` prop `abbrevSource`, nebo použij `Sidebar.MenuButton` s `itemLabel` (zkratka v avataru `rounded-md`).
+ * @example Collapsed panel: icons or abbreviation
+ * Without `Sidebar.MenuIcon` add the `abbrevSource` prop to `Sidebar.MenuLabel`, or use `Sidebar.MenuButton` with `itemLabel` (abbreviation in a `rounded-md` avatar).
  * ```tsx
  * import { Sidebar } from "~/components/ui/base/sidebar";
  *
@@ -271,27 +271,27 @@
  *                 P
  *               </span>
  *             </Sidebar.MenuIcon>
- *             <Sidebar.MenuLabel>Přehled</Sidebar.MenuLabel>
+ *             <Sidebar.MenuLabel>Overview</Sidebar.MenuLabel>
  *           </Sidebar.MenuButton>
  *         </Sidebar.MenuItem>
  *         <Sidebar.MenuItem>
  *           <Sidebar.MenuButton>
- *             <Sidebar.MenuLabel abbrevSource="Správa dokumentů">Správa dokumentů</Sidebar.MenuLabel>
+ *             <Sidebar.MenuLabel abbrevSource="Document management">Document management</Sidebar.MenuLabel>
  *           </Sidebar.MenuButton>
  *         </Sidebar.MenuItem>
  *         <Sidebar.MenuItem>
- *           <Sidebar.MenuButton itemLabel="Nastavení účtu" />
+ *           <Sidebar.MenuButton itemLabel="Account settings" />
  *         </Sidebar.MenuItem>
  *       </Sidebar.Menu>
  *     </Sidebar.Content>
  *   </Sidebar.Root>
  *   <Sidebar.Inset>
  *     <header class="flex items-center gap-2 border-b p-3">
- *       <Sidebar.Trigger aria-label="Přepnout panel">☰</Sidebar.Trigger>
- *       <span class="text-callout font-medium text-label">Rozbalte triggerem — zkratky vs. plné názvy</span>
+ *       <Sidebar.Trigger aria-label="Toggle panel">☰</Sidebar.Trigger>
+ *       <span class="text-callout font-medium text-label">Expand with the trigger — abbreviations vs. full names</span>
  *     </header>
  *     <div class="p-4 text-body text-secondary-label">
- *       Ve sbaleném stavu: vlastní ikona, zkratka z `abbrevSource`, nebo vygenerovaná z `itemLabel`.
+ *       In collapsed state: a custom icon, an abbreviation from `abbrevSource`, or one generated from `itemLabel`.
  *     </div>
  *   </Sidebar.Inset>
  * </Sidebar.Provider>
@@ -336,7 +336,7 @@ const sidebarMenuButtonContextId = createContextId<SidebarMenuButtonContextValue
   "q-ui-lib.sidebar-menu-button",
 );
 
-/** Zkratka pro „hraný“ avatar bez vlastní ikony (dvě slova → iniciály, jedno slovo → max. 2 znaky). */
+/** Abbreviation for a "fallback" avatar without a custom icon (two words → initials, one word → max. 2 characters). */
 export function sidebarLabelAbbrev(source: string): string {
   const t = source.trim();
   if (!t) return "";
@@ -353,13 +353,13 @@ export function sidebarLabelAbbrev(source: string): string {
 }
 
 export type SidebarProviderProps = PropsOf<"div"> & {
-  /** Výchozí stav „ikonového“ zúžení postranního panelu (desktop). */
+  /** Default state of the "icon" narrowing of the sidebar (desktop). */
   defaultCollapsed?: boolean;
 };
 
 /**
- * Obal aplikace / layoutu — drží stav sbaleného panelu a mobilního draweru.
- * Musí obepínat {@link SidebarRoot} a {@link SidebarInset}.
+ * Application / layout wrapper — holds the collapsed panel state and the mobile drawer.
+ * Must wrap {@link SidebarRoot} and {@link SidebarInset}.
  */
 export const SidebarProvider = component$<SidebarProviderProps>((props) => {
   const { defaultCollapsed = false, class: className, ...rest } = props;
@@ -400,23 +400,23 @@ export const SidebarProvider = component$<SidebarProviderProps>((props) => {
 function useSidebarContext(component: string): SidebarContextValue {
   const ctx = useContext(sidebarContextId);
   if (!ctx) {
-    throw new Error(`${component} musí být uvnitř <Sidebar.Provider>.`);
+    throw new Error(`${component} must be inside <Sidebar.Provider>.`);
   }
   return ctx;
 }
 
-/** Stav sbaleného panelu a mobilního draweru — pouze uvnitř {@link SidebarProvider}. */
+/** Collapsed panel state and the mobile drawer — only inside {@link SidebarProvider}. */
 export function useSidebar(): SidebarContextValue {
   return useSidebarContext("useSidebar");
 }
 
 export type SidebarRootProps = PropsOf<"aside"> & {
-  /** Strana panelu (výchozí `left`). */
+  /** Panel side (default `left`). */
   side?: "left" | "right";
 };
 
 /**
- * Hlavní postranní panel — šířka podle `collapsed`, na `max-md` jako fixed drawer přes {@link SidebarProvider}.
+ * Main sidebar — width based on `collapsed`, on `max-md` as a fixed drawer via {@link SidebarProvider}.
  */
 export const SidebarRoot = component$<SidebarRootProps>((props) => {
   const ctx = useSidebarContext("Sidebar.Root");
@@ -435,7 +435,7 @@ export const SidebarRoot = component$<SidebarRootProps>((props) => {
   const widthMd = collapsed ? "md:w-14" : "md:w-64";
   const mobileWidth = "max-md:w-[min(18rem,100vw-2rem)]";
 
-  /** Jeden DOM uzel sloupce (backdrop + aside), aby {@link SidebarProvider} flex měl jen [shell, inset] — fragment [backdrop, aside] jinak vytváří třetí „sloupec“ a obsah může překrývat odkazy. */
+  /** A single DOM column node (backdrop + aside) so {@link SidebarProvider} flex has only [shell, inset] — a [backdrop, aside] fragment otherwise creates a third "column" and the content may overlap the links. */
   const shell = [
     "relative z-[60] flex h-full min-h-0 shrink-0 flex-col border-separator-opaque bg-grouped-surface text-label",
     "transition-[width,transform,opacity] duration-200 ease-out",
@@ -470,7 +470,7 @@ export const SidebarRoot = component$<SidebarRootProps>((props) => {
 
 export type SidebarInsetProps = PropsOf<"main">;
 
-/** Hlavní obsah vedle panelu — `min-w-0` kvůli flex overflow. */
+/** Main content next to the panel — `min-w-0` because of flex overflow. */
 export const SidebarInset = component$<SidebarInsetProps>((props) => {
   const { class: className, ...rest } = props;
   const merged = ["flex min-h-0 min-w-0 flex-1 flex-col bg-background", className].filter(Boolean).join(" ");
@@ -504,7 +504,7 @@ export const SidebarHeader = component$<SidebarHeaderProps>((props) => {
 export type SidebarHeaderTitleProps = PropsOf<"span">;
 
 /**
- * Nadpis v {@link SidebarHeader} — při sbaleném panelu na desktopu se skryje (`sr-only`), zůstane vidět značka / ikona vlevo.
+ * Title in {@link SidebarHeader} — when the panel is collapsed on desktop it is hidden (`sr-only`), the brand / icon on the left stays visible.
  */
 export const SidebarHeaderTitle = component$<SidebarHeaderTitleProps>((props) => {
   const ctx = useSidebarContext("Sidebar.HeaderTitle");
@@ -540,7 +540,7 @@ export const SidebarFooter = component$<SidebarFooterProps>((props) => {
 
 export type SidebarContentProps = PropsOf<"div">;
 
-/** Rolovatelný prostředek mezi hlavičkou a patičkou. */
+/** Scrollable area between the header and the footer. */
 export const SidebarContent = component$<SidebarContentProps>((props) => {
   const { class: className, ...rest } = props;
   const merged = ["min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2 py-2", className]
@@ -567,7 +567,7 @@ export const SidebarGroup = component$<SidebarGroupProps>((props) => {
 
 export type SidebarGroupLabelProps = PropsOf<"div">;
 
-/** Při sbaleném panelu na desktopu je skrytý (zůstane čitelný pro SR přes `sr-only` pokud doplníš). */
+/** When the panel is collapsed on desktop it is hidden (stays readable for SR via `sr-only` if you add it). */
 export const SidebarGroupLabel = component$<SidebarGroupLabelProps>((props) => {
   const ctx = useSidebarContext("Sidebar.GroupLabel");
   const { class: className, ...rest } = props;
@@ -625,8 +625,8 @@ export const SidebarMenuItem = component$<SidebarMenuItemProps>((props) => {
 export type SidebarMenuIconProps = PropsOf<"span">;
 
 /**
- * Ikonová část tlačítka menu — vždy viditelná, i v sbaleném stavu.
- * Registruje přítomnost ikony u {@link SidebarMenuButton}; bez ní {@link SidebarMenuLabel} zobrazí zkratku v avataru.
+ * The icon part of the menu button — always visible, even in the collapsed state.
+ * Registers the presence of an icon with {@link SidebarMenuButton}; without it {@link SidebarMenuLabel} shows an abbreviation in the avatar.
  */
 export const SidebarMenuIcon = component$<SidebarMenuIconProps>((props) => {
   const mb = useContext(sidebarMenuButtonContextId);
@@ -644,15 +644,15 @@ export const SidebarMenuIcon = component$<SidebarMenuIconProps>((props) => {
 
 export type SidebarMenuLabelProps = PropsOf<"span"> & {
   /**
-   * Text pro zkrácený monogram ve sbaleném panelu (`md+`), pokud není {@link SidebarMenuIcon}.
-   * Např. „Můj projekt“ → „MP“; jedno slovo → max. 2 znaky.
+   * Text for the shortened monogram in the collapsed panel (`md+`), if there is no {@link SidebarMenuIcon}.
+   * E.g. "My project" → "MP"; one word → max. 2 characters.
    */
   abbrevSource?: string;
 };
 
 /**
- * Textová část tlačítka menu — při sbalení na desktopu plný text jen pro AT (`sr-only`),
- * pokud chybí {@link SidebarMenuIcon}, viditelná je zkratka v „hraném“ avataru (`rounded-md`).
+ * The text part of the menu button — when collapsed on desktop the full text is for AT only (`sr-only`),
+ * if {@link SidebarMenuIcon} is missing, an abbreviation in a "fallback" avatar (`rounded-md`) is visible.
  */
 export const SidebarMenuLabel = component$<SidebarMenuLabelProps>((props) => {
   const ctx = useSidebarContext("Sidebar.MenuLabel");
@@ -664,9 +664,9 @@ export const SidebarMenuLabel = component$<SidebarMenuLabelProps>((props) => {
   const abbrev = sidebarLabelAbbrev(abbrevSource);
 
   /**
-   * Ve sbaleném stavu: s {@link SidebarMenuIcon} nesmí label roztahovat řádek (`md:flex-none`).
-   * Bez ikony (jen zkratka z `abbrevSource`) musí obal na `md+` vyplnit šířku tlačítka a vnitřně vycentrovat monogram —
-   * jinak se vizuálně liší od řádků s ikonou v prvním slotu.
+   * In the collapsed state: with {@link SidebarMenuIcon} the label must not stretch the row (`md:flex-none`).
+   * Without an icon (just the abbreviation from `abbrevSource`) the wrapper must fill the button width on `md+` and center the monogram internally —
+   * otherwise it looks different from rows with an icon in the first slot.
    */
   const outerClass = [
     "flex min-w-0 items-center gap-2",
@@ -699,18 +699,18 @@ export const SidebarMenuLabel = component$<SidebarMenuLabelProps>((props) => {
 });
 
 export type SidebarMenuButtonProps = PropsOf<"button"> & {
-  /** Aktivní položka (např. aktuální route). */
+  /** Active item (e.g. the current route). */
   active?: boolean;
-  /** Varianta vzhledu. */
+  /** Appearance variant. */
   variant?: "default" | "outline";
   /**
-   * Krátký label: vygeneruje {@link SidebarMenuIcon} (zkratka) + {@link SidebarMenuLabel} bez vlastních children.
+   * Short label: generates {@link SidebarMenuIcon} (abbreviation) + {@link SidebarMenuLabel} without its own children.
    */
   itemLabel?: string;
 };
 
 /**
- * Tlačítko v menu. Pro routovaný odkaz použij {@link SidebarMenuLink} — sdílí kontext pro {@link SidebarMenuIcon} / {@link SidebarMenuLabel}.
+ * Button in the menu. For a routed link use {@link SidebarMenuLink} — it shares context for {@link SidebarMenuIcon} / {@link SidebarMenuLabel}.
  */
 export const SidebarMenuButton = component$<SidebarMenuButtonProps>((props) => {
   const ctx = useSidebarContext("Sidebar.MenuButton");
@@ -765,13 +765,13 @@ export const SidebarMenuButton = component$<SidebarMenuButtonProps>((props) => {
 export type SidebarMenuLinkProps = PropsOf<"a"> & {
   active?: boolean;
   variant?: "default" | "outline";
-  /** Stejné jako u {@link SidebarMenuButton} — generuje ikonu + label bez children. */
+  /** Same as {@link SidebarMenuButton} — generates an icon + label without children. */
   itemLabel?: string;
 };
 
 /**
- * Navigační odkaz v menu (Qwik City {@link Link}) se stejným chováním a kontextem jako {@link SidebarMenuButton},
- * aby {@link SidebarMenuIcon} / {@link SidebarMenuLabel} fungovaly i mimo `<button>`.
+ * Navigation link in the menu (Qwik City {@link Link}) with the same behavior and context as {@link SidebarMenuButton},
+ * so {@link SidebarMenuIcon} / {@link SidebarMenuLabel} work outside `<button>` too.
  */
 export const SidebarMenuLink = component$<SidebarMenuLinkProps>((props) => {
   const ctx = useSidebarContext("Sidebar.MenuLink");
@@ -828,7 +828,7 @@ export const SidebarMenuLink = component$<SidebarMenuLinkProps>((props) => {
 
 export type SidebarMenuActionProps = PropsOf<"button">;
 
-/** Vedlejší akce u položky menu (např. „⋯“), zarovnaná vpravo. Ve sbaleném panelu na desktopu skrytá. */
+/** Secondary action on a menu item (e.g. "⋯"), aligned to the right. Hidden when the panel is collapsed on desktop. */
 export const SidebarMenuAction = component$<SidebarMenuActionProps>((props) => {
   const ctx = useSidebarContext("Sidebar.MenuAction");
   const collapsed = ctx.collapsed.value;
@@ -859,7 +859,7 @@ export const SidebarSeparator = component$<SidebarSeparatorProps>((props) => {
 
 export type SidebarTriggerProps = PropsOf<"button">;
 
-/** Otevře / zavře mobilní drawer; na `md+` přepíná sbalený stav (stejné jako {@link SidebarRail}). */
+/** Opens / closes the mobile drawer; on `md+` toggles the collapsed state (same as {@link SidebarRail}). */
 export const SidebarTrigger = component$<SidebarTriggerProps>((props) => {
   const ctx = useSidebarContext("Sidebar.Trigger");
   const { class: className, onClick$, ...rest } = props;
@@ -877,7 +877,7 @@ export const SidebarTrigger = component$<SidebarTriggerProps>((props) => {
       data-q-sidebar-trigger=""
       {...rest}
       class={merged}
-      aria-label="Přepnout postranní panel"
+      aria-label="Toggle the sidebar"
       onClick$={
         onClick$
           ? [
@@ -907,7 +907,7 @@ export const SidebarTrigger = component$<SidebarTriggerProps>((props) => {
 export type SidebarRailProps = PropsOf<"button">;
 
 /**
- * Úzký pruh na vnitřním kraji panelu (u `side="left"` vpravo od panelu) — klik rozbalí sbalený panel (desktop).
+ * Narrow strip on the inner edge of the panel (for `side="left"` to the right of the panel) — a click expands the collapsed panel (desktop).
  */
 export const SidebarRail = component$<SidebarRailProps>((props) => {
   const ctx = useSidebarContext("Sidebar.Rail");
@@ -930,7 +930,7 @@ export const SidebarRail = component$<SidebarRailProps>((props) => {
     <button
       type="button"
       data-q-sidebar-rail=""
-      aria-label="Rozbalit postranní panel"
+      aria-label="Expand the sidebar"
       {...rest}
       class={merged}
       onClick$={ctx.toggleCollapsed$}
@@ -939,12 +939,12 @@ export const SidebarRail = component$<SidebarRailProps>((props) => {
 });
 
 /**
- * Postranní navigace — layout kompozice (bez @qwik-ui/headless modulu; viz BASE_COMPONENTS.md), tokeny dle COLORS.md.
- * Mobilní režim: overlay + drawer; desktop: flex vedle {@link SidebarInset}.
+ * Sidebar navigation — layout composition (without a @qwik-ui/headless module; see BASE_COMPONENTS.md), tokens per COLORS.md.
+ * Mobile mode: overlay + drawer; desktop: flex next to {@link SidebarInset}.
  */
 export const Sidebar = {
   Provider: SidebarProvider,
-  /** Stejné jako {@link sidebarLabelAbbrev} — zkratky pro sbalený panel. */
+  /** Same as {@link sidebarLabelAbbrev} — abbreviations for the collapsed panel. */
   labelAbbrev: sidebarLabelAbbrev,
   Root: SidebarRoot,
   Inset: SidebarInset,

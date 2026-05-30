@@ -2,23 +2,23 @@
  * @component select
  * @title Select
  * @version 1.2.3
- * @example Základní výběr
- * Základní výběr — viz ukázka níže.
+ * @example Basic select
+ * Basic select — see the example below.
  * ```tsx
  * import { Select } from "~/components/ui/base/select";
  * 
  * <Select.Root>
- *   <Select.Label>Téma</Select.Label>
+ *   <Select.Label>Theme</Select.Label>
  *   <Select.Trigger>
- *     <Select.DisplayValue placeholder="Vyberte možnost" />
+ *     <Select.DisplayValue placeholder="Select an option" />
  *   </Select.Trigger>
  *   <Select.Popover>
  *     <Select.Item value="light">
- *       <Select.ItemLabel>Světlý</Select.ItemLabel>
+ *       <Select.ItemLabel>Light</Select.ItemLabel>
  *       <Select.ItemIndicator>✓</Select.ItemIndicator>
  *     </Select.Item>
  *     <Select.Item value="dark">
- *       <Select.ItemLabel>Tmavý</Select.ItemLabel>
+ *       <Select.ItemLabel>Dark</Select.ItemLabel>
  *       <Select.ItemIndicator>✓</Select.ItemIndicator>
  *     </Select.Item>
  *   </Select.Popover>
@@ -26,7 +26,7 @@
  * ```
  *
  * @example Align item with trigger vs popper
- * Analogie k Radix/shadcn: `position=&quot;item-aligned&quot;` po otevření posune panel tak, aby řádka s aktuální hodnotou (nebo zvýrazněnou položkou) měla stejnou výšku jako trigger; při jiné volbě se pozice znovu dopočítá. `position=&quot;popper&quot;` to nevynucuje — chová se jako standardní plovoucí menu. Obě varianty mají počáteční hodnotu uprostřed seznamu (1–10).
+ * Analogous to Radix/shadcn: `position=&quot;item-aligned&quot;` after opening shifts the panel so that the row with the current value (or highlighted item) is at the same height as the trigger; on a different choice the position is recomputed. `position=&quot;popper&quot;` does not enforce this — it behaves like a standard floating menu. Both variants start with the initial value in the middle of the list (1–10).
  * ```tsx
  * import { component$ } from "@builder.io/qwik";
  * import { Select } from "~/components/ui/base/select";
@@ -34,16 +34,16 @@
  * export const ItemAlignCompare = component$(() => {
  *   const items = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
  *     <Select.Item key={n} value={String(n)}>
- *       <Select.ItemLabel>{`Možnost ${n}`}</Select.ItemLabel>
+ *       <Select.ItemLabel>{`Option ${n}`}</Select.ItemLabel>
  *     </Select.Item>
  *   ));
  *   return (
  *     <div class="flex flex-wrap gap-10">
  *       <div class="w-56 space-y-1">
- *         <p class="text-caption-1 text-secondary-label">item-aligned (výchozí)</p>
+ *         <p class="text-caption-1 text-secondary-label">item-aligned (default)</p>
  *         <Select.Root class="!max-w-none w-full" value="6">
  *           <Select.Trigger>
- *             <Select.DisplayValue placeholder="Vyberte" />
+ *             <Select.DisplayValue placeholder="Select" />
  *           </Select.Trigger>
  *           <Select.Popover position="item-aligned">{items}</Select.Popover>
  *         </Select.Root>
@@ -52,7 +52,7 @@
  *         <p class="text-caption-1 text-secondary-label">popper</p>
  *         <Select.Root class="!max-w-none w-full" value="6">
  *           <Select.Trigger>
- *             <Select.DisplayValue placeholder="Vyberte" />
+ *             <Select.DisplayValue placeholder="Select" />
  *           </Select.Trigger>
  *           <Select.Popover position="popper">{items}</Select.Popover>
  *         </Select.Root>
@@ -62,22 +62,22 @@
  * });
  * ```
  *
- * @example Zarovnání panelu (align)
- * Prop `align` na `Select.Popover` : `start` (výchozí, odpovídá `bottom-start` ), `center` , `end` . Zde je u všech příkladů `position=&quot;popper&quot;` , aby byl vidět jen horizontální rozdíl. Při vlastním `floating` s příponou `-start` / `-end` se `align` neaplikuje.
+ * @example Panel alignment (align)
+ * The `align` prop on `Select.Popover` : `start` (default, matches `bottom-start` ), `center` , `end` . Here all examples use `position=&quot;popper&quot;` so only the horizontal difference is visible. With a custom `floating` ending in `-start` / `-end`, `align` is not applied.
  * ```tsx
  * import { Select } from "~/components/ui/base/select";
  * 
- * // position="popper" vypne svislé dosednutí na vybranou položku — ukazuje čistě horizontální align.
+ * // position="popper" disables vertical snapping to the selected item — shows purely horizontal align.
  * <div class="flex flex-wrap gap-8">
  *   <div class="w-56 space-y-1">
- *     <p class="text-caption-1 text-secondary-label">align="start" (výchozí)</p>
+ *     <p class="text-caption-1 text-secondary-label">align="start" (default)</p>
  *     <Select.Root class="!max-w-none w-full">
  *       <Select.Trigger>
  *         <Select.DisplayValue placeholder="Start" />
  *       </Select.Trigger>
  *       <Select.Popover position="popper" align="start">
  *         <Select.Item value="a"><Select.ItemLabel>Ant</Select.ItemLabel></Select.Item>
- *         <Select.Item value="b"><Select.ItemLabel>Bó</Select.ItemLabel></Select.Item>
+ *         <Select.Item value="b"><Select.ItemLabel>Bee</Select.ItemLabel></Select.Item>
  *       </Select.Popover>
  *     </Select.Root>
  *   </div>
@@ -85,11 +85,11 @@
  *     <p class="text-caption-1 text-secondary-label">align="center"</p>
  *     <Select.Root class="!max-w-none w-full">
  *       <Select.Trigger>
- *         <Select.DisplayValue placeholder="Střed" />
+ *         <Select.DisplayValue placeholder="Center" />
  *       </Select.Trigger>
  *       <Select.Popover position="popper" align="center">
  *         <Select.Item value="a"><Select.ItemLabel>Ant</Select.ItemLabel></Select.Item>
- *         <Select.Item value="b"><Select.ItemLabel>Bó</Select.ItemLabel></Select.Item>
+ *         <Select.Item value="b"><Select.ItemLabel>Bee</Select.ItemLabel></Select.Item>
  *       </Select.Popover>
  *     </Select.Root>
  *   </div>
@@ -97,19 +97,19 @@
  *     <p class="text-caption-1 text-secondary-label">align="end"</p>
  *     <Select.Root class="!max-w-none w-full">
  *       <Select.Trigger>
- *         <Select.DisplayValue placeholder="Konec" />
+ *         <Select.DisplayValue placeholder="End" />
  *       </Select.Trigger>
  *       <Select.Popover position="popper" align="end">
  *         <Select.Item value="a"><Select.ItemLabel>Ant</Select.ItemLabel></Select.Item>
- *         <Select.Item value="b"><Select.ItemLabel>Bó</Select.ItemLabel></Select.Item>
+ *         <Select.Item value="b"><Select.ItemLabel>Bee</Select.ItemLabel></Select.Item>
  *       </Select.Popover>
  *     </Select.Root>
  *   </div>
  * </div>
  * ```
  *
- * @example Skupiny
- * Rozdělení položek pomocí `Select.Group` a `GroupLabel` (sekce v seznamu).
+ * @example Groups
+ * Splitting items using `Select.Group` and `GroupLabel` (sections in the list).
  * ```tsx
  * import { Select } from "~/components/ui/base/select";
  * 
@@ -119,23 +119,23 @@
  *   </Select.Trigger>
  *   <Select.Popover>
  *     <Select.Group>
- *       <Select.GroupLabel>Populární</Select.GroupLabel>
+ *       <Select.GroupLabel>Popular</Select.GroupLabel>
  *       <Select.Item value="qwik">
  *         <Select.ItemLabel>Qwik</Select.ItemLabel>
  *       </Select.Item>
  *     </Select.Group>
  *     <Select.Group>
- *       <Select.GroupLabel>Ostatní</Select.GroupLabel>
+ *       <Select.GroupLabel>Other</Select.GroupLabel>
  *       <Select.Item value="other">
- *         <Select.ItemLabel>Jiné</Select.ItemLabel>
+ *         <Select.ItemLabel>Other</Select.ItemLabel>
  *       </Select.Item>
  *     </Select.Group>
  *   </Select.Popover>
  * </Select.Root>
  * ```
  *
- * @example Řízená hodnota (bind:value)
- * Řízená hodnota (bind:value) — viz ukázka níže.
+ * @example Controlled value (bind:value)
+ * Controlled value (bind:value) — see the example below.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
  * import { Select } from "~/components/ui/base/select";
@@ -147,18 +147,18 @@
  *     <>
  *       <Select.Root bind:value={value}>
  *         <Select.Trigger>
- *           <Select.DisplayValue placeholder="Ovoce" />
+ *           <Select.DisplayValue placeholder="Fruit" />
  *         </Select.Trigger>
  *         <Select.Popover>
  *           <Select.Item value="apple">
- *             <Select.ItemLabel>Jablko</Select.ItemLabel>
+ *             <Select.ItemLabel>Apple</Select.ItemLabel>
  *           </Select.Item>
  *           <Select.Item value="banana">
- *             <Select.ItemLabel>Banán</Select.ItemLabel>
+ *             <Select.ItemLabel>Banana</Select.ItemLabel>
  *           </Select.Item>
  *         </Select.Popover>
  *       </Select.Root>
- *       <p class="mt-2 text-caption-1 text-secondary-label">Hodnota: {value.value}</p>
+ *       <p class="mt-2 text-caption-1 text-secondary-label">Value: {value.value}</p>
  *     </>
  *   );
  * });
@@ -183,7 +183,7 @@ import {
 import { Select as HeadlessSelect } from "@qwik-ui/headless";
 
 /**
- * Stejný název kontextu jako v @qwik-ui/headless Select — Qwik páruje podle `context.id`, ne podle reference.
+ * Same context name as in @qwik-ui/headless Select — Qwik matches by `context.id`, not by reference.
  */
 type SelectAlignContext = {
   triggerRef: Signal<HTMLButtonElement | undefined>;
@@ -195,7 +195,7 @@ type SelectAlignContext = {
 
 const selectAlignContextId = createContextId<SelectAlignContext>("Select");
 
-/** Skryje panel do zarovnání, aby nebyl vidět mezikrok Floating UI. */
+/** Hides the panel until alignment so the Floating UI intermediate step is not visible. */
 const selectItemAlignStyles = `
 .qui-select-item-aligned[data-open]:not(.qui-select-item-aligned-ready) {
   visibility: hidden !important;
@@ -245,13 +245,13 @@ export type SelectTriggerProps = PropsOf<typeof HeadlessSelect.Trigger>;
 
 export type SelectDisplayValueProps = PropsOf<typeof HeadlessSelect.DisplayValue>;
 
-/** Horizontální ukotvení plovoucího panelu (Floating UI). */
+/** Horizontal anchoring of the floating panel (Floating UI). */
 export type SelectAlign = "start" | "center" | "end";
 
 /**
- * `item-aligned` — po otevření se panel posune tak, aby vybraná (nebo zvýrazněná) položka
- * byla na stejné výšce jako trigger; při změně výběru se pozice znovu dopočítá (jako Radix `position="item-aligned"`).
- * `popper` — jen standardní Floating UI podle `align` / `floating`.
+ * `item-aligned` — after opening the panel shifts so that the selected (or highlighted) item
+ * is at the same height as the trigger; when the selection changes the position is recomputed (like Radix `position="item-aligned"`).
+ * `popper` — just standard Floating UI according to `align` / `floating`.
  */
 export type SelectPosition = "item-aligned" | "popper";
 
@@ -259,13 +259,13 @@ type HeadlessPopoverProps = PropsOf<typeof HeadlessSelect.Popover>;
 
 export type SelectPopoverProps = HeadlessPopoverProps & {
   /**
-   * Horizontální zarovnání panelu vůči triggeru (`bottom-start` / `bottom` / `bottom-end` apod.).
-   * Ignoruje se, pokud předáš `floating` s příponou `-start` nebo `-end`.
+   * Horizontal alignment of the panel relative to the trigger (`bottom-start` / `bottom` / `bottom-end` etc.).
+   * Ignored if you pass `floating` ending in `-start` or `-end`.
    */
   align?: SelectAlign;
   /**
-   * Strategie pozicování ve smyslu Radix/shadcn Select.
-   * Výchozí: `item-aligned`.
+   * Positioning strategy in the sense of Radix/shadcn Select.
+   * Default: `item-aligned`.
    */
   position?: SelectPosition;
 };
@@ -289,7 +289,7 @@ function resolveSelectPopoverFloating(
   return floating;
 }
 
-/** @deprecated V Qwik UI je `Listbox` prázdný fragment; položky vkládej přímo do {@link SelectPopover}. */
+/** @deprecated In Qwik UI `Listbox` is an empty fragment; insert items directly into {@link SelectPopover}. */
 export type SelectListboxProps = PropsOf<typeof HeadlessSelect.Listbox>;
 
 export type SelectGroupProps = PropsOf<typeof HeadlessSelect.Group>;
@@ -463,8 +463,8 @@ export const SelectItem: FunctionComponent<SelectItemProps> = (props) => {
 };
 
 /**
- * Text položky v mapě headlessu musí být **jeden řetězec** (typeahead volá `.slice()` na `displayValue`).
- * Např. `{`Možnost ${id}`}` místo `Možnost {id}` — jinak Qwik může předat pole/objekt a SSR spadne.
+ * The item text in the headless map must be **a single string** (typeahead calls `.slice()` on `displayValue`).
+ * E.g. `{`Option ${id}`}` instead of `Option {id}` — otherwise Qwik may pass an array/object and SSR crashes.
  */
 export const SelectItemLabel: FunctionComponent<SelectItemLabelProps> = (props) => {
   const merged = [itemLabelClass, props.class].filter(Boolean).join(" ");
@@ -477,8 +477,8 @@ export const SelectErrorMessage: FunctionComponent<SelectErrorMessageProps> = (p
 };
 
 /**
- * Kořen selectu — předává stylované {@link SelectItem} / {@link SelectItemLabel} / {@link SelectErrorMessage}
- * do headless walkeru (stejný princip jako u Dropdown menu).
+ * Select root — passes styled {@link SelectItem} / {@link SelectItemLabel} / {@link SelectErrorMessage}
+ * into the headless walker (same principle as the Dropdown menu).
  */
 export const SelectRoot: FunctionComponent<SelectRootProps> = (props) => {
   const {
@@ -556,7 +556,7 @@ export const SelectPopover = component$<SelectPopoverProps>((props) => {
   );
 });
 
-/** @deprecated Položky vkládej přímo do {@link SelectPopover}. */
+/** @deprecated Insert items directly into {@link SelectPopover}. */
 export const SelectListbox: FunctionComponent<SelectListboxProps> = (props) => (
   <HeadlessSelect.Listbox {...props} />
 );
@@ -586,8 +586,8 @@ export const SelectHiddenNativeSelect: FunctionComponent<SelectHiddenNativeSelec
 );
 
 /**
- * Složené API nad {@link https://qwikui.com/docs/headless/select | @qwik-ui/headless Select}
- * (shadcn „Select“); styly z COLORS.md jako u Dropdown menu / Popover.
+ * Composite API over {@link https://qwikui.com/docs/headless/select | @qwik-ui/headless Select}
+ * (shadcn "Select"); styles from COLORS.md as with the Dropdown menu / Popover.
  */
 export const Select = {
   Root: SelectRoot,

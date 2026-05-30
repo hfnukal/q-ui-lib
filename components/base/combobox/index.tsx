@@ -2,12 +2,12 @@
  * @component combobox
  * @title Combobox
  * @version 1.1.1
- * @example Filtrování a prázdný stav
- * Headless ve výchozím stavu zapíná `filter` — při psaní se schovávají nevyhovující položky. S `Combobox.Empty` zobrazíš hlášku, když nic nezůstane.
+ * @example Filtering and empty state
+ * Headless enables `filter` by default — non-matching items hide as you type. With `Combobox.Empty` you show a message when nothing remains.
  * ```tsx
  * import { Combobox } from "~/components/ui/base/combobox";
  * 
- * <Combobox.Root filter placeholder="Hledej framework…">
+ * <Combobox.Root filter placeholder="Search framework…">
  *   <Combobox.Label>Framework</Combobox.Label>
  *   <Combobox.Control>
  *     <Combobox.Input />
@@ -20,13 +20,13 @@
  *     <Combobox.Item value="react">
  *       <Combobox.ItemLabel>React</Combobox.ItemLabel>
  *     </Combobox.Item>
- *     <Combobox.Empty>Žádná shoda.</Combobox.Empty>
+ *     <Combobox.Empty>No match.</Combobox.Empty>
  *   </Combobox.Popover>
  * </Combobox.Root>
  * ```
  *
- * @example Řízená hodnota (bind:value)
- * Vybraná hodnota v signálu přes `bind:value` (řízený combobox).
+ * @example Controlled value (bind:value)
+ * The selected value in a signal via `bind:value` (controlled combobox).
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
  * import { Combobox } from "~/components/ui/base/combobox";
@@ -36,30 +36,30 @@
  * 
  *   return (
  *     <>
- *       <Combobox.Root bind:value={value} filter placeholder="Město…">
- *         <Combobox.Label>Město</Combobox.Label>
+ *       <Combobox.Root bind:value={value} filter placeholder="City…">
+ *         <Combobox.Label>City</Combobox.Label>
  *         <Combobox.Control>
  *           <Combobox.Input />
  *           <Combobox.Trigger>▼</Combobox.Trigger>
  *         </Combobox.Control>
  *         <Combobox.Popover>
  *           <Combobox.Item value="praha">
- *             <Combobox.ItemLabel>Praha</Combobox.ItemLabel>
+ *             <Combobox.ItemLabel>Prague</Combobox.ItemLabel>
  *           </Combobox.Item>
  *           <Combobox.Item value="brno">
  *             <Combobox.ItemLabel>Brno</Combobox.ItemLabel>
  *           </Combobox.Item>
- *           <Combobox.Empty>Nic nenalezeno.</Combobox.Empty>
+ *           <Combobox.Empty>Nothing found.</Combobox.Empty>
  *         </Combobox.Popover>
  *       </Combobox.Root>
- *       <p class="mt-2 text-caption-1 text-secondary-label">Hodnota: {value.value}</p>
+ *       <p class="mt-2 text-caption-1 text-secondary-label">Value: {value.value}</p>
  *     </>
  *   );
  * });
  * ```
  *
- * @example Vícenásobný výběr a chipy
- * S `multiple` a `bind:value` jako `string[]` (bez jednorázového `value` na kořeni — headless to v multi režimu nepovoluje). Vybrané položky vykresli jako `Combobox.Chip` s `onRemove ; odfiltrováním z pole se synchronizuje stav. Na `Combobox.Control` použij `comboboxMultiselectControlClass` a na vstup `comboboxMultiselectInputClass` . Bez `Combobox.Trigger` (žádná šipka): seznam otevři při fokusu vstupu přes `bind:open` a `onFocus . Text ve vstupu drž v samostatném signálu přes `Combobox.Input bind:value` (výchozí prázdný řetězec) — headless by jinak při `multiple` vyplnil vstup názvy vybraných položek; výběr zůstává jen na chipích. Po změně výběru vyčisti filtr v `onChange na kořeni. V seznamu označ vybrané řádky přes `Combobox.ItemIndicator` (headless je zobrazí jen u vybraných položek).
+ * @example Multiple selection and chips
+ * With `multiple` and `bind:value` as `string[]` (without a one-off `value` on the root — headless does not allow it in multi mode). Render the selected items as `Combobox.Chip` with `onRemove ; filtering them out of the array synchronizes the state. On `Combobox.Control` use `comboboxMultiselectControlClass` and on the input `comboboxMultiselectInputClass` . Without `Combobox.Trigger` (no arrow): open the list on input focus via `bind:open` and `onFocus . Keep the input text in a separate signal via `Combobox.Input bind:value` (default empty string) — otherwise headless would fill the input with the names of the selected items when `multiple`; the selection stays only on the chips. After a selection change, clear the filter in `onChange on the root. In the list, mark the selected rows via `Combobox.ItemIndicator` (headless shows them only for selected items).
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
  * import {
@@ -88,12 +88,12 @@
  *       bind:value={selected}
  *       bind:open={open}
  *       filter
- *       placeholder="Přidej jazyk…"
+ *       placeholder="Add a language…"
  *       onChange$={$(() => {
  *         filterText.value = "";
  *       })}
  *     >
- *       <Combobox.Label>Jazyky</Combobox.Label>
+ *       <Combobox.Label>Languages</Combobox.Label>
  *       <Combobox.Control class={comboboxMultiselectControlClass}>
  *         {selected.value.map((v) => (
  *           <Combobox.Chip key={v} value={v} onRemove$={remove$}>
@@ -119,20 +119,20 @@
  *             </Combobox.ItemIndicator>
  *           </Combobox.Item>
  *         ))}
- *         <Combobox.Empty>Žádný jazyk.</Combobox.Empty>
+ *         <Combobox.Empty>No languages.</Combobox.Empty>
  *       </Combobox.Popover>
  *     </Combobox.Root>
  *   );
  * });
  * ```
  *
- * @example showOnFocus — otevření při fokusu
- * Prop `showOnFocus` na `Combobox.Input` otevře seznam automaticky při fokusu bez nutnosti psát.
+ * @example showOnFocus — open on focus
+ * The `showOnFocus` prop on `Combobox.Input` opens the list automatically on focus without having to type.
  * ```tsx
  * import { Combobox } from "~/components/ui/base/combobox";
  *
- * <Combobox.Root filter placeholder="Vyber nebo piš…">
- *   <Combobox.Label>Výběr</Combobox.Label>
+ * <Combobox.Root filter placeholder="Select or type…">
+ *   <Combobox.Label>Selection</Combobox.Label>
  *   <Combobox.Control>
  *     <Combobox.Input showOnFocus />
  *     <Combobox.Trigger>▼</Combobox.Trigger>
@@ -147,7 +147,7 @@
  *     <Combobox.Item value="vue">
  *       <Combobox.ItemLabel>Vue</Combobox.ItemLabel>
  *     </Combobox.Item>
- *     <Combobox.Empty>Žádná shoda.</Combobox.Empty>
+ *     <Combobox.Empty>No match.</Combobox.Empty>
  *   </Combobox.Popover>
  * </Combobox.Root>
  * ```
@@ -172,7 +172,7 @@ import {
 import { Combobox as HeadlessCombobox } from "@qwik-ui/headless";
 import { floatingComboboxListPanelClass } from "../utilities/floating-ui";
 
-/** Musí odpovídat `createContextId` v @qwik-ui/headless combobox (řetězec `qui-combobox`). */
+/** Must match the `createContextId` in @qwik-ui/headless combobox (the `qui-combobox` string). */
 type ComboboxCtxLite = {
   controlRef: Signal<HTMLDivElement | undefined>;
   panelRef: Signal<HTMLDivElement | undefined>;
@@ -185,7 +185,7 @@ const rootClass = "inline-block w-full max-w-xs";
 const labelClass = "mb-1.5 block text-caption-1 font-medium text-label";
 
 /**
- * Obal vstupu + tlačítka šipky — jeden rámeček jako u shadcn Combobox.
+ * Wrapper for the input + arrow button — a single frame like shadcn Combobox.
  */
 const controlClass = [
   "flex h-10 w-full min-w-0 items-center gap-0.5 rounded-md border border-separator-opaque bg-surface-raised shadow-sm ring-offset-background",
@@ -229,8 +229,8 @@ const errorMessageClass = "mt-1 text-caption-1 text-destructive";
 const emptyClass = "px-2 py-6 text-center text-caption-1 text-secondary-label";
 
 /**
- * Obal {@link ComboboxControl} při více výběrech s chipy (zalamování řádků, vnitřní mezery).
- * Nahrazuje výchozí jednořádkovou třídu controlu.
+ * Wraps {@link ComboboxControl} for multiple selections with chips (line wrapping, inner gaps).
+ * Replaces the default single-line control class.
  */
 export const comboboxMultiselectControlClass = [
   "flex min-h-10 h-auto w-full min-w-0 flex-wrap items-center gap-1 rounded-md border border-separator-opaque bg-surface-raised px-1.5 py-1 shadow-sm ring-offset-background",
@@ -244,7 +244,7 @@ const chipClass =
 const chipRemoveClass =
   "inline-flex shrink-0 rounded p-0.5 text-secondary-label transition-colors hover:bg-surface-raised hover:text-label focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1";
 
-/** Vstup uvnitř multiselect controlu — nižší řádková výška vedle chipů. */
+/** Input inside the multiselect control — lower line height next to the chips. */
 export const comboboxMultiselectInputClass = [
   "h-8 min-h-8 min-w-[6rem] flex-1 border-0 bg-transparent px-2 py-1 text-callout text-label shadow-none outline-none",
   "placeholder:text-placeholder",
@@ -254,14 +254,14 @@ export const comboboxMultiselectInputClass = [
 
 export type ComboboxChipProps = {
   class?: string;
-  /** Hodnota odpovídající `Combobox.Item` `value` — předá se do {@link ComboboxChipProps.onRemove$}. */
+  /** The value matching the `Combobox.Item` `value` — passed to {@link ComboboxChipProps.onRemove$}. */
   value: string;
-  /** Po kliknutí na ikonu odebrání (např. odfiltrovat z pole v `bind:value`). */
+  /** On clicking the remove icon (e.g. filter out from the array in `bind:value`). */
   onRemove$?: QRL<(value: string) => void>;
 };
 
 /**
- * Kompaktní štítek pro zobrazení vybrané hodnoty u multiselect comboboxu; ikona odebrání volitelná přes {@link ComboboxChipProps.onRemove$}.
+ * A compact label for displaying a selected value in a multiselect combobox; the remove icon is optional via {@link ComboboxChipProps.onRemove$}.
  */
 export const ComboboxChip = component$<ComboboxChipProps>((props) => {
   const merged = [chipClass, props.class].filter(Boolean).join(" ");
@@ -275,7 +275,7 @@ export const ComboboxChip = component$<ComboboxChipProps>((props) => {
         <button
           type="button"
           class={chipRemoveClass}
-          aria-label="Odebrat"
+          aria-label="Remove"
           preventdefault:mousedown
           onClick$={$(async () => {
             await props.onRemove$!(props.value);
@@ -304,7 +304,7 @@ export type ComboboxLabelProps = PropsOf<typeof HeadlessCombobox.Label>;
 export type ComboboxControlProps = PropsOf<typeof HeadlessCombobox.Control>;
 
 export type ComboboxInputProps = PropsOf<typeof HeadlessCombobox.Input> & {
-  /** Při fokusu vstupu otevře seznam (užitečné s `filter`). */
+  /** On input focus opens the list (useful with `filter`). */
   showOnFocus?: boolean;
 };
 
@@ -352,7 +352,7 @@ export const ComboboxItem: FunctionComponent<ComboboxItemProps> = (props) => {
 };
 
 /**
- * Text položky musí být v mapě headlessu jeden řetězec (typeahead). Použij např. {\`Položka ${id}\`}.
+ * The item text must be a single string in the headless map (typeahead). Use e.g. {\`Item ${id}\`}.
  */
 export const ComboboxItemLabel: FunctionComponent<ComboboxItemLabelProps> = (props) => {
   const merged = [itemLabelClass, props.class].filter(Boolean).join(" ");
@@ -370,8 +370,8 @@ export const ComboboxEmpty: FunctionComponent<ComboboxEmptyProps> = (props) => {
 };
 
 /**
- * Kořen comboboxu — předává stylované {@link ComboboxItem} / {@link ComboboxItemLabel} do headless walkeru
- * (stejný princip jako u Select). {@link ComboboxEmpty} a {@link ComboboxErrorMessage} stylovaně vlož do stromu jako děti.
+ * Combobox root — passes styled {@link ComboboxItem} / {@link ComboboxItemLabel} into the headless walker
+ * (the same principle as Select). Insert styled {@link ComboboxEmpty} and {@link ComboboxErrorMessage} into the tree as children.
  */
 export const ComboboxRoot: FunctionComponent<ComboboxRootProps> = (props) => {
   const { comboboxItemComponent, comboboxItemLabelComponent, class: className, ...rest } = props;
@@ -482,8 +482,8 @@ export const ComboboxInline: FunctionComponent<ComboboxInlineProps> = (props) =>
 );
 
 /**
- * Složené API nad {@link https://qwikui.com/docs/headless/combobox | @qwik-ui/headless Combobox}
- * (shadcn „Combobox“); styly z COLORS.md jako u Select / Popover.
+ * Compound API over {@link https://qwikui.com/docs/headless/combobox | @qwik-ui/headless Combobox}
+ * (shadcn "Combobox"); styles from COLORS.md like Select / Popover.
  */
 export const Combobox = {
   Root: ComboboxRoot,
@@ -507,7 +507,7 @@ export const Combobox = {
   PopoverInline: ComboboxInline,
   Inline: ComboboxInline,
   PopoverChip: ComboboxChip,
-  /** Alias pro {@link ComboboxChip} — stejné jako `PopoverChip`. */
+  /** Alias for {@link ComboboxChip} — same as `PopoverChip`. */
   Chip: ComboboxChip,
   PopoverEmpty: ComboboxEmpty,
   Empty: ComboboxEmpty,

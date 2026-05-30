@@ -2,50 +2,50 @@
  * @component textarea
  * @title Textarea
  * @version 1.0.0
- * @example Základ
- * Základ — viz ukázka níže.
+ * @example Basics
+ * Basics — see the example below.
  * ```tsx
  * import { component$ } from "@builder.io/qwik";
  * import { Textarea } from "~/components/ui/base/textarea";
  * 
  * export default component$(() => (
- *   <Textarea placeholder="Napište zprávu…" rows={4} />
+ *   <Textarea placeholder="Write a message…" rows={4} />
  * ));
  * ```
  *
- * @example Se štítkem
- * Se štítkem — viz ukázka níže.
+ * @example With a label
+ * With a label — see the example below.
  * ```tsx
  * import { Textarea } from "~/components/ui/base/textarea";
  * import { Label } from "~/components/ui/base/label";
  * 
  * <div class="flex max-w-md flex-col gap-2">
- *   <Label for="msg">Zpráva</Label>
- *   <Textarea id="msg" name="message" placeholder="Obsah…" rows={5} />
+ *   <Label for="msg">Message</Label>
+ *   <Textarea id="msg" name="message" placeholder="Content…" rows={5} />
  * </div>
  * ```
  *
- * @example Zakázané přetahování (disableResize)
- * Prop `disableResize` zakáže nativní přetahování rohu — vhodné pro fixní výšku nebo layout s flexem.
+ * @example Disabled resizing (disableResize)
+ * The `disableResize` prop disables the native corner drag — useful for a fixed height or a flex layout.
  * ```tsx
  * import { Textarea } from "~/components/ui/base/textarea";
  * import { Label } from "~/components/ui/base/label";
  *
  * <div class="flex max-w-md flex-col gap-2">
- *   <Label for="fixed">Zpráva (fixní výška)</Label>
- *   <Textarea id="fixed" placeholder="Nelze zvětšit…" rows={4} disableResize />
+ *   <Label for="fixed">Message (fixed height)</Label>
+ *   <Textarea id="fixed" placeholder="Cannot be enlarged…" rows={4} disableResize />
  * </div>
  * ```
  *
- * @example Stavy
- * `disabled` a `readOnly` — chybové stavy řeš přes `class` nebo obal.
+ * @example States
+ * `disabled` and `readOnly` — handle error states via `class` or a wrapper.
  * ```tsx
  * import { Textarea } from "~/components/ui/base/textarea";
  * 
  * <div class="flex max-w-md flex-col gap-3">
- *   <Textarea placeholder="Běžný stav" rows={3} />
+ *   <Textarea placeholder="Regular state" rows={3} />
  *   <Textarea disabled placeholder="Disabled" rows={3} />
- *   <Textarea readOnly value="Jen ke čtení" rows={3} />
+ *   <Textarea readOnly value="Read only" rows={3} />
  * </div>
  * ```
  
@@ -62,7 +62,7 @@
 import { component$, type PropsOf } from "@builder.io/qwik";
 
 export type TextareaProps = PropsOf<"textarea"> & {
-  /** Zakáže uživatelské měnění velikosti (nativní `resize`). */
+  /** Disables user resizing (native `resize`). */
   disableResize?: boolean;
 };
 

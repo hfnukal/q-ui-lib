@@ -2,8 +2,8 @@
  * @component code-edit
  * @title CodeEdit
  * @version 1.0.0
- * @example Základní použití
- * Řízená komponenta — hodnota přichází přes `value`, změny jsou hlášeny přes `onValue.
+ * @example Basic usage
+ * A controlled component — the value comes via `value`, changes are reported via `onValue.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
  * import { CodeEdit } from "~/components/ui/base/code-edit";
@@ -21,13 +21,13 @@
  * ```
  *
  * @example TSX / TypeScript
- * Jazyk `tsx` — vhodné pro ukázky Qwik komponent a TypeScriptu. Další jazyky (`json`, `html`, `css`) nastav stejným způsobem přes prop `language`.
+ * The `tsx` language — suitable for Qwik component and TypeScript examples. Set other languages (`json`, `html`, `css`) the same way via the `language` prop.
  * ```tsx
  * import { component$, useSignal, $ } from "@builder.io/qwik";
  * import { CodeEdit } from "~/components/ui/base/code-edit";
  * 
  * export default component$(() => {
- *   const tsxCode = useSignal("// ukázka");
+ *   const tsxCode = useSignal("// example");
  *   const set = $((v: string) => {
  *     tsxCode.value = v;
  *   });
@@ -38,7 +38,7 @@
  * ```
  *
  * @example readOnly
- * Prop `readOnly` — žádný `textarea`, pouze zvýrazněný výpis.
+ * Prop `readOnly` — no `textarea`, only a highlighted listing.
  * ```tsx
  * <CodeEdit
  *   readOnly

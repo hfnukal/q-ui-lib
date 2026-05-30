@@ -2,35 +2,35 @@
  * @component carousel
  * @title Carousel
  * @version 1.0.0
- * @example Tečky uprostřed (pagination)
- * Pod karuselem jsou vystředěné tečky: aktivní snímek je vyplněný, ostatní jen obrysové. Kliknutím na tečku přejdeš na daný snímek. Šipky jsou textové (‹ ›), bez ikon. Uvnitř každého snímku je kompletní `Card` s titulkem, popisem a obsahem; na `Carousel.Slide` je `border-0 bg-transparent p-0` , aby se nepletly dva rámečky.
+ * @example Centered dots (pagination)
+ * Below the carousel are centered dots: the active slide is filled, the others are just outlined. Click a dot to go to that slide. The arrows are textual (‹ ›), without icons. Inside each slide is a complete `Card` with a title, description and content; `Carousel.Slide` has `border-0 bg-transparent p-0` so the two frames don't clash.
  * ```tsx
  * import { Card } from "~/components/ui/base/card";
  * import { Carousel } from "~/components/ui/base/carousel";
  * 
  * <Carousel.Root class="max-w-xl" rewind>
- *   <Carousel.Title>Karusel</Carousel.Title>
+ *   <Carousel.Title>Carousel</Carousel.Title>
  *   <div class="relative px-11">
  *     <Carousel.Scroller>
  *       <Carousel.Slide class="border-0 bg-transparent p-0 shadow-none">
  *         <Card.Root class="w-full">
  *           <Card.Header>
- *             <Card.Title>První karta</Card.Title>
- *             <Card.Description>Stručný podtitulek</Card.Description>
+ *             <Card.Title>First card</Card.Title>
+ *             <Card.Description>Brief subtitle</Card.Description>
  *           </Card.Header>
  *           <Card.Content>
- *             <p class="text-callout text-secondary-label">Obsah snímku.</p>
+ *             <p class="text-callout text-secondary-label">Slide content.</p>
  *           </Card.Content>
  *         </Card.Root>
  *       </Carousel.Slide>
  *       <Carousel.Slide class="border-0 bg-transparent p-0 shadow-none">
  *         <Card.Root class="w-full">
  *           <Card.Header>
- *             <Card.Title>Druhá karta</Card.Title>
- *             <Card.Description>Další snímek</Card.Description>
+ *             <Card.Title>Second card</Card.Title>
+ *             <Card.Description>Another slide</Card.Description>
  *           </Card.Header>
  *           <Card.Content>
- *             <p class="text-callout text-secondary-label">Stejný layout jako první snímek.</p>
+ *             <p class="text-callout text-secondary-label">Same layout as the first slide.</p>
  *           </Card.Content>
  *         </Card.Root>
  *       </Carousel.Slide>
@@ -46,8 +46,8 @@
  * </Carousel.Root>
  * ```
  *
- * @example Autoplay a přehrávač
- * `bind:autoplay` a `Carousel.Player` — u uživatelů s `prefers-reduced-motion` se tlačítko přehrávače skryje (headless CSS). Snímky jsou opět karty s obsahem.
+ * @example Autoplay and player
+ * `bind:autoplay` and `Carousel.Player` — for users with `prefers-reduced-motion` the player button is hidden (headless CSS). The slides are again cards with content.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
  * import { Card } from "~/components/ui/base/card";
@@ -71,18 +71,18 @@
  *               <Card.Description>Autoplay</Card.Description>
  *             </Card.Header>
  *             <Card.Content>
- *               <p class="text-callout text-secondary-label">Obsah první karty.</p>
+ *               <p class="text-callout text-secondary-label">First card content.</p>
  *             </Card.Content>
  *           </Card.Root>
  *         </Carousel.Slide>
  *         <Carousel.Slide class="border-0 bg-transparent p-0 shadow-none">
  *           <Card.Root class="w-full">
  *             <Card.Header>
- *               <Card.Title>Druhá karta</Card.Title>
- *               <Card.Description>Další snímek ve smyčce</Card.Description>
+ *               <Card.Title>Second card</Card.Title>
+ *               <Card.Description>Another slide in the loop</Card.Description>
  *             </Card.Header>
  *             <Card.Content>
- *               <p class="text-callout text-secondary-label">Stejný layout jako první snímek; autoplay pokračuje podle intervalu.</p>
+ *               <p class="text-callout text-secondary-label">Same layout as the first slide; autoplay continues at the interval.</p>
  *             </Card.Content>
  *           </Card.Root>
  *         </Carousel.Slide>
@@ -95,45 +95,45 @@
  * });
  * ```
  *
- * @example Stepper (číslované kroky)
- * `Carousel.Stepper` a `Carousel.Step` — karty v snímcích, skok přímo podle čísla.
+ * @example Stepper (numbered steps)
+ * `Carousel.Stepper` and `Carousel.Step` — cards in slides, jump directly by number.
  * ```tsx
  * import { Card } from "~/components/ui/base/card";
  * import { Carousel } from "~/components/ui/base/carousel";
  * 
  * <Carousel.Root class="max-w-md" rewind>
- *   <Carousel.Title>Kroky</Carousel.Title>
+ *   <Carousel.Title>Steps</Carousel.Title>
  *   <Carousel.Scroller>
  *     <Carousel.Slide class="border-0 bg-transparent p-0 shadow-none">
  *       <Card.Root class="w-full">
  *         <Card.Header>
- *           <Card.Title>Krok 1</Card.Title>
- *           <Card.Description>Výběr šablony</Card.Description>
+ *           <Card.Title>Step 1</Card.Title>
+ *           <Card.Description>Template selection</Card.Description>
  *         </Card.Header>
  *         <Card.Content>
- *           <p class="text-callout text-secondary-label">Vyber základní rozložení; další kroky ho doplní.</p>
+ *           <p class="text-callout text-secondary-label">Choose the base layout; the next steps will complete it.</p>
  *         </Card.Content>
  *       </Card.Root>
  *     </Carousel.Slide>
  *     <Carousel.Slide class="border-0 bg-transparent p-0 shadow-none">
  *       <Card.Root class="w-full">
  *         <Card.Header>
- *           <Card.Title>Krok 2</Card.Title>
- *           <Card.Description>Nastavení obsahu</Card.Description>
+ *           <Card.Title>Step 2</Card.Title>
+ *           <Card.Description>Content setup</Card.Description>
  *         </Card.Header>
  *         <Card.Content>
- *           <p class="text-callout text-secondary-label">Uprav texty a obrázky; náhled se aktualizuje okamžitě.</p>
+ *           <p class="text-callout text-secondary-label">Edit the texts and images; the preview updates instantly.</p>
  *         </Card.Content>
  *       </Card.Root>
  *     </Carousel.Slide>
  *     <Carousel.Slide class="border-0 bg-transparent p-0 shadow-none">
  *       <Card.Root class="w-full">
  *         <Card.Header>
- *           <Card.Title>Krok 3</Card.Title>
- *           <Card.Description>Publikace</Card.Description>
+ *           <Card.Title>Step 3</Card.Title>
+ *           <Card.Description>Publishing</Card.Description>
  *         </Card.Header>
  *         <Card.Content>
- *           <p class="text-callout text-secondary-label">Zkontroluj náhled a potvrď zveřejnění.</p>
+ *           <p class="text-callout text-secondary-label">Review the preview and confirm publishing.</p>
  *         </Card.Content>
  *       </Card.Root>
  *     </Carousel.Slide>
@@ -158,7 +158,7 @@ import {
 } from "@builder.io/qwik";
 import { Carousel as HeadlessCarousel } from "@qwik-ui/headless";
 
-/** Vzhled vychází z konceptu shadcn Carousel; barvy a tokeny z COLORS.md. */
+/** Appearance is based on the shadcn Carousel concept; colors and tokens from COLORS.md. */
 
 const rootClass = "relative w-full";
 
@@ -174,7 +174,7 @@ const navButtonClass =
 const paginationClass =
   "flex flex-wrap items-center justify-center gap-2.5 pt-4";
 
-/** Neaktivní: jen obrys; aktivní (`aria-selected`): vyplněná tečka. Kliknutí řeší headless. */
+/** Inactive: just an outline; active (`aria-selected`): filled dot. Clicking is handled by headless. */
 const bulletClass =
   "box-border h-2.5 w-2.5 shrink-0 cursor-pointer rounded-full border-2 border-secondary-label/45 bg-transparent transition-colors hover:border-accent/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 aria-selected:border-accent aria-selected:bg-accent";
 
@@ -190,7 +190,7 @@ const stepClass =
 
 export type CarouselRootProps = PropsOf<typeof HeadlessCarousel.Root>;
 
-/** `component$` + {@link Slot} — stejný vzor jako Checkbox/Label: jinak se děti do headless primitiva nepromítnou. */
+/** `component$` + {@link Slot} — the same pattern as Checkbox/Label: otherwise the children are not projected into the headless primitive. */
 export const CarouselSlide = component$<PropsOf<typeof HeadlessCarousel.Slide>>((props) => {
   const merged = [slideClass, props.class].filter(Boolean).join(" ");
   return (
@@ -210,7 +210,7 @@ export const CarouselBullet = component$<PropsOf<typeof HeadlessCarousel.Bullet>
 });
 
 /**
- * {@link https://qwikui.com/docs/headless/carousel | Carousel.Root}: výchozí styly a předání vlastních {@link CarouselSlide} / {@link CarouselBullet} / {@link CarouselTitle}.
+ * {@link https://qwikui.com/docs/headless/carousel | Carousel.Root}: default styles and passing custom {@link CarouselSlide} / {@link CarouselBullet} / {@link CarouselTitle}.
  */
 export const CarouselRoot: FunctionComponent<CarouselRootProps> = (props) => {
   const {
@@ -271,7 +271,7 @@ export const CarouselPagination: FunctionComponent<
 };
 
 /**
- * Obal kolem headless titulku (id pro aria zůstává uvnitř); výchozí je jen pro čtečky — přepiš `class` pro viditelný nadpis.
+ * Wrapper around the headless title (the id for aria stays inside); the default is screen-reader-only — override `class` for a visible heading.
  */
 export const CarouselTitle = component$<{ class?: string }>((props) => {
   const merged = [titleWrapperClass, props.class].filter(Boolean).join(" ");
@@ -311,7 +311,7 @@ export const CarouselStep = component$((props: PropsOf<typeof HeadlessCarousel.S
 });
 
 /**
- * Složené API jako v {@link https://qwikui.com/docs/headless/carousel | Qwik UI Carousel}.
+ * Compound API as in {@link https://qwikui.com/docs/headless/carousel | Qwik UI Carousel}.
  */
 export const Carousel = {
   Root: CarouselRoot,

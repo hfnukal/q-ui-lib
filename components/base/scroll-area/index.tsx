@@ -2,8 +2,8 @@
  * @component scroll-area
  * @title ScrollArea
  * @version 1.1.0
- * @example Složené API
- * `ScrollArea.Root` drží výšku a ořízne rohy; `ScrollArea.Viewport` scroluje obsah.
+ * @example Composite API
+ * `ScrollArea.Root` holds the height and clips the corners; `ScrollArea.Viewport` scrolls the content.
  * ```tsx
  * import { ScrollArea } from "~/components/ui/base/scroll-area";
  * 
@@ -11,15 +11,15 @@
  *   <ScrollArea.Viewport class="p-4">
  *     {Array.from({ length: 40 }, (_, i) => (
  *       <p key={i} class="text-body text-label">
- *         Řádek {i + 1} — ukázkový text, aby byl scroll vidět.
+ *         Row {i + 1} — sample text so the scroll is visible.
  *       </p>
  *     ))}
  *   </ScrollArea.Viewport>
  * </ScrollArea.Root>
  * ```
  *
- * @example Zkratka Pane
- * `ScrollArea.Pane` = Root + Viewport + slot; padding dejte přes `viewportClass`.
+ * @example Pane shortcut
+ * `ScrollArea.Pane` = Root + Viewport + slot; set padding via `viewportClass`.
  * ```tsx
  * import { ScrollArea } from "~/components/ui/base/scroll-area";
  * 
@@ -29,14 +29,14 @@
  * >
  *   {Array.from({ length: 40 }, (_, i) => (
  *     <p key={i} class="text-body text-label">
- *       Řádek {i + 1} — ukázkový text, aby byl scroll vidět.
+ *       Row {i + 1} — sample text so the scroll is visible.
  *     </p>
  *   ))}
  * </ScrollArea.Pane>
  * ```
  *
- * @example Vodorovný scroll
- * Prop `direction=&quot;horizontal&quot;` na Viewport / Pane ( `LAYOUT.md` ).
+ * @example Horizontal scroll
+ * The `direction=&quot;horizontal&quot;` prop on Viewport / Pane ( `LAYOUT.md` ).
  * ```tsx
  * import { ScrollArea } from "~/components/ui/base/scroll-area";
  * 
@@ -66,10 +66,10 @@ import { component$, type PropsOf, Slot, useSignal, useVisibleTask$ } from "@bui
 export type ScrollAreaRootProps = PropsOf<"div">;
 
 /**
- * Vnější obal — skryje přetečení rohů (`overflow-hidden`), výšku/šířku určuje `class` (např. `h-72`).
- * Inspirace shadcn Scroll Area; bez Radix — nativní scroll (bez headless mapování; viz CREATE.md).
- * `ScrollArea.Root` má pevný root `<div>` (`PropsOf<"div">`) a nepodporuje změnu tagu.
- * Nevkládejte do `<p>` ani `<pre>`.
+ * Outer wrapper — hides corner overflow (`overflow-hidden`), the height/width is set by `class` (e.g. `h-72`).
+ * Inspired by shadcn Scroll Area; no Radix — native scroll (without headless mapping; see CREATE.md).
+ * `ScrollArea.Root` has a fixed root `<div>` (`PropsOf<"div">`) and does not support changing the tag.
+ * Do not place inside `<p>` or `<pre>`.
  */
 export const ScrollAreaRoot = component$<ScrollAreaRootProps>((props) => {
   const { class: className, ...rest } = props;
@@ -84,17 +84,17 @@ export const ScrollAreaRoot = component$<ScrollAreaRootProps>((props) => {
 });
 
 export type ScrollAreaViewportProps = PropsOf<"div"> & {
-  /** Osa scrollování (LAYOUT.md). Výchozí `both` = chování jako dříve. */
+  /** Scroll axis (LAYOUT.md). Default `both` = same behavior as before. */
   direction?: "vertical" | "horizontal" | "both";
-  /** Uloží pozici scrollu do `sessionStorage` a po obnovení stránky ji obnoví. */
+  /** Saves the scroll position to `sessionStorage` and restores it after a page reload. */
   keepScroll?: boolean;
-  /** Klíč v rámci `sessionStorage` (více scrollů na stránce). */
+  /** Key within `sessionStorage` (multiple scrolls on a page). */
   keepScrollId?: string;
 };
 
 /**
- * Scrollovatelná oblast — dědí zaoblení od rodiče (`rounded-[inherit]`).
- * Scrollbar je zjemňěný pomocí tokenů `fill-tertiary` / `fill-secondary` (COLORS.md).
+ * Scrollable area — inherits rounding from the parent (`rounded-[inherit]`).
+ * The scrollbar is softened using the `fill-tertiary` / `fill-secondary` tokens (COLORS.md).
  */
 export const ScrollAreaViewport = component$<ScrollAreaViewportProps>((props) => {
   const {
@@ -167,16 +167,16 @@ export const ScrollAreaViewport = component$<ScrollAreaViewportProps>((props) =>
 });
 
 export type ScrollAreaPaneProps = ScrollAreaRootProps & {
-  /** Třídy jen pro vnitřní viewport (např. `p-4`). */
+  /** Classes only for the inner viewport (e.g. `p-4`). */
   viewportClass?: string;
-  /** Předáno na {@link ScrollAreaViewport}. */
+  /** Passed to {@link ScrollAreaViewport}. */
   direction?: ScrollAreaViewportProps["direction"];
   keepScroll?: ScrollAreaViewportProps["keepScroll"];
   keepScrollId?: ScrollAreaViewportProps["keepScrollId"];
 };
 
 /**
- * Zkratka: {@link ScrollAreaRoot} + {@link ScrollAreaViewport} + obsah ve slotu.
+ * Shortcut: {@link ScrollAreaRoot} + {@link ScrollAreaViewport} + content in the slot.
  */
 export const ScrollAreaPane = component$<ScrollAreaPaneProps>((props) => {
   const {

@@ -2,7 +2,7 @@
  * @component checkbox
  * @title Checkbox
  * @version 1.1.0
- * @example Složené API — bind:checked
+ * @example Compound API — bind:checked
  * `Checkbox.Root` + `Checkbox.Indicator`.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
@@ -18,7 +18,7 @@
  *         </Checkbox.Indicator>
  *       </Checkbox.Root>
  *       <span id="demo-cb-compound-label" class="text-sm text-muted-foreground">
- *         Stav: {checked.value ? "vybráno" : "nevybráno"}
+ *         State: {checked.value ? "selected" : "not selected"}
  *       </span>
  *     </div>
  *   );
@@ -26,7 +26,7 @@
  * ```
  *
  * @example CheckboxControl
- * Jedna komponenta s ikonou; vždy s přímým headless stromem uvnitř (vhodné s `bind:checked`).
+ * A single component with an icon; always with a direct headless tree inside (suitable with `bind:checked`).
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
  * import { CheckboxControl } from "~/components/ui/base/checkbox";
@@ -35,17 +35,17 @@
  *   const ok = useSignal(false);
  *   return (
  *     <div class="flex items-center gap-2">
- *       <CheckboxControl bind:checked={ok} aria-label="Souhlasím" />
+ *       <CheckboxControl bind:checked={ok} aria-label="I agree" />
  *       <span class="text-sm text-muted-foreground">
- *         Stav: {ok.value ? "vybráno" : "nevybráno"}
+ *         State: {ok.value ? "selected" : "not selected"}
  *       </span>
  *     </div>
  *   );
  * });
  * ```
  *
- * @example CheckboxField — klik na štítek
- * Kombinuje `CheckboxControl` a `Label`; klik na text přepne stejný signál jako checkbox.
+ * @example CheckboxField — click on label
+ * Combines `CheckboxControl` and `Label`; clicking the text toggles the same signal as the checkbox.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
  * import { CheckboxField } from "~/components/ui/base/checkbox";
@@ -53,13 +53,13 @@
  * export default component$(() => {
  *   const accepted = useSignal(false);
  *   return (
- *     <CheckboxField bind:checked={accepted} label="Souhlasím s podmínkami" />
+ *     <CheckboxField bind:checked={accepted} label="I agree to the terms" />
  *   );
  * });
  * ```
  *
- * @example Vlastní řádek (Label + onClick$)
- * Stejné chování ručně: `aria-labelledby` + přepnutí signálu v `onClick na štítku (bez `htmlFor` / `for`).
+ * @example Custom row (Label + onClick$)
+ * The same behavior manually: `aria-labelledby` + toggling the signal in `onClick on the label (without `htmlFor` / `for`).
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
  * import { CheckboxControl } from "~/components/ui/base/checkbox";
@@ -73,7 +73,7 @@
  *     <div class="flex items-center gap-2">
  *       <CheckboxControl bind:checked={v} id={id} aria-labelledby={lid} />
  *       <Label id={lid} class="cursor-pointer" onClick$={$(() => { v.value = !v.value; })}>
- *         Vlastní text
+ *         Custom text
  *       </Label>
  *     </div>
  *   );
@@ -90,7 +90,7 @@ import { Label } from "../label";
 const rootClass =
   "peer box-border flex size-4 shrink-0 items-center justify-center rounded-[4px] border border-separator-opaque bg-surface-raised text-white shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background aria-checked:border-accent aria-checked:bg-accent";
 
-/** Bez `size-full` na hostu — skrytý headless indikátor (`display:none`) by jinak mohl nechat prázdný Qwik host a rozházet layout. */
+/** Without `size-full` on the host — a hidden headless indicator (`display:none`) could otherwise leave an empty Qwik host and break the layout. */
 const indicatorClass = "flex items-center justify-center text-current";
 
 export type CheckboxRootProps = PropsOf<typeof HeadlessCheckbox.Root>;
@@ -98,8 +98,8 @@ export type CheckboxRootProps = PropsOf<typeof HeadlessCheckbox.Root>;
 export type CheckboxIndicatorProps = PropsOf<typeof HeadlessCheckbox.Indicator>;
 
 /**
- * Styled {@link https://qwikui.com/docs/headless/checkbox | Checkbox.Root} (role=`checkbox`, klávesa Space).
- * Musí být `component$` + {@link Slot}, aby se děti promítly do headless kořene (stejný vzor jako {@link Label}).
+ * Styled {@link https://qwikui.com/docs/headless/checkbox | Checkbox.Root} (role=`checkbox`, Space key).
+ * Must be `component$` + {@link Slot} so children are projected into the headless root (the same pattern as {@link Label}).
  */
 export const CheckboxRoot = component$<CheckboxRootProps>((props) => {
   const merged = [rootClass, props.class].filter(Boolean).join(" ");
@@ -111,8 +111,8 @@ export const CheckboxRoot = component$<CheckboxRootProps>((props) => {
 });
 
 /**
- * Zobrazení stavu zaškrtnutí; skryté přes headless styly, když není checked.
- * `component$` + {@link Slot} kvůli správnému přenosu dětí do headless primitiva.
+ * Displays the checked state; hidden via headless styles when not checked.
+ * `component$` + {@link Slot} for correctly passing children into the headless primitive.
  */
 export const CheckboxIndicator = component$<CheckboxIndicatorProps>((props) => {
   const merged = [indicatorClass, props.class].filter(Boolean).join(" ");
@@ -124,15 +124,15 @@ export const CheckboxIndicator = component$<CheckboxIndicatorProps>((props) => {
 });
 
 /**
- * Složené API: {@link CheckboxRoot}, {@link CheckboxIndicator}
- * (v dokumentaci Qwik UI `Checkbox.*`).
+ * Compound API: {@link CheckboxRoot}, {@link CheckboxIndicator}
+ * (in the Qwik UI documentation `Checkbox.*`).
  */
 export const Checkbox = {
   Root: CheckboxRoot,
   Indicator: CheckboxIndicator,
 };
 
-/** Výchozí kompaktní fajfka (currentColor = `text-white` z kořene při checked). */
+/** Default compact checkmark (currentColor = `text-white` from the root when checked). */
 export const CheckboxCheckIcon = component$(() => {
   return (
     <svg
@@ -153,8 +153,8 @@ export const CheckboxCheckIcon = component$(() => {
 export type CheckboxControlProps = CheckboxRootProps;
 
 /**
- * Kořen + indikátor + ikona v jednom `component$` přímo nad headlessem (bez vnořeného {@link CheckboxRoot} / {@link CheckboxIndicator}),
- * aby Qwik správně promítl sloty a kontext — vnořené `component$` kolem stejného stromu rozbíjely chování po odškrtnutí.
+ * Root + indicator + icon in a single `component$` directly over headless (without a nested {@link CheckboxRoot} / {@link CheckboxIndicator}),
+ * so Qwik correctly projects the slots and context — nested `component$` around the same tree broke the behavior after unchecking.
  */
 export const CheckboxControl = component$<CheckboxControlProps>((props) => {
   const { class: className, ...rest } = props;
@@ -169,13 +169,13 @@ export const CheckboxControl = component$<CheckboxControlProps>((props) => {
 });
 
 export type CheckboxFieldProps = CheckboxControlProps & {
-  /** Text štítku; klik na štítek přepíná stejný stav jako checkbox. */
+  /** Label text; clicking the label toggles the same state as the checkbox. */
   label: string;
 };
 
 /**
- * {@link CheckboxControl} + {@link Label}: klik na text volitelně přes `onClick$` mění signál (`bind:checked`) nebo u neřízeného režimu
- * deleguje programový `click` na kořen checkboxu (žádné `for` — u `role="checkbox"` na `div` by hrozilo dvojité přepnutí).
+ * {@link CheckboxControl} + {@link Label}: clicking the text optionally changes the signal via `onClick$` (`bind:checked`) or in uncontrolled mode
+ * delegates a programmatic `click` to the checkbox root (no `for` — with `role="checkbox"` on a `div` a double toggle could occur).
  */
 export const CheckboxField = component$<CheckboxFieldProps>((props) => {
   const { label, class: className, id: givenId, ...rest } = props;

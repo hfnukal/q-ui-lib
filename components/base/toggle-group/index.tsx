@@ -3,7 +3,7 @@
  * @title ToggleGroup
  * @version 1.0.0
  * @example Single — ToggleGroupGroup
- * V jednu chvíli je aktivní nejvýše jedna položka; šipky mění fokus podle orientace.
+ * At most one item is active at a time; arrow keys move focus according to the orientation.
  * ```tsx
  * import { ToggleGroupGroup } from "~/components/ui/base/toggle-group";
  * 
@@ -17,7 +17,7 @@
  * ```
  *
  * @example Multiple
- * Více současných aktivních hodnot (např. tučné i kurzíva najednou).
+ * Multiple active values at once (e.g. bold and italic together).
  * ```tsx
  * import { ToggleGroupGroup } from "~/components/ui/base/toggle-group";
  * 
@@ -31,7 +31,7 @@
  * ```
  *
  * @example Vertical
- * Svislé uspořádání přes `orientation=&quot;vertical&quot;`.
+ * Vertical arrangement via `orientation=&quot;vertical&quot;`.
  * ```tsx
  * import { ToggleGroupGroup } from "~/components/ui/base/toggle-group";
  * 
@@ -49,7 +49,7 @@
  * ```
  *
  * @example Compound API
- * Pro řízený stav použij `bind:value` na `ToggleGroup.Root` (viz dokumentace Qwik UI Toggle Group).
+ * For controlled state use `bind:value` on `ToggleGroup.Root` (see the Qwik UI Toggle Group documentation).
  * ```tsx
  * import { ToggleGroup } from "~/components/ui/base/toggle-group";
  * 
@@ -72,7 +72,7 @@
 import { component$, type FunctionComponent, type PropsOf } from "@builder.io/qwik";
 import { ToggleGroup as HeadlessToggleGroup } from "@qwik-ui/headless";
 
-/** Vzhled odpovídá stylu tab triggerů (COLORS.md); stisk je `aria-pressed`. */
+/** Appearance matches the tab trigger style (COLORS.md); the pressed state is `aria-pressed`. */
 const itemClass =
   "inline-flex shrink-0 items-center justify-center rounded-md border border-transparent px-3 py-1.5 font-medium text-callout text-secondary-label ring-offset-background transition-all focus:outline-none focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 aria-pressed:border-separator-opaque aria-pressed:bg-surface-overlay aria-pressed:text-label aria-pressed:shadow-inner";
 
@@ -102,8 +102,8 @@ export const ToggleGroupItem: FunctionComponent<ToggleGroupItemProps> = (props) 
 };
 
 /**
- * Složené API: {@link ToggleGroupRoot}, {@link ToggleGroupItem}
- * (v dokumentaci Qwik UI `ToggleGroup.*`).
+ * Compound API: {@link ToggleGroupRoot}, {@link ToggleGroupItem}
+ * (`ToggleGroup.*` in the Qwik UI documentation).
  */
 export const ToggleGroup = {
   Root: ToggleGroupRoot,
@@ -130,7 +130,7 @@ export type ToggleGroupGroupProps =
   | (ToggleGroupGroupBase & { multiple: true; defaultValue?: string[] });
 
 /**
- * Zkratka nad {@link ToggleGroup} z pole položek (`multiple` určí single vs multi výběr).
+ * Shortcut over {@link ToggleGroup} from an array of items (`multiple` determines single vs multi selection).
  */
 export const ToggleGroupGroup = component$<ToggleGroupGroupProps>((props) => {
   const orientation = props.orientation ?? "horizontal";

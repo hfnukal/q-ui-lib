@@ -2,23 +2,23 @@
  * @component box
  * @title Box
  * @version 1.0.0
- * @example Předvolby
- * Tokenové předvolby: `padding`, `background`, okraj a zaoblení.
+ * @example Presets
+ * Token presets: `padding`, `background`, border and rounding.
  * ```tsx
  * import { Box } from "~/components/ui/base/box";
  * 
  * <Box padding="md" margin="none" background="raised" border rounded="lg">
- *   Obsah
+ *   Content
  * </Box>
  * ```
  *
- * @example Rozšíření přes class
- * Vlastní layout a vzhled jednou třídou přes `class`.
+ * @example Extending via class
+ * Custom layout and appearance with a single class via `class`.
  * ```tsx
  * import { Box } from "~/components/ui/base/box";
  * 
  * <Box class="w-64 p-6 bg-surface-overlay rounded-xl border border-separator-opaque">
- *   Šířka a další styly přes class
+ *   Width and other styles via class
  * </Box>
  * ```
  
@@ -77,8 +77,8 @@ export type BoxProps = Omit<PropsOf<"div">, "class"> & {
 
 /**
  * Generic layout/styling container (LAYOUT.md). Width/height via `class` (e.g. `w-full h-full`).
- * Root je pevně `<div>` (`BoxProps` vychází z `PropsOf<"div">`), tag nelze přepnout přes API.
- * Nevkládejte do `<p>` ani `<pre>`.
+ * The root is fixed as `<div>` (`BoxProps` is based on `PropsOf<"div">`); the tag cannot be switched via the API.
+ * Do not place inside `<p>` or `<pre>`.
  */
 export const Box = component$<BoxProps>((props) => {
   const {

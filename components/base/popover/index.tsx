@@ -2,78 +2,78 @@
  * @component popover
  * @title Popover
  * @version 1.0.1
- * @example Základní použití
- * Základní použití — viz ukázka níže.
+ * @example Basic usage
+ * Basic usage — see the example below.
  * ```tsx
  * import { Popover } from "~/components/ui/base/popover";
  * 
  * <Popover.Root>
- *   <Popover.Trigger>Otevřít</Popover.Trigger>
+ *   <Popover.Trigger>Open</Popover.Trigger>
  *   <Popover.Panel>
  *     <div class="space-y-2 p-4">
- *       <p class="text-callout font-medium text-label">Obsah popoveru</p>
+ *       <p class="text-callout font-medium text-label">Popover content</p>
  *       <p class="text-caption-1 text-secondary-label">
- *         Vnitřní blok s paddingem — host panelu u plovoucího režimu může mít reset paddingu z headless CSS.
+ *         An inner block with padding — the panel host in floating mode may have its padding reset by headless CSS.
  *       </p>
  *     </div>
  *   </Popover.Panel>
  * </Popover.Root>
  * ```
  *
- * @example Umístění (floating)
- * Prop `floating` na kořeni předává umístění Floating UI (např. `"top"` , `"bottom-end"` ).
+ * @example Placement (floating)
+ * The `floating` prop on the root passes the Floating UI placement (e.g. `"top"` , `"bottom-end"` ).
  * ```tsx
  * import { Popover } from "~/components/ui/base/popover";
  * 
  * <Popover.Root floating="top">
- *   <Popover.Trigger>Nahoru</Popover.Trigger>
+ *   <Popover.Trigger>Up</Popover.Trigger>
  *   <Popover.Panel>
- *     <div class="p-4 text-callout text-secondary-label">Panel nad triggerem.</div>
+ *     <div class="p-4 text-callout text-secondary-label">Panel above the trigger.</div>
  *   </Popover.Panel>
  * </Popover.Root>
  * ```
  *
- * @example Šipka (arrow)
- * Na `Popover.Root` nastav `arrow` a do panelu vlož `Popover.PanelArrow` .
+ * @example Arrow
+ * Set `arrow` on `Popover.Root` and insert `Popover.PanelArrow` into the panel.
  * ```tsx
  * import { Popover } from "~/components/ui/base/popover";
  * 
  * <Popover.Root gutter={8} arrow floating="left">
- *   <Popover.Trigger>Se šipkou</Popover.Trigger>
+ *   <Popover.Trigger>With arrow</Popover.Trigger>
  *   <Popover.Panel>
  *     <Popover.PanelArrow />
  *     <div class="p-4 text-callout text-secondary-label">
- *       Kořen má prop <code>arrow</code> pro middleware Floating UI.
+ *       The root has an <code>arrow</code> prop for the Floating UI middleware.
  *     </div>
  *   </Popover.Panel>
  * </Popover.Root>
  * 
  * <Popover.Root gutter={8} arrow  floating="top">
- *   <Popover.Trigger>Se šipkou</Popover.Trigger>
+ *   <Popover.Trigger>With arrow</Popover.Trigger>
  *   <Popover.Panel>
  *     <Popover.PanelArrow />
  *     <div class="p-4 text-callout text-secondary-label">
- *       Kořen má prop <code>arrow</code> pro middleware Floating UI.
+ *       The root has an <code>arrow</code> prop for the Floating UI middleware.
  *     </div>
  *   </Popover.Panel>
  * </Popover.Root>
  * 
  * <Popover.Root gutter={8} arrow  floating="bottom">
- *   <Popover.Trigger>Se šipkou</Popover.Trigger>
+ *   <Popover.Trigger>With arrow</Popover.Trigger>
  *   <Popover.Panel>
  *     <Popover.PanelArrow />
  *     <div class="p-4 text-callout text-secondary-label">
- *       Kořen má prop <code>arrow</code> pro middleware Floating UI.
+ *       The root has an <code>arrow</code> prop for the Floating UI middleware.
  *     </div>
  *   </Popover.Panel>
  * </Popover.Root>
  * 
  * <Popover.Root gutter={8} arrow  floating="right">
- *   <Popover.Trigger>Se šipkou</Popover.Trigger>
+ *   <Popover.Trigger>With arrow</Popover.Trigger>
  *   <Popover.Panel>
  *     <Popover.PanelArrow />
  *     <div class="p-4 text-callout text-secondary-label">
- *       Kořen má prop <code>arrow</code> pro middleware Floating UI.
+ *       The root has an <code>arrow</code> prop for the Floating UI middleware.
  *     </div>
  *   </Popover.Panel>
  * </Popover.Root>
@@ -100,19 +100,19 @@ import {
 } from "../utilities/floating-ui";
 import { headlessPopoverContextId } from "../utilities/headless-popover-context";
 
-/** Kořen — drží kontext pro trigger a panel (plovoucí umístění přes Floating UI ve výchozím stavu). */
+/** Root — holds context for the trigger and panel (floating placement via Floating UI by default). */
 const rootClass = "inline-block";
 
-/** Tlačítkový trigger — viz {@link floatingOutlineButtonTriggerClass}. */
+/** Button trigger — see {@link floatingOutlineButtonTriggerClass}. */
 const triggerClass = floatingOutlineButtonTriggerClass;
 
 /**
- * Panel host může mít u `[data-floating]` reset paddingu z headless CSS — vnitřní mezery
- * drž v dceřiném bloku nebo přidej vlastní `class` s `!p-4` apod.
+ * The panel host may have its padding reset on `[data-floating]` by headless CSS — keep inner spacing
+ * in a child block or add a custom `class` with `!p-4` etc.
  */
 const panelClass = floatingPopoverPanelClass;
 
-/** Základ šipky; osu kolmo k hraně doplňuje {@link floatingArrowEdgeClassForPlacement} přes {@link headlessPopoverContextId}. */
+/** Arrow base; the axis perpendicular to the edge is added by {@link floatingArrowEdgeClassForPlacement} via {@link headlessPopoverContextId}. */
 const panelArrowClass = floatingPanelArrowClass;
 
 export type PopoverRootProps = PropsOf<typeof HeadlessPopover.Root>;
@@ -179,8 +179,8 @@ export const PopoverPanelArrow = component$<PopoverPanelArrowProps>((props) => {
 });
 
 /**
- * Složené API nad {@link https://qwikui.com/docs/headless/popover | @qwik-ui/headless Popover}
- * se styly z COLORS.md (tokeny jako u Tab/Button).
+ * Composite API over {@link https://qwikui.com/docs/headless/popover | @qwik-ui/headless Popover}
+ * with styles from COLORS.md (tokens as in Tab/Button).
  */
 export const Popover = {
   Root: PopoverRoot,

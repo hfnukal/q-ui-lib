@@ -2,64 +2,64 @@
  * @component tooltip
  * @title Tooltip
  * @version 1.0.0
- * @example Základní použití
- * Otevření na hover a na fokus klávesnicí; zavření Escape (chování headlessu).
+ * @example Basic usage
+ * Opens on hover and on keyboard focus; closes on Escape (headless behavior).
  * ```tsx
  * import { Tooltip } from "~/components/ui/base/tooltip";
  * 
  * <Tooltip.Root>
- *   <Tooltip.Trigger>Najet myší nebo fokus</Tooltip.Trigger>
- *   <Tooltip.Panel>Krátká nápověda k prvku.</Tooltip.Panel>
+ *   <Tooltip.Trigger>Hover or focus</Tooltip.Trigger>
+ *   <Tooltip.Panel>Short hint for the element.</Tooltip.Panel>
  * </Tooltip.Root>
  * ```
  *
- * @example Umístění
- * Prop `placement` na kořeni odpovídá Floating UI (výchozí `top` ).
+ * @example Placement
+ * The `placement` prop on the root matches Floating UI (defaults to `top` ).
  * ```tsx
  * import { Tooltip } from "~/components/ui/base/tooltip";
  * 
  * <Tooltip.Root placement="bottom">
- *   <Tooltip.Trigger>Panel dole</Tooltip.Trigger>
- *   <Tooltip.Panel>Umístění přes prop placement (jako u headlessu).</Tooltip.Panel>
+ *   <Tooltip.Trigger>Panel below</Tooltip.Trigger>
+ *   <Tooltip.Panel>Placement via the placement prop (as in headless).</Tooltip.Panel>
  * </Tooltip.Root>
  * ```
  *
- * @example Zpoždění
- * Prop `delayDuration` (ms) — prodleva před otevřením, vhodná pro husté rozhraní.
+ * @example Delay
+ * The `delayDuration` prop (ms) — a delay before opening, useful for a dense interface.
  * ```tsx
  * import { Tooltip } from "~/components/ui/base/tooltip";
  * 
  * <Tooltip.Root delayDuration={400}>
- *   <Tooltip.Trigger>Zpoždění 400 ms</Tooltip.Trigger>
- *   <Tooltip.Panel>Otevře se až po prodlevě — vhodné pro husté rozhraní.</Tooltip.Panel>
+ *   <Tooltip.Trigger>400 ms delay</Tooltip.Trigger>
+ *   <Tooltip.Panel>Opens only after the delay — useful for a dense interface.</Tooltip.Panel>
  * </Tooltip.Root>
  * ```
  *
- * @example Šipka (volitelná)
- * `Tooltip.Arrow` sleduje skutečnou polohu panelu (i po flipu při skrolování) — stačí přidat do panelu a přidat padding dle strany.
+ * @example Arrow (optional)
+ * `Tooltip.Arrow` follows the actual panel position (even after a flip while scrolling) — just add it to the panel and add padding on the relevant side.
  * ```tsx
  * import { Tooltip } from "~/components/ui/base/tooltip";
  *
  * <div class="flex flex-wrap gap-6">
  *   <Tooltip.Root placement="top">
- *     <Tooltip.Trigger>Nahoře</Tooltip.Trigger>
+ *     <Tooltip.Trigger>Top</Tooltip.Trigger>
  *     <Tooltip.Panel class="pb-2">
  *       <Tooltip.Arrow />
- *       Šipka sleduje panel.
+ *       The arrow follows the panel.
  *     </Tooltip.Panel>
  *   </Tooltip.Root>
  *   <Tooltip.Root placement="bottom">
- *     <Tooltip.Trigger>Dole</Tooltip.Trigger>
+ *     <Tooltip.Trigger>Bottom</Tooltip.Trigger>
  *     <Tooltip.Panel class="pt-2">
  *       <Tooltip.Arrow />
- *       Panel dole.
+ *       Panel below.
  *     </Tooltip.Panel>
  *   </Tooltip.Root>
  *   <Tooltip.Root placement="right">
- *     <Tooltip.Trigger>Vpravo</Tooltip.Trigger>
+ *     <Tooltip.Trigger>Right</Tooltip.Trigger>
  *     <Tooltip.Panel class="pl-2">
  *       <Tooltip.Arrow />
- *       Panel vpravo.
+ *       Panel on the right.
  *     </Tooltip.Panel>
  *   </Tooltip.Root>
  * </div>
@@ -81,30 +81,30 @@ import { Tooltip as HeadlessTooltip } from "@qwik-ui/headless";
 import { floatingAnchorFromPopoverContext } from "../utilities/floating-ui";
 import { headlessPopoverContextId } from "../utilities/headless-popover-context";
 
-/** Kořen — kontext triggeru a panelu (Floating UI, výchozí `placement` = top). */
+/** Root — context for the trigger and panel (Floating UI, default `placement` = top). */
 const rootClass = "inline-block";
 
 /**
- * Trigger je v headlessu vždy `<button>` — reset výchozích stylů tlačítka, aby šel použít jako obal
- * ikony nebo textu (focus ring podle COLORS.md).
+ * In headless the trigger is always a `<button>` — reset the default button styles so it can be used as a wrapper
+ * for an icon or text (focus ring per COLORS.md).
  */
 const triggerClass =
   "inline-flex max-w-full cursor-default items-center justify-center rounded-sm border-0 bg-transparent p-0 font-inherit text-inherit shadow-none ring-offset-background transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
 /**
- * Vnější panel — `data-floating` z headlessu; reset padding/border/overflow na tomto uzlu (viz popover.css v @qwik-ui/headless).
- * Vizuál je na vnitřním `div`u (`panelInnerClass`), aby `px-3` / `py-1.5` a uživatelské `class` na panelu nešly do prázdna.
+ * Outer panel — `data-floating` from headless; reset padding/border/overflow on this node (see popover.css in @qwik-ui/headless).
+ * The visuals live on the inner `div` (`panelInnerClass`), so that `px-3` / `py-1.5` and user `class` on the panel don't go to waste.
  */
 const panelOuterClass =
   "z-50 max-w-[min(20rem,calc(100vw-2rem))] outline-none ring-offset-background";
 
-/** Vnitřní plocha tooltipu — inverzní (`bg-label` / `text-background`); `relative` pro absolutní šipku. */
+/** Inner surface of the tooltip — inverted (`bg-label` / `text-background`); `relative` for the absolute arrow. */
 const panelInnerClass =
   "relative overflow-visible rounded-md border border-separator-opaque bg-label px-3 py-1.5 text-caption-1 text-background shadow-md";
 
 /**
- * Základní třída šipky — border-b border-r s bg-label (inverzní). Polohu a rotaci přidává
- * {@link tooltipArrowEdgeClass} dle placement.
+ * Base arrow class — border-b border-r with bg-label (inverted). Position and rotation are added by
+ * {@link tooltipArrowEdgeClass} based on placement.
  */
 const arrowBaseClass =
   "pointer-events-none absolute z-10 h-2 w-2 border-b border-r border-separator-opaque bg-label shadow-sm transition-none";
@@ -125,7 +125,7 @@ export type TooltipTriggerProps = PropsOf<typeof HeadlessTooltip.Trigger>;
 export type TooltipPanelProps = PropsOf<typeof HeadlessTooltip.Panel>;
 
 export type TooltipArrowProps = PropsOf<typeof HeadlessTooltip.Arrow> & {
-  /** Odpovídá `placement` na kořeni — určuje orientaci šipky. Výchozí `top`. */
+  /** Matches `placement` on the root — determines the arrow orientation. Defaults to `top`. */
   placement?: "top" | "bottom" | "left" | "right" | string;
 };
 
@@ -152,8 +152,8 @@ export const TooltipPanel: FunctionComponent<TooltipPanelProps> = (props) => {
 const arrowSize = 8;
 
 /**
- * Šipka s dynamickým sledováním polohy panelu — reaguje i na flip při skrolování.
- * Tooltip interně používá `HPopoverRoot`, takže je dostupný `headlessPopoverContextId`.
+ * Arrow with dynamic tracking of the panel position — reacts to a flip while scrolling too.
+ * Tooltip internally uses `HPopoverRoot`, so `headlessPopoverContextId` is available.
  */
 export const TooltipArrow = component$<TooltipArrowProps>((props) => {
   const { width = arrowSize, height = arrowSize, class: className, placement = "top", ...rest } = props;
@@ -218,8 +218,8 @@ export const TooltipArrow = component$<TooltipArrowProps>((props) => {
 });
 
 /**
- * Složené API nad {@link https://qwikui.com/docs/headless/tooltip | @qwik-ui/headless Tooltip}
- * se styly z COLORS.md (tokeny jako u Popover).
+ * Compound API over {@link https://qwikui.com/docs/headless/tooltip | @qwik-ui/headless Tooltip}
+ * with styles from COLORS.md (tokens as in Popover).
  */
 export const Tooltip = {
   Root: TooltipRoot,

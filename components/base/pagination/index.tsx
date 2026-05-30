@@ -2,8 +2,8 @@
  * @component pagination
  * @title Pagination
  * @version 1.0.0
- * @example Základní použití
- * Props `selectedPage`, `totalPages`, `onPageChange — aktuální stránka drž v `useSignal`.
+ * @example Basic usage
+ * Props `selectedPage`, `totalPages`, `onPageChange — keep the current page in `useSignal`.
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
  * import { Pagination } from "~/components/ui/base/pagination";
@@ -22,8 +22,8 @@
  * });
  * ```
  *
- * @example Více sousedních stránek
- * Prop `siblingCount` (výchozí 1) rozšiřuje okno kolem aktivní stránky.
+ * @example More sibling pages
+ * Prop `siblingCount` (default 1) widens the window around the active page.
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
  * import { Pagination } from "~/components/ui/base/pagination";
@@ -43,8 +43,8 @@
  * });
  * ```
  *
- * @example Vlastní popisky šipek
- * `customArrowTexts` — krátké texty místo výchozích PREV / NEXT.
+ * @example Custom arrow labels
+ * `customArrowTexts` — short texts instead of the default PREV / NEXT.
  * ```tsx
  * import { $, component$, useSignal } from "@builder.io/qwik";
  * import { Pagination } from "~/components/ui/base/pagination";
@@ -55,7 +55,7 @@
  *     <Pagination
  *       selectedPage={page.value}
  *       totalPages={8}
- *       customArrowTexts={{ previous: "Zpět", next: "Vpřed" }}
+ *       customArrowTexts={{ previous: "Back", next: "Forward" }}
  *       onPageChange$={$((p) => {
  *         page.value = p;
  *       })}
@@ -64,8 +64,8 @@
  * });
  * ```
  *
- * @example Zakázáno
- * Neinteraktivní stránkování přes prop `disabled`.
+ * @example Disabled
+ * Non-interactive pagination via the `disabled` prop.
  * ```tsx
  * import { $, component$ } from "@builder.io/qwik";
  * import { Pagination } from "~/components/ui/base/pagination";
@@ -94,7 +94,7 @@ import { component$, type PropsOf } from "@builder.io/qwik";
 import { Pagination as HeadlessPagination } from "@qwik-ui/headless";
 
 /**
- * Kořenová navigace: flex, mezery mezi prvky (headless `gap` v typu zatím neaplikuje na DOM).
+ * Root navigation: flex, spacing between elements (the headless `gap` in the type does not yet apply to the DOM).
  */
 const navClass =
   "mx-auto flex w-full max-w-fit flex-wrap items-center justify-center gap-1 text-callout text-secondary-label";
@@ -114,10 +114,10 @@ const arrowClass =
 export type PaginationProps = PropsOf<typeof HeadlessPagination>;
 
 /**
- * Stránkování nad {@link https://qwikui.com/docs/headless/pagination | @qwik-ui/headless Pagination} —
- * styly z COLORS.md (surface, accent, ring). Sloty `prefix` / `suffix` u šipek; text šipek přes `customArrowTexts`.
+ * Pagination over {@link https://qwikui.com/docs/headless/pagination | @qwik-ui/headless Pagination} —
+ * styles from COLORS.md (surface, accent, ring). `prefix` / `suffix` slots on the arrows; arrow text via `customArrowTexts`.
  *
- * Pozn.: headless mapuje `nextButtonClass` na **předchozí** stránku a `prevButtonClass` na **další** — obal sjednocuje oba na stejný vzhled.
+ * Note: headless maps `nextButtonClass` to the **previous** page and `prevButtonClass` to the **next** — the wrapper unifies both to the same look.
  */
 export const Pagination = component$<PaginationProps>((props) => {
   const {

@@ -2,50 +2,50 @@
  * @component navigation-menu
  * @title NavigationMenu
  * @version 1.0.0
- * @example Základní složení
- * `Item value` je potřeba u dvojice `Trigger` + `Content`. Přímé odkazy použij `Link`.
+ * @example Basic composition
+ * `Item value` is required for the `Trigger` + `Content` pair. For direct links use `Link`.
  * ```tsx
  * import { NavigationMenu } from "~/components/ui/base/navigation-menu";
  * 
  * <NavigationMenu.Root class="justify-start">
  *   <NavigationMenu.List>
  *     <NavigationMenu.Item value="produkty">
- *       <NavigationMenu.Trigger>Produkty</NavigationMenu.Trigger>
+ *       <NavigationMenu.Trigger>Products</NavigationMenu.Trigger>
  *       <NavigationMenu.Content>
  *         <ul class="grid min-w-[200px] gap-1 p-1">
  *           <li>
  *             <a class="block rounded-md px-3 py-2 text-callout hover:bg-surface-overlay" href="#">
- *               Knihovna
+ *               Library
  *             </a>
  *           </li>
  *           <li>
  *             <a class="block rounded-md px-3 py-2 text-callout hover:bg-surface-overlay" href="#">
- *               Šablony
+ *               Templates
  *             </a>
  *           </li>
  *         </ul>
  *       </NavigationMenu.Content>
  *     </NavigationMenu.Item>
  *     <NavigationMenu.Item>
- *       <NavigationMenu.Link href="#">Ceník</NavigationMenu.Link>
+ *       <NavigationMenu.Link href="#">Pricing</NavigationMenu.Link>
  *     </NavigationMenu.Item>
  *   </NavigationMenu.List>
  * </NavigationMenu.Root>
  * ```
  *
- * @example Oddělovač v liště
- * Oddělovač mezi položkami vodorovné lišty — `NavigationMenu.Separator`.
+ * @example Separator in the bar
+ * A separator between items of a horizontal bar — `NavigationMenu.Separator`.
  * ```tsx
  * import { NavigationMenu } from "~/components/ui/base/navigation-menu";
  * 
  * <NavigationMenu.Root>
  *   <NavigationMenu.List>
  *     <NavigationMenu.Item value="dokumentace">
- *       <NavigationMenu.Trigger>Dokumentace</NavigationMenu.Trigger>
+ *       <NavigationMenu.Trigger>Documentation</NavigationMenu.Trigger>
  *       <NavigationMenu.Content>
- *         <p class="px-2 py-1 text-caption-1 text-secondary-label">Začínáme</p>
+ *         <p class="px-2 py-1 text-caption-1 text-secondary-label">Getting started</p>
  *         <a class="block rounded-md px-3 py-2 text-callout hover:bg-surface-overlay" href="#">
- *           Úvod
+ *           Introduction
  *         </a>
  *       </NavigationMenu.Content>
  *     </NavigationMenu.Item>
@@ -57,8 +57,8 @@
  * </NavigationMenu.Root>
  * ```
  *
- * @example Vlastní vzhled a barvy
- * Hlavní řádek: „Více“ s `contentAlign="start"` (panel pod levým okrajem triggeru). Pod tím další lišty — **kompaktní** velikost vs. **větší**, palety **teal** / **oranžová** / **fialová** (tokeny z COLORS).
+ * @example Custom look and colors
+ * Main row: „More“ with `contentAlign="start"` (panel below the trigger's left edge). Below it more bars — **compact** size vs. **larger**, palettes **teal** / **orange** / **purple** (tokens from COLORS).
  * ```tsx
  * import { NavigationMenu } from "~/components/ui/base/navigation-menu";
  *
@@ -69,7 +69,7 @@
  *         Q
  *       </span>
  *       <div class="flex flex-col gap-0.5">
- *         <span class="text-caption-1 font-medium text-label">Nástroje</span>
+ *         <span class="text-caption-1 font-medium text-label">Tools</span>
  *         <span class="inline-flex w-max items-center rounded-full bg-system-green/20 px-2 py-px text-caption-2 text-system-green">
  *           beta
  *         </span>
@@ -79,7 +79,7 @@
  *       <NavigationMenu.List>
  *         <NavigationMenu.Item value="vice-hlavni">
  *           <NavigationMenu.Trigger class="rounded-lg text-system-indigo hover:bg-system-indigo/20 focus-visible:ring-system-indigo data-[state=open]:bg-system-indigo/25">
- *             Více
+ *             More
  *           </NavigationMenu.Trigger>
  *           <NavigationMenu.Content
  *             contentAlign="start"
@@ -87,37 +87,37 @@
  *           >
  *             <div class="border-b border-separator-opaque px-3 py-2">
  *               <div class="flex items-center justify-between gap-2">
- *                 <p class="text-caption-1 font-medium text-label">Rychlé akce</p>
- *                 <span class="rounded-md bg-system-orange/15 px-1.5 py-0.5 text-caption-2 text-system-orange">3 nové</span>
+ *                 <p class="text-caption-1 font-medium text-label">Quick actions</p>
+ *                 <span class="rounded-md bg-system-orange/15 px-1.5 py-0.5 text-caption-2 text-system-orange">3 new</span>
  *               </div>
- *               <p class="mt-1 text-caption-2 text-secondary-label">Popup se zarovnává `start` — levý okraj pod levým okrajem „Více“.</p>
+ *               <p class="mt-1 text-caption-2 text-secondary-label">The popup aligns `start` — the left edge below the left edge of „More“.</p>
  *             </div>
  *             <div class="grid gap-2 p-3 sm:grid-cols-2">
  *               <a
  *                 class="rounded-lg border border-separator bg-surface-raised p-3 text-callout text-label transition hover:border-system-teal/50 hover:bg-fill-secondary/30"
  *                 href="#"
  *               >
- *                 <span class="block font-medium">Průvodce</span>
- *                 <span class="mt-1 block text-caption-2 text-secondary-label">Interaktivní úvod</span>
+ *                 <span class="block font-medium">Guide</span>
+ *                 <span class="mt-1 block text-caption-2 text-secondary-label">Interactive introduction</span>
  *               </a>
  *               <a
  *                 class="rounded-lg border border-separator bg-surface-raised p-3 text-callout text-label transition hover:border-system-teal/50 hover:bg-fill-secondary/30"
  *                 href="#"
  *               >
- *                 <span class="block font-medium">Šablony</span>
- *                 <span class="mt-1 block text-caption-2 text-secondary-label">Začni z příkladu</span>
+ *                 <span class="block font-medium">Templates</span>
+ *                 <span class="mt-1 block text-caption-2 text-secondary-label">Start from an example</span>
  *               </a>
  *             </div>
  *             <div class="h-px bg-separator-opaque" role="presentation" />
  *             <ul class="p-2">
  *               <li>
  *                 <a class="block rounded-md px-2 py-2 text-callout text-label hover:bg-fill-secondary/40" href="#">
- *                   Dokumentace
+ *                   Documentation
  *                 </a>
  *               </li>
  *               <li>
  *                 <a class="block rounded-md px-2 py-2 text-callout text-label hover:bg-fill-secondary/40" href="#">
- *                   Podpora
+ *                   Support
  *                 </a>
  *               </li>
  *             </ul>
@@ -126,7 +126,7 @@
  *         <NavigationMenu.Separator />
  *         <NavigationMenu.Item>
  *           <NavigationMenu.Link class="rounded-lg text-system-indigo no-underline hover:bg-system-indigo/20" href="#">
- *             Přehled
+ *             Overview
  *           </NavigationMenu.Link>
  *         </NavigationMenu.Item>
  *       </NavigationMenu.List>
@@ -134,23 +134,23 @@
  *   </div>
  *
  *   <div class="space-y-3">
- *     <p class="text-caption-1 font-medium text-label">Další lišty — velikosti a barvy</p>
+ *     <p class="text-caption-1 font-medium text-label">More bars — sizes and colors</p>
  *     <div class="flex flex-col gap-4 overflow-visible">
  *       <div>
- *         <p class="mb-1.5 text-caption-2 text-tertiary-label">Kompaktní (menší trigger i panel)</p>
+ *         <p class="mb-1.5 text-caption-2 text-tertiary-label">Compact (smaller trigger and panel)</p>
  *         <div class="inline-flex max-w-full overflow-visible rounded-md border border-separator-opaque bg-surface-raised px-1.5 py-1">
  *           <NavigationMenu.Root class="justify-start">
  *             <NavigationMenu.List>
  *               <NavigationMenu.Item value="vice-kompakt">
  *                 <NavigationMenu.Trigger class="h-8 rounded-md px-2 text-caption-1 text-secondary-label hover:bg-fill-secondary/40">
- *                   Více
+ *                   More
  *                 </NavigationMenu.Trigger>
  *                 <NavigationMenu.Content contentAlign="start" class="!mt-1.5 min-w-[10rem] max-w-[16rem] p-1.5 text-caption-2">
  *                   <a class="block rounded px-2 py-1.5 text-label hover:bg-surface-overlay" href="#">
- *                     Položka A
+ *                     Item A
  *                   </a>
  *                   <a class="block rounded px-2 py-1.5 text-label hover:bg-surface-overlay" href="#">
- *                     Položka B
+ *                     Item B
  *                   </a>
  *                 </NavigationMenu.Content>
  *               </NavigationMenu.Item>
@@ -160,20 +160,20 @@
  *       </div>
  *
  *       <div>
- *         <p class="mb-1.5 text-caption-2 text-tertiary-label">Teal — větší panel</p>
+ *         <p class="mb-1.5 text-caption-2 text-tertiary-label">Teal — larger panel</p>
  *         <div class="overflow-visible rounded-xl border border-system-teal/40 bg-system-teal/10 px-2 py-1.5 shadow-sm">
  *           <NavigationMenu.Root class="justify-start">
  *             <NavigationMenu.List>
  *               <NavigationMenu.Item value="vice-teal">
  *                 <NavigationMenu.Trigger class="rounded-lg px-3 py-1.5 text-callout font-medium text-system-teal hover:bg-system-teal/20 data-[state=open]:bg-system-teal/25">
- *                   Více
+ *                   More
  *                 </NavigationMenu.Trigger>
  *                 <NavigationMenu.Content
  *                   contentAlign="start"
  *                   class="!mt-2 min-w-[14rem] rounded-lg border border-system-teal/30 bg-grouped-surface p-2 shadow-lg"
  *                 >
  *                   <a class="block rounded-md px-3 py-2 text-callout text-label hover:bg-fill-secondary/40" href="#">
- *                     Úvod
+ *                     Introduction
  *                   </a>
  *                   <a class="block rounded-md px-3 py-2 text-callout text-label hover:bg-fill-secondary/40" href="#">
  *                     API
@@ -186,20 +186,20 @@
  *       </div>
  *
  *       <div>
- *         <p class="mb-1.5 text-caption-2 text-tertiary-label">Oranžová akcentní lišta</p>
+ *         <p class="mb-1.5 text-caption-2 text-tertiary-label">Orange accent bar</p>
  *         <div class="overflow-visible rounded-xl border border-system-orange/35 bg-system-orange/10 px-2 py-1.5">
  *           <NavigationMenu.Root class="justify-start">
  *             <NavigationMenu.List>
  *               <NavigationMenu.Item value="vice-orange">
  *                 <NavigationMenu.Trigger class="rounded-lg px-3 py-1.5 text-callout font-medium text-system-orange hover:bg-system-orange/20 data-[state=open]:bg-system-orange/25">
- *                   Další
+ *                   More
  *                 </NavigationMenu.Trigger>
  *                 <NavigationMenu.Content contentAlign="start" class="!mt-2 min-w-[13rem] rounded-lg border border-system-orange/25 bg-surface-raised p-2 shadow-md">
  *                   <a class="block rounded-md px-3 py-2 text-callout hover:bg-fill-secondary/30" href="#">
- *                     Nastavení
+ *                     Settings
  *                   </a>
  *                   <a class="block rounded-md px-3 py-2 text-callout hover:bg-fill-secondary/30" href="#">
- *                     Odhlásit
+ *                     Sign out
  *                   </a>
  *                 </NavigationMenu.Content>
  *               </NavigationMenu.Item>
@@ -209,20 +209,20 @@
  *       </div>
  *
  *       <div>
- *         <p class="mb-1.5 text-caption-2 text-tertiary-label">Fialová / větší typografie</p>
+ *         <p class="mb-1.5 text-caption-2 text-tertiary-label">Purple / larger typography</p>
  *         <div class="overflow-visible rounded-xl border border-system-purple/35 bg-system-purple/10 px-3 py-2">
  *           <NavigationMenu.Root class="justify-start">
  *             <NavigationMenu.List>
  *               <NavigationMenu.Item value="vice-purple">
  *                 <NavigationMenu.Trigger class="min-h-10 rounded-lg px-4 py-2 text-body font-medium text-system-purple hover:bg-system-purple/15 data-[state=open]:bg-system-purple/20">
- *                   Více
+ *                   More
  *                 </NavigationMenu.Trigger>
  *                 <NavigationMenu.Content contentAlign="start" class="!mt-2 min-w-[15rem] rounded-xl border border-system-purple/25 bg-grouped-surface p-3 text-body shadow-lg">
  *                   <a class="block rounded-lg px-3 py-2.5 hover:bg-fill-secondary/35" href="#">
- *                     Profil
+ *                     Profile
  *                   </a>
  *                   <a class="block rounded-lg px-3 py-2.5 hover:bg-fill-secondary/35" href="#">
- *                     Účet
+ *                     Account
  *                   </a>
  *                 </NavigationMenu.Content>
  *               </NavigationMenu.Item>
@@ -235,8 +235,8 @@
  * </div>
  * ```
  *
- * @example Varianty contentAlign
- * `start` — pod levým okrajem triggeru; `end` — pod pravým okrajem (vhodné pro tlačítko vpravo); `center` — pod středem; `inlineEnd` — flyout **napravo** od triggeru (vodorovně).
+ * @example contentAlign variants
+ * `start` — below the trigger's left edge; `end` — below the right edge (suited for a button on the right); `center` — below the center; `inlineEnd` — a flyout **to the right** of the trigger (horizontally).
  * ```tsx
  * import { NavigationMenu } from "~/components/ui/base/navigation-menu";
  *
@@ -248,7 +248,7 @@
  *         <NavigationMenu.Item value="s">
  *           <NavigationMenu.Trigger>Menu</NavigationMenu.Trigger>
  *           <NavigationMenu.Content contentAlign="start">
- *             <a class="block rounded-md px-3 py-2 text-callout hover:bg-surface-overlay" href="#">Odkaz</a>
+ *             <a class="block rounded-md px-3 py-2 text-callout hover:bg-surface-overlay" href="#">Link</a>
  *           </NavigationMenu.Content>
  *         </NavigationMenu.Item>
  *       </NavigationMenu.List>
@@ -259,9 +259,9 @@
  *     <NavigationMenu.Root class="flex w-full justify-end">
  *       <NavigationMenu.List>
  *         <NavigationMenu.Item value="e">
- *           <NavigationMenu.Trigger>Více</NavigationMenu.Trigger>
+ *           <NavigationMenu.Trigger>More</NavigationMenu.Trigger>
  *           <NavigationMenu.Content contentAlign="end">
- *             <a class="block rounded-md px-3 py-2 text-callout hover:bg-surface-overlay" href="#">Odkaz</a>
+ *             <a class="block rounded-md px-3 py-2 text-callout hover:bg-surface-overlay" href="#">Link</a>
  *           </NavigationMenu.Content>
  *         </NavigationMenu.Item>
  *       </NavigationMenu.List>
@@ -272,22 +272,22 @@
  *     <NavigationMenu.Root class="flex w-full justify-center">
  *       <NavigationMenu.List>
  *         <NavigationMenu.Item value="c">
- *           <NavigationMenu.Trigger>Uprostřed</NavigationMenu.Trigger>
+ *           <NavigationMenu.Trigger>Center</NavigationMenu.Trigger>
  *           <NavigationMenu.Content contentAlign="center">
- *             <a class="block rounded-md px-3 py-2 text-callout hover:bg-surface-overlay" href="#">Odkaz</a>
+ *             <a class="block rounded-md px-3 py-2 text-callout hover:bg-surface-overlay" href="#">Link</a>
  *           </NavigationMenu.Content>
  *         </NavigationMenu.Item>
  *       </NavigationMenu.List>
  *     </NavigationMenu.Root>
  *   </div>
  *   <div>
- *     <p class="mb-2 text-caption-1 text-secondary-label">inlineEnd (vpravo od triggeru)</p>
+ *     <p class="mb-2 text-caption-1 text-secondary-label">inlineEnd (to the right of the trigger)</p>
  *     <NavigationMenu.Root class="justify-start">
  *       <NavigationMenu.List>
  *         <NavigationMenu.Item value="i">
  *           <NavigationMenu.Trigger>Menu</NavigationMenu.Trigger>
  *           <NavigationMenu.Content contentAlign="inlineEnd" class="min-w-[12rem]">
- *             <a class="block rounded-md px-3 py-2 text-callout hover:bg-surface-overlay" href="#">Odkaz</a>
+ *             <a class="block rounded-md px-3 py-2 text-callout hover:bg-surface-overlay" href="#">Link</a>
  *           </NavigationMenu.Content>
  *         </NavigationMenu.Item>
  *       </NavigationMenu.List>
@@ -319,21 +319,21 @@ const triggerClass =
 const linkClass =
   "inline-flex h-9 w-max items-center justify-center rounded-md px-3 py-1 text-callout font-medium text-label no-underline outline-none ring-offset-background transition-colors hover:bg-surface-overlay focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
-/** Společné styly panelu — pozice (`top`, `left`/`right`) řeší `contentAlign` + `contentLayoutByAlign`. */
+/** Shared panel styles — position (`top`, `left`/`right`) is handled by `contentAlign` + `contentLayoutByAlign`. */
 const contentClassBase =
   "absolute z-50 min-w-[12rem] overflow-hidden rounded-lg border border-separator-opaque bg-surface-raised p-2 text-body text-label shadow-md outline-none ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
-/** Pozicování vůči obalu triggeru (`Item` má vnitřní `relative w-max` = šířka triggeru). */
+/** Positioning relative to the trigger wrapper (`Item` has an inner `relative w-max` = trigger width). */
 const contentLayoutByAlign = {
-  /** Pod triggerem, levé hrany zarovnané (výchozí). */
+  /** Below the trigger, left edges aligned (default). */
   start: "left-0 right-auto top-full mt-1.5",
-  /** Pod triggerem, pravé hrany zarovnané — panel roste doleva (např. „Více“ vpravo v liště). */
+  /** Below the trigger, right edges aligned — the panel grows to the left (e.g. „More“ on the right of the bar). */
   end: "left-auto right-0 top-full mt-1.5",
-  /** Pod středem triggeru. */
+  /** Below the center of the trigger. */
   center: "left-1/2 right-auto top-full mt-1.5 -translate-x-1/2",
   /**
-   * Vodorovný flyout: panel napravo od triggeru, horní hrany zarovnané (vhodné na úzké liště).
-   * Na malém viewportu zvaž `end` nebo užší `max-w-*`.
+   * Horizontal flyout: panel to the right of the trigger, top edges aligned (suited for a narrow bar).
+   * On a small viewport consider `end` or a narrower `max-w-*`.
    */
   inlineEnd: "left-full right-auto top-0 mt-0 ml-2",
 } as const;
@@ -341,7 +341,7 @@ const contentLayoutByAlign = {
 const listClass =
   "m-0 flex list-none flex-wrap items-center gap-0 p-0";
 
-/** `li` ve flex řádku; skutečný kontext pro `absolute` panel je vnitřní obal v {@link NavigationMenuItem}. */
+/** `li` in the flex row; the actual context for the `absolute` panel is the inner wrapper in {@link NavigationMenuItem}. */
 const itemClass = "min-w-0 shrink-0";
 
 const itemTriggerWrapClass = "relative w-max max-w-full";
@@ -367,7 +367,7 @@ const navigationMenuItemContextId = createContextId<
 function useNavigationMenuRoot(name: string): NavigationMenuRootContext {
   const ctx = useContext(navigationMenuRootContextId);
   if (!ctx) {
-    throw new Error(`${name} musí být uvnitř <NavigationMenu.Root>.`);
+    throw new Error(`${name} must be inside <NavigationMenu.Root>.`);
   }
   return ctx;
 }
@@ -375,22 +375,22 @@ function useNavigationMenuRoot(name: string): NavigationMenuRootContext {
 function useNavigationMenuItem(name: string): NavigationMenuItemContext {
   const ctx = useContext(navigationMenuItemContextId);
   if (!ctx) {
-    throw new Error(`${name} musí být uvnitř <NavigationMenu.Item>.`);
+    throw new Error(`${name} must be inside <NavigationMenu.Item>.`);
   }
   return ctx;
 }
 
 export type NavigationMenuRootProps = PropsOf<"nav"> & {
-  /** Počátečně otevřená položka (`value` z {@link NavigationMenuItem}). */
+  /** Initially open item (`value` from {@link NavigationMenuItem}). */
   defaultValue?: string | null;
 };
 
 /**
- * Kořen navigačního menu (shadcn „Navigation Menu“) — horizontální lišta s rozbalovacími panely.
- * V @qwik-ui/headless primitiva nejsou ({@link https://github.com/qwikifiers/qwik-ui | Qwik UI}); chování je vlastní (Escape, klik mimo).
+ * Root of the navigation menu (shadcn „Navigation Menu“) — a horizontal bar with dropdown panels.
+ * There are no primitives in @qwik-ui/headless ({@link https://github.com/qwikifiers/qwik-ui | Qwik UI}); the behavior is custom (Escape, click outside).
  */
 export const NavigationMenuRoot = component$<NavigationMenuRootProps>((props) => {
-  const { defaultValue = null, class: className, "aria-label": ariaLabel = "Hlavní navigace", ...rest } =
+  const { defaultValue = null, class: className, "aria-label": ariaLabel = "Main navigation", ...rest } =
     props;
   const openValue = useSignal<string | null>(defaultValue ?? null);
   const rootRef = useSignal<HTMLElement>();
@@ -421,8 +421,8 @@ export const NavigationMenuRoot = component$<NavigationMenuRootProps>((props) =>
     }),
   );
 
-  // Čtení openValue v JSX zajistí přerender při otevření; zvýšený z-index celého kořene,
-  // aby rozbalený panel nepřekryl až následující toolbary se stejným/nevyšším z-indexem v DOM.
+  // Reading openValue in JSX ensures a re-render when opening; an increased z-index on the whole root,
+  // so the expanded panel is not overlapped by subsequent toolbars with the same/higher z-index in the DOM.
   const menuOpen = openValue.value !== null;
   const merged = [
     "relative flex max-w-max flex-1 items-center justify-center",
@@ -460,8 +460,8 @@ export const NavigationMenuList = component$<NavigationMenuListProps>((props) =>
 
 export type NavigationMenuItemProps = PropsOf<"li"> & {
   /**
-   * Jednoznačný identifikátor položky s {@link NavigationMenuTrigger} / {@link NavigationMenuContent}.
-   * U položky jen s {@link NavigationMenuLink} může chybět.
+   * Unique identifier of an item with {@link NavigationMenuTrigger} / {@link NavigationMenuContent}.
+   * It may be absent for an item with only {@link NavigationMenuLink}.
    */
   value?: string;
 };
@@ -494,7 +494,7 @@ export const NavigationMenuTrigger = component$<NavigationMenuTriggerProps>((pro
 
   if (item.value === undefined) {
     throw new Error(
-      "NavigationMenu.Trigger vyžaduje <NavigationMenu.Item value=\"…\">.",
+      "NavigationMenu.Trigger requires <NavigationMenu.Item value=\"…\">.",
     );
   }
 
@@ -524,8 +524,8 @@ export const NavigationMenuTrigger = component$<NavigationMenuTriggerProps>((pro
 
 export type NavigationMenuContentProps = PropsOf<"div"> & {
   /**
-   * Zarovnání panelu vůči **triggeru** (viz vnitřní obal u {@link NavigationMenuItem}).
-   * `end` = pod triggerem, pravé hrany zarovnané; `inlineEnd` = panel vpravo od triggeru (flyout).
+   * Alignment of the panel relative to the **trigger** (see the inner wrapper at {@link NavigationMenuItem}).
+   * `end` = below the trigger, right edges aligned; `inlineEnd` = panel to the right of the trigger (flyout).
    */
   contentAlign?: keyof typeof contentLayoutByAlign;
 };
@@ -537,7 +537,7 @@ export const NavigationMenuContent = component$<NavigationMenuContentProps>((pro
 
   if (item.value === undefined) {
     throw new Error(
-      "NavigationMenu.Content vyžaduje <NavigationMenu.Item value=\"…\">.",
+      "NavigationMenu.Content requires <NavigationMenu.Item value=\"…\">.",
     );
   }
 
@@ -561,7 +561,7 @@ export const NavigationMenuContent = component$<NavigationMenuContentProps>((pro
 
 export type NavigationMenuLinkProps = PropsOf<"a">;
 
-/** Přímý odkaz v liště (bez rozbalovacího panelu). */
+/** Direct link in the bar (without a dropdown panel). */
 export const NavigationMenuLink = component$<NavigationMenuLinkProps>((props) => {
   const { class: className, ...rest } = props;
   const merged = [linkClass, className].filter(Boolean).join(" ");
@@ -570,7 +570,7 @@ export const NavigationMenuLink = component$<NavigationMenuLinkProps>((props) =>
 
 export type NavigationMenuSeparatorProps = PropsOf<"li">;
 
-/** Svislý oddělovač mezi položkami v {@link NavigationMenuList}. */
+/** Vertical separator between items in {@link NavigationMenuList}. */
 export const NavigationMenuSeparator = component$<NavigationMenuSeparatorProps>((props) => {
   const { class: className, ...rest } = props;
   const merged = [className].filter(Boolean).join(" ");
@@ -584,7 +584,7 @@ export const NavigationMenuSeparator = component$<NavigationMenuSeparatorProps>(
 });
 
 /**
- * Složené API ve stylu shadcn/ui Navigation Menu; styly z COLORS.md (tokeny jako u Dropdown menu).
+ * Compound API in the shadcn/ui Navigation Menu style; styles from COLORS.md (tokens as in Dropdown menu).
  */
 export const NavigationMenu = {
   Root: NavigationMenuRoot,

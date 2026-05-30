@@ -2,23 +2,23 @@
  * @component split
  * @title Split
  * @version 1.0.0
- * @example Vodorovně
- * Dva panely vedle sebe — fixní šířka v pixelech a zbytek `1fr`.
+ * @example Horizontal
+ * Two panels side by side — a fixed width in pixels and the rest `1fr`.
  * ```tsx
  * import { Split } from "~/components/ui/base/split";
  * 
  * <Split.Root direction="horizontal" class="h-32 rounded-lg border border-separator-opaque">
  *   <Split.Panel size="120px" class="bg-surface-raised p-3 text-callout">
- *     Fixní
+ *     Fixed
  *   </Split.Panel>
  *   <Split.Panel size="1fr" class="bg-surface-overlay p-3 text-callout">
- *     Zbytek
+ *     Rest
  *   </Split.Panel>
  * </Split.Root>
  * ```
  *
- * @example Svisle
- * Svislé panely: horní s fixní výškou, spodní vyplní zbytek.
+ * @example Vertical
+ * Vertical panels: the top one with a fixed height, the bottom one fills the rest.
  * ```tsx
  * import { Split } from "~/components/ui/base/split";
  * 

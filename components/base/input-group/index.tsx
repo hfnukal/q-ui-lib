@@ -3,7 +3,7 @@
  * @title InputGroup
  * @version 1.0.0
  * @example Prefix
- * Prefix — viz ukázka níže.
+ * Prefix — see the example below.
  * ```tsx
  * import { InputGroup } from "~/components/ui/base/input-group";
  * 
@@ -14,39 +14,39 @@
  * ```
  *
  * @example Suffix
- * Suffix — viz ukázka níže.
+ * Suffix — see the example below.
  * ```tsx
  * import { InputGroup } from "~/components/ui/base/input-group";
  * 
  * <InputGroup.Root aria-label="E-mail">
- *   <InputGroup.Input type="email" placeholder="jméno" />
- *   <InputGroup.Addon align="end">@firma.cz</InputGroup.Addon>
+ *   <InputGroup.Input type="email" placeholder="name" />
+ *   <InputGroup.Addon align="end">@company.com</InputGroup.Addon>
  * </InputGroup.Root>
  * ```
  *
- * @example Pole a tlačítko
- * Přímé dítě `Button` dostane zarovnání a oddělovací okraj od skupiny.
+ * @example Field and button
+ * A direct `Button` child gets alignment and a separating border from the group.
  * ```tsx
  * import { Button } from "~/components/ui/base/button";
  * import { InputGroup } from "~/components/ui/base/input-group";
  * 
- * <InputGroup.Root aria-label="Hledat">
- *   <InputGroup.Input placeholder="Hledat…" />
- *   <Button variant="secondary">Hledat</Button>
+ * <InputGroup.Root aria-label="Search">
+ *   <InputGroup.Input placeholder="Search…" />
+ *   <Button variant="secondary">Search</Button>
  * </InputGroup.Root>
  * ```
  *
- * @example Lucide ikona v addonu
- * Ikony z `@qwikest/icons/lucide` (např. `LuSearch`) — velikost přes `{"[&_svg]:size-4"}` na addonu.
+ * @example Lucide icon in the addon
+ * Icons from `@qwikest/icons/lucide` (e.g. `LuSearch`) — size via `{"[&_svg]:size-4"}` on the addon.
  * ```tsx
  * import { LuSearch } from "@qwikest/icons/lucide";
  * import { InputGroup } from "~/components/ui/base/input-group";
  * 
- * <InputGroup.Root aria-label="Hledat">
+ * <InputGroup.Root aria-label="Search">
  *   <InputGroup.Addon class="[&_svg]:size-4">
  *     <LuSearch aria-hidden="true" />
  *   </InputGroup.Addon>
- *   <InputGroup.Input placeholder="Dotaz…" />
+ *   <InputGroup.Input placeholder="Query…" />
  * </InputGroup.Root>
  * ```
  
@@ -67,8 +67,8 @@ export type InputGroupRootProps = Omit<PropsOf<"div">, "as"> & {
   /** When the group has no visible caption, set for accessibility (`role="group"`). */
   "aria-label"?: string;
   /**
-   * Root element. Default je `span` kvůli možnosti vložení do textových parentů.
-   * Pro blokový wrapper nastavte `as="div"`.
+   * Root element. Default is `span` so it can be placed inside text parents.
+   * For a block wrapper, set `as="div"`.
    */
   as?: "div" | "span";
 };
@@ -77,8 +77,8 @@ export type InputGroupRootProps = Omit<PropsOf<"div">, "as"> & {
  * Horizontal flex shell for a single merged control: shared border, surface, shadow, and
  * `focus-within` ring (shadcn „Input Group“). Place {@link InputGroupAddon}, {@link InputGroupInput},
  * or a library `Button` as direct children.
- * Přes `as` můžete přepnout root mezi `span` (výchozí) a `div`.
- * V `<p>`/`<pre>` použijte pouze `as="span"` a validní phrasing obsah.
+ * Via `as` you can switch the root between `span` (default) and `div`.
+ * In `<p>`/`<pre>` use only `as="span"` and valid phrasing content.
  */
 export const InputGroupRoot = component$<InputGroupRootProps>((props) => {
   const { class: className, "aria-label": ariaLabel, as = "span", ...rest } = props;

@@ -2,8 +2,8 @@
  * @component label
  * @title Label
  * @version 1.0.1
- * @example S polem
- * Prop `for` (nebo `htmlFor`) spáruje štítek s `id` vstupu.
+ * @example With a field
+ * Prop `for` (or `htmlFor`) pairs the label with the input's `id`.
  * ```tsx
  * import { component$ } from "@builder.io/qwik";
  * import { Input } from "~/components/ui/base/input";
@@ -18,21 +18,21 @@
  * ```
  *
  * @example Peer + disabled
- * Třída `peer` patří na vstup; `peer-disabled:*` na štítku reaguje jen když je v DOM vstup před štítkem — layout můžeš srovnat gridem (řádky 2 / 1).
+ * The `peer` class belongs on the input; `peer-disabled:*` on the label only reacts when the input comes before the label in the DOM — you can fix the layout with a grid (rows 2 / 1).
  * ```tsx
  * import { Input } from "~/components/ui/base/input";
  * import { Label } from "~/components/ui/base/label";
  * 
- * // V DOM musí být .peer dřív než Label (kvůli Tailwind peer-*).
+ * // In the DOM, .peer must come before Label (because of Tailwind peer-*).
  * <div class="grid grid-cols-1 gap-2">
  *   <Input
  *     id="demo-locked"
  *     disabled
- *     value="Nelze upravit"
+ *     value="Cannot edit"
  *     class="peer col-start-1 row-start-2"
  *   />
  *   <Label for="demo-locked" class="col-start-1 row-start-1">
- *     Uzamčené pole
+ *     Locked field
  *   </Label>
  * </div>
  * ```

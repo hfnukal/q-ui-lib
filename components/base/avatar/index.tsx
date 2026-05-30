@@ -2,19 +2,19 @@
  * @component avatar
  * @title Avatar
  * @version 1.0.0
- * @example Obrázek + fallback
- * Obrázek + fallback — viz ukázka níže.
+ * @example Image + fallback
+ * Image + fallback — see the example below.
  * ```tsx
  * import { Avatar } from "~/components/ui/base/avatar";
  * 
  * <Avatar.Root>
- *   <Avatar.Image src="…" alt="Náhled" />
+ *   <Avatar.Image src="…" alt="Preview" />
  *   <Avatar.Fallback>QU</Avatar.Fallback>
  * </Avatar.Root>
  * ```
  *
- * @example Velikosti
- * Prop `size` na `Avatar.Root`: `sm`, `md` (výchozí), `lg`.
+ * @example Sizes
+ * Prop `size` on `Avatar.Root`: `sm`, `md` (default), `lg`.
  * ```tsx
  * import { Avatar } from "~/components/ui/base/avatar";
  * 
@@ -34,8 +34,8 @@
  * </div>
  * ```
  *
- * @example Jen fallback
- * Bez `Avatar.Image` nebo bez `src` zůstane iniciála / placeholder.
+ * @example Fallback only
+ * Without `Avatar.Image` or without `src`, the initial / placeholder remains.
  * ```tsx
  * import { Avatar } from "~/components/ui/base/avatar";
  * 
@@ -44,8 +44,8 @@
  * </Avatar.Root>
  * ```
  *
- * @example Chyba načtení obrázku
- * Neplatná URL zobrazí znovu `Avatar.Fallback`.
+ * @example Image load error
+ * An invalid URL shows the `Avatar.Fallback` again.
  * ```tsx
  * import { Avatar } from "~/components/ui/base/avatar";
  * 
@@ -119,7 +119,7 @@ export const AvatarRoot = component$<AvatarRootProps>((props) => {
 
 /**
  * Avatar image; coordinates loading / error with {@link AvatarFallback} via context.
- * Nevalidní URL se nikdy nevloží do `<img>` — nejdřív preload přes `Image()`, až pak render (žádná ikona rozbitého obrázku).
+ * An invalid URL is never inserted into `<img>` — preload via `Image()` first, then render (no broken-image icon).
  */
 export const AvatarImage = component$<PropsOf<"img">>((props) => {
   const status = useContext(AvatarStatusContext);
@@ -134,7 +134,7 @@ export const AvatarImage = component$<PropsOf<"img">>((props) => {
     }
   });
 
-  // eslint-disable-next-line qwik/no-use-visible-task -- preload jen v prohlížeči; SSR nevykresluje <img> se špatnou URL
+  // eslint-disable-next-line qwik/no-use-visible-task -- preload only in the browser; SSR does not render <img> with a bad URL
   useVisibleTask$(({ track, cleanup }) => {
     const src = track(() => props.src);
     if (!src) {

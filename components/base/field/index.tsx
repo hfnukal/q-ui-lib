@@ -2,8 +2,8 @@
  * @component field
  * @title Field
  * @version 1.0.0
- * @example Základ (Label + Input)
- * Základ (Label + Input) — viz ukázka níže.
+ * @example Basics (Label + Input)
+ * Basics (Label + Input) — see the example below.
  * ```tsx
  * import { Field } from "~/components/ui/base/field";
  * import { Input } from "~/components/ui/base/input";
@@ -15,15 +15,15 @@
  * </Field.Root>
  * ```
  *
- * @example S popisem
- * S popisem — viz ukázka níže.
+ * @example With description
+ * With description — see the example below.
  * ```tsx
  * import { Field } from "~/components/ui/base/field";
  * import { Input } from "~/components/ui/base/input";
  * import { Label } from "~/components/ui/base/label";
  * 
  * <Field.Root>
- *   <Label for="display-name">Zobrazované jméno</Label>
+ *   <Label for="display-name">Display name</Label>
  *   <Input
  *     id="display-name"
  *     type="text"
@@ -31,20 +31,20 @@
  *     aria-describedby="display-name-hint"
  *   />
  *   <Field.Description id="display-name-hint">
- *     Tak vás uvidí ostatní uživatelé.
+ *     This is how other users will see you.
  *   </Field.Description>
  * </Field.Root>
  * ```
  *
- * @example Chybový stav
- * Chybový stav — viz ukázka níže.
+ * @example Error state
+ * Error state — see the example below.
  * ```tsx
  * import { Field } from "~/components/ui/base/field";
  * import { Input } from "~/components/ui/base/input";
  * import { Label } from "~/components/ui/base/label";
  * 
  * <Field.Root>
- *   <Label for="invite-code">Pozvánkový kód</Label>
+ *   <Label for="invite-code">Invite code</Label>
  *   <Input
  *     id="invite-code"
  *     type="text"
@@ -52,7 +52,7 @@
  *     aria-describedby="invite-code-err"
  *     class="border-system-red focus-visible:ring-system-red"
  *   />
- *   <Field.Error id="invite-code-err">Tento kód neexistuje nebo už vypršel.</Field.Error>
+ *   <Field.Error id="invite-code-err">This code does not exist or has already expired.</Field.Error>
  * </Field.Root>
  * ```
  
@@ -71,8 +71,8 @@ import { Polymorphic } from "@qwik-ui/headless";
 
 export type FieldRootProps = Omit<PropsOf<"div">, "as"> & {
   /**
-   * Root element. Default je `span` kvůli možnosti vložení do textových parentů.
-   * Pro klasický blokový layout nastavte `as="div"`.
+   * Root element. Default is `span` so it can be placed inside text parents.
+   * For a classic block layout, set `as="div"`.
    */
   as?: "div" | "span";
 };
@@ -80,8 +80,8 @@ export type FieldRootProps = Omit<PropsOf<"div">, "as"> & {
 /**
  * Vertical stack for one form control with consistent spacing (shadcn-style Field).
  * Compose with `Label`, `Input`, `FieldDescription`, and `FieldError`.
- * Přes `as` můžete přepnout root mezi `span` (výchozí) a `div`.
- * V `<p>`/`<pre>` použijte pouze `as="span"` a jen textově validní potomky.
+ * Via `as` you can switch the root between `span` (default) and `div`.
+ * In `<p>`/`<pre>` use only `as="span"` and only text-valid children.
  */
 export const FieldRoot = component$<FieldRootProps>((props) => {
   const { class: className, as = "span", ...rest } = props;

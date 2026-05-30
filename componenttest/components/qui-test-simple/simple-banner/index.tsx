@@ -2,12 +2,13 @@
  * @component simple-banner
  * @title SimpleBanner
  * @version 0.0.1
- * @example Jednoduchy banner
+ * @example Simple banner
+ * Simple banner example
  * ```tsx
  * import { SimpleBanner } from "~/components/ui/qui-test-simple/simple-banner";
  *
- * <SimpleBanner tone="success" headline="Ulozeno">
- *   Zmena byla bez problemu ulozena.
+ * <SimpleBanner tone="success" headline="Saved">
+ *   The change was saved without any problems.
  * </SimpleBanner>
  * ```
  */

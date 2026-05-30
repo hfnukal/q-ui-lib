@@ -2,8 +2,8 @@
  * @component badge
  * @title Badge
  * @version 1.0.0
- * @example Varianty
- * Varianty — viz ukázka níže.
+ * @example Variants
+ * Variants — see the example below.
  * ```tsx
  * import { Badge } from "~/components/ui/base/badge";
  * 
@@ -15,8 +15,8 @@
  * </div>
  * ```
  *
- * @example Velikosti
- * Velikosti — viz ukázka níže.
+ * @example Sizes
+ * Sizes — see the example below.
  * ```tsx
  * import { Badge } from "~/components/ui/base/badge";
  * 
@@ -26,13 +26,13 @@
  * </div>
  * ```
  *
- * @example V řádku s textem
- * Doplňkové třídy (např. `align-middle`, `ml-2`) sloučíš přes `class`.
+ * @example Inline with text
+ * Merge additional classes (e.g. `align-middle`, `ml-2`) via `class`.
  * ```tsx
  * import { Badge } from "~/components/ui/base/badge";
  * 
  * <p class="text-body text-label">
- *   Verze 2.1
+ *   Version 2.1
  *   <Badge variant="secondary" class="ml-2 align-middle">
  *     Beta
  *   </Badge>

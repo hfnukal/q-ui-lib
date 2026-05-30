@@ -2,14 +2,14 @@
  * @component button
  * @title Button
  * @version 2.1.0
- * @example Základní použití
- * Kliknutím spustí handler předaný přes `onClick$`.
+ * @example Basic usage
+ * Clicking triggers the handler passed via `onClick$`.
  * ```tsx
  * <Button onClick$={$(() => { alert("Button clicked"); })}>Click me</Button>
  * ```
  *
- * @example Varianty (Styl)
- * Prop `variant`: `contained` (výchozí), `outline`, `text`.
+ * @example Variants (Style)
+ * Prop `variant`: `contained` (default), `outline`, `text`.
  * ```tsx
  * <div class="flex flex-wrap gap-2">
  *   <Button variant="contained">Contained</Button>
@@ -18,8 +18,8 @@
  * </div>
  * ```
  *
- * @example Záměry (Barvy)
- * Prop `intent`: `primary` (výchozí), `secondary`, `danger`. Funguje i jako legacy `variant`.
+ * @example Intents (Colors)
+ * Prop `intent`: `primary` (default), `secondary`, `danger`. Also works as a legacy `variant`.
  * ```tsx
  * <div class="flex flex-wrap gap-2">
  *   <Button intent="primary">Primary</Button>
@@ -28,7 +28,7 @@
  * </div>
  * ```
  *
- * @example Kombinace
+ * @example Combinations
  * ```tsx
  * <div class="flex flex-wrap gap-2">
  *   <Button variant="outline" intent="danger">Outline Danger</Button>
@@ -36,8 +36,8 @@
  * </div>
  * ```
  *
- * @example Velikosti
- * Prop `size`: `sm`, `md` (výchozí), `lg`.
+ * @example Sizes
+ * Prop `size`: `sm`, `md` (default), `lg`.
  * ```tsx
  * <div class="flex flex-wrap items-center gap-2">
  *   <Button size="sm">Small</Button>
@@ -47,7 +47,7 @@
  * ```
  *
  * @example Disabled
- * Prop `disabled` zakazuje interakci a sníží opacity.
+ * Prop `disabled` disables interaction and reduces opacity.
  * ```tsx
  * <div class="flex flex-wrap gap-2">
  *   <Button>Enabled</Button>

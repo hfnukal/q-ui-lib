@@ -2,84 +2,84 @@
  * @component table
  * @title Table
  * @version 1.0.0
- * @example Základní tabulka
- * Základní tabulka — viz ukázka níže.
+ * @example Basic table
+ * Basic table — see the example below.
  * ```tsx
  * import { Table } from "~/components/ui/base/table";
  * 
  * <Table.Root class="max-w-2xl rounded-lg border border-separator-opaque">
  *   <Table.Header>
  *     <Table.Row>
- *       <Table.Head>Název</Table.Head>
- *       <Table.Head>Stav</Table.Head>
- *       <Table.Head class="text-right">Částka</Table.Head>
+ *       <Table.Head>Name</Table.Head>
+ *       <Table.Head>Status</Table.Head>
+ *       <Table.Head class="text-right">Amount</Table.Head>
  *     </Table.Row>
  *   </Table.Header>
  *   <Table.Body>
  *     <Table.Row>
- *       <Table.Cell class="font-medium">Projekt Alpha</Table.Cell>
+ *       <Table.Cell class="font-medium">Project Alpha</Table.Cell>
  *       <Table.Cell>
- *         <span class="text-secondary-label">Aktivní</span>
+ *         <span class="text-secondary-label">Active</span>
  *       </Table.Cell>
- *       <Table.Cell class="text-right">12 400 Kč</Table.Cell>
+ *       <Table.Cell class="text-right">$12,400</Table.Cell>
  *     </Table.Row>
  *     <Table.Row>
- *       <Table.Cell class="font-medium">Projekt Beta</Table.Cell>
+ *       <Table.Cell class="font-medium">Project Beta</Table.Cell>
  *       <Table.Cell>
- *         <span class="text-secondary-label">Návrh</span>
+ *         <span class="text-secondary-label">Draft</span>
  *       </Table.Cell>
- *       <Table.Cell class="text-right">8 200 Kč</Table.Cell>
+ *       <Table.Cell class="text-right">$8,200</Table.Cell>
  *     </Table.Row>
  *   </Table.Body>
  * </Table.Root>
  * ```
  *
- * @example Caption a Footer
- * Caption a Footer — viz ukázka níže.
+ * @example Caption and Footer
+ * Caption and Footer — see the example below.
  * ```tsx
  * import { Table } from "~/components/ui/base/table";
  * 
  * <Table.Root class="max-w-2xl rounded-lg border border-separator-opaque">
- *   <Table.Caption>Fakturace za období Q1</Table.Caption>
+ *   <Table.Caption>Invoicing for Q1</Table.Caption>
  *   <Table.Header>
  *     <Table.Row>
- *       <Table.Head>Položka</Table.Head>
- *       <Table.Head class="text-right">Hodnota</Table.Head>
+ *       <Table.Head>Item</Table.Head>
+ *       <Table.Head class="text-right">Value</Table.Head>
  *     </Table.Row>
  *   </Table.Header>
  *   <Table.Body>
  *     <Table.Row>
- *       <Table.Cell>Licence</Table.Cell>
+ *       <Table.Cell>License</Table.Cell>
  *       <Table.Cell class="text-right">99 €</Table.Cell>
  *     </Table.Row>
  *     <Table.Row>
- *       <Table.Cell>Podpora</Table.Cell>
+ *       <Table.Cell>Support</Table.Cell>
  *       <Table.Cell class="text-right">49 €</Table.Cell>
  *     </Table.Row>
  *   </Table.Body>
  *   <Table.Footer>
  *     <Table.Row>
- *       <Table.Cell>Celkem</Table.Cell>
+ *       <Table.Cell>Total</Table.Cell>
  *       <Table.Cell class="text-right font-semibold">148 €</Table.Cell>
  *     </Table.Row>
  *   </Table.Footer>
  * </Table.Root>
  * ```
  *
- * @example Stav řádku
- * Pro zvýraznění vybraného řádku nastav na `Table.Row` atribut `data-state=&quot;selected&quot;`.
+ * @example Row state
+ * To highlight the selected row, set the `data-state=&quot;selected&quot;` attribute on `Table.Row`.
  * ```tsx
  * import { Table } from "~/components/ui/base/table";
  * 
  * <Table.Root class="max-w-xl rounded-lg border border-separator-opaque">
  *   <Table.Body>
  *     <Table.Row data-state="selected">
- *       <Table.Cell>Vybraný řádek</Table.Cell>
+ *       <Table.Cell>Selected row</Table.Cell>
  *       <Table.Cell class="text-secondary-label">data-state=&quot;selected&quot;</Table.Cell>
  *     </Table.Row>
  *     <Table.Row>
- *       <Table.Cell>Běžný řádek</Table.Cell>
- *       <Table.Cell class="text-secondary-label">hover pro zvýraznění</Table.Cell>
+ *       <Table.Cell>Regular row</Table.Cell>
+ *       <Table.Cell class="text-secondary-label">hover to highlight</Table.Cell>
  *     </Table.Row>
  *   </Table.Body>
  * </Table.Root>
@@ -100,8 +100,8 @@ import { component$, type PropsOf, Slot } from "@builder.io/qwik";
 export type TableRootProps = PropsOf<"table">;
 
 /**
- * Obal s vodorovným scrollnutím a vnitřní `<table>`. Děti (`Table.Header`, `Table.Body`, …) patří přímo do tabulky.
- * Poznámka: `<caption>` musí být první potomek `<table>` (použij {@link TableCaption}).
+ * Wrapper with horizontal scrolling and an inner `<table>`. Children (`Table.Header`, `Table.Body`, …) belong directly in the table.
+ * Note: `<caption>` must be the first child of `<table>` (use {@link TableCaption}).
  */
 export const TableRoot = component$<TableRootProps>((props) => {
   const { class: className, ...rest } = props;
@@ -120,7 +120,7 @@ export const TableRoot = component$<TableRootProps>((props) => {
 
 export type TableHeaderProps = PropsOf<"thead">;
 
-/** Hlavičková sekce — spodní okraj řádků v hlavičce. */
+/** Header section — bottom border on the header rows. */
 export const TableHeader = component$<TableHeaderProps>((props) => {
   const { class: className, ...rest } = props;
   const base = "[&_tr]:border-b border-separator-opaque";
@@ -135,7 +135,7 @@ export const TableHeader = component$<TableHeaderProps>((props) => {
 
 export type TableBodyProps = PropsOf<"tbody">;
 
-/** Tělo tabulky — poslední řádek bez spodního rámečku. */
+/** Table body — last row without a bottom border. */
 export const TableBody = component$<TableBodyProps>((props) => {
   const { class: className, ...rest } = props;
   const base = "[&_tr:last-child]:border-0";
@@ -150,7 +150,7 @@ export const TableBody = component$<TableBodyProps>((props) => {
 
 export type TableFooterProps = PropsOf<"tfoot">;
 
-/** Patička — horní oddělovač, jemné pozadí (součty, akce). */
+/** Footer — top separator, subtle background (totals, actions). */
 export const TableFooter = component$<TableFooterProps>((props) => {
   const { class: className, ...rest } = props;
   const base =
@@ -166,7 +166,7 @@ export const TableFooter = component$<TableFooterProps>((props) => {
 
 export type TableRowProps = PropsOf<"tr">;
 
-/** Řádek — oddělovač a zvýraznění při hoveru / výběru (`data-state=selected`). */
+/** Row — separator and highlight on hover / selection (`data-state=selected`). */
 export const TableRow = component$<TableRowProps>((props) => {
   const { class: className, ...rest } = props;
   const base =
@@ -182,7 +182,7 @@ export const TableRow = component$<TableRowProps>((props) => {
 
 export type TableHeadProps = PropsOf<"th">;
 
-/** Buňka hlavičky — zarovnání a sekundární barva textu. */
+/** Header cell — alignment and secondary text color. */
 export const TableHead = component$<TableHeadProps>((props) => {
   const { class: className, ...rest } = props;
   const base =
@@ -198,7 +198,7 @@ export const TableHead = component$<TableHeadProps>((props) => {
 
 export type TableCellProps = PropsOf<"td">;
 
-/** Datová buňka. */
+/** Data cell. */
 export const TableCell = component$<TableCellProps>((props) => {
   const { class: className, ...rest } = props;
   const base = "p-3 align-middle [&:has([role=checkbox])]:pr-0";
@@ -213,7 +213,7 @@ export const TableCell = component$<TableCellProps>((props) => {
 
 export type TableCaptionProps = PropsOf<"caption">;
 
-/** Titulek tabulky — umísti jako první dítě uvnitř {@link TableRoot}. */
+/** Table caption — place as the first child inside {@link TableRoot}. */
 export const TableCaption = component$<TableCaptionProps>((props) => {
   const { class: className, ...rest } = props;
   const base = "mt-4 text-caption-1 text-secondary-label";

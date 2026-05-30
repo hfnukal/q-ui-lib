@@ -2,15 +2,15 @@
  * @component calendar-input
  * @title CalendarInput
  * @version 1.0.0
- * @example Základ
- * Vstup s textem data (`LL`, locale z dayjs), ikonou kalendáře a panelem `Calendar.Panel` v popoveru.
+ * @example Basics
+ * Input with date text (`LL`, locale from dayjs), a calendar icon and the `Calendar.Panel` panel in a popover.
  * ```tsx
  * import { CalendarInput } from "~/components/ui/base/calendar-input";
  *
  * <CalendarInput
  *   defaultValue="2026-04-12"
  *   defaultViewMonth="2026-04-01"
- *   placeholder="např. 12. dubna 2026"
+ *   placeholder="e.g. April 12, 2026"
  * />
  * ```
  
@@ -111,23 +111,23 @@ function caretInSegmentAfterChange(
 }
 
 export interface CalendarInputProps {
-  /** Vybrané datum `YYYY-MM-DD` (controlled s `onValueChange$`). */
+  /** Selected date `YYYY-MM-DD` (controlled with `onValueChange$`). */
   value?: string;
-  /** Výchozí datum při neřízeném režimu. */
+  /** Default date in uncontrolled mode. */
   defaultValue?: string;
   onValueChange$?: PropFunction<(iso: string) => void>;
-  /** Výchozí zobrazený měsíc (`YYYY-MM-DD` prvního dne). */
+  /** Default displayed month (`YYYY-MM-DD` of the first day). */
   defaultViewMonth?: string;
   minDate?: string;
   maxDate?: string;
   weekStartsOn?: 0 | 1;
   placeholder?: string;
-  /** Kořenový `id` popoveru (`usePopover`); výchozí z `useId`. */
+  /** Root popover `id` (`usePopover`); default from `useId`. */
   popoverRootId?: string;
-  /** `id` vstupního pole. */
+  /** Input field `id`. */
   inputId?: string;
   class?: string;
-  /** Popisek skupiny pro čtečky (`InputGroup.Root`). */
+  /** Group label for screen readers (`InputGroup.Root`). */
   "aria-label"?: string;
 }
 
@@ -179,7 +179,7 @@ export const CalendarInput = component$<CalendarInputProps>((props) => {
     }),
   );
 
-  const aria = props["aria-label"] ?? props.placeholder ?? "Datum";
+  const aria = props["aria-label"] ?? props.placeholder ?? "Date";
 
   return (
     <div class={["w-full min-w-0", props.class].filter(Boolean).join(" ")}>

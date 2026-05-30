@@ -2,8 +2,8 @@
  * @component spinner
  * @title Spinner
  * @version 1.6.0
- * @example Velikosti
- * Velikosti — viz ukázka níže.
+ * @example Sizes
+ * Sizes — see the example below.
  * ```tsx
  * import { Spinner } from "~/components/ui/base/spinner";
  *
@@ -14,8 +14,8 @@
  * </div>
  * ```
  *
- * @example Varianty
- * `variant`: mimo jiné `ring`, `dash`, `dots`, `wave`, `stack`, `square`, `ripple`, `needle`, … (výchozí je `arc`).
+ * @example Variants
+ * `variant`: among others `ring`, `dash`, `dots`, `wave`, `stack`, `square`, `ripple`, `needle`, … (default is `arc`).
  * ```tsx
  * import { Spinner } from "~/components/ui/base/spinner";
  *
@@ -42,8 +42,8 @@
  * </div>
  * ```
  *
- * @example Styl macOS (Activity)
- * `activity` — paprsky jako indikátor činnosti; `duo` — dva soustředné oblouky proti sobě; `chase` — segmenty po obvodu s vlnou pulzu.
+ * @example macOS style (Activity)
+ * `activity` — rays like an activity indicator; `duo` — two concentric arcs facing each other; `chase` — segments around the perimeter with a pulse wave.
  * ```tsx
  * import { Spinner } from "~/components/ui/base/spinner";
  *
@@ -54,16 +54,16 @@
  * </div>
  * ```
  *
- * @example S popiskem pro čtečky
- * Prop `label` přidá `role=&quot;status&quot;` a skrytý text ( `sr-only` ).
+ * @example With a label for screen readers
+ * The `label` prop adds `role=&quot;status&quot;` and hidden text ( `sr-only` ).
  * ```tsx
  * import { Spinner } from "~/components/ui/base/spinner";
  *
- * <Spinner size="md" label="Načítám data" />
+ * <Spinner size="md" label="Loading data" />
  * ```
  *
- * @example Vlastní barva
- * U `ring` / `dash` / `duo` / `square` přepiš okraje přes `class`. U `arc` použij `text-*`. U výplňových a „čárových“ variant (`dots`, `wave`, `stack`, `needle`, `ripple`, …) použij `text-*` (`currentColor`).
+ * @example Custom color
+ * For `ring` / `dash` / `duo` / `square` override the borders via `class`. For `arc` use `text-*`. For fill and "line" variants (`dots`, `wave`, `stack`, `needle`, `ripple`, …) use `text-*` (`currentColor`).
  * ```tsx
  * import { Spinner } from "~/components/ui/base/spinner";
  *
@@ -88,36 +88,36 @@ export type SpinnerVariant =
   | "ping"
   | "orbit"
   | "grid"
-  /** Paprsky jako indikátor činnosti (macOS Activity) */
+  /** Rays like an activity indicator (macOS Activity) */
   | "activity"
-  /** Dva soustředné oblouky rotující proti sobě */
+  /** Two concentric arcs rotating against each other */
   | "duo"
-  /** Dvanáct segmentů po obvodu s vlnou pulzu */
+  /** Twelve segments around the perimeter with a pulse wave */
   | "chase"
-  /** Zaoblený čtverec, otáčející se rám */
+  /** Rounded square, rotating frame */
   | "square"
-  /** Soustředné rozšiřující se kruhy */
+  /** Concentric expanding circles */
   | "ripple"
-  /** Pět svislých sloupců (vlna / equalizer) */
+  /** Five vertical columns (wave / equalizer) */
   | "wave"
-  /** Tři vodorovné čárky (skeleton / řádky) */
+  /** Three horizontal lines (skeleton / rows) */
   | "stack"
-  /** Jedna ručička z centra (ciferník) */
+  /** A single hand from the center (clock face) */
   | "needle"
-  /** 3D kostka (CSS transform, lehký náklon + rotace kolem Y) */
+  /** 3D cube (CSS transform, slight tilt + rotation around Y) */
   | "cube"
-  /** Nedokončený prstenec (conic-gradient + maska) */
+  /** Unfinished ring (conic-gradient + mask) */
   | "arc";
 
 export interface SpinnerProps {
-  /** Vizuální styl */
+  /** Visual style */
   variant?: SpinnerVariant;
-  /** Vizuální velikost */
+  /** Visual size */
   size?: "sm" | "md" | "lg";
-  /** Doplňkové Tailwind třídy (např. barva) */
+  /** Additional Tailwind classes (e.g. color) */
   class?: string;
   /**
-   * Text pro čtečky (`role="status"`). Bez něj je spinner dekorativní (`aria-hidden`).
+   * Text for screen readers (`role="status"`). Without it the spinner is decorative (`aria-hidden`).
    */
   label?: string;
 }
@@ -164,13 +164,13 @@ const gridLayout = {
   lg: "grid-cols-2 gap-1.5 [&>span]:size-3",
 } as const;
 
-/** Úhly paprsků (8 × 45°) — styl Activity indicator */
+/** Ray angles (8 × 45°) — Activity indicator style */
 const ACTIVITY_RAY_DEG = [0, 45, 90, 135, 180, 225, 270, 315] as const;
 
-/** Segmenty po obvodu (12 × 30°) */
+/** Segments around the perimeter (12 × 30°) */
 const CHASE_RAY_DEG = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330] as const;
 
-/** Relativní výšky sloupců u `wave` (v %) */
+/** Relative column heights for `wave` (in %) */
 const WAVE_HEIGHT_PCT = [48, 74, 100, 68, 52] as const;
 
 const stackWidths = {
@@ -179,14 +179,14 @@ const stackWidths = {
   lg: ["w-7", "w-9", "w-6"],
 } as const;
 
-/** Hrana 3D kostky (`variant="cube"`) */
+/** Edge of the 3D cube (`variant="cube"`) */
 const cubeSide = {
   sm: "12px",
   md: "19px",
   lg: "28px",
 } as const;
 
-/** Tloušťka „prstence“ u `arc` (maska) */
+/** Thickness of the "ring" for `arc` (mask) */
 const arcTrackPx = {
   sm: "3.5px",
   md: "4.5px",
@@ -337,7 +337,7 @@ const chaseRay =
   "absolute left-1/2 top-1/2 block h-[30%] w-[7%] max-w-[2.5px] min-w-[1px] -translate-x-1/2 origin-bottom rounded-full bg-current opacity-50 animate-pulse motion-reduce:animate-none";
 
 /**
- * Indikátor načítání (bez SVG), barvy z COLORS.md (`accent`, výplně).
+ * Loading indicator (without SVG), colors from COLORS.md (`accent`, fills).
  */
 export const Spinner = component$<SpinnerProps>((props) => {
   useStyles$(spinnerCubeArcStyles);

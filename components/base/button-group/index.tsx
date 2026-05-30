@@ -2,8 +2,8 @@
  * @component button-group
  * @title ButtonGroup
  * @version 1.0.0
- * @example Vodorovně
- * Vodorovně — viz ukázka níže.
+ * @example Horizontal
+ * Horizontal — see the example below.
  * ```tsx
  * import { Button } from "~/components/ui/base/button";
  * import { ButtonGroup } from "~/components/ui/base/button-group";
@@ -15,7 +15,7 @@
  * </ButtonGroup>
  * ```
  *
- * @example Svisle
+ * @example Vertical
  * Prop `orientation=&quot;vertical&quot;` .
  * ```tsx
  * import { Button } from "~/components/ui/base/button";
@@ -27,8 +27,8 @@
  * </ButtonGroup>
  * ```
  *
- * @example Primární varianta
- * Stejné sloučení okrajů funguje i u `primary` / `danger`.
+ * @example Primary variant
+ * The same border merging also works with `primary` / `danger`.
  * ```tsx
  * import { Button } from "~/components/ui/base/button";
  * import { ButtonGroup } from "~/components/ui/base/button-group";
@@ -55,9 +55,9 @@ export interface ButtonGroupProps {
 }
 
 /**
- * Spojuje více tlačítek do jednoho vizuálního celku (shadcn „Button Group“): sdílené stíny,
- * překryté okraje (`-space-x/y-px`) a zaoblení jen na koncích. Děti vlož jako přímé potomky
- * (typicky {@link Button} s `variant="secondary"`).
+ * Joins multiple buttons into a single visual unit (shadcn “Button Group”): shared shadows,
+ * overlapping borders (`-space-x/y-px`) and rounding only at the ends. Insert children as direct descendants
+ * (typically {@link Button} with `variant="secondary"`).
  */
 export const ButtonGroup = component$<ButtonGroupProps>((props) => {
   const orient = props.orientation ?? "horizontal";

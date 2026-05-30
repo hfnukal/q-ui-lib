@@ -21,7 +21,7 @@ export type UiComponentExport = {
   name: string;
   props: UiPropInfo[];
   /**
-   * true = props jsou jen lokální rozšíření (bez `PropsOf<…>`, `QwikIntrinsicElements`, …).
+   * true = props are only local extensions (without `PropsOf<…>`, `QwikIntrinsicElements`, …).
    */
   propsAreExtendedOnly?: boolean;
 };
@@ -146,7 +146,7 @@ function isLikelyNamespaceExport(
   });
 }
 
-/** SheetRoot → "Sheet.Root" když existuje `export const Sheet = { Root: SheetRoot, … }`. */
+/** SheetRoot → "Sheet.Root" when `export const Sheet = { Root: SheetRoot, … }` exists. */
 function buildNamespaceChildDisplayNames(sf: SourceFile): Map<string, string> {
   const map = new Map<string, string>();
   for (const stmt of sf.getVariableStatements()) {
@@ -211,8 +211,8 @@ function unwrapTypeAliasChain(
 }
 
 /**
- * Z průniku typů vezme jen vlastnosti z lokálních literálů `{ … }`, které nejsou v „základních“
- * operandech (`PropsOf`, `QwikIntrinsicElements`, rozšířené referenční typy z knihoven).
+ * From a type intersection takes only the properties from local literals `{ … }` that are not in the “base”
+ * operands (`PropsOf`, `QwikIntrinsicElements`, extended reference types from libraries).
  */
 function extendedPropsOnlyFromTypeNode(
   sf: SourceFile,
@@ -293,7 +293,7 @@ function componentExportFromVariable(
   };
 }
 
-/** Exporty `component$(…)`, `FunctionComponent<…>` a podkomponent namespace objektů. */
+/** Exports of `component$(…)`, `FunctionComponent<…>` and subcomponents of namespace objects. */
 export function extractUiComponentsFromSourceFile(
   sf: SourceFile,
 ): UiComponentExport[] {
@@ -358,8 +358,8 @@ function isPathInsideRoot(resolvedFile: string, root: string): boolean {
 }
 
 /**
- * Introspekce jednoho .tsx souboru pod kořenem dema.
- * `relativePath` používá `/` (např. `src/components/ui/button/index.tsx`).
+ * Introspection of a single .tsx file under the demo root.
+ * `relativePath` uses `/` (e.g. `src/components/ui/button/index.tsx`).
  */
 export function scanSingleUiFile(relativePath: string): UiFileScan | null {
   const root = demoRootDir();
@@ -387,7 +387,7 @@ export function scanSingleUiFile(relativePath: string): UiFileScan | null {
   };
 }
 
-/** Obsah `meta.generated.json` vedle `index.tsx` (viz `npm run generate:meta`). */
+/** Contents of `meta.generated.json` next to `index.tsx` (see `npm run generate:meta`). */
 export type MetaGenerated = {
   name: string;
   title: string;
@@ -400,8 +400,8 @@ export type MetaGenerated = {
 };
 
 /**
- * Načte `meta.generated.json` ve stejné složce jako `index.tsx` komponenty v demu.
- * `relativePath` ve stejném tvaru jako u {@link scanSingleUiFile} (např. `src/components/ui/button/index.tsx`).
+ * Loads `meta.generated.json` in the same folder as the component's `index.tsx` in the demo.
+ * `relativePath` in the same form as in {@link scanSingleUiFile} (e.g. `src/components/ui/button/index.tsx`).
  */
 export function readMetaGeneratedForUiIndex(
   relativePath: string,
@@ -429,7 +429,7 @@ export function readMetaGeneratedForUiIndex(
   }
 }
 
-/** Relativní cesty k `index.tsx` v podadresářích `src/components/ui` (řazeno). */
+/** Relative paths to `index.tsx` in the subdirectories of `src/components/ui` (sorted). */
 export function listUiComponentRelativePaths(): string[] {
   const root = demoRootDir();
   const uiRoot = path.join(root, "src/components/ui");

@@ -2,8 +2,8 @@
  * @component resizable
  * @title Resizable
  * @version 1.0.0
- * @example Vodorovně
- * Přetahujte oddělovač nebo použijte šipky vlevo/vpravo, když má fokus. Volitelně `withHandle` pro vizuální úchop.
+ * @example Horizontal
+ * Drag the separator or use the left/right arrow keys when it has focus. Optionally `withHandle` for a visual grip.
  * ```tsx
  * import { Resizable } from "~/components/ui/base/resizable";
  * 
@@ -13,17 +13,17 @@
  *   class="h-52 rounded-lg border border-separator-opaque/40"
  * >
  *   <Resizable.Panel side="start" minSize={15} class="bg-surface-raised p-4">
- *     <p class="text-callout text-label">Levý panel</p>
+ *     <p class="text-callout text-label">Left panel</p>
  *   </Resizable.Panel>
  *   <Resizable.Handle withHandle />
  *   <Resizable.Panel side="end" minSize={15} class="bg-surface-overlay p-4">
- *     <p class="text-callout text-label">Pravý panel</p>
+ *     <p class="text-callout text-label">Right panel</p>
  *   </Resizable.Panel>
  * </Resizable.PanelGroup>
  * ```
  *
- * @example Svisle
- * `direction=&quot;vertical&quot;` — kurzor `row-resize`, klávesy nahoru/dolů. `withHandle` přidá vizuální úchop.
+ * @example Vertical
+ * `direction=&quot;vertical&quot;` — `row-resize` cursor, up/down keys. `withHandle` adds a visual grip.
  * ```tsx
  * import { Resizable } from "~/components/ui/base/resizable";
  *
@@ -33,11 +33,11 @@
  *   class="h-72 max-w-md rounded-lg border border-separator-opaque/40"
  * >
  *   <Resizable.Panel side="start" minSize={10} class="bg-surface-raised p-3">
- *     <p class="text-caption-1 text-secondary-label">Horní část</p>
+ *     <p class="text-caption-1 text-secondary-label">Top part</p>
  *   </Resizable.Panel>
  *   <Resizable.Handle withHandle />
  *   <Resizable.Panel side="end" minSize={15} class="bg-surface-overlay p-3">
- *     <p class="text-caption-1 text-secondary-label">Spodní část</p>
+ *     <p class="text-caption-1 text-secondary-label">Bottom part</p>
  *   </Resizable.Panel>
  * </Resizable.PanelGroup>
  * ```
@@ -257,9 +257,9 @@ export const ResizableHandle = component$<ResizableHandleProps>((props) => {
     }
   });
 
-  // Qwik může spustit onPointerDown$ se zpožděním → currentTarget je null a drag se nikdy nezaregistruje.
-  // Nativní listener na reálném DOM uzlu + přímá úprava CSS proměnných na skupině zajistí okamžitý layout.
-  // eslint-disable-next-line qwik/no-use-visible-task -- výhradně registrace DOM pointerdown (QRL nespolehlivé)
+  // Qwik may run onPointerDown$ with a delay → currentTarget is null and the drag never registers.
+  // A native listener on the real DOM node + direct update of CSS variables on the group ensures an immediate layout.
+  // eslint-disable-next-line qwik/no-use-visible-task -- solely registers DOM pointerdown (QRL unreliable)
   useVisibleTask$(({ track, cleanup }) => {
     track(() => rootRef.value);
     const root = rootRef.value;
@@ -348,7 +348,7 @@ export const ResizableHandle = component$<ResizableHandleProps>((props) => {
       class={merged}
       onKeyDown$={onKeyDown$}
     >
-      {/* Tenká vizuální linka — jemná barva, při hover se mírně zesiluje */}
+      {/* Thin visual line — subtle color, slightly intensifies on hover */}
       <span
         class={
           horizontal

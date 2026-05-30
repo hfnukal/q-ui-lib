@@ -2,11 +2,12 @@
  * @component complex-dashboard
  * @title ComplexDashboard
  * @version 0.0.1
- * @example Dashboard s navazanymi komponentami
+ * @example Dashboard with composed components
+ * Dashboard example, showcase
  * ```tsx
  * import { ComplexDashboard } from "~/components/ui/qui-test-complex/complex-dashboard";
  *
- * <ComplexDashboard title="Prehled projektu" items={["Build #142", "2 nove tasky", "1 failing test"]} />
+ * <ComplexDashboard title="Project overview" items={["Build #142", "2 new tasks", "1 failing test"]} />
  * ```
  */
 import { $, component$, Slot, useSignal, useVisibleTask$ } from "@builder.io/qwik";
@@ -60,13 +61,13 @@ export interface ComplexDashboardProps {
 const DashboardToastActions = component$(() => {
   const { toast } = useSonner();
   return (
-    <Toolbar.Root aria-label="Akce dashboardu">
-      <Toolbar.Group aria-label="Rychlé akce">
+    <Toolbar.Root aria-label="Dashboard actions">
+      <Toolbar.Group aria-label="Quick actions">
         <Toolbar.Button
           onClick$={() =>
             toast({
-              title: "Dashboard aktualizován",
-              description: "Data jsou synchronizovaná s API.",
+              title: "Dashboard updated",
+              description: "Data is synchronized with the API.",
               type: "success",
             })
           }
@@ -76,8 +77,8 @@ const DashboardToastActions = component$(() => {
         <Toolbar.Button
           onClick$={() =>
             toast({
-              title: "Načítání reportu",
-              description: "Export se připravuje na pozadí.",
+              title: "Loading report",
+              description: "The export is being prepared in the background.",
               type: "loading",
             })
           }
@@ -92,10 +93,9 @@ const DashboardToastActions = component$(() => {
 interface ToastButtonProps {
   title: string;
   description: string;
-  variant?: "default" | "secondary";
-  size?: "sm" | "default";
+  variant?: "contained" | "outline" | "text" | "primary" | "secondary" | "danger";
+  size?: "sm" | "md" | "lg";
   class?: string;
-  children: string;
 }
 
 const ToastButton = component$<ToastButtonProps>((props) => {
@@ -124,51 +124,51 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
   const showGrid = useSignal(false);
   const density = useSignal("comfortable");
   return (
-    <Toolbar.Root aria-label="Header toolbar dashboardu" class="w-full">
+    <Toolbar.Root aria-label="Dashboard header toolbar" class="w-full">
       <div class="text-callout text-label">{props.title}</div>
       <Toolbar.Spacer />
-      <Toolbar.Group aria-label="Navigace">
+      <Toolbar.Group aria-label="Navigation">
         <Toolbar.Button
           onClick$={() =>
             toast({
-              title: "Přepnuto na přehled",
-              description: "Zobrazení Overview je aktivní.",
+              title: "Switched to overview",
+              description: "The Overview view is active.",
               type: "info",
             })
           }
         >
-          Přehled
+          Overview
         </Toolbar.Button>
         <Toolbar.Button
           onClick$={() =>
             toast({
-              title: "Přepnuto na reporty",
-              description: "Otevírá se sekce reportů.",
+              title: "Switched to reports",
+              description: "Opening the reports section.",
               type: "info",
             })
           }
         >
-          Reporty
+          Reports
         </Toolbar.Button>
       </Toolbar.Group>
       <Toolbar.Separator />
       <Toolbar.Group aria-label="Menu sm">
 
         <Menu.Root menuKey="menu-sm">
-          <Menu.Trigger variant="icon" class="size-7">
+          <Menu.Trigger class="size-7">
             ⋮
           </Menu.Trigger>
           <Menu.Panel>
-            <Menu.Item
+              <Menu.Item
               onSelect$={() => {
                 void toast({
                   title: "Mini menu",
-                  description: "Zvolena akce z kompaktního menu.",
+                  description: "Selected an action from the compact menu.",
                   type: "info",
                 });
               }}
             >
-              Mini akce
+              Mini action
             </Menu.Item>
           </Menu.Panel>
         </Menu.Root>
@@ -182,14 +182,14 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
               onClick$={() => {
                 void toast({
                   title: "Menu M",
-                  description: "Zvolena položka 1.",
+                  description: "Selected item 1.",
                   type: "info",
                 });
               }}
             >
               <MenuItem.Root>
                 <MenuItem.Start>📄</MenuItem.Start>
-                <MenuItem.Label>Položka 1</MenuItem.Label>
+                <MenuItem.Label>Item 1</MenuItem.Label>
                 <MenuItem.End>⌘1</MenuItem.End>
               </MenuItem.Root>
             </Menu.Item>
@@ -197,14 +197,14 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
               onClick$={() => {
                 void toast({
                   title: "Menu M",
-                  description: "Zvolena položka 2.",
+                  description: "Selected item 2.",
                   type: "info",
                 });
               }}
             >
               <MenuItem.Root>
                 <MenuItem.Start>⚙️</MenuItem.Start>
-                <MenuItem.Label>Položka 2</MenuItem.Label>
+                <MenuItem.Label>Item 2</MenuItem.Label>
                 <MenuItem.End>⌘2</MenuItem.End>
               </MenuItem.Root>
             </Menu.Item>
@@ -212,7 +212,7 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
             <Menu.Separator />
             <Menu.SubMenu>
               <Menu.SubTrigger>
-                <span>Pokročilé</span>
+                <span>Advanced</span>
                 <span aria-hidden="true">›</span>
               </Menu.SubTrigger>
               <Menu.Panel>
@@ -220,8 +220,8 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
                   onClick$={$(() => {
                     alert("Audit log");
                     void toast({
-                      title: "Pokročilé",
-                      description: "Otevřen audit log.",
+                      title: "Advanced",
+                      description: "Opened the audit log.",
                       type: "info",
                     });
                   })}
@@ -230,15 +230,15 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
                 </Menu.Item>
                 <Menu.Item
                   onClick$={$(() => {
-                    alert("Integrace");
+                    alert("Integrations");
                     void toast({
-                      title: "Pokročilé",
-                      description: "Otevřeny integrace.",
+                      title: "Advanced",
+                      description: "Opened integrations.",
                       type: "info",
                     });
                   })}
                 >
-                  Integrace
+                  Integrations
                 </Menu.Item>
               </Menu.Panel>
             </Menu.SubMenu>
@@ -246,35 +246,35 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
           </Menu.Panel>
         </Menu.Root>
 
-        <Menu.Root menuKey="menu-m-alias">
+        <Menu.Root menuKey="menu-m-alias" gutter={4}>
           <Menu.Trigger>Menu M (alias)</Menu.Trigger>
-          <Menu.Panel gutter={4}>
+          <Menu.Panel>
             <Menu.Item
               onClick$={() => {
                 void toast({
                   title: "Menu alias",
-                  description: "Zvolena položka A.",
+                  description: "Selected item A.",
                   type: "info",
                 });
               }}
             >
-              Položka A
+              Item A
             </Menu.Item>
             <Menu.Item
               onClick$={() => {
                 void toast({
                   title: "Menu alias",
-                  description: "Zvolena položka B.",
+                  description: "Selected item B.",
                   type: "info",
                 });
               }}
             >
-              Položka B
+              Item B
             </Menu.Item>
             <Menu.Separator />
             <Menu.SubMenu>
               <Menu.SubTrigger>
-                <span>Pokročilé</span>
+                <span>Advanced</span>
                 <span aria-hidden="true">›</span>
               </Menu.SubTrigger>
               <Menu.Panel>
@@ -282,7 +282,7 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
                   onSelect$={$(() => {
                     void toast({
                       title: "Menu alias",
-                      description: "Otevřen audit log (submenu).",
+                      description: "Opened the audit log (submenu).",
                       type: "info",
                     });
                   })}
@@ -293,19 +293,19 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
                   onSelect$={$(() => {
                     void toast({
                       title: "Menu alias",
-                      description: "Otevřeny integrace (submenu).",
+                      description: "Opened integrations (submenu).",
                       type: "info",
                     });
                   })}
                 >
-                  Integrace
+                  Integrations
                 </Menu.Item>
               </Menu.Panel>
             </Menu.SubMenu>
 
             <Menu.SubMenu>
               <Menu.SubTrigger>
-                <span>Pokročilé 2</span>
+                <span>Advanced 2</span>
                 <span aria-hidden="true">›</span>
               </Menu.SubTrigger>
               <Menu.Panel>
@@ -314,7 +314,7 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
                     alert("Audit log");
                     void toast({
                       title: "Menu alias",
-                      description: "Otevřen audit log (submenu).",
+                      description: "Opened the audit log (submenu).",
                       type: "info",
                     });
                   }}
@@ -323,15 +323,15 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
                 </Menu.Item>
                 <Menu.Item
                   onSelect$={$(() => {
-                    alert("Integrace");
+                    alert("Integrations");
                     void toast({
                       title: "Menu alias",
-                      description: "Otevřeny integrace (submenu).",
+                      description: "Opened integrations (submenu).",
                       type: "info",
                     });
                   })}
                 >
-                  Integrace
+                  Integrations
                 </Menu.Item>
               </Menu.Panel>
             </Menu.SubMenu>
@@ -339,33 +339,33 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
         </Menu.Root>
 
 
-        <Menu.Root menuKey="menu-m-alias">
+        <Menu.Root menuKey="menu-m-alias" gutter={4}>
           <Menu.Trigger>Menu M (alias)</Menu.Trigger>
-          <Menu.Panel gutter={4}>
+          <Menu.Panel>
             <Menu.Item
               onClick$={() => {
                 void toast({
                   title: "Menu alias",
-                  description: "Zvolena položka A.",
+                  description: "Selected item A.",
                   type: "info",
                 });
               }}
             >
-              Položka A
+              Item A
             </Menu.Item>
-            <Menu.Root>
+            <Menu.Root floating="right-start" gutter={4}>
               <Menu.Trigger>Menu M (alias)</Menu.Trigger>
-              <Menu.Panel gutter={4} floating="right-start">
+              <Menu.Panel>
                 <Menu.Item
                   onClick$={() => {
                     void toast({
                       title: "Menu alias",
-                      description: "Zvolena položka A.",
+                      description: "Selected item A.",
                       type: "info",
                     });
                   }}
                 >
-                  Položka A
+                  Item A
                 </Menu.Item>
               </Menu.Panel>
             </Menu.Root>
@@ -379,30 +379,28 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
           <Menu.Panel>
             <Menu.CheckBoxItem
               bind:value={showSidebar}
-              closeOnSelect={false}
               onClick$={() => {
                 void toast({
                   title: "Menu L",
-                  description: `Sidebar ${showSidebar.value ? "vypnut" : "zapnut"}.`,
+                  description: `Sidebar ${showSidebar.value ? "disabled" : "enabled"}.`,
                   type: "info",
                 });
               }}
             >
-              <MenuItem.Label>Zobrazit sidebar</MenuItem.Label>
+              <MenuItem.Label>Show sidebar</MenuItem.Label>
               <MenuItem.End>⌘B</MenuItem.End>
             </Menu.CheckBoxItem>
             <Menu.CheckBoxItem
               bind:value={showGrid}
-              closeOnSelect={false}
               onClick$={() => {
                 void toast({
                   title: "Menu L",
-                  description: `Grid ${showGrid.value ? "vypnut" : "zapnut"}.`,
+                  description: `Grid ${showGrid.value ? "disabled" : "enabled"}.`,
                   type: "info",
                 });
               }}
             >
-              <MenuItem.Label>Zobrazit grid</MenuItem.Label>
+              <MenuItem.Label>Show grid</MenuItem.Label>
               <MenuItem.End>⌘G</MenuItem.End>
             </Menu.CheckBoxItem>
             <Menu.Separator />
@@ -411,8 +409,8 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
                 value="comfortable"
                 onClick$={() => {
                   void toast({
-                    title: "Hustota zobrazení",
-                    description: "Nastaveno na Comfortable.",
+                    title: "Display density",
+                    description: "Set to Comfortable.",
                     type: "info",
                   });
                 }}
@@ -423,8 +421,8 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
                 value="compact"
                 onClick$={() => {
                   void toast({
-                    title: "Hustota zobrazení",
-                    description: "Nastaveno na Compact.",
+                    title: "Display density",
+                    description: "Set to Compact.",
                     type: "info",
                   });
                 }}
@@ -440,8 +438,8 @@ const HeaderToolbarMenus = component$<{ title: string }>((props) => {
         <Toolbar.Button
           onClick$={() =>
             toast({
-              title: "Export zahájen",
-              description: "CSV export byl zařazen do fronty.",
+              title: "Export started",
+              description: "The CSV export has been queued.",
               type: "loading",
             })
           }
@@ -491,33 +489,32 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
         <LayoutShell.Content>
           <LayoutShell.Sidebar>
             <Stack gap={3}>
-              <SimpleBanner tone="info" headline="Systémové info">
-                Data jsou obnovena každých 30 sekund.
+              <SimpleBanner tone="info" headline="System info">
+                Data is refreshed every 30 seconds.
               </SimpleBanner>
 
               <DashboardToastActions />
 
               <Card.Root as="div">
                 <Card.Header>
-                  <Card.Title>Rychlé filtry</Card.Title>
-                  <Card.Description>Ukázka skládání Field + InputGroup + Button.</Card.Description>
+                  <Card.Title>Quick filters</Card.Title>
+                  <Card.Description>Example of composing Field + InputGroup + Button.</Card.Description>
                 </Card.Header>
                 <Card.Content class="space-y-3">
-                  <Field.Root as="div" size="sm">
+                  <Field.Root as="div">
                     <Field.Description id="dashboard-search-help">
-                      Filtrování podle názvu úkolu
+                      Filter by task name
                     </Field.Description>
-                    <InputGroup.Root as="div" size="sm" aria-label="Filtrování úkolů">
+                    <InputGroup.Root as="div" aria-label="Filter tasks">
                       <InputGroup.Input
-                        placeholder="Hledat položku..."
+                        placeholder="Search item..."
                         aria-describedby="dashboard-search-help"
-                        variant="sm"
                       />
                       <ToastButton
                         variant="secondary"
                         size="sm"
-                        title="Filtr aplikován"
-                        description="Dashboard byl přefiltrován podle zadaného dotazu."
+                        title="Filter applied"
+                        description="The dashboard was filtered by the entered query."
                         class="inline-flex items-center gap-1"
                       >
                         🔍
@@ -529,8 +526,8 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
 
               <Card.Root as="div">
                 <Card.Header>
-                  <Card.Title>Menu a Popover</Card.Title>
-                  <Card.Description>Menu + Popover + Dialog v jednom místě.</Card.Description>
+                  <Card.Title>Menu and Popover</Card.Title>
+                  <Card.Description>Menu + Popover + Dialog in one place.</Card.Description>
                 </Card.Header>
                 <Card.Content class="flex flex-wrap gap-2">
                   <Menu.Root>
@@ -540,35 +537,35 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                         onClick$={() => {
                           void toast({
                             title: "Menu",
-                            description: "Otevřen profil.",
+                            description: "Opened profile.",
                             type: "info",
                           });
                         }}
                       >
-                        Profil
+                        Profile
                       </Menu.Item>
                       <Menu.Item
                         onClick$={() => {
                           void toast({
                             title: "Menu",
-                            description: "Otevřeno nastavení.",
+                            description: "Opened settings.",
                             type: "info",
                           });
                         }}
                       >
-                        Nastavení
+                        Settings
                       </Menu.Item>
                       <Menu.Separator />
                       <Menu.Item
                         onClick$={() => {
                           void toast({
                             title: "Menu",
-                            description: "Probíhá odhlášení uživatele.",
+                            description: "Signing the user out.",
                             type: "loading",
                           });
                         }}
                       >
-                        Odhlásit
+                        Sign out
                       </Menu.Item>
                     </Menu.Panel>
                   </Menu.Root>
@@ -576,7 +573,7 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                   <Popover.Root floating="bottom-start">
                     <Popover.Trigger>Popover</Popover.Trigger>
                     <Popover.Panel>
-                      <div class="p-3 text-sm text-secondary-label">Obsah popoveru pro test skládání.</div>
+                      <div class="p-3 text-sm text-secondary-label">Popover content for the composition test.</div>
                     </Popover.Panel>
                   </Popover.Root>
 
@@ -584,15 +581,15 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                     <Dialog.Trigger>Dialog</Dialog.Trigger>
                     <Dialog.Panel>
                       <Dialog.Header>
-                        <Dialog.Title>Test dialogu</Dialog.Title>
-                        <Dialog.Description>Komponenty fungují i uvnitř modalu.</Dialog.Description>
+                        <Dialog.Title>Dialog test</Dialog.Title>
+                        <Dialog.Description>Components work inside a modal too.</Dialog.Description>
                       </Dialog.Header>
                       <Dialog.Content>
-                        <p class="text-sm text-secondary-label">Toto je testovací obsah dialogu.</p>
+                        <p class="text-sm text-secondary-label">This is test dialog content.</p>
                       </Dialog.Content>
                       <Dialog.Footer>
                         <Dialog.Close class="rounded-md border border-separator-opaque px-3 py-1.5">
-                          Zavřít
+                          Close
                         </Dialog.Close>
                       </Dialog.Footer>
                     </Dialog.Panel>
@@ -604,8 +601,8 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
 
           <LayoutShell.Main>
             <Stack gap={4}>
-              <SimpleBanner tone="success" headline="Stav nasazení">
-                Poslední release proběhl úspěšně.
+              <SimpleBanner tone="success" headline="Deployment status">
+                The last release completed successfully.
               </SimpleBanner>
 
               <Tabs.Root variant="line" selectedTabId="overview">
@@ -630,26 +627,26 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                 <Tabs.Panel key="overview" tabId="overview" class={dashboardTabsPanelClass}>
                   <Card.Root as="div">
                     <Card.Header>
-                      <Card.Title>Souhrn dashboardu</Card.Title>
+                      <Card.Title>Dashboard summary</Card.Title>
                       <Card.Action>
                         <Badge variant="secondary">LIVE</Badge>
                       </Card.Action>
-                      <Card.Description>Kombinace Card + Item + Progress + Spinner + Chart.</Card.Description>
+                      <Card.Description>Combination of Card + Item + Progress + Spinner + Chart.</Card.Description>
                     </Card.Header>
                     <Card.Content class="space-y-3">
                       <ProgressBar value={animatedProgress.value} />
                       <div class="flex items-center gap-2 text-sm text-secondary-label">
                         <Spinner variant="activity" size="sm" />
-                        Zpracování datového feedu...
+                        Processing data feed...
                       </div>
                       <Chart
                         type="bar"
                         class="max-w-xl"
                         data={{
-                          labels: ["Po", "Út", "St", "Čt", "Pá"],
+                          labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
                           datasets: [
                             {
-                              label: "Počet událostí",
+                              label: "Event count",
                               data: [18, 24, 21, 27, 31],
                               backgroundColor: "hsl(var(--accent) / 0.75)",
                             },
@@ -660,14 +657,14 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                         <Item.Root key={item} as="div" variant="outline" size="sm">
                           <Item.Content>
                             <Item.Title>{item}</Item.Title>
-                            <Item.Description>Automaticky načtený status dashboardu.</Item.Description>
+                            <Item.Description>Automatically loaded dashboard status.</Item.Description>
                           </Item.Content>
                           <Item.Actions>
                             <ToastButton
                               variant="secondary"
                               size="sm"
-                              title="Otevřen detail"
-                              description={`Detail položky ${item} byl otevřen.`}
+                              title="Detail opened"
+                              description={`The detail of item ${item} was opened.`}
                             >
                               Detail
                             </ToastButton>
@@ -678,10 +675,10 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                     <Card.Footer class="justify-end">
                       <ToastButton
                         size="sm"
-                        title="Data obnovena"
-                        description="Metriky byly znovu načtené."
+                        title="Data refreshed"
+                        description="The metrics were reloaded."
                       >
-                        Obnovit data
+                        Refresh data
                       </ToastButton>
                     </Card.Footer>
                   </Card.Root>
@@ -690,18 +687,18 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                 <Tabs.Panel key="chart" tabId="chart" class={dashboardTabsPanelClass}>
                   <Card.Root as="div">
                     <Card.Header>
-                      <Card.Title>Přehled grafů</Card.Title>
-                      <Card.Description>Více typů: line, bar, doughnut.</Card.Description>
+                      <Card.Title>Charts overview</Card.Title>
+                      <Card.Description>Multiple types: line, bar, doughnut.</Card.Description>
                     </Card.Header>
                     <Card.Content class="grid gap-4 md:grid-cols-2">
                       <Chart
                         type="line"
                         class="max-w-xl"
                         data={{
-                          labels: ["Po", "Út", "St", "Čt", "Pá"],
+                          labels: ["Mon", "Tue", "Wed", "Thu", "Fri"],
                           datasets: [
                             {
-                              label: "Návštěvy",
+                              label: "Visits",
                               data: [12, 19, 15, 25, 22],
                               borderColor: "hsl(var(--accent))",
                               backgroundColor: "hsl(var(--accent) / 0.2)",
@@ -717,7 +714,7 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                           labels: ["Q1", "Q2", "Q3", "Q4"],
                           datasets: [
                             {
-                              label: "Tržby",
+                              label: "Revenue",
                               data: [48, 62, 55, 71],
                               backgroundColor: "hsl(var(--system-blue) / 0.7)",
                             },
@@ -728,7 +725,7 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                         type="doughnut"
                         class="max-w-sm"
                         data={{
-                          labels: ["Hotovo", "Probíhá", "Čeká"],
+                          labels: ["Done", "In progress", "Waiting"],
                           datasets: [
                             {
                               data: [62, 23, 15],
@@ -748,15 +745,15 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                 <Tabs.Panel key="forms" tabId="forms" class={dashboardTabsPanelClass}>
                   <Card.Root as="div">
                     <Card.Header>
-                      <Card.Title>Formulářové prvky</Card.Title>
+                      <Card.Title>Form elements</Card.Title>
                       <Card.Description>
-                        Input, Textarea, Checkbox, RadioGroup, Switch, Combobox, Select a FieldGroup.
+                        Input, Textarea, Checkbox, RadioGroup, Switch, Combobox, Select and FieldGroup.
                       </Card.Description>
                     </Card.Header>
                     <Card.Content class="space-y-3">
-                      <Input placeholder="Název projektu" />
-                      <Textarea rows={3} placeholder="Poznámka k nasazení..." />
-                      <CheckboxField label="Povolit notifikace e-mailem" />
+                      <Input placeholder="Project name" />
+                      <Textarea rows={3} placeholder="Deployment note..." />
+                      <CheckboxField label="Enable email notifications" />
                       <RadioGroup.Root>
                         <RadioGroup.Item name="plan" value="basic" label="Basic" />
                         <RadioGroup.Item name="plan" value="pro" label="Pro" />
@@ -770,9 +767,9 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                           multiple
                           bind:value={selectedTeams}
                           filter
-                          placeholder="Vyber týmy…"
+                          placeholder="Select teams…"
                         >
-                          <Combobox.Label>Tým</Combobox.Label>
+                          <Combobox.Label>Team</Combobox.Label>
                           <Combobox.Control>
                             <Combobox.Input />
                             <Combobox.Trigger>▼</Combobox.Trigger>
@@ -790,13 +787,13 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                               <Combobox.ItemLabel>Ops</Combobox.ItemLabel>
                               <Combobox.ItemIndicator>✓</Combobox.ItemIndicator>
                             </Combobox.Item>
-                            <Combobox.Empty>Žádný tým nenalezen.</Combobox.Empty>
+                            <Combobox.Empty>No team found.</Combobox.Empty>
                           </Combobox.Popover>
                         </Combobox.Root>
                         <Select.Root>
-                          <Select.Label>Prostředí</Select.Label>
+                          <Select.Label>Environment</Select.Label>
                           <Select.Trigger>
-                            <Select.DisplayValue placeholder="Vyber prostředí" />
+                            <Select.DisplayValue placeholder="Select environment" />
                           </Select.Trigger>
                           <Select.Popover>
                             <Select.Item value="dev">
@@ -816,34 +813,34 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                       </div>
                       <fieldset class="space-y-3 rounded-md border border-separator-opaque p-3">
                         <legend class="px-1 text-xs font-medium text-secondary-label">
-                          FieldGroup: notifikace a release preference
+                          FieldGroup: notifications and release preferences
                         </legend>
                         <Field.Root as="div">
                           <InputGroup.Root as="div">
-                            <InputGroup.Input placeholder="Slack channel (např. #releases)" />
+                            <InputGroup.Input placeholder="Slack channel (e.g. #releases)" />
                             <Button variant="secondary" size="sm">
-                              Ověřit
+                              Verify
                             </Button>
                           </InputGroup.Root>
                           <Field.Description>
-                            Skupina více navazujících polí a akcí v jednom bloku.
+                            A group of multiple related fields and actions in a single block.
                           </Field.Description>
                         </Field.Root>
                         <div class="flex flex-wrap gap-4">
-                          <CheckboxField label="Posílat denní souhrn" />
-                          <CheckboxField label="Posílat alerty při chybě" />
+                          <CheckboxField label="Send daily summary" />
+                          <CheckboxField label="Send alerts on error" />
                         </div>
                       </fieldset>
                       <Field.Root as="div">
                         <ToastButton
-                          title="Formulář uložen"
-                          description="Nastavení dashboardu byla uložena."
+                          title="Form saved"
+                          description="The dashboard settings were saved."
                           class="w-full"
                         >
-                          Uložit formulář
+                          Save form
                         </ToastButton>
                         <Field.Description>
-                          Submit tlačítko uloží konfiguraci formuláře a zobrazí potvrzovací toast.
+                          The submit button saves the form configuration and shows a confirmation toast.
                         </Field.Description>
                       </Field.Root>
                     </Card.Content>
@@ -853,15 +850,15 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                 <Tabs.Panel key="table" tabId="table" class={dashboardTabsPanelClass}>
                   <Card.Root as="div">
                     <Card.Header>
-                      <Card.Title>Tabulka metrik</Card.Title>
+                      <Card.Title>Metrics table</Card.Title>
                     </Card.Header>
                     <Card.Content>
                       <Table.Root>
                         <Table.Header>
                           <Table.Row>
-                            <Table.Head>Metrika</Table.Head>
-                            <Table.Head>Stav</Table.Head>
-                            <Table.Head class="text-right">Hodnota</Table.Head>
+                            <Table.Head>Metric</Table.Head>
+                            <Table.Head>Status</Table.Head>
+                            <Table.Head class="text-right">Value</Table.Head>
                           </Table.Row>
                         </Table.Header>
                         <Table.Body>
@@ -884,8 +881,8 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                 <Tabs.Panel key="extras" tabId="extras" class={dashboardTabsPanelClass}>
                   <Card.Root as="div">
                     <Card.Header>
-                      <Card.Title>Další base komponenty</Card.Title>
-                      <Card.Description>Avatar, Accordion a kombinace dalších prvků.</Card.Description>
+                      <Card.Title>More base components</Card.Title>
+                      <Card.Description>Avatar, Accordion and a combination of other elements.</Card.Description>
                     </Card.Header>
                     <Card.Content class="space-y-4">
                       <div class="flex items-center gap-3">
@@ -900,11 +897,11 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                         </Avatar.Root>
                       </div>
                       <Accordion.Root>
-                        <Accordion.Trigger>Integrace komponent</Accordion.Trigger>
+                        <Accordion.Trigger>Component integration</Accordion.Trigger>
                         <Accordion.Content>
                           <div class="space-y-3 pt-2">
                             <p class="text-sm text-secondary-label">
-                              Accordion funguje i se složitým obsahem (Carousel + Card + Button).
+                              The Accordion works with complex content too (Carousel + Card + Button).
                             </p>
                             <Carousel.Root class="max-w-xl" rewind>
                               <Carousel.Title>Accordion carousel</Carousel.Title>
@@ -914,18 +911,18 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                                     <Card.Root as="div" class="w-full">
                                       <Card.Header>
                                         <Card.Title>Slide 1</Card.Title>
-                                        <Card.Description>Kombinace card + toast action.</Card.Description>
+                                        <Card.Description>Combination of card + toast action.</Card.Description>
                                       </Card.Header>
                                       <Card.Content class="space-y-2">
                                         <p class="text-sm text-secondary-label">
-                                          Testujeme, že uvnitř accordion panelu funguje i komplexní layout.
+                                          We are testing that a complex layout works inside an accordion panel too.
                                         </p>
                                         <ToastButton
                                           size="sm"
-                                          title="Carousel akce"
-                                          description="Slide 1 triggernul toast z Accordion obsahu."
+                                          title="Carousel action"
+                                          description="Slide 1 triggered a toast from Accordion content."
                                         >
-                                          Akce slide 1
+                                          Slide 1 action
                                         </ToastButton>
                                       </Card.Content>
                                     </Card.Root>
@@ -934,13 +931,13 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                                     <Card.Root as="div" class="w-full">
                                       <Card.Header>
                                         <Card.Title>Slide 2</Card.Title>
-                                        <Card.Description>Nested komponenty bez kolizí.</Card.Description>
+                                        <Card.Description>Nested components without collisions.</Card.Description>
                                       </Card.Header>
                                       <Card.Content class="space-y-2">
                                         <ProgressBar value={54} />
                                         <div class="flex items-center gap-2 text-sm text-secondary-label">
                                           <Spinner variant="activity" size="sm" />
-                                          Synchronizace metrik ve druhém snímku.
+                                          Synchronizing metrics in the second slide.
                                         </div>
                                       </Card.Content>
                                     </Card.Root>
@@ -960,9 +957,9 @@ export const ComplexDashboard = component$<ComplexDashboardProps>((props) => {
                             </Carousel.Root>
                           </div>
                         </Accordion.Content>
-                        <Accordion.Trigger>A11y kontrola</Accordion.Trigger>
+                        <Accordion.Trigger>A11y check</Accordion.Trigger>
                         <Accordion.Content>
-                          Fokus management a keyboard navigace jsou použitelné i v showcase dashboardu.
+                          Focus management and keyboard navigation are usable in the showcase dashboard too.
                         </Accordion.Content>
                       </Accordion.Root>
                     </Card.Content>

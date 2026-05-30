@@ -2,8 +2,8 @@
  * @component switch
  * @title Switch
  * @version 1.0.0
- * @example Řízený stav
- * Stav přes `bind:pressed` a textová nápověda vedle přepínače.
+ * @example Controlled state
+ * State via `bind:pressed` and a text hint next to the switch.
  * ```tsx
  * import { useSignal } from "@builder.io/qwik";
  * import { Switch } from "~/components/ui/base/switch";
@@ -13,25 +13,25 @@
  *   return (
  *     <Switch
  *       bind:pressed={on}
- *       aria-label="Upozornění"
+ *       aria-label="Notifications"
  *     />
  *   );
  * });
  * ```
  *
- * @example Výchozí hodnota a disabled
- * Viditelné popisky přes `Label` v řádku s přepínačem (`flex`).
+ * @example Default value and disabled
+ * Visible labels via `Label` in a row with the switch (`flex`).
  * ```tsx
  * import { Label } from "~/components/ui/base/label";
  * import { Switch } from "~/components/ui/base/switch";
  * 
  * <div class="flex max-w-md flex-col gap-4">
  *   <div class="flex items-center justify-between gap-4">
- *     <Label for="demo-sw-on">Výchozí zapnuto</Label>
+ *     <Label for="demo-sw-on">On by default</Label>
  *     <Switch id="demo-sw-on" pressed />
  *   </div>
  *   <div class="flex items-center justify-between gap-4">
- *     <Label class="text-secondary-label" for="demo-sw-off">Neaktivní</Label>
+ *     <Label class="text-secondary-label" for="demo-sw-off">Inactive</Label>
  *     <Switch id="demo-sw-off" disabled />
  *   </div>
  * </div>
@@ -59,7 +59,7 @@ const thumbClass =
   "pointer-events-none absolute left-[3px] top-1/2 block size-[18px] -translate-y-1/2 rounded-full bg-surface-overlay shadow-sm ring-1 ring-separator-opaque transition-transform duration-200 ease-in-out will-change-transform";
 
 /**
- * Přepínač ve stylu přepínače (switch) nad {@link https://qwikui.com/docs/headless/toggle | @qwik-ui/headless Toggle}:
+ * A switch-style toggle over {@link https://qwikui.com/docs/headless/toggle | @qwik-ui/headless Toggle}:
  * `aria-pressed`, `bind:pressed`, `onPressedChange$`, `disabled`.
  */
 export const Switch = component$<SwitchProps>((props) => {

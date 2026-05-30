@@ -2,48 +2,48 @@
  * @component hover-card
  * @title HoverCard
  * @version 1.0.1
- * @example Základní použití
- * Najetí na trigger otevře panel; chování vychází z headlessu (včetně omezení oproti plnému „bezpečnému mostu“ mezi triggerem a panelem u některých knihoven).
+ * @example Basic usage
+ * Hovering the trigger opens the panel; the behavior comes from headless (including limitations compared to a full „safe bridge“ between the trigger and panel in some libraries).
  * ```tsx
  * import { HoverCard } from "~/components/ui/base/hover-card";
  * 
  * <HoverCard.Root>
- *   <HoverCard.Trigger>@uživatel</HoverCard.Trigger>
+ *   <HoverCard.Trigger>@user</HoverCard.Trigger>
  *   <HoverCard.Content>
  *     <div class="space-y-2 p-4">
- *       <p class="text-callout font-medium text-label">Náhled profilu</p>
+ *       <p class="text-callout font-medium text-label">Profile preview</p>
  *       <p class="text-caption-1 text-secondary-label">
- *         Hover Card je postavený na headless Popoveru s výchozím hover režimem — vhodný pro bohatší obsah než Tooltip.
+ *         Hover Card is built on the headless Popover with the default hover mode — suited for richer content than a Tooltip.
  *       </p>
  *     </div>
  *   </HoverCard.Content>
  * </HoverCard.Root>
  * ```
  *
- * @example Umístění (floating)
- * Prop `floating` pro směr panelu (např. zobrazení nad triggerem).
+ * @example Placement (floating)
+ * Prop `floating` for the panel direction (e.g. showing above the trigger).
  * ```tsx
  * import { HoverCard } from "~/components/ui/base/hover-card";
  * 
  * <HoverCard.Root floating="top">
- *   <HoverCard.Trigger>Panel nahoře</HoverCard.Trigger>
+ *   <HoverCard.Trigger>Panel above</HoverCard.Trigger>
  *   <HoverCard.Content>
- *     <div class="p-4 text-callout text-secondary-label">Umístění přes prop floating na kořeni.</div>
+ *     <div class="p-4 text-callout text-secondary-label">Placement via the floating prop on the root.</div>
  *   </HoverCard.Content>
  * </HoverCard.Root>
  * ```
  *
- * @example Šipka
- * Šipka — viz ukázka níže.
+ * @example Arrow
+ * Arrow — see the example below.
  * ```tsx
  * import { HoverCard } from "~/components/ui/base/hover-card";
  * 
  * <HoverCard.Root gutter={8} arrow>
- *   <HoverCard.Trigger>Se šipkou</HoverCard.Trigger>
+ *   <HoverCard.Trigger>With arrow</HoverCard.Trigger>
  *   <HoverCard.Content>
  *     <HoverCard.Arrow />
  *     <div class="p-4 text-callout text-secondary-label">
- *       Stejné Floating UI volby jako u Popoveru (<code>arrow</code>, <code>gutter</code>).
+ *       The same Floating UI options as the Popover (<code>arrow</code>, <code>gutter</code>).
  *     </div>
  *   </HoverCard.Content>
  * </HoverCard.Root>
@@ -68,18 +68,18 @@ import {
 } from "../utilities/floating-ui";
 import { headlessPopoverContextId } from "../utilities/headless-popover-context";
 
-/** Kořen — kontext triggeru a panelu; výchozí `hover` odpovídá vzoru Hover Card (popover při najetí). */
+/** Root — context for the trigger and panel; the default `hover` matches the Hover Card pattern (popover on hover). */
 const rootClass = "inline-block";
 
 /**
- * Trigger je u headlessu `<button>` — nenápadný styl vhodný pro odkaz/avatar (jako Tooltip),
- * ne primární tlačítko jako u klikacího Popoveru.
+ * The trigger is a `<button>` in headless — an understated style suited for a link/avatar (like Tooltip),
+ * not a primary button as in the click Popover.
  */
 const triggerClass =
   "inline-flex max-w-full cursor-default items-center justify-center rounded-sm border-0 bg-transparent p-0 font-inherit text-inherit shadow-none ring-offset-background transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
 /**
- * Obsah karty — širší než základní Popover (`w-80`), vhodné pro náhled profilu nebo delší text.
+ * Card content — wider than the basic Popover (`w-80`), suited for a profile preview or longer text.
  */
 const contentClass =
   "z-50 w-80 max-w-[min(20rem,calc(100vw-2rem))] overflow-visible rounded-lg border border-separator-opaque bg-surface-raised p-0 text-body text-label shadow-md outline-none ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
@@ -151,8 +151,8 @@ export const HoverCardArrow = component$<HoverCardArrowProps>((props) => {
 });
 
 /**
- * Složené API (Hover Card) nad {@link https://qwikui.com/docs/headless/popover | @qwik-ui/headless Popover}
- * s výchozím `hover` a styly z COLORS.md. Mapuje se na shadcn Hover Card (Content = Panel).
+ * Compound API (Hover Card) over {@link https://qwikui.com/docs/headless/popover | @qwik-ui/headless Popover}
+ * with the default `hover` and styles from COLORS.md. Maps to the shadcn Hover Card (Content = Panel).
  */
 export const HoverCard = {
   Root: HoverCardRoot,

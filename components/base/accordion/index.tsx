@@ -2,43 +2,43 @@
  * @component accordion
  * @title Accordion
  * @version 1.0.1
- * @example Compound API (střídavě `Trigger` / `Content`)
- * Compound API (střídavě Trigger / Content) — viz ukázka níže.
+ * @example Compound API (alternating `Trigger` / `Content`)
+ * Compound API (alternating Trigger / Content) — see the example below.
  * ```tsx
  * import { Accordion } from "~/components/ui/base/accordion";
  * 
  * <Accordion.Root>
- *   <Accordion.Trigger>Základní informace</Accordion.Trigger>
+ *   <Accordion.Trigger>Basic information</Accordion.Trigger>
  *   <Accordion.Content>
- *     Stručný úvod do tématu a odkazy na další zdroje.
+ *     A brief introduction to the topic and links to further resources.
  *   </Accordion.Content>
- *   <Accordion.Trigger>Pokročilé možnosti</Accordion.Trigger>
+ *   <Accordion.Trigger>Advanced options</Accordion.Trigger>
  *   <Accordion.Content>
- *     Rozšířená nastavení a tipy pro každodenní použití.
+ *     Extended settings and tips for everyday use.
  *   </Accordion.Content>
  * </Accordion.Root>
  * ```
  *
  * @example Single open panel
- * Single open panel — viz ukázka níže.
+ * Single open panel — see the example below.
  * ```tsx
  * import { AccordionList } from "~/components/ui/base/accordion";
  * 
  * const items = [
  *   {
  *     value: "basics",
- *     title: "Co je Qwik?",
- *     content: "Framework zaměřený na okamžité načtení a minimální JavaScript na klientu.",
+ *     title: "What is Qwik?",
+ *     content: "A framework focused on instant loading and minimal JavaScript on the client.",
  *   },
  *   {
  *     value: "resumability",
- *     title: "Co je resumability?",
- *     content: "Server může obnovit stav aplikace bez velkého hydration bundle.",
+ *     title: "What is resumability?",
+ *     content: "The server can resume the application state without a large hydration bundle.",
  *   },
  *   {
  *     value: "signals",
- *     title: "Reaktivita",
- *     content: "Jemně granularní signály pro efektivní aktualizace UI.",
+ *     title: "Reactivity",
+ *     content: "Fine-grained signals for efficient UI updates.",
  *   },
  * ];
  * 
@@ -46,33 +46,33 @@
  * ```
  *
  * @example Multiple open panels
- * Multiple open panels — viz ukázka níže.
+ * Multiple open panels — see the example below.
  * ```tsx
  * import { AccordionList } from "~/components/ui/base/accordion";
  * 
  * const items = [
  *   {
  *     value: "basics",
- *     title: "Co je Qwik?",
- *     content: "Framework zaměřený na okamžité načtení a minimální JavaScript na klientu.",
+ *     title: "What is Qwik?",
+ *     content: "A framework focused on instant loading and minimal JavaScript on the client.",
  *   },
  *   {
  *     value: "resumability",
- *     title: "Co je resumability?",
- *     content: "Server může obnovit stav aplikace bez velkého hydration bundle.",
+ *     title: "What is resumability?",
+ *     content: "The server can resume the application state without a large hydration bundle.",
  *   },
  *   {
  *     value: "signals",
- *     title: "Reaktivita",
- *     content: "Jemně granularní signály pro efektivní aktualizace UI.",
+ *     title: "Reactivity",
+ *     content: "Fine-grained signals for efficient UI updates.",
  *   },
  * ];
  * 
  * <AccordionList items={items} multiple />
  * ```
- 
- 
- */
+
+
+*/
 
 import {
   component$,
@@ -82,7 +82,7 @@ import {
 import type { JSXNode } from "@builder.io/qwik/jsx-runtime";
 import { Accordion as HeadlessAccordion } from "@qwik-ui/headless";
 
-/** Jedna souvislá karta — oddělení jen linkou mezi položkami (žádný meziřádek). */
+/** A single continuous card — separated only by a line between items (no gap between rows). */
 const itemFrameClass = "min-w-0 overflow-hidden bg-surface-raised";
 
 const headerClass = "flex";
@@ -90,7 +90,7 @@ const headerClass = "flex";
 const triggerClass =
   "flex w-full items-center justify-between gap-2 px-4 py-3 text-left text-callout font-medium text-label transition-colors hover:bg-surface-overlay focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background after:ml-auto after:inline-block after:text-tertiary-label after:transition-transform after:duration-200 after:content-['▼'] [&[data-open]]:after:rotate-180";
 
-/** Horizontální padding + vertikální odsazení (nahoře pod triggerem, dole u spodní hrany karty). */
+/** Horizontal padding + vertical spacing (at the top below the trigger, at the bottom near the card's lower edge). */
 const contentClass = "px-4 pb-3 pt-3 text-callout text-secondary-label";
 
 const rootClass =
@@ -109,11 +109,11 @@ function flattenChildren(children: unknown): JSXNode[] {
 }
 
 /**
- * Kořen accordionu. Přímé děti musí být střídavě {@link AccordionTrigger} a {@link AccordionContent}
- * (Trigger, Content, Trigger, Content, …). Každá dvojice se zabalí do headless `Item` + `Header`.
+ * Accordion root. Direct children must alternate between {@link AccordionTrigger} and {@link AccordionContent}
+ * (Trigger, Content, Trigger, Content, …). Each pair is wrapped into a headless `Item` + `Header`.
  *
- * Poznámka: `AccordionRoot` renderuje blokový root (`<div>`), proto nesmí být vnořený uvnitř
- * textových kontejnerů `<p>` ani `<pre>` (nevalidní HTML).
+ * Note: `AccordionRoot` renders a block root (`<div>`), so it must not be nested inside
+ * text containers `<p>` or `<pre>` (invalid HTML).
  */
 export const AccordionRoot: FunctionComponent<
   AccordionRootProps & { children?: unknown }
@@ -148,7 +148,7 @@ export const AccordionRoot: FunctionComponent<
   );
 };
 
-/** Trigger panelu — výchozí obsah přes headless `<Slot />` (šipka je `::after`, headless Trigger nepřidává další uzly). */
+/** Panel trigger — default content via the headless `<Slot />` (the arrow is `::after`; the headless Trigger does not add extra nodes). */
 export const AccordionTrigger: FunctionComponent<AccordionTriggerProps> = (
   props,
 ) => {
@@ -156,7 +156,7 @@ export const AccordionTrigger: FunctionComponent<AccordionTriggerProps> = (
   return <HeadlessAccordion.Trigger {...props} class={merged} />;
 };
 
-/** Obsah panelu — výchozí obsah přes headless `<Slot />`. */
+/** Panel content — default content via the headless `<Slot />`. */
 export const AccordionContent: FunctionComponent<AccordionContentProps> = (
   props,
 ) => {
@@ -165,9 +165,9 @@ export const AccordionContent: FunctionComponent<AccordionContentProps> = (
 };
 
 /**
- * Složené API: {@link AccordionRoot}, {@link AccordionTrigger}, {@link AccordionContent}.
- * Pod `Root` střídavě `Trigger` a `Content` (každý má vnitřní slot).
- * Protože `AccordionRoot` renderuje `<div>`, nepoužívejte `Accordion` uvnitř `<p>` ani `<pre>`.
+ * Compound API: {@link AccordionRoot}, {@link AccordionTrigger}, {@link AccordionContent}.
+ * Under `Root`, alternate `Trigger` and `Content` (each has an inner slot).
+ * Because `AccordionRoot` renders a `<div>`, do not use `Accordion` inside `<p>` or `<pre>`.
  */
 export const Accordion = {
   Root: AccordionRoot,
@@ -188,7 +188,7 @@ export interface AccordionProps {
 }
 
 /**
- * Zkratka nad {@link Accordion}: položky z pole jako střídavé Trigger / Content.
+ * Shortcut over {@link Accordion}: items from an array as alternating Trigger / Content.
  */
 export const AccordionList = component$<AccordionProps>((props) => {
   return (

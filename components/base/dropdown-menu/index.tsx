@@ -2,46 +2,46 @@
  * @component dropdown-menu
  * @title DropdownMenu
  * @version 1.4.0
- * @example Základní menu
- * Základní menu — viz ukázka níže.
+ * @example Basic menu
+ * Basic menu — see the example below.
  * ```tsx
  * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
  * 
- * <DropdownMenu.Root>
- *   <DropdownMenu.Trigger>Otevřít menu</DropdownMenu.Trigger>
- *   <DropdownMenu.Popover gutter={4}>
- *     <DropdownMenu.Item>Profil</DropdownMenu.Item>
- *     <DropdownMenu.Item>Nastavení</DropdownMenu.Item>
+ * <DropdownMenu.Root gutter={4}>
+ *   <DropdownMenu.Trigger>Open menu</DropdownMenu.Trigger>
+ *   <DropdownMenu.Popover>
+ *     <DropdownMenu.Item>Profile</DropdownMenu.Item>
+ *     <DropdownMenu.Item>Settings</DropdownMenu.Item>
  *     <DropdownMenu.Separator />
- *     <DropdownMenu.Item>Odebrat</DropdownMenu.Item>
+ *     <DropdownMenu.Item>Remove</DropdownMenu.Item>
  *   </DropdownMenu.Popover>
  * </DropdownMenu.Root>
  * ```
  *
- * @example Skupiny a popisky
- * Skupiny a popisky — viz ukázka níže.
+ * @example Groups and labels
+ * Groups and labels — see the example below.
  * ```tsx
  * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
  * 
- * <DropdownMenu.Root>
- *   <DropdownMenu.Trigger>Účet</DropdownMenu.Trigger>
- *   <DropdownMenu.Popover gutter={4}>
+ * <DropdownMenu.Root gutter={4}>
+ *   <DropdownMenu.Trigger>Account</DropdownMenu.Trigger>
+ *   <DropdownMenu.Popover>
  *     <DropdownMenu.Group>
- *       <DropdownMenu.Label>Můj účet</DropdownMenu.Label>
- *       <DropdownMenu.Item>Profil</DropdownMenu.Item>
- *       <DropdownMenu.Item>Fakturace</DropdownMenu.Item>
+ *       <DropdownMenu.Label>My account</DropdownMenu.Label>
+ *       <DropdownMenu.Item>Profile</DropdownMenu.Item>
+ *       <DropdownMenu.Item>Billing</DropdownMenu.Item>
  *     </DropdownMenu.Group>
  *     <DropdownMenu.Separator />
  *     <DropdownMenu.Group>
- *       <DropdownMenu.Label>Nebezpečná zóna</DropdownMenu.Label>
- *       <DropdownMenu.Item>Odhlásit se</DropdownMenu.Item>
+ *       <DropdownMenu.Label>Danger zone</DropdownMenu.Label>
+ *       <DropdownMenu.Item>Sign out</DropdownMenu.Item>
  *     </DropdownMenu.Group>
  *   </DropdownMenu.Popover>
  * </DropdownMenu.Root>
  * ```
  *
- * @example Checkbox a radio
- * Pro vícenásobný výběr použij `CheckboxItem` s `bind:value` ; pro jednu hodnotu `RadioGroup` s `bind:value` a `RadioItem` .
+ * @example Checkbox and radio
+ * For multiple selection use `CheckboxItem` with `bind:value` ; for a single value `RadioGroup` with `bind:value` and `RadioItem` .
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
  * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
@@ -51,17 +51,17 @@
  *   const theme = useSignal("system");
  * 
  *   return (
- *     <DropdownMenu.Root>
- *       <DropdownMenu.Trigger>Volby</DropdownMenu.Trigger>
- *       <DropdownMenu.Popover gutter={4}>
+ *     <DropdownMenu.Root gutter={4}>
+ *       <DropdownMenu.Trigger>Options</DropdownMenu.Trigger>
+ *       <DropdownMenu.Popover>
  *         <DropdownMenu.CheckboxItem bind:value={notifications}>
- *           Oznámení
+ *           Notifications
  *         </DropdownMenu.CheckboxItem>
  *         <DropdownMenu.Separator />
  *         <DropdownMenu.RadioGroup bind:value={theme}>
- *           <DropdownMenu.RadioItem value="light">Světlý</DropdownMenu.RadioItem>
- *           <DropdownMenu.RadioItem value="dark">Tmavý</DropdownMenu.RadioItem>
- *           <DropdownMenu.RadioItem value="system">Systém</DropdownMenu.RadioItem>
+ *           <DropdownMenu.RadioItem value="light">Light</DropdownMenu.RadioItem>
+ *           <DropdownMenu.RadioItem value="dark">Dark</DropdownMenu.RadioItem>
+ *           <DropdownMenu.RadioItem value="system">System</DropdownMenu.RadioItem>
  *         </DropdownMenu.RadioGroup>
  *       </DropdownMenu.Popover>
  *     </DropdownMenu.Root>
@@ -75,7 +75,6 @@ import {
   $,
   component$,
   createContextId,
-  FunctionComponent,
   PropsOf,
   Slot,
   useContext,
@@ -89,8 +88,8 @@ import {
 import { Popover as HeadlessPopover } from "@qwik-ui/headless";
 
 /**
- * Vizuální layout řádku menu — kombinuj s interaktivním wrapperem
- * (např. `DropdownMenu.Item`). Skládá `Start`, `Label`, `End`.
+ * Visual layout of a menu row — combine with an interactive wrapper
+ * (e.g. `DropdownMenu.Item`). Composes `Start`, `Label`, `End`.
  */
 export const MenuItemRoot = component$<PropsOf<"div">>((props) => {
   const { class: className, ...rest } = props;
@@ -103,7 +102,7 @@ export const MenuItemRoot = component$<PropsOf<"div">>((props) => {
   );
 });
 
-/** Levá plocha pro ikonu nebo jinou vizuální indikaci. */
+/** Left area for an icon or other visual indication. */
 export const MenuItemStart = component$<PropsOf<"span">>((props) => {
   const { class: className, ...rest } = props;
   const base =
@@ -116,7 +115,7 @@ export const MenuItemStart = component$<PropsOf<"span">>((props) => {
   );
 });
 
-/** Hlavní text položky — roztahuje se do dostupného prostoru. */
+/** Main item text — expands into the available space. */
 export const MenuItemLabel = component$<PropsOf<"span">>((props) => {
   const { class: className, ...rest } = props;
   const base = "flex-1 truncate text-left";
@@ -128,7 +127,7 @@ export const MenuItemLabel = component$<PropsOf<"span">>((props) => {
   );
 });
 
-/** Pravá plocha — typicky `KbdShortcut` nebo badge. */
+/** Right area — typically `KbdShortcut` or a badge. */
 export const MenuItemEnd = component$<PropsOf<"span">>((props) => {
   const { class: className, ...rest } = props;
   const base = "ml-auto flex shrink-0 items-center gap-1 text-secondary-label";
@@ -140,7 +139,7 @@ export const MenuItemEnd = component$<PropsOf<"span">>((props) => {
   );
 });
 
-/** Složené API pro vizuální layout: `MenuItem.Root`, `MenuItem.Start`, `MenuItem.Label`, `MenuItem.End`. */
+/** Compound API for visual layout: `MenuItem.Root`, `MenuItem.Start`, `MenuItem.Label`, `MenuItem.End`. */
 export const MenuItem = {
   Root: MenuItemRoot,
   Start: MenuItemStart,

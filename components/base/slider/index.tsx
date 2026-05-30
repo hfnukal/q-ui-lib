@@ -3,7 +3,7 @@
  * @title Slider
  * @version 1.0.0
  * @example Labeled value
- * Hodnotu drž v `useSignal` a předej ji jako `value` spolu s `onChange.
+ * Keep the value in `useSignal` and pass it as `value` together with `onChange.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
  * import { Slider } from "~/components/ui/base/slider";
@@ -22,8 +22,8 @@
  * });
  * ```
  *
- * @example Min, max a krok
- * Props `min`, `max` a `step` pro rozsah a krok posuvníku.
+ * @example Min, max and step
+ * The `min`, `max` and `step` props for the slider's range and step.
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
  * import { Slider } from "~/components/ui/base/slider";
@@ -45,20 +45,20 @@
  * });
  * ```
  *
- * @example Velikost ukazatele (thumbSize)
- * Prop `thumbSize` mění velikost ukazatele i výšku dráhy: `sm`, `md` (výchozí), `lg`.
+ * @example Thumb size (thumbSize)
+ * The `thumbSize` prop changes the thumb size and the track height: `sm`, `md` (default), `lg`.
  * ```tsx
  * import { Slider } from "~/components/ui/base/slider";
  *
  * <div class="flex max-w-md flex-col gap-6">
- *   <Slider label="Malý (sm)" thumbSize="sm" value={30} />
- *   <Slider label="Střední (md)" thumbSize="md" value={50} />
- *   <Slider label="Velký (lg)" thumbSize="lg" value={70} />
+ *   <Slider label="Small (sm)" thumbSize="sm" value={30} />
+ *   <Slider label="Medium (md)" thumbSize="md" value={50} />
+ *   <Slider label="Large (lg)" thumbSize="lg" value={70} />
  * </div>
  * ```
  *
- * @example Barva akcentu a pozadí
- * Props `color` a `backgroundColor` berou Tailwind třídy ( `accent-*`, `bg-*` z palety v `COLORS.md`).
+ * @example Accent and background color
+ * The `color` and `backgroundColor` props take Tailwind classes ( `accent-*`, `bg-*` from the palette in `COLORS.md`).
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
  * import { Slider } from "~/components/ui/base/slider";
@@ -67,7 +67,7 @@
  *   const warmth = useSignal(50);
  *   return (
  *     <Slider
- *       label="Teplota"
+ *       label="Temperature"
  *       color="accent-system-orange"
  *       backgroundColor="bg-fill-quaternary"
  *       value={warmth.value}
@@ -99,11 +99,11 @@ export interface SliderProps {
   /** Accessible label; also sets <label htmlFor> when provided. */
   label?: string;
   onChange$?: PropFunction<(value: number) => void>;
-  /** Tailwind třídy pro akcent posuvníku (thumb / `accent-color`), výchozí `accent-accent`. */
+  /** Tailwind classes for the slider accent (thumb / `accent-color`), default `accent-accent`. */
   color?: string;
-  /** Tailwind třídy pro pozadí dráhy, výchozí `bg-fill-secondary`. */
+  /** Tailwind classes for the track background, default `bg-fill-secondary`. */
   backgroundColor?: string;
-  /** Velikost ukazatele (thumb) — ovlivní WebKit/Mozilla pseudoprvek i výšku dráhy. */
+  /** Thumb size — affects the WebKit/Mozilla pseudo-element and the track height. */
   thumbSize?: "sm" | "md" | "lg";
   /** Extra Tailwind classes merged after defaults on the range input. */
   class?: string;

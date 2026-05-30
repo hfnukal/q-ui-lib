@@ -2,8 +2,8 @@
  * @component menu
  * @title Menu
  * @version 1.0.0
- * @example Základní použití
- * Základní použití — viz ukázka níže.
+ * @example Basic usage
+ * Basic usage — see the example below.
  * ```tsx
  * import { LuChevronRight } from "@qwikest/icons/lucide";
  * import { Menu, MenuItem } from "~/components/ui/base/menu";
@@ -38,8 +38,8 @@
  * </Menu.Root>
  * ```
  *
- * @example S MenuItem layoutem
- * S MenuItem layoutem — viz ukázka níže.
+ * @example With MenuItem layout
+ * With MenuItem layout — see the example below.
  * ```tsx
  * import { LuCopy, LuSave, LuTrash } from "@qwikest/icons/lucide";
  * import { Menu, MenuItem } from "~/components/ui/base/menu";
@@ -69,7 +69,7 @@
  * ```
  *
  * @example CheckboxItem
- * Zaškrtnutí se zobrazí jako fajfka vlevo. Stav řídí `bind:value`.
+ * The check is shown as a checkmark on the left. State is controlled by `bind:value`.
  * ```tsx
  * import { useSignal, component$ } from "@builder.io/qwik";
  * import { Menu, MenuItem } from "~/components/ui/base/menu";
@@ -93,7 +93,7 @@
  * ```
  *
  * @example RadioGroup & RadioButton
- * Vybraná položka se označí tečkou. Stav řídí `bind:value` na `RadioGroup`.
+ * The selected item is marked with a dot. State is controlled by `bind:value` on `RadioGroup`.
  * ```tsx
  * import { useSignal, component$ } from "@builder.io/qwik";
  * import { Menu, MenuItem } from "~/components/ui/base/menu";
@@ -126,7 +126,7 @@
  *
  *
  * @example MenuGroup (Menubar)
- * Seskupení více menu, umožňuje navigaci šipkami (ArrowLeft/ArrowRight) mezi nimi.
+ * A grouping of multiple menus, allowing arrow-key navigation (ArrowLeft/ArrowRight) between them.
  * ```tsx
  * import { LuChevronRight } from "@qwikest/icons/lucide";
  * import { Menu, MenuItem } from "~/components/ui/base/menu";
@@ -175,9 +175,9 @@
  */
 
 /**
- * `Menu` je aria kopatibilni s web accessibility standards.
+ * `Menu` is ARIA compatible with web accessibility standards.
  *
- * Použití:
+ * Usage:
  * ```tsx
  * import { Menu } from "~/components/ui/base/menu";
  *
@@ -194,9 +194,9 @@
 /**
  * Menu – ARIA keyboard navigation (WAI-ARIA Menu pattern)
  *
- * Kontext obsahuje POUZE serializovatelná data (string, number, array<string>).
- * onKeyDown$ je file-level factory: makeKeyHandler(ctx) → handler.
- * Přiřazeno na Item a SubTrigger — zachytávají klávesy, když mají focus.
+ * The context contains ONLY serializable data (string, number, array<string>).
+ * onKeyDown$ is a file-level factory: makeKeyHandler(ctx) → handler.
+ * Assigned to Item and SubTrigger — they capture keys when focused.
  */
 
 import {
@@ -217,8 +217,8 @@ import {
 import { Popover } from "@qwik-ui/headless";
 
 /**
- * Vizuální layout řádku menu — kombinuj s interaktivním wrapperem
- * (např. `Menu.Item`). Skládá `Start`, `Label`, `End`.
+ * Visual layout of a menu row — combine with an interactive wrapper
+ * (e.g. `Menu.Item`). Composes `Start`, `Label`, `End`.
  */
 export const MenuItemRoot = component$<PropsOf<"div">>((props) => {
   const { class: className, ...rest } = props;
@@ -231,7 +231,7 @@ export const MenuItemRoot = component$<PropsOf<"div">>((props) => {
   );
 });
 
-/** Levá plocha pro ikonu nebo jinou vizuální indikaci. */
+/** Left area for an icon or other visual indication. */
 export const MenuItemStart = component$<PropsOf<"span">>((props) => {
   const { class: className, ...rest } = props;
   const base =
@@ -244,7 +244,7 @@ export const MenuItemStart = component$<PropsOf<"span">>((props) => {
   );
 });
 
-/** Hlavní text položky — roztahuje se do dostupného prostoru. */
+/** Main item text — expands into the available space. */
 export const MenuItemLabel = component$<PropsOf<"span">>((props) => {
   const { class: className, ...rest } = props;
   const base = "flex-1 truncate text-left";
@@ -256,7 +256,7 @@ export const MenuItemLabel = component$<PropsOf<"span">>((props) => {
   );
 });
 
-/** Pravá plocha — typicky `KbdShortcut` nebo badge. */
+/** Right area — typically `KbdShortcut` or a badge. */
 export const MenuItemEnd = component$<PropsOf<"span">>((props) => {
   const { class: className, ...rest } = props;
   const base = "ml-auto flex shrink-0 items-center gap-1 text-secondary-label";
@@ -268,7 +268,7 @@ export const MenuItemEnd = component$<PropsOf<"span">>((props) => {
   );
 });
 
-/** Složené API pro vizuální layout: `MenuItem.Root`, `MenuItem.Start`, `MenuItem.Label`, `MenuItem.End`. */
+/** Compound API for visual layout: `MenuItem.Root`, `MenuItem.Start`, `MenuItem.Label`, `MenuItem.End`. */
 export const MenuItem = {
   Root: MenuItemRoot,
   Start: MenuItemStart,
@@ -298,7 +298,7 @@ export type MenuContextState = {
   activeId: string;
   itemIds: string[];
   itemIndex: number;
-  /** ID SubTriggeru v rodičovském menu — pro ArrowLeft. Prázdné u root. */
+  /** ID of the SubTrigger in the parent menu — for ArrowLeft. Empty at root. */
   parentTriggerId: string;
   isOpen: boolean;
 };
@@ -309,12 +309,12 @@ const parentMenuCtxId = createContextId<MenuContextState>("q.menu.parent");
 export const useMenuContext = () => useContext(menuCtxId);
 
 // ── Keyboard handler factory ───────────────────────────────────────────────
-// Navigace přes DOM traversal — nezávisí na ID registraci.
-// Najde všechny [role="menuitem"] v aktuálním panelu (ne vnořených submenu).
+// Navigation via DOM traversal — does not depend on ID registration.
+// Finds all [role="menuitem"] in the current panel (not nested submenus).
 
 /**
- * Vrátí všechny přímé menuitemy daného panelu (ne položky vnořených submenu).
- * Menuitem patří panelu, pokud jeho nejbližší [role="menu"] je tento panel.
+ * Returns all direct menuitems of the given panel (not items of nested submenus).
+ * A menuitem belongs to the panel if its nearest [role="menu"] is this panel.
  */
 const getMenuItems = (panel: Element): HTMLElement[] => {
   return Array.from(panel.querySelectorAll<HTMLElement>("[role='menuitem']")).filter(
@@ -323,26 +323,26 @@ const getMenuItems = (panel: Element): HTMLElement[] => {
 };
 
 /**
- * Zavře všechna otevřená submenu v daném panelu.
- * Najde viditelné [role="menu"] panely uvnitř a klikne na jejich trigger (toggle off).
- * @param exceptTrigger — pokud zadán, jeho submenu se nezavírá (pro SubTrigger hover)
+ * Closes all open submenus in the given panel.
+ * Finds visible [role="menu"] panels inside and clicks their trigger (toggle off).
+ * @param exceptTrigger — if provided, its submenu is not closed (for SubTrigger hover)
  */
 const closeChildSubmenus = (menuPanel: Element, exceptTrigger?: HTMLElement) => {
   const subPanels = menuPanel.querySelectorAll<HTMLElement>("[role='menu']");
   subPanels.forEach((subPanel) => {
     const rect = subPanel.getBoundingClientRect();
-    if (rect.width === 0 && rect.height === 0) return; // skrytý
-    // Najdi trigger tohoto subpanelu (sibling v Popover.Root wrapperu)
+    if (rect.width === 0 && rect.height === 0) return; // hidden
+    // Find this subpanel's trigger (sibling in the Popover.Root wrapper)
     const wrapper = subPanel.parentElement;
     const trigger = wrapper?.querySelector<HTMLElement>("[aria-haspopup='menu']");
     if (trigger && trigger !== exceptTrigger) {
-      trigger.click(); // zavře submenu
+      trigger.click(); // close submenu
     }
   });
 };
 
 /**
- * Vrátí Set všech aktuálně viditelných [role="menu"] panelů.
+ * Returns a Set of all currently visible [role="menu"] panels.
  */
 const getVisiblePanels = (): Set<HTMLElement> => {
   return new Set(
@@ -356,15 +356,15 @@ const getVisiblePanels = (): Set<HTMLElement> => {
 };
 
 /**
- * Počká na objevení NOVÉHO submenu panelu (který nebyl ve snapshotu)
- * a focusne jeho první menuitem. Retry loop přes rAF, max 300ms.
+ * Waits for a NEW submenu panel to appear (one not in the snapshot)
+ * and focuses its first menuitem. Retry loop via rAF, max 300ms.
  */
 const focusNewSubMenuItem = (existingPanels: Set<HTMLElement>) => {
   const start = performance.now();
   const tryFocus = () => {
     const allPanels = document.querySelectorAll<HTMLElement>("[role='menu']");
     for (const panel of allPanels) {
-      if (existingPanels.has(panel)) continue; // existoval před klikem
+      if (existingPanels.has(panel)) continue; // existed before the click
       const rect = panel.getBoundingClientRect();
       if (rect.width === 0 && rect.height === 0) continue;
       const items = getMenuItems(panel);
@@ -390,13 +390,13 @@ const makeKeyHandler = (ctx: MenuContextState) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // Najdi focusovaný menuitem a jeho panel
+    // Find the focused menuitem and its panel
     const focusedEl = (e.target as HTMLElement)?.closest("[role='menuitem']") as HTMLElement | null;
     if (!focusedEl) return;
     const panel = focusedEl.closest("[role='menu']");
     if (!panel) return;
 
-    // Všechny menuitemy tohoto panelu (ne vnořených submenu)
+    // All menuitems of this panel (not nested submenus)
     const items = getMenuItems(panel);
     const curIdx = items.indexOf(focusedEl);
     const len = items.length;
@@ -469,7 +469,7 @@ const makeKeyHandler = (ctx: MenuContextState) => {
       case "Enter":
       case " ": {
         if (focusedIsSubTrigger) {
-          // Snapshot PŘED klikem — pak hledáme NOVÝ panel
+          // Snapshot BEFORE the click — then we look for a NEW panel
           const before = getVisiblePanels();
           focusedEl.click();
           focusNewSubMenuItem(before);
@@ -484,11 +484,11 @@ const makeKeyHandler = (ctx: MenuContextState) => {
 
       case "ArrowLeft":
       case "Escape": {
-        // Najdi aktuální panel a jeho rodičovský trigger v DOM
+        // Find the current panel and its parent trigger in the DOM
         const currentPanel = focusedEl.closest("[role='menu']");
         if (!currentPanel) break;
 
-        // Hledáme SubTrigger, který otevřel tento panel
+        // We look for the SubTrigger that opened this panel
         const wrapper = currentPanel.parentElement;
         const parentTrigger = wrapper?.querySelector<HTMLElement>(
           "[aria-haspopup='menu']"
@@ -510,7 +510,7 @@ const makeKeyHandler = (ctx: MenuContextState) => {
             parentTrigger.click();
             parentTrigger.focus();
           } else {
-            // Zavři submenu klikem na trigger (toggle)
+            // Close the submenu by clicking the trigger (toggle)
             parentTrigger.click();
             parentTrigger.focus();
           }
@@ -566,7 +566,7 @@ export const Root: FunctionComponent<MenuRootProps> = (props) => {
   const { menuKey, _parentTriggerId, _groupIndex, floating, ...rest } = props;
   return (
     <MenuContextProvider
-      menuKey={menuKey ?? props.id?.toString() ?? "menu"}
+      menuKey={menuKey ?? props.id?.toString() ?? "menu" + _groupIndex}
       parentTriggerId={_parentTriggerId}
     >
       <Popover.Root
@@ -579,8 +579,8 @@ export const Root: FunctionComponent<MenuRootProps> = (props) => {
 };
 
 // ── Trigger ────────────────────────────────────────────────────────────────
-// Hlavní trigger — registruje se jako item, zvýrazňuje se při výběru.
-// ArrowDown/Up/Enter/Space otevřou menu a přesunou focus na první/poslední item.
+// Main trigger — registers as an item, highlights when selected.
+// ArrowDown/Up/Enter/Space open the menu and move focus to the first/last item.
 
 export const Trigger = component$((props: PropsOf<typeof Popover.Trigger>) => {
   const ctx = useMenuContext();
@@ -722,7 +722,7 @@ export const Item = component$((props: PropsOf<"button">) => {
       onMouseOver$={$(() => {
         ctx.activeId = myId.value;
         document.getElementById(myId.value)?.focus();
-        // Zavři otevřená submenu v tomto panelu
+        // Close open submenus in this panel
         const el = document.getElementById(myId.value);
         const panel = el?.closest("[role='menu']");
         if (panel) closeChildSubmenus(panel);
@@ -896,8 +896,8 @@ export const RadioButton = component$<PropsOf<"button"> & {
 });
 
 // ── MenuGroup ──────────────────────────────────────────────────────────────
-// Kontejner pro více Menu.Root vedle sebe. ArrowLeft/Right na Trigger
-// přepíná (focus + otevření) mezi menu v této skupině.
+// Container for multiple Menu.Root side by side. ArrowLeft/Right on Trigger
+// switches (focus + open) between menus in this group.
 
 type MenuGroupProps = PropsOf<"div"> & {
   /** Accessible label for the menubar group */
