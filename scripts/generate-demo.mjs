@@ -656,6 +656,97 @@ function ensureQuiClientDevDependency(targetApp) {
   return true;
 }
 
+// ─── Route paths & stale cleanup ──────────────────────────────────────────────
+
+function usesNestedComponentRoutes(routesDir) {
+  return path.basename(routesDir) !== "components";
+}
+
+/**
+ * @param {string} slug
+ * @param {string|null} uiLib
+ * @param {string} routesDir
+ */
+function resolveRouteDir(slug, uiLib, routesDir) {
+  const nested = usesNestedComponentRoutes(routesDir);
+  if (nested) {
+    return uiLib
+      ? path.join(routesDir, "components", uiLib, slug)
+      : path.join(routesDir, "components", slug);
+  }
+  return uiLib ? path.join(routesDir, uiLib, slug) : path.join(routesDir, slug);
+}
+
+/**
+ * @param {string} routesDir
+ */
+function getComponentRoutesRoot(routesDir) {
+  return usesNestedComponentRoutes(routesDir)
+    ? path.join(routesDir, "components")
+    : routesDir;
+}
+
+/**
+ * @param {string} removedDir
+ * @param {string} boundaryDir
+ */
+function pruneEmptyParentDirectories(removedDir, boundaryDir) {
+  const boundary = path.resolve(boundaryDir);
+  let current = path.dirname(path.resolve(removedDir));
+  while (current !== boundary && (current + path.sep).startsWith(boundary + path.sep)) {
+    if (!fs.existsSync(current)) break;
+    if (fs.readdirSync(current).length > 0) break;
+    fs.rmdirSync(current);
+    current = path.dirname(current);
+  }
+}
+
+/**
+ * Remove demo routes whose source component no longer exists under componentsDir.
+ * Skipped when generating a slug subset (same rule as partial writes).
+ * @param {{ routesDir: string, componentsDir: string, targetApp: string, slugFilter: Set<string> }} opts
+ * @returns {number}
+ */
+function pruneStaleComponentRoutes({ routesDir, componentsDir, targetApp, slugFilter }) {
+  if (slugFilter.size > 0) return 0;
+
+  const componentRoutesRoot = getComponentRoutesRoot(routesDir);
+  if (!fs.existsSync(componentRoutesRoot)) return 0;
+
+  let removed = 0;
+
+  /** @param {string} dir */
+  function walkRoutes(dir) {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    if (entries.some((entry) => entry.isFile() && entry.name === "index.tsx")) {
+      const rel = path.relative(componentRoutesRoot, dir);
+      const segments = rel.split(path.sep).filter(Boolean);
+      if (segments.length === 0) return;
+
+      const slug = segments[segments.length - 1];
+      const uiLib = segments.length > 1 ? segments[0] : null;
+      const componentPath = uiLib
+        ? path.join(componentsDir, uiLib, slug, "index.tsx")
+        : path.join(componentsDir, slug, "index.tsx");
+
+      if (!fs.existsSync(componentPath)) {
+        fs.rmSync(dir, { recursive: true, force: true });
+        console.log(`Removed stale route: ${path.relative(targetApp, dir)}`);
+        pruneEmptyParentDirectories(dir, componentRoutesRoot);
+        removed++;
+      }
+      return;
+    }
+
+    for (const entry of entries) {
+      if (entry.isDirectory()) walkRoutes(path.join(dir, entry.name));
+    }
+  }
+
+  walkRoutes(componentRoutesRoot);
+  return removed;
+}
+
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 function main() {
@@ -701,20 +792,20 @@ function main() {
     const relCompDir = path.relative(componentsDir, compDir);
     const relSegments = relCompDir.split(path.sep).filter(Boolean);
     const uiLib = relSegments.length > 1 ? relSegments[0] : null;
-    const useNestedComponents = path.basename(routesDir) !== "components";
-    const routeDir = useNestedComponents
-      ? uiLib
-        ? path.join(routesDir, "components", uiLib, slug)
-        : path.join(routesDir, "components", slug)
-      : uiLib
-        ? path.join(routesDir, uiLib, slug)
-        : path.join(routesDir, slug);
+    const routeDir = resolveRouteDir(slug, uiLib, routesDir);
     const routePath = path.join(routeDir, "index.tsx");
     fs.mkdirSync(routeDir, { recursive: true });
     fs.writeFileSync(routePath, renderRoute(slug, uiLib, parsed), "utf8");
     console.log(`Generated: ${path.relative(targetApp, routePath)}`);
     written++;
   }
+
+  const removed = pruneStaleComponentRoutes({
+    routesDir,
+    componentsDir,
+    targetApp,
+    slugFilter,
+  });
 
   const appRoot = path.resolve(targetApp);
   if (ensureQuiClientDevDependency(appRoot)) {
@@ -728,7 +819,9 @@ function main() {
     );
   }
 
-  console.log(`generate-demo: written ${written}, skipped (no JSDoc) ${skipped}`);
+  console.log(
+    `generate-demo: written ${written}, skipped (no JSDoc) ${skipped}, removed stale ${removed}`,
+  );
 }
 
 main();

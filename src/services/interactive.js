@@ -21,6 +21,21 @@ function nonInteractiveAskError(hint) {
   return err;
 }
 
+async function promptText(message, defaultValue = "") {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  try {
+    const suffix = defaultValue ? ` [${defaultValue}]` : "";
+    const raw = await rl.question(`${message}${suffix}: `);
+    const trimmed = String(raw || "").trim();
+    return trimmed || defaultValue;
+  } finally {
+    await rl.close();
+  }
+}
+
 async function confirmYesNo(message, defaultYes = false) {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -32,6 +47,36 @@ async function confirmYesNo(message, defaultYes = false) {
     const t = String(raw || "").trim().toLowerCase();
     if (!t) return defaultYes;
     return t === "y" || t === "yes";
+  } finally {
+    await rl.close();
+  }
+}
+
+/**
+ * @param {string} message
+ * @param {() => void | Promise<void>} [onDiff]
+ * @returns {Promise<'yes'|'no'>}
+ */
+async function promptUpdateConfirm(message, onDiff) {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  try {
+    for (;;) {
+      const msg =
+        `${message}\n` +
+        `  [y] yes overwrite  [n] no  [d] diff\n` +
+        `Choice (default n): `;
+      const raw = await rl.question(msg);
+      const c = String(raw || "").trim().toLowerCase().charAt(0);
+      if (c === "y") return "yes";
+      if (c === "n" || !c) return "no";
+      if (c === "d" && onDiff) {
+        await onDiff();
+        continue;
+      }
+    }
   } finally {
     await rl.close();
   }
@@ -154,12 +199,114 @@ async function promptTemplateConflict(relPath, existingPath, templatePath, optio
   }
 }
 
+/**
+ * @param {string} message
+ * @param {{ label: string, value: string }[]} options
+ */
+async function promptSelectOne(message, options) {
+  if (options.length === 0) {
+    const err = new Error("No options available for selection.");
+    err.exitCode = EXIT_CODES.USAGE_PARSER_ERROR;
+    throw err;
+  }
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  try {
+    process.stdout.write(`${message}\n`);
+    for (let i = 0; i < options.length; i += 1) {
+      process.stdout.write(`  ${i + 1}) ${options[i].label}\n`);
+    }
+    for (;;) {
+      const raw = await rl.question(`Select [1-${options.length}]: `);
+      const trimmed = String(raw || "").trim();
+      const asNumber = Number.parseInt(trimmed, 10);
+      if (Number.isInteger(asNumber) && asNumber >= 1 && asNumber <= options.length) {
+        return options[asNumber - 1].value;
+      }
+      if (trimmed) {
+        const byValue = options.find((o) => o.value === trimmed);
+        if (byValue) return byValue.value;
+      }
+    }
+  } finally {
+    await rl.close();
+  }
+}
+
+/**
+ * @param {string} message
+ * @param {{ label: string, value: string }[]} options
+ * @param {{ beforeQuestion?: () => void }} [promptOptions]
+ * @returns {Promise<string[]>}
+ */
+async function promptSelectMany(message, options, promptOptions = {}) {
+  if (options.length === 0) {
+    const err = new Error("No uilibs available for selection.");
+    err.exitCode = EXIT_CODES.USAGE_PARSER_ERROR;
+    throw err;
+  }
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  try {
+    process.stdout.write(`${message}\n`);
+    for (let i = 0; i < options.length; i += 1) {
+      process.stdout.write(`  ${i + 1}) ${options[i].label}\n`);
+    }
+    process.stdout.write("\n");
+    if (promptOptions.beforeQuestion) {
+      promptOptions.beforeQuestion();
+    }
+    for (;;) {
+      const raw = await rl.question("Select uilibs (comma-separated, or 'all'): ");
+      const trimmed = String(raw || "").trim().toLowerCase();
+      if (trimmed === "all") {
+        return options.map((o) => o.value);
+      }
+      const parts = String(raw || "")
+        .split(",")
+        .map((x) => x.trim())
+        .filter(Boolean);
+      if (parts.length === 0) continue;
+
+      const selected = [];
+      for (const part of parts) {
+        const asNumber = Number.parseInt(part, 10);
+        if (Number.isInteger(asNumber) && asNumber >= 1 && asNumber <= options.length) {
+          selected.push(options[asNumber - 1].value);
+          continue;
+        }
+        const byValue = options.find((o) => o.value === part);
+        if (byValue) {
+          selected.push(byValue.value);
+          continue;
+        }
+        process.stdout.write(`Unknown selection '${part}'. Try again.\n`);
+        selected.length = 0;
+        break;
+      }
+      if (selected.length > 0) {
+        return [...new Set(selected)];
+      }
+    }
+  } finally {
+    await rl.close();
+  }
+}
+
 module.exports = {
   confirmYesNo,
   filesAreEquivalentForReplace,
   isInteractiveTerminal,
   nonInteractiveAskError,
   printTemplateConflictDiff,
+  promptSelectMany,
+  promptSelectOne,
   promptTemplateConflict,
+  promptText,
+  promptUpdateConfirm,
   userRejected,
 };

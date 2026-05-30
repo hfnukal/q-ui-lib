@@ -1,7 +1,7 @@
 # Dependencies (root, template, demo)
 node_modules
 
-demo/**
+# demo/**
 
 # Build — Qwik (demo, template)
 # dist/

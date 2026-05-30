@@ -121,29 +121,27 @@ async function runAdd(context) {
   const warnings = [];
   const mergedComponents = [];
   const npmPackages = new Set();
+  const activeWorkspaces = [];
 
   for (const [repoName, seedKeys] of byRepo) {
     const source = resolveSourceContext(cwd, config, repoName);
     const workspace = prepareSourceWorkspace(source);
-    try {
-      const componentsRootDir = path.join(workspace.rootPath, source.repo.componentsRoot);
-      const orderedUilibs = source.repo.uilibs;
-      const expanded = expandDependencies(componentsRootDir, orderedUilibs, seedKeys, repoName);
-      mergedComponents.push(...expanded.components);
-      for (const pkg of expanded.npmPackages) npmPackages.add(pkg);
-      const autoAdded = expanded.components.filter((c) => !expanded.explicitSeeds.has(c.key));
-      if (autoAdded.length > 0) {
-        warnings.push(
-          `[${repoName}] Missing component dependencies were auto-added: ${autoAdded.map((x) => x.key).join(", ")}`
-        );
-      }
-      if (expanded.unresolvedDeps.length > 0) {
-        warnings.push(
-          `[${repoName}] Some dependencies referenced in meta.generated.json were not found in source: ${expanded.unresolvedDeps.join(", ")}`
-        );
-      }
-    } finally {
-      workspace.cleanup();
+    activeWorkspaces.push(workspace);
+    const componentsRootDir = path.join(workspace.rootPath, source.repo.componentsRoot);
+    const orderedUilibs = source.repo.uilibs;
+    const expanded = expandDependencies(componentsRootDir, orderedUilibs, seedKeys, repoName);
+    mergedComponents.push(...expanded.components);
+    for (const pkg of expanded.npmPackages) npmPackages.add(pkg);
+    const autoAdded = expanded.components.filter((c) => !expanded.explicitSeeds.has(c.key));
+    if (autoAdded.length > 0) {
+      warnings.push(
+        `[${repoName}] Missing component dependencies were auto-added: ${autoAdded.map((x) => x.key).join(", ")}`
+      );
+    }
+    if (expanded.unresolvedDeps.length > 0) {
+      warnings.push(
+        `[${repoName}] Some dependencies referenced in meta.generated.json were not found in source: ${expanded.unresolvedDeps.join(", ")}`
+      );
     }
   }
 
@@ -152,24 +150,28 @@ async function runAdd(context) {
   const npmResult = await installMissingDependencies(cwd, [...npmPackages].sort(), flags, policy);
   const items = [];
 
-  for (const component of expandedFlat) {
-    const sourceDir = component.dir;
-    const targetUilibDir = path.join(targetDir, component.uilib);
-    const destDir = path.join(targetUilibDir, component.slug);
-    const alreadyInstalled = installed.has(component.key);
-    if (flags.dryRun) {
-      const status = alreadyInstalled ? "skipped" : "planned";
-      items.push({ action: "create", target: path.relative(cwd, destDir), status });
-      continue;
+  try {
+    for (const component of expandedFlat) {
+      const sourceDir = component.dir;
+      const targetUilibDir = path.join(targetDir, component.uilib);
+      const destDir = path.join(targetUilibDir, component.slug);
+      const alreadyInstalled = installed.has(component.key);
+      if (flags.dryRun) {
+        const status = alreadyInstalled ? "skipped" : "planned";
+        items.push({ action: "create", target: path.relative(cwd, destDir), status });
+        continue;
+      }
+      if (alreadyInstalled) {
+        items.push({ action: "create", target: path.relative(cwd, destDir), status: "skipped" });
+        continue;
+      }
+      assertNoCaseInsensitiveCollision(targetUilibDir, component.slug);
+      copyComponentDirectory(sourceDir, destDir);
+      installed.add(component.key);
+      items.push({ action: "create", target: path.relative(cwd, destDir), status: "applied" });
     }
-    if (alreadyInstalled) {
-      items.push({ action: "create", target: path.relative(cwd, destDir), status: "skipped" });
-      continue;
-    }
-    assertNoCaseInsensitiveCollision(targetUilibDir, component.slug);
-    copyComponentDirectory(sourceDir, destDir);
-    installed.add(component.key);
-    items.push({ action: "create", target: path.relative(cwd, destDir), status: "applied" });
+  } finally {
+    for (const workspace of activeWorkspaces) workspace.cleanup();
   }
 
   for (const pkg of npmResult.missing) {

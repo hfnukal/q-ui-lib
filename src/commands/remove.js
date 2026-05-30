@@ -3,7 +3,12 @@ const path = require("node:path");
 const { readConfig } = require("../services/config");
 const { resolveSourceContext } = require("../services/source-resolver");
 const { createReport } = require("../services/report");
-const { ensureRelativeUnderCwd, removeComponentDirectory } = require("../services/component-files");
+const {
+  ensureRelativeUnderCwd,
+  listEmptyParentsAfterRemove,
+  pruneEmptyParentDirectories,
+  removeComponentDirectory,
+} = require("../services/component-files");
 const { uninstallDependencies } = require("../services/npm-dependencies");
 const { resolvePolicy } = require("../services/policy");
 const { EXIT_CODES } = require("../constants");
@@ -223,6 +228,13 @@ async function runRemove(context) {
     const dir = component.dir;
     if (flags.dryRun) {
       items.push({ action: "delete", target: path.relative(cwd, dir), status: "planned" });
+      for (const parent of listEmptyParentsAfterRemove(dir, targetDir)) {
+        items.push({
+          action: "delete",
+          target: path.relative(cwd, parent),
+          status: "planned",
+        });
+      }
       continue;
     }
     const removed = removeComponentDirectory(dir);
@@ -231,6 +243,15 @@ async function runRemove(context) {
       target: path.relative(cwd, dir),
       status: removed ? "applied" : "skipped",
     });
+    if (removed) {
+      for (const parent of pruneEmptyParentDirectories(dir, targetDir)) {
+        items.push({
+          action: "delete",
+          target: path.relative(cwd, parent),
+          status: "applied",
+        });
+      }
+    }
   }
   for (const pkg of uninstallCandidates) {
     items.push({

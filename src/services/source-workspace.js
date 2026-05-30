@@ -24,5 +24,6 @@ function prepareSourceWorkspace(source) {
 }
 
 module.exports = {
+  createGitWorkspace,
   prepareSourceWorkspace,
 };

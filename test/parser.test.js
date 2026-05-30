@@ -71,3 +71,16 @@ describe("parseConnectPairs", () => {
     });
   });
 });
+
+describe("parseArgv connect flags", () => {
+  test("parses --search-levels", () => {
+    const r = parseArgv(["connect", "file://../lib", "--search-levels", "3"]);
+    assert.equal(r.flags.searchLevels, "3");
+  });
+
+  test("parses --remove", () => {
+    const r = parseArgv(["connect", "--remove", "componentsextra", "app"]);
+    assert.equal(r.flags.remove, true);
+    assert.deepEqual(r.positionals, ["componentsextra", "app"]);
+  });
+});

@@ -1,6 +1,15 @@
 const { EXIT_CODES } = require("./constants");
 
-const GLOBAL_BOOLEAN_FLAGS = new Set(["auto", "force", "dry-run", "yes", "json", "all", "ci"]);
+const GLOBAL_BOOLEAN_FLAGS = new Set([
+  "auto",
+  "force",
+  "dry-run",
+  "yes",
+  "json",
+  "all",
+  "ci",
+  "remove",
+]);
 const GLOBAL_VALUE_FLAGS = new Set([
   "on-error",
   "repo",
@@ -16,6 +25,7 @@ const GLOBAL_VALUE_FLAGS = new Set([
   "branch",
   "routes-dir",
   "components-dir",
+  "search-levels",
 ]);
 
 function usageError(message) {

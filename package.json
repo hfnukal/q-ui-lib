@@ -36,7 +36,7 @@
     "prepublishOnly": "npm pack --dry-run",
     "build": "node ./scripts/generate-meta.mjs --app-root . --components-dir ./components",
     "start": "node ./bin/qui.js",
-    "test": "node --test test/parser.test.js test/config.test.js test/policy.test.js test/source-resolver.test.js test/component-catalog.test.js test/cli-demo-smoke.test.js test/init-smoke.test.js test/connect-smoke.test.js",
+    "test": "node --test test/parser.test.js test/config.test.js test/policy.test.js test/source-resolver.test.js test/component-catalog.test.js test/connect-discovery.test.js test/list.test.js test/add-git-workspace.test.js test/update.test.js test/remove-prune.test.js test/push-resolve.test.js test/diff.test.js test/cli-demo-smoke.test.js test/init-smoke.test.js test/connect-smoke.test.js",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "playwright:install": "playwright install",
