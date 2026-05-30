@@ -1,6 +1,6 @@
 # qui-feature
 
-Balíček ve stylu [Qwik starter feature „tailwind“](https://github.com/QwikDev/qwik/tree/main/starters/features/tailwind): nepřidává Qwik komponenty k importu, ale **sloučí integraci** (závislosti + Vite plugin přes `__qwik__`) a dodá **sdílené styly** (`src/global.css` + `tailwind.config.js`).
+Balíček ve stylu [Qwik starter feature „tailwind“](https://github.com/QwikDev/qwik/tree/main/starters/features/tailwind): nepřidává Qwik komponenty k importu, ale **sloučí integraci** (závislosti + Vite plugin přes `__qwik__`) a odkazuje na **kanonický** `global.css` z `templates/app/src/global.css` v tomto repu (`src/global.css` jen `@import`uje ten soubor) + `tailwind.config.js` z tohoto balíčku.
 
 ## Proč tu dřív byly komponenty?
 
@@ -39,9 +39,9 @@ import tailwindcss from "@tailwindcss/vite";
 plugins: [/* … */, tailwindcss()],
 ```
 
-Zkopírujte `tailwind.config.js` a `src/global.css` z tohoto balíčku.
+Zkopírujte `tailwind.config.js` z tohoto balíčku a pro styly použijte **`templates/app/src/global.css`** z nadřazeného **qui-client** (nebo nechte `src/global.css` z feature, pokud zůstáváte v monorepu a relativní `@import` platí).
 
-## Monorepo (`q-ui-lib`)
+## Monorepo (qui-client)
 
 ```bash
 npm install
@@ -51,10 +51,10 @@ Balíček je workspace položka v `packages/qui-feature`; nevyžaduje vlastní b
 
 ## qui-client
 
-V `devDependencies` je [`qui-client`](../qui-client) jako `"qui-client": "file:../qui-client"` (workspace balíček v `packages/qui-client`). Po `npm install` z kořene monorepa máte CLI **`qui`** k dispozici v tomto workspace.
+V `devDependencies` je `qui-client` jako `"qui-client": "file:.."` (nadřazený balíček je **kořen repozitáře** — publikovatelný `qui-client`). Po `npm install` z kořene repa máte CLI **`qui`** k dispozici v tomto workspace.
 
-Poznámka: pokud tento feature kopírujete nebo slučujete přes `qwik add` do projektu **mimo** tento monorepo, cesta `file:../qui-client` nebude platná — tam `qui-client` nainstalujte z npm nebo upravte závislost ručně.
+Poznámka: pokud tento feature kopírujete nebo slučujete přes `qwik add` do projektu **mimo** tento monorepo, cesta `file:..` nebude platná — tam `qui-client` nainstalujte z npm nebo upravte závislost ručně.
 
 ## Licence
 
-MIT (stejně jako nadřazený repozitář `q-ui-lib`, pokud není uvedeno jinak).
+MIT (stejně jako nadřazený repozitář **qui-client**, pokud není uvedeno jinak).

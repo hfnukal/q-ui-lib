@@ -2,9 +2,67 @@
   "name": "menu",
   "title": "Menu",
   "version": "1.0.0",
-  "kind": "unknown",
+  "kind": "compound",
   "registry": "base",
-  "dependencies": [],
-  "npmDependencies": [],
-  "apiTree": {}
+  "dependencies": [
+    "base/separator"
+  ],
+  "npmDependencies": [
+    "@qwik-ui/headless"
+  ],
+  "apiTree": {
+    "Root": {
+      "children": {
+        "Trigger": {
+          "slot": true
+        },
+        "SubTrigger": {
+          "slot": true
+        },
+        "Panel": {
+          "slot": true
+        },
+        "Item": {
+          "slot": true
+        },
+        "SubMenu": {
+          "slot": true
+        },
+        "MenuGroup": {
+          "params": {
+            "aria-label": "string"
+          },
+          "slot": true
+        },
+        "CheckBoxItem": {
+          "params": {
+            "value": "boolean",
+            "bind:value": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/@builder.io/qwik/dist/core\").Signal<boolean>"
+          },
+          "slot": true
+        },
+        "RadioGroup": {
+          "params": {
+            "value": "string",
+            "bind:value": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/@builder.io/qwik/dist/core\").Signal<string>"
+          },
+          "slot": true
+        },
+        "RadioButton": {
+          "params": {
+            "value": "string"
+          },
+          "slot": true
+        },
+        "Separator": {},
+        "Group": {
+          "slot": true
+        },
+        "Label": {
+          "slot": true
+        },
+        "MenuItem": {}
+      }
+    }
+  }
 }

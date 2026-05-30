@@ -5,8 +5,6 @@
   "kind": "primitive",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [
-    "@builder.io/qwik"
-  ],
+  "npmDependencies": [],
   "apiTree": {}
 }

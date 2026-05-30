@@ -1,0 +1,10 @@
+{
+  "name": "html-tags-mix",
+  "title": "HtmlTagsMix",
+  "version": "0.0.1",
+  "kind": "primitive",
+  "registry": "qui-test-html-tags",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {}
+}

@@ -5,9 +5,7 @@
   "kind": "compound",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [
-    "@builder.io/qwik"
-  ],
+  "npmDependencies": [],
   "apiTree": {
     "Root": {
       "slot": true,
@@ -27,9 +25,13 @@
         "Pane": {
           "params": {
             "viewportClass": "string",
-            "direction": "any",
-            "keepScroll": "any",
-            "keepScrollId": "any"
+            "direction": [
+              "both",
+              "horizontal",
+              "vertical"
+            ],
+            "keepScroll": "boolean",
+            "keepScrollId": "string"
           },
           "slot": true
         }

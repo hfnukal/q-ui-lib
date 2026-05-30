@@ -81,6 +81,8 @@ export type ScreenProps = PropsOf<"div">;
 /**
  * Viewport root: full screen, no body scroll, column flex (LAYOUT.md).
  * Compose with {@link ScrollArea} for inner scroll.
+ * Root je pevně `<div>` (`PropsOf<"div">`) a nepodporuje změnu tagu.
+ * Nevkládejte do `<p>` ani `<pre>`.
  */
 export const Screen = component$<ScreenProps>((props) => {
   const { class: className, ...rest } = props;

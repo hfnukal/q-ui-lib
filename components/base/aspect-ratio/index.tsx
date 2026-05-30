@@ -63,21 +63,27 @@ export type AspectRatioProps = {
    * Odpovídá CSS vlastnosti `aspect-ratio`.
    */
   ratio?: number;
+  /**
+   * Root element. Use `as="span"` when nesting inside text-only containers like `<p>` or `<pre>`.
+   */
+  as?: "div" | "span";
   class?: string;
 };
 
 /**
  * Kontejner s fixním poměrem stran (inspirace shadcn Aspect Ratio; v repu bez Radix — čisté CSS).
  * Děti typicky stylovat `h-full w-full object-cover`, aby vyplnily rámeček.
+ * Root je pevně `<div>` (bez `as`/`asChild`), proto komponentu nevkládejte do `<p>` ani `<pre>`.
  */
 export const AspectRatio = component$<AspectRatioProps>((props) => {
   const ratio = props.ratio ?? 16 / 9;
-  const base = "relative w-full overflow-hidden";
+  const base = "relative block w-full overflow-hidden";
   const merged = [base, props.class].filter(Boolean).join(" ");
+  const Tag = props.as ?? "span";
 
   return (
-    <div class={merged} style={{ aspectRatio: ratio }}>
+    <Tag class={merged} style={{ aspectRatio: ratio }}>
       <Slot />
-    </div>
+    </Tag>
   );
 });

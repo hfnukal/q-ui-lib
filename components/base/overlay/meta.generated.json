@@ -6,9 +6,15 @@
   "registry": "base",
   "dependencies": [],
   "npmDependencies": [
-    "@builder.io/qwik"
+    "@qwik-ui/headless"
   ],
   "apiTree": {
+    "params": {
+      "as": [
+        "div",
+        "span"
+      ]
+    },
     "slot": true
   }
 }

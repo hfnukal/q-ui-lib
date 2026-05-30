@@ -67,22 +67,31 @@
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
+import { Polymorphic } from "@qwik-ui/headless";
 
-export type FieldRootProps = PropsOf<"div">;
+export type FieldRootProps = Omit<PropsOf<"div">, "as"> & {
+  /**
+   * Root element. Default je `span` kvůli možnosti vložení do textových parentů.
+   * Pro klasický blokový layout nastavte `as="div"`.
+   */
+  as?: "div" | "span";
+};
 
 /**
  * Vertical stack for one form control with consistent spacing (shadcn-style Field).
  * Compose with `Label`, `Input`, `FieldDescription`, and `FieldError`.
+ * Přes `as` můžete přepnout root mezi `span` (výchozí) a `div`.
+ * V `<p>`/`<pre>` použijte pouze `as="span"` a jen textově validní potomky.
  */
 export const FieldRoot = component$<FieldRootProps>((props) => {
-  const { class: className, ...rest } = props;
+  const { class: className, as = "span", ...rest } = props;
   const base = "flex w-full flex-col gap-2";
   const merged = [base, className].filter(Boolean).join(" ");
 
   return (
-    <div {...rest} class={merged}>
+    <Polymorphic as={as} {...rest} class={merged}>
       <Slot />
-    </div>
+    </Polymorphic>
   );
 });
 

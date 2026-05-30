@@ -8,7 +8,6 @@
     "base/utilities"
   ],
   "npmDependencies": [
-    "@builder.io/qwik",
     "@qwik-ui/headless"
   ],
   "apiTree": {
@@ -46,7 +45,7 @@
               "params": {
                 "class": "string",
                 "value": "string",
-                "onRemove$": "any"
+                "onRemove$": "function"
               },
               "slot": true
             },
@@ -70,7 +69,7 @@
           "params": {
             "class": "string",
             "value": "string",
-            "onRemove$": "any"
+            "onRemove$": "function"
           },
           "slot": true
         },

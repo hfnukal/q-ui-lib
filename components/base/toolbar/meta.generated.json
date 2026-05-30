@@ -7,9 +7,7 @@
   "dependencies": [
     "base/separator"
   ],
-  "npmDependencies": [
-    "@builder.io/qwik"
-  ],
+  "npmDependencies": [],
   "apiTree": {
     "Root": {
       "params": {
@@ -42,7 +40,11 @@
         "Spacer": {},
         "Button": {
           "params": {
-            "type": "any"
+            "type": [
+              "button",
+              "reset",
+              "submit"
+            ]
           },
           "slot": true
         },

@@ -61,19 +61,27 @@
  */
 
 import { component$, Slot, type PropsOf } from "@builder.io/qwik";
+import { Polymorphic } from "@qwik-ui/headless";
 
-export type InputGroupRootProps = PropsOf<"div"> & {
+export type InputGroupRootProps = Omit<PropsOf<"div">, "as"> & {
   /** When the group has no visible caption, set for accessibility (`role="group"`). */
   "aria-label"?: string;
+  /**
+   * Root element. Default je `span` kvůli možnosti vložení do textových parentů.
+   * Pro blokový wrapper nastavte `as="div"`.
+   */
+  as?: "div" | "span";
 };
 
 /**
  * Horizontal flex shell for a single merged control: shared border, surface, shadow, and
  * `focus-within` ring (shadcn „Input Group“). Place {@link InputGroupAddon}, {@link InputGroupInput},
  * or a library `Button` as direct children.
+ * Přes `as` můžete přepnout root mezi `span` (výchozí) a `div`.
+ * V `<p>`/`<pre>` použijte pouze `as="span"` a validní phrasing obsah.
  */
 export const InputGroupRoot = component$<InputGroupRootProps>((props) => {
-  const { class: className, "aria-label": ariaLabel, ...rest } = props;
+  const { class: className, "aria-label": ariaLabel, as = "span", ...rest } = props;
   const base = [
     "flex w-full min-w-0 items-stretch overflow-hidden rounded-md",
     "border border-separator-opaque bg-surface-raised shadow-sm transition-colors",
@@ -88,9 +96,9 @@ export const InputGroupRoot = component$<InputGroupRootProps>((props) => {
   const merged = [base, className].filter(Boolean).join(" ");
 
   return (
-    <div role="group" class={merged} aria-label={ariaLabel} {...rest}>
+    <Polymorphic as={as} role="group" class={merged} aria-label={ariaLabel} {...rest}>
       <Slot />
-    </div>
+    </Polymorphic>
   );
 });
 

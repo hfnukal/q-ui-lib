@@ -12,10 +12,7 @@
     "base/sonner",
     "qui-demo/demo-component-props"
   ],
-  "npmDependencies": [
-    "@builder.io/qwik",
-    "@builder.io/qwik-city"
-  ],
+  "npmDependencies": [],
   "apiTree": {
     "slot": true
   }

@@ -1,46 +1,68 @@
 {
-  "name": "q-ui-lib",
+  "name": "qui-client",
   "version": "0.1.0",
-  "description": "Custom Qwik UI component library with CLI",
-  "private": true,
-  "workspaces": [
-    "packages/*",
-    "demo",
-    "template"
+  "description": "Qwik UI CLI (qui): init, connect, add, update — plus default component sources in this repo under components/",
+  "license": "MIT",
+  "type": "commonjs",
+  "private": false,
+  "keywords": [
+    "qwik",
+    "cli",
+    "ui",
+    "components",
+    "q-ui-lib"
   ],
-  "main": "index.js",
-  "exports": {
-    "./utilities": "./components/utilities/index.ts",
-    "./utilities/*": "./components/utilities/*.ts",
-    "./cli": "./cli/index.js"
+  "engines": {
+    "node": ">=18"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/honzicekdev/q-ui-lib.git"
+  },
+  "bugs": {
+    "url": "https://github.com/honzicekdev/q-ui-lib/issues"
+  },
+  "homepage": "https://github.com/honzicekdev/q-ui-lib#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
   "bin": {
-    "q-ui-lib": "./cli/index.js",
-    "qui": "./cli/index.js"
+    "qui": "./bin/qui.js"
   },
   "scripts": {
-    "test:qui-client": "npm test -w qui-client",
-    "publish:qui-client": "npm publish -w qui-client --access public",
-    "build": "echo 'No build step needed for library'",
-    "qui": "qui",
-    "qui:createdemo": "qui init demo && (cd demo && qui add --all base --force && qui generate-demo) && echo \"\nDemo created. Run:\\ncd demo\\nnpm run dev\""
+    "prepublishOnly": "npm pack --dry-run",
+    "start": "node ./bin/qui.js",
+    "test": "node --test test/parser.test.js test/config.test.js test/policy.test.js test/source-resolver.test.js test/component-catalog.test.js test/cli-demo-smoke.test.js test/init-smoke.test.js test/connect-smoke.test.js",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "playwright:install": "playwright install",
+    "generate-meta": "node ./scripts/generate-meta.mjs --app-root . --components-dir ./components",
+    "qui": "node ./bin/qui.js",
+    "qui:createdemo": "node ./bin/qui.js init demo && (cd demo && node ../bin/qui.js add --all base --force && node ../bin/qui.js generate-demo) && echo \"\nDemo created. Run:\\ncd demo\\nnpm run dev\"",
+    "qui:addtest": "cd demo && node ../bin/qui.js connect --repo componenttest --url file://../componenttest --uilibs qui-test-simple,qui-test-layout,qui-test-complex,qui-test-html-tags && node ../bin/qui.js add --repo componenttest --all qui-test-simple && node ../bin/qui.js add --repo componenttest --all qui-test-layout && node ../bin/qui.js add --repo componenttest --all qui-test-complex && node ../bin/qui.js add --repo componenttest --all qui-test-html-tags"
   },
-  "author": "",
-  "license": "MIT",
   "dependencies": {
-    "@builder.io/qwik": "^1.19.2",
-    "@builder.io/qwik-city": "^1.19.2",
-    "@qwik-ui/headless": "^0.7.4",
-    "chalk": "^4.1.2",
-    "chart.js": "^4.5.1",
-    "commander": "^11.0.0",
-    "dayjs": "^1.11.13",
-    "fast-glob": "^3.3.3",
-    "fs-extra": "^11.1.1",
     "ts-morph": "^27.0.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@builder.io/qwik": "^1.19.2",
+    "@builder.io/qwik-city": "^1.19.2",
+    "@qwik-ui/headless": "^0.7.4",
     "@qwikest/icons": "^0.0.13",
-    "qui-client": "^0.1.0"
-  }
+    "chart.js": "^4.5.1",
+    "dayjs": "^1.11.13",
+    "vite": "^7.3.2"
+  },
+  "files": [
+    "bin",
+    "src",
+    "scripts",
+    "templates",
+    "CHANGELOG.md",
+    "README.md"
+  ]
 }

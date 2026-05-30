@@ -85,9 +85,20 @@
  *   <FileInput.Input name="nodrop-border" hidden />
  * </FileInput.DropArea>
  * ```
- 
- 
- 
+ *
+ * @example Velikosti (variant)
+ * Prop `variant`: `xl`, `lg`, `md` (výchozí), `sm`, `xs`.
+ * ```tsx
+ * import { FileInput } from "~/components/ui/base/file-input";
+ *
+ * <div class="flex flex-col gap-4">
+ *   <FileInput.Input variant="xl" placeholder="Extra Large" />
+ *   <FileInput.Input variant="lg" placeholder="Large" />
+ *   <FileInput.Input variant="md" placeholder="Medium (Default)" />
+ *   <FileInput.Input variant="sm" placeholder="Small" />
+ *   <FileInput.Input variant="xs" placeholder="Extra Small" />
+ * </div>
+ * ```
  */
 
 import {
@@ -362,21 +373,39 @@ export type FileInputInputProps = Omit<PropsOf<"input">, "type" | "class"> & {
   /** Zobrazí název souboru pod inputem. */
   hideFileName?: boolean;
   class?: string;
+  /**
+   * Visual variant affecting size: xl, lg, md (default), sm, xs
+   * @example variant="sm"
+   */
+  variant?: "xl" | "lg" | "md" | "sm" | "xs";
 };
 
 const fileInputBaseClass = [
-  "flex w-full min-w-0 rounded-md border border-separator-opaque bg-surface-raised px-3 py-2",
-  "text-callout text-label shadow-sm transition-colors",
-  "file:border-0 file:bg-transparent file:text-callout file:font-medium file:text-label",
+  "flex w-full min-w-0 rounded-md border border-separator-opaque bg-surface-raised transition-colors",
+  "text-label shadow-sm",
+  "file:border-0 file:bg-transparent file:font-medium file:text-label",
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
   "disabled:cursor-not-allowed disabled:opacity-50",
 ].join(" ");
+
+const fileInputVariants = {
+  xl: "h-14 px-5 py-4 text-title-3 file:text-title-3",
+  lg: "h-12 px-4 py-3 text-headline file:text-headline",
+  md: "h-10 px-3 py-2 text-callout file:text-callout",
+  sm: "h-8 px-2.5 py-1.5 text-caption-1 file:text-caption-1",
+  xs: "h-7 px-2 py-1 text-caption-2 file:text-caption-2",
+};
 
 const srOnlyClass = "sr-only";
 
 /**
  * Nativní `input type="file"` ve stylu Input; uvnitř {@link FileInputDropArea} při dropu přijme soubory.
  * S `hidden` zůstane přístupný pro AT a formulář; název souboru se zobrazí pod ním.
+ *
+ * @example Velikosti (variant)
+ * ```tsx
+ * <FileInput.Input variant="sm" />
+ * ```
  */
 export const FileInputInput = component$<FileInputInputProps>((props) => {
   const ctx = useContext(fileInputContextId, undefined);
@@ -390,6 +419,7 @@ export const FileInputInput = component$<FileInputInputProps>((props) => {
     hideFileName: hideFileName,
     onChange$: userOnChange$,
     onInput$: userOnInput$,
+    variant = "md",
     ...rest
   } = props;
 
@@ -411,7 +441,14 @@ export const FileInputInput = component$<FileInputInputProps>((props) => {
   const onInputMerged = [patchLabel$, userOnInput$].filter(Boolean);
   const onChangeMerged = [patchLabel$, userOnChange$].filter(Boolean);
 
-  const merged = [fileInputBaseClass, visuallyHidden ? srOnlyClass : "", className].filter(Boolean).join(" ");
+  const merged = [
+    fileInputBaseClass,
+    fileInputVariants[variant],
+    visuallyHidden ? srOnlyClass : "",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div class={visuallyHidden ? "flex w-full flex-col gap-1" : "contents"}>
@@ -424,7 +461,13 @@ export const FileInputInput = component$<FileInputInputProps>((props) => {
         onChange$={onChangeMerged.length === 1 ? onChangeMerged[0] : onChangeMerged}
       />
       {visuallyHidden && !hideFileName ? (
-        <p class="min-h-[1.25rem] text-callout text-secondary-label" aria-live="polite">
+        <p
+          class={[
+            "text-secondary-label",
+            fileInputVariants[variant].split(" ").find((c) => c.startsWith("text-")),
+          ].join(" ")}
+          aria-live="polite"
+        >
           {selectedLabel.value || "No file selected"}
         </p>
       ) : null}

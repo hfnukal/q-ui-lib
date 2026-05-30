@@ -7,10 +7,7 @@
   "dependencies": [
     "qui-demo/demo-component-props"
   ],
-  "npmDependencies": [
-    "@builder.io/qwik",
-    "@builder.io/qwik-city"
-  ],
+  "npmDependencies": [],
   "apiTree": {
     "params": {
       "filePath": "string",

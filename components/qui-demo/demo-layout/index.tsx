@@ -14,9 +14,11 @@ const COMPONENT_SLUGS: string[] = Object.keys(
   .map((file) =>
     file
       // .replace(/^\.\/components\//, "")
-      .replace(/^\.\.\/\.\.\//, "")
-      .replace(/^\.\.\//, "qui-demo/")
-      .replace(/\/index\.tsx$/, ""),
+      .replace(/^(\.\.\/)+/, "")
+      .replace(/\/index\.tsx$/, "")
+      .split("/")
+      .slice(-2)
+      .join("/"),
   )
   .filter((slug) => !slug.includes("qui-demo"))
   .sort((a, b) => a.localeCompare(b));

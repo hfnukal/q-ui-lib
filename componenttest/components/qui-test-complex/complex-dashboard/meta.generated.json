@@ -1,0 +1,18 @@
+{
+  "name": "complex-dashboard",
+  "title": "ComplexDashboard",
+  "version": "0.0.1",
+  "kind": "primitive",
+  "registry": "qui-test-complex",
+  "dependencies": [
+    "qui-test-layout/layout-shell",
+    "qui-test-simple/simple-banner"
+  ],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "title": "string",
+      "items": "string[]"
+    }
+  }
+}

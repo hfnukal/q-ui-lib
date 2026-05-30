@@ -29,45 +29,127 @@
  * </Sheet.Root>
  * ```
  *
- * @example Strana panelu
- * Na `Sheet.Panel` nastav `side` : `left` , `right` , `top` , `bottom` .
- *
- * @example Fullscreen
- * Prop `fullScreen` — panel přes celý viewport; směr slide určuje `side` .
- * ```tsx
- * <Sheet.Root>
- *   <Sheet.Trigger>Fullscreen zprava</Sheet.Trigger>
- *   <Sheet.Panel side="right" fullScreen>
- *     …
- *   </Sheet.Panel>
- * </Sheet.Root>
- * ```
+ * @example Strany panelu (top | bottom | left | right)
+ * Na `Sheet.Panel` nastav `side` . Každý sheet má vlastní `Sheet.Root` .
  * ```tsx
  * import { Sheet } from "~/components/ui/base/sheet";
- * 
- * <Sheet.Root>
- *   <Sheet.Trigger>Zleva</Sheet.Trigger>
- *   <Sheet.Panel side="left">
- *     <Sheet.Close class="absolute right-4 top-4 z-10" />
- *     <Sheet.Header>
- *       <Sheet.Title>Levý panel</Sheet.Title>
- *       <Sheet.Description>Prop `side="left"` na Panel.</Sheet.Description>
- *     </Sheet.Header>
- *     <Sheet.Content>
- *       <p class="text-callout text-secondary-label">Obsah…</p>
- *     </Sheet.Content>
- *   </Sheet.Panel>
- * </Sheet.Root>
+ *
+ * <div class="flex flex-wrap gap-2">
+ *   <Sheet.Root>
+ *     <Sheet.Trigger>Shora</Sheet.Trigger>
+ *     <Sheet.Panel side="top">
+ *       <Sheet.Close class="absolute right-4 top-4 z-10" />
+ *       <Sheet.Header>
+ *         <Sheet.Title>Panel shora</Sheet.Title>
+ *         <Sheet.Description>`side="top"`</Sheet.Description>
+ *       </Sheet.Header>
+ *       <Sheet.Content>
+ *         <p class="text-callout text-secondary-label">Obsah…</p>
+ *       </Sheet.Content>
+ *     </Sheet.Panel>
+ *   </Sheet.Root>
+ *   <Sheet.Root>
+ *     <Sheet.Trigger>Zdola</Sheet.Trigger>
+ *     <Sheet.Panel side="bottom">
+ *       <Sheet.Close class="absolute right-4 top-4 z-10" />
+ *       <Sheet.Header>
+ *         <Sheet.Title>Panel zdola</Sheet.Title>
+ *         <Sheet.Description>`side="bottom"`</Sheet.Description>
+ *       </Sheet.Header>
+ *       <Sheet.Content>
+ *         <p class="text-callout text-secondary-label">Obsah…</p>
+ *       </Sheet.Content>
+ *     </Sheet.Panel>
+ *   </Sheet.Root>
+ *   <Sheet.Root>
+ *     <Sheet.Trigger>Zleva</Sheet.Trigger>
+ *     <Sheet.Panel side="left">
+ *       <Sheet.Close class="absolute right-4 top-4 z-10" />
+ *       <Sheet.Header>
+ *         <Sheet.Title>Levý panel</Sheet.Title>
+ *         <Sheet.Description>`side="left"`</Sheet.Description>
+ *       </Sheet.Header>
+ *       <Sheet.Content>
+ *         <p class="text-callout text-secondary-label">Obsah…</p>
+ *       </Sheet.Content>
+ *     </Sheet.Panel>
+ *   </Sheet.Root>
+ *   <Sheet.Root>
+ *     <Sheet.Trigger>Zprava</Sheet.Trigger>
+ *     <Sheet.Panel side="right">
+ *       <Sheet.Close class="absolute right-4 top-4 z-10" />
+ *       <Sheet.Header>
+ *         <Sheet.Title>Pravý panel</Sheet.Title>
+ *         <Sheet.Description>`side="right"` (výchozí)</Sheet.Description>
+ *       </Sheet.Header>
+ *       <Sheet.Content>
+ *         <p class="text-callout text-secondary-label">Obsah…</p>
+ *       </Sheet.Content>
+ *     </Sheet.Panel>
+ *   </Sheet.Root>
+ * </div>
  * ```
- 
- 
- 
- 
- 
- 
- 
- 
- 
+ *
+ * @example Fullscreen (top | bottom | left | right)
+ * Prop `fullScreen` — panel přes celý viewport; směr animace určuje `side` .
+ * ```tsx
+ * import { Sheet } from "~/components/ui/base/sheet";
+ *
+ * <div class="flex flex-wrap gap-2">
+ *   <Sheet.Root>
+ *     <Sheet.Trigger>Fullscreen shora</Sheet.Trigger>
+ *     <Sheet.Panel side="top" fullScreen>
+ *       <Sheet.Close class="absolute right-4 top-4 z-10" />
+ *       <Sheet.Header>
+ *         <Sheet.Title>Fullscreen top</Sheet.Title>
+ *         <Sheet.Description>`side="top"` + `fullScreen`</Sheet.Description>
+ *       </Sheet.Header>
+ *       <Sheet.Content>
+ *         <p class="text-callout text-secondary-label">Obsah…</p>
+ *       </Sheet.Content>
+ *     </Sheet.Panel>
+ *   </Sheet.Root>
+ *   <Sheet.Root>
+ *     <Sheet.Trigger>Fullscreen zdola</Sheet.Trigger>
+ *     <Sheet.Panel side="bottom" fullScreen>
+ *       <Sheet.Close class="absolute right-4 top-4 z-10" />
+ *       <Sheet.Header>
+ *         <Sheet.Title>Fullscreen bottom</Sheet.Title>
+ *         <Sheet.Description>`side="bottom"` + `fullScreen`</Sheet.Description>
+ *       </Sheet.Header>
+ *       <Sheet.Content>
+ *         <p class="text-callout text-secondary-label">Obsah…</p>
+ *       </Sheet.Content>
+ *     </Sheet.Panel>
+ *   </Sheet.Root>
+ *   <Sheet.Root>
+ *     <Sheet.Trigger>Fullscreen zleva</Sheet.Trigger>
+ *     <Sheet.Panel side="left" fullScreen>
+ *       <Sheet.Close class="absolute right-4 top-4 z-10" />
+ *       <Sheet.Header>
+ *         <Sheet.Title>Fullscreen left</Sheet.Title>
+ *         <Sheet.Description>`side="left"` + `fullScreen`</Sheet.Description>
+ *       </Sheet.Header>
+ *       <Sheet.Content>
+ *         <p class="text-callout text-secondary-label">Obsah…</p>
+ *       </Sheet.Content>
+ *     </Sheet.Panel>
+ *   </Sheet.Root>
+ *   <Sheet.Root>
+ *     <Sheet.Trigger>Fullscreen zprava</Sheet.Trigger>
+ *     <Sheet.Panel side="right" fullScreen>
+ *       <Sheet.Close class="absolute right-4 top-4 z-10" />
+ *       <Sheet.Header>
+ *         <Sheet.Title>Fullscreen right</Sheet.Title>
+ *         <Sheet.Description>`side="right"` + `fullScreen`</Sheet.Description>
+ *       </Sheet.Header>
+ *       <Sheet.Content>
+ *         <p class="text-callout text-secondary-label">Obsah…</p>
+ *       </Sheet.Content>
+ *     </Sheet.Panel>
+ *   </Sheet.Root>
+ * </div>
+ * ```
  */
 
 import { type FunctionComponent, type PropsOf } from "@builder.io/qwik";
@@ -97,14 +179,15 @@ const panelBaseClass =
  */
 const panelSideDefaultClass: Record<SheetSide, string> = {
   /* 100% = layout viewport (bez klasického posunu od 100vw + scrollbaru); šířka jen z right/left. */
+  /* Slide animuje `translate` v global.css — ne translate-* z Tailwindu (kolidovalo by to se stejnou vlastností v keyframes). */
   right:
-    "top-0 bottom-0 right-0 left-auto h-dvh w-[min(100%,max(18rem,33vw))] max-w-none border-l translate-x-0",
+    "top-0 bottom-0 right-0 left-auto h-dvh w-[min(100%,max(18rem,33vw))] max-w-none border-l",
   left:
-    "top-0 bottom-0 left-0 right-auto h-dvh w-[min(100%,max(18rem,33vw))] max-w-none border-r translate-x-0",
+    "top-0 bottom-0 left-0 right-auto h-dvh w-[min(100%,max(18rem,33vw))] max-w-none border-r",
   top:
-    "left-0 right-0 top-0 bottom-auto h-[min(100dvh,max(12rem,33dvh))] w-auto max-w-none border-b translate-y-0",
+    "left-0 right-0 top-0 bottom-auto h-[min(100dvh,max(12rem,33dvh))] w-auto max-w-none border-b",
   bottom:
-    "left-0 right-0 top-auto bottom-0 h-[min(100dvh,max(12rem,33dvh))] w-auto max-w-none border-t translate-y-0",
+    "left-0 right-0 top-auto bottom-0 h-[min(100dvh,max(12rem,33dvh))] w-auto max-w-none border-t",
 };
 
 /** Rozměry fullscreen řeší `dialog.q-sheet-panel…:modal` v global.css — zde jen značka + insets jako fallback. */
@@ -162,7 +245,8 @@ export const SheetTrigger: FunctionComponent<SheetTriggerProps> = (props) => {
 export const SheetPanel: FunctionComponent<SheetPanelProps> = (props) => {
   const { side = "right", fullScreen = false, class: className, ...rest } = props;
   const sideLayout = fullScreen ? panelFullscreenClass : panelSideDefaultClass[side];
-  const merged = [panelBaseClass, sideLayout, "relative", className].filter(Boolean).join(" ");
+  /* Bez `relative` — přepisovalo by `fixed` z panelBaseClass (stejná specificita v Tailwindu) a panel by nebyl k okraji viewportu. `fixed` dialog už kotví `absolute` u Sheet.Close. */
+  const merged = [panelBaseClass, sideLayout, className].filter(Boolean).join(" ");
   return (
     <HeadlessModal.Panel
       {...rest}

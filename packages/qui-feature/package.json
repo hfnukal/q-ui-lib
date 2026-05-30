@@ -30,7 +30,7 @@
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.4",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "qui-client": "file:../qui-client",
+    "qui-client": "file:..",
     "tailwindcss": "^4.1.4"
   }
 }

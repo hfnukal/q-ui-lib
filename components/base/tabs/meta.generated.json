@@ -5,23 +5,70 @@
   "kind": "compound",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [
-    "@builder.io/qwik",
-    "@qwik-ui/headless"
-  ],
+  "npmDependencies": [],
   "apiTree": {
     "Root": {
+      "params": {
+        "variant": [
+          "default",
+          "line"
+        ],
+        "selectedTabId": "string",
+        "behavior": [
+          "automatic",
+          "manual"
+        ],
+        "vertical": "boolean",
+        "bind:selectedTabId": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/@builder.io/qwik/dist/core\").Signal<string | undefined>"
+      },
+      "slot": true,
       "children": {
         "List": {
+          "params": {
+            "verticalLayout": "boolean"
+          },
+          "slot": true,
           "children": {
-            "ListLine": {}
+            "ListLine": {
+              "params": {
+                "verticalLayout": "boolean"
+              },
+              "slot": true
+            }
           }
         },
-        "Tab": {},
-        "TriggerLine": {},
+        "Tab": {
+          "params": {
+            "tabId": "string",
+            "_tabId": "string"
+          },
+          "slot": true
+        },
+        "TriggerLine": {
+          "params": {
+            "tabId": "string",
+            "_tabId": "string"
+          },
+          "slot": true
+        },
         "Panel": {
+          "params": {
+            "tabId": "string",
+            "_tabId": "string",
+            "verticalLayout": "boolean",
+            "children": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/@builder.io/qwik/dist/core\").JSXChildren"
+          },
+          "slot": true,
           "children": {
-            "PanelLine": {}
+            "PanelLine": {
+              "params": {
+                "tabId": "string",
+                "_tabId": "string",
+                "verticalLayout": "boolean",
+                "children": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/@builder.io/qwik/dist/core\").JSXChildren"
+              },
+              "slot": true
+            }
           }
         }
       }

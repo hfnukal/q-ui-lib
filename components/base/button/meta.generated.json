@@ -5,12 +5,10 @@
   "kind": "primitive",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [
-    "@builder.io/qwik"
-  ],
+  "npmDependencies": [],
   "apiTree": {
     "params": {
-      "onClick$": "any",
+      "onClick$": "function",
       "variant": [
         "danger",
         "primary",

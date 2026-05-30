@@ -3,7 +3,7 @@
  * @title Tabs
  * @version 1.1.1
  * @example Složené API (stejná data jako TabsGroup)
- * `key` na triggeru a panelu se musí shodovat (headless z něj dělá `tabId` ).
+ * `tabId` na triggeru a panelu se musí shodovat.
  * ```tsx
  * import { Tab } from "~/components/ui/base/tabs";
  * 
@@ -110,8 +110,17 @@
  
  */
 
-import { component$, type FunctionComponent, type PropsOf } from "@builder.io/qwik";
-import { Tabs as HeadlessTabs } from "@qwik-ui/headless";
+import {
+  component$,
+  createContextId,
+  Slot,
+  type PropsOf,
+  useContext,
+  useContextProvider,
+  useSignal,
+  useVisibleTask$,
+  type Signal,
+} from "@builder.io/qwik";
 
 /** Default variant — vzhled odpovídá {@link https://qwikui.com/docs/styled/tabs | Qwik UI Styled Tabs}; barvy jsou tokeny z COLORS.md. */
 const triggerClass =
@@ -137,87 +146,389 @@ const listClassLine =
 const listClassVertical =
   "inline-flex flex-col w-48 shrink-0 rounded-lg border border-separator-opaque bg-surface-raised p-1 text-secondary-label gap-1 shadow-sm";
 
-export type TabRootProps = PropsOf<typeof HeadlessTabs.Root> & {
+export type TabRootProps = Omit<PropsOf<"div">, "role"> & {
   /** `line` — podtržené záložky, obsah bez rámečku; výchozí varianta má rámeček kolem listu i panelu. */
   variant?: "default" | "line";
+  /** Controlled selected tab id. */
+  selectedTabId?: string;
+  /** Activation mode. */
+  behavior?: "automatic" | "manual";
+  /** Orientation. */
+  vertical?: boolean;
+  "bind:selectedTabId"?: Signal<string | undefined>;
 };
 
-export type TabListProps = PropsOf<typeof HeadlessTabs.List> & {
-  /** Match {@link TabRootProps.vertical} so list layout aligns with keyboard orientation. */
+export type TabListProps = PropsOf<"div"> & {
   verticalLayout?: boolean;
 };
 
-export type TabTriggerProps = PropsOf<typeof HeadlessTabs.Tab>;
+export type TabTriggerProps = Omit<PropsOf<"button">, "role"> & {
+  /** Explicit tab id for reliable panel matching. */
+  tabId?: string;
+  /** Optional alias for tab id (for compatibility). */
+  _tabId?: string;
+};
 
-export type TabPanelProps = PropsOf<typeof HeadlessTabs.Panel> & {
-  /** Match {@link TabRootProps.vertical} for panel spacing next to a vertical list. */
+export type TabPanelProps = Omit<PropsOf<"div">, "children"> & {
+  /** Match with `Tab.Tab tabId`. */
+  tabId?: string;
+  /**
+   * Backward-compatible alias used in some existing examples.
+   * Prefer `tabId`.
+   */
+  _tabId?: string;
   verticalLayout?: boolean;
+  children?: PropsOf<"div">["children"];
 };
 
-/** Styled tab list — default variant. FunctionComponent so HTabs `child.type` matches `tabListComponent`. */
-export const TabList: FunctionComponent<TabListProps> = (props) => {
-  const { verticalLayout, class: className, ...rest } = props;
-  const base = verticalLayout ? listClassVertical : listClassHorizontal;
-  const merged = [base, className].filter(Boolean).join(" ");
-  return <HeadlessTabs.List {...rest} class={merged} />;
-};
-
-/** Tab list for `variant="line"` — podtržený řádek bez rámečku. */
-export const TabListLine: FunctionComponent<TabListProps> = (props) => {
-  const { verticalLayout: _, class: className, ...rest } = props;
-  const merged = [listClassLine, className].filter(Boolean).join(" ");
-  return <HeadlessTabs.List {...rest} class={merged} />;
-};
-
-/** Styled tab trigger — default variant. FunctionComponent so HTabs matches `tabComponent`. */
-export const TabTrigger: FunctionComponent<TabTriggerProps> = (props) => {
-  const { class: className, ...rest } = props;
-  const merged = [triggerClass, className].filter(Boolean).join(" ");
-  return <HeadlessTabs.Tab {...rest} class={merged} />;
-};
-
-/** Tab trigger for `variant="line"` — spodní okraj jako indikátor. */
-export const TabTriggerLine: FunctionComponent<TabTriggerProps> = (props) => {
-  const { class: className, ...rest } = props;
-  const merged = [triggerClassLine, className].filter(Boolean).join(" ");
-  return <HeadlessTabs.Tab {...rest} class={merged} />;
-};
-
-/** Styled tab panel — default variant. FunctionComponent so HTabs matches `tabPanelComponent`. */
-export const TabPanel: FunctionComponent<TabPanelProps> = (props) => {
-  const { verticalLayout, class: className, ...rest } = props;
-  const base = verticalLayout ? panelClassVertical : panelClassHorizontal;
-  const merged = [base, className].filter(Boolean).join(" ");
-  return <HeadlessTabs.Panel {...rest} class={merged} />;
-};
-
-/** Tab panel for `variant="line"` — bez rámečku. */
-export const TabPanelLine: FunctionComponent<TabPanelProps> = (props) => {
-  const { verticalLayout: _, class: className, ...rest } = props;
-  const merged = [panelClassHorizontalLine, className].filter(Boolean).join(" ");
-  return <HeadlessTabs.Panel {...rest} class={merged} />;
-};
+const selectedTabIdContext = createContextId<Signal<string | undefined>>(
+  "q-ui-lib.tabs.selected-tab-id",
+);
+const tabIdsContext = createContextId<Signal<string[]>>("q-ui-lib.tabs.ids");
+const verticalContext = createContextId<Signal<boolean>>("q-ui-lib.tabs.vertical");
+const behaviorContext = createContextId<Signal<"automatic" | "manual">>(
+  "q-ui-lib.tabs.behavior",
+);
+const idPrefixContext = createContextId<Signal<string>>("q-ui-lib.tabs.id-prefix");
+const autoTabIdContext = createContextId<Signal<number>>("q-ui-lib.tabs.auto-tab-id");
+const autoPanelIdContext = createContextId<Signal<number>>("q-ui-lib.tabs.auto-panel-id");
 
 /**
- * Styled {@link https://qwikui.com/docs/headless/tabs | Tabs.Root} / {@link https://qwikui.com/docs/styled/tabs | styled příklad}: layout, tokeny z COLORS.md.
- * FunctionComponent (jako upstream HTabs), aby děti a `tab*Component` zůstaly sladěné s HTabs.
+ * Styled Tabs root — layout, tokeny z COLORS.md.
  */
-export const TabRoot: FunctionComponent<TabRootProps> = (props) => {
-  const { variant = "default", class: className, ...rest } = props;
-  const isLine = variant === "line";
+export const TabRoot = component$<TabRootProps>((props) => {
+  const {
+    variant = "default",
+    class: className,
+    selectedTabId,
+    "bind:selectedTabId": bindSelectedTabId,
+    behavior: _behavior,
+    ...rest
+  } = props;
   const rootBase = "w-full max-w-xl";
   const rootVertical = props.vertical ? "flex flex-row flex-wrap gap-6 items-start" : "";
   const merged = [rootBase, rootVertical, className].filter(Boolean).join(" ");
-  return (
-    <HeadlessTabs.Root
-      {...rest}
-      tabListComponent={props.tabListComponent ?? (isLine ? TabListLine : TabList)}
-      tabComponent={props.tabComponent ?? (isLine ? TabTriggerLine : TabTrigger)}
-      tabPanelComponent={props.tabPanelComponent ?? (isLine ? TabPanelLine : TabPanel)}
-      class={merged}
-    />
+  const localSelectedTabIdSig = useSignal<string | undefined>(selectedTabId);
+  const selectedTabIdSig = bindSelectedTabId ?? localSelectedTabIdSig;
+  const tabIdsSig = useSignal<string[]>([]);
+  const verticalSig = useSignal(Boolean(props.vertical));
+  const behaviorSig = useSignal(props.behavior ?? "automatic");
+  const autoTabIdSig = useSignal(0);
+  const autoPanelIdSig = useSignal(0);
+  const prefixSig = useSignal(
+    props.id && typeof props.id === "string" ? `${props.id}` : `tabs-${Math.random().toString(36).slice(2, 10)}`,
   );
+  useContextProvider(selectedTabIdContext, selectedTabIdSig);
+  useContextProvider(tabIdsContext, tabIdsSig);
+  useContextProvider(verticalContext, verticalSig);
+  useContextProvider(behaviorContext, behaviorSig);
+  useContextProvider(idPrefixContext, prefixSig);
+  useContextProvider(autoTabIdContext, autoTabIdSig);
+  useContextProvider(autoPanelIdContext, autoPanelIdSig);
+
+  useVisibleTask$(({ track }) => {
+    track(() => tabIdsSig.value.length);
+    track(() => selectedTabIdSig.value);
+    if (selectedTabIdSig.value) {
+      return;
+    }
+    if (tabIdsSig.value.length > 0) {
+      selectedTabIdSig.value = tabIdsSig.value[0];
+    }
+  });
+
+  return (
+    <div {...rest} class={merged} data-variant={variant}>
+      <Slot />
+    </div>
+  );
+});
+
+const resolveTabId = (props: { tabId?: string; _tabId?: string }, autoIdSig: Signal<number>) => {
+  if (props.tabId) {
+    return props.tabId;
+  }
+  if (props._tabId) {
+    return props._tabId;
+  }
+  autoIdSig.value += 1;
+  return `tab-${autoIdSig.value}`;
 };
+
+export const TabTrigger = component$<TabTriggerProps>((props) => {
+  const selectedTabIdSig = useContext(selectedTabIdContext);
+  const tabIdsSig = useContext(tabIdsContext);
+  const verticalSig = useContext(verticalContext);
+  const behaviorSig = useContext(behaviorContext);
+  const prefixSig = useContext(idPrefixContext);
+  const autoIdSig = useContext(autoTabIdContext);
+  const resolvedTabIdSig = useSignal<string>(resolveTabId(props, autoIdSig));
+  const { class: className, disabled, ...rest } = props;
+  const merged = [triggerClass, className].filter(Boolean).join(" ");
+  const isSelected = selectedTabIdSig.value === resolvedTabIdSig.value;
+
+  useVisibleTask$(({ track }) => {
+    const id = track(() => resolvedTabIdSig.value);
+    if (!tabIdsSig.value.includes(id)) {
+      tabIdsSig.value = [...tabIdsSig.value, id];
+    }
+  });
+
+  return (
+    <button
+      {...rest}
+      type="button"
+      role="tab"
+      id={`${prefixSig.value}-tab-${resolvedTabIdSig.value}`}
+      aria-controls={`${prefixSig.value}-panel-${resolvedTabIdSig.value}`}
+      aria-selected={isSelected}
+      data-state={isSelected ? "selected" : "unselected"}
+      data-tab-id={resolvedTabIdSig.value}
+      tabIndex={isSelected ? 0 : -1}
+      disabled={disabled}
+      class={merged}
+      onClick$={() => {
+        selectedTabIdSig.value = resolvedTabIdSig.value;
+      }}
+      onKeyDown$={(event, element) => {
+        const ids = tabIdsSig.value;
+        const currentIndex = ids.indexOf(resolvedTabIdSig.value);
+        if (currentIndex === -1 || ids.length === 0) {
+          return;
+        }
+
+        const focusTab = (id: string) => {
+          const selector = `[role="tab"][data-tab-id="${id}"]`;
+          const target = element.parentElement?.querySelector<HTMLButtonElement>(selector);
+          target?.focus();
+          if (behaviorSig.value === "automatic") {
+            selectedTabIdSig.value = id;
+          }
+        };
+
+        if (
+          (verticalSig.value && event.key === "ArrowDown") ||
+          (!verticalSig.value && event.key === "ArrowRight")
+        ) {
+          event.preventDefault();
+          const nextId = ids[(currentIndex + 1) % ids.length];
+          if (nextId) {
+            focusTab(nextId);
+          }
+        } else if (
+          (verticalSig.value && event.key === "ArrowUp") ||
+          (!verticalSig.value && event.key === "ArrowLeft")
+        ) {
+          event.preventDefault();
+          const prevId = ids[(currentIndex - 1 + ids.length) % ids.length];
+          if (prevId) {
+            focusTab(prevId);
+          }
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          const firstId = ids[0];
+          if (firstId) {
+            focusTab(firstId);
+          }
+        } else if (event.key === "End") {
+          event.preventDefault();
+          const lastId = ids[ids.length - 1];
+          if (lastId) {
+            focusTab(lastId);
+          }
+        } else if (
+          behaviorSig.value === "manual" &&
+          (event.key === "Enter" || event.key === " ")
+        ) {
+          event.preventDefault();
+          selectedTabIdSig.value = resolvedTabIdSig.value;
+        }
+      }}
+    >
+      <Slot />
+    </button>
+  );
+});
+
+export const TabTriggerLine = component$<TabTriggerProps>((props) => {
+  const selectedTabIdSig = useContext(selectedTabIdContext);
+  const tabIdsSig = useContext(tabIdsContext);
+  const verticalSig = useContext(verticalContext);
+  const behaviorSig = useContext(behaviorContext);
+  const prefixSig = useContext(idPrefixContext);
+  const autoIdSig = useContext(autoTabIdContext);
+  const resolvedTabIdSig = useSignal<string>(resolveTabId(props, autoIdSig));
+  const { class: className, disabled, ...rest } = props;
+  const merged = [triggerClassLine, className].filter(Boolean).join(" ");
+  const isSelected = selectedTabIdSig.value === resolvedTabIdSig.value;
+
+  useVisibleTask$(({ track }) => {
+    const id = track(() => resolvedTabIdSig.value);
+    if (!tabIdsSig.value.includes(id)) {
+      tabIdsSig.value = [...tabIdsSig.value, id];
+    }
+  });
+
+  return (
+    <button
+      {...rest}
+      type="button"
+      role="tab"
+      id={`${prefixSig.value}-tab-${resolvedTabIdSig.value}`}
+      aria-controls={`${prefixSig.value}-panel-${resolvedTabIdSig.value}`}
+      aria-selected={isSelected}
+      data-state={isSelected ? "selected" : "unselected"}
+      data-tab-id={resolvedTabIdSig.value}
+      tabIndex={isSelected ? 0 : -1}
+      disabled={disabled}
+      class={merged}
+      onClick$={() => {
+        selectedTabIdSig.value = resolvedTabIdSig.value;
+      }}
+      onKeyDown$={(event, element) => {
+        const ids = tabIdsSig.value;
+        const currentIndex = ids.indexOf(resolvedTabIdSig.value);
+        if (currentIndex === -1 || ids.length === 0) {
+          return;
+        }
+
+        const focusTab = (id: string) => {
+          const selector = `[role="tab"][data-tab-id="${id}"]`;
+          const target = element.parentElement?.querySelector<HTMLButtonElement>(selector);
+          target?.focus();
+          if (behaviorSig.value === "automatic") {
+            selectedTabIdSig.value = id;
+          }
+        };
+
+        if (
+          (verticalSig.value && event.key === "ArrowDown") ||
+          (!verticalSig.value && event.key === "ArrowRight")
+        ) {
+          event.preventDefault();
+          const nextId = ids[(currentIndex + 1) % ids.length];
+          if (nextId) {
+            focusTab(nextId);
+          }
+        } else if (
+          (verticalSig.value && event.key === "ArrowUp") ||
+          (!verticalSig.value && event.key === "ArrowLeft")
+        ) {
+          event.preventDefault();
+          const prevId = ids[(currentIndex - 1 + ids.length) % ids.length];
+          if (prevId) {
+            focusTab(prevId);
+          }
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          const firstId = ids[0];
+          if (firstId) {
+            focusTab(firstId);
+          }
+        } else if (event.key === "End") {
+          event.preventDefault();
+          const lastId = ids[ids.length - 1];
+          if (lastId) {
+            focusTab(lastId);
+          }
+        } else if (
+          behaviorSig.value === "manual" &&
+          (event.key === "Enter" || event.key === " ")
+        ) {
+          event.preventDefault();
+          selectedTabIdSig.value = resolvedTabIdSig.value;
+        }
+      }}
+    >
+      <Slot />
+    </button>
+  );
+});
+
+export const TabList = component$<TabListProps>((props) => {
+  const verticalSig = useContext(verticalContext);
+  const { class: className, verticalLayout, ...rest } = props;
+  return (
+    <div
+      {...rest}
+      role="tablist"
+      aria-orientation={verticalLayout || verticalSig.value ? "vertical" : "horizontal"}
+      class={className}
+    >
+      <Slot />
+    </div>
+  );
+});
+
+export const TabPanel = component$<TabPanelProps>((props) => {
+  const selectedTabIdSig = useContext(selectedTabIdContext);
+  const prefixSig = useContext(idPrefixContext);
+  const autoIdSig = useContext(autoPanelIdContext);
+  const {
+    tabId,
+    _tabId,
+    verticalLayout: _verticalLayout,
+    class: className,
+    hidden,
+    ...rest
+  } = props;
+  const resolvedTabIdSig = useSignal<string>(
+    tabId ?? _tabId ?? resolveTabId({ tabId, _tabId }, autoIdSig),
+  );
+  const merged = [panelClassHorizontal, className].filter(Boolean).join(" ");
+  const isSelected =
+    selectedTabIdSig.value === resolvedTabIdSig.value;
+
+  return (
+    <div
+      {...rest}
+      role="tabpanel"
+      id={`${prefixSig.value}-panel-${resolvedTabIdSig.value}`}
+      aria-labelledby={`${prefixSig.value}-tab-${resolvedTabIdSig.value}`}
+      data-tab-id={resolvedTabIdSig.value}
+      hidden={hidden ?? !isSelected}
+      data-state={isSelected ? "selected" : "unselected"}
+      class={merged}
+    >
+      <Slot />
+    </div>
+  );
+});
+
+export const TabPanelLine = component$<TabPanelProps>((props) => {
+  const selectedTabIdSig = useContext(selectedTabIdContext);
+  const prefixSig = useContext(idPrefixContext);
+  const autoIdSig = useContext(autoPanelIdContext);
+  const {
+    tabId,
+    _tabId,
+    verticalLayout: _verticalLayout,
+    class: className,
+    hidden,
+    ...rest
+  } = props;
+  const resolvedTabIdSig = useSignal<string>(
+    tabId ?? _tabId ?? resolveTabId({ tabId, _tabId }, autoIdSig),
+  );
+  const merged = [panelClassHorizontalLine, className].filter(Boolean).join(" ");
+  const isSelected =
+    selectedTabIdSig.value === resolvedTabIdSig.value;
+
+  return (
+    <div
+      {...rest}
+      role="tabpanel"
+      id={`${prefixSig.value}-panel-${resolvedTabIdSig.value}`}
+      aria-labelledby={`${prefixSig.value}-tab-${resolvedTabIdSig.value}`}
+      data-tab-id={resolvedTabIdSig.value}
+      hidden={hidden ?? !isSelected}
+      data-state={isSelected ? "selected" : "unselected"}
+      class={merged}
+    >
+      <Slot />
+    </div>
+  );
+});
 
 /**
  * Složené API ve stylu Qwik UI: {@link TabRoot}, {@link TabList}, {@link TabTrigger}, {@link TabPanel}
@@ -226,7 +537,7 @@ export const TabRoot: FunctionComponent<TabRootProps> = (props) => {
 export const Tab = {
   Root: TabRoot,
   List: TabList,
-  ListLine: TabListLine,
+  ListLine: TabList,
   Tab: TabTrigger,
   TriggerLine: TabTriggerLine,
   Panel: TabPanel,
@@ -271,9 +582,17 @@ export const TabsGroup = component$<TabsGroupProps>((props) => {
   const vertical = props.vertical;
   const isLine = props.variant === "line";
 
-  const ListComp = isLine ? TabListLine : TabList;
-  const TriggerComp = isLine ? TabTriggerLine : TabTrigger;
-  const PanelComp = isLine ? TabPanelLine : TabPanel;
+  const listClass = isLine
+    ? listClassLine
+    : vertical
+      ? listClassVertical
+      : listClassHorizontal;
+  const triggerClassName = isLine ? triggerClassLine : triggerClass;
+  const panelClassName = isLine
+    ? panelClassHorizontalLine
+    : vertical
+      ? panelClassVertical
+      : panelClassHorizontal;
 
   return (
     <Tab.Root
@@ -283,17 +602,26 @@ export const TabsGroup = component$<TabsGroupProps>((props) => {
       variant={props.variant}
       selectedTabId={initialId}
     >
-      <ListComp verticalLayout={isLine ? false : vertical}>
+      <Tab.List class={listClass}>
         {items.map((item) => (
-          <TriggerComp key={item.value} disabled={item.disabled}>
+          <Tab.Tab
+            key={item.value}
+            tabId={item.value}
+            disabled={item.disabled}
+            class={triggerClassName}
+          >
             {item.label}
-          </TriggerComp>
+          </Tab.Tab>
         ))}
-      </ListComp>
+      </Tab.List>
       {items.map((item) => (
-        <PanelComp key={item.value} verticalLayout={isLine ? false : vertical} disabled={item.disabled}>
+        <Tab.Panel
+          key={item.value}
+          tabId={item.value}
+          class={panelClassName}
+        >
           <p>{item.content}</p>
-        </PanelComp>
+        </Tab.Panel>
       ))}
     </Tab.Root>
   );

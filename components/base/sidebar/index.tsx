@@ -314,6 +314,8 @@ import {
   useSignal,
   useTask$,
 } from "@builder.io/qwik";
+import { Link } from "@builder.io/qwik-city";
+
 
 export interface SidebarContextValue {
   collapsed: Signal<boolean>;
@@ -708,7 +710,7 @@ export type SidebarMenuButtonProps = PropsOf<"button"> & {
 };
 
 /**
- * Tlačítko v menu; můžeš nahradit obsahem vlastní {@link https://qwik.builder.io/docs/components/link | Link} se stejnými třídami.
+ * Tlačítko v menu. Pro routovaný odkaz použij {@link SidebarMenuLink} — sdílí kontext pro {@link SidebarMenuIcon} / {@link SidebarMenuLabel}.
  */
 export const SidebarMenuButton = component$<SidebarMenuButtonProps>((props) => {
   const ctx = useSidebarContext("Sidebar.MenuButton");
@@ -757,6 +759,70 @@ export const SidebarMenuButton = component$<SidebarMenuButtonProps>((props) => {
         <Slot />
       )}
     </button>
+  );
+});
+
+export type SidebarMenuLinkProps = PropsOf<"a"> & {
+  active?: boolean;
+  variant?: "default" | "outline";
+  /** Stejné jako u {@link SidebarMenuButton} — generuje ikonu + label bez children. */
+  itemLabel?: string;
+};
+
+/**
+ * Navigační odkaz v menu (Qwik City {@link Link}) se stejným chováním a kontextem jako {@link SidebarMenuButton},
+ * aby {@link SidebarMenuIcon} / {@link SidebarMenuLabel} fungovaly i mimo `<button>`.
+ */
+export const SidebarMenuLink = component$<SidebarMenuLinkProps>((props) => {
+  const ctx = useSidebarContext("Sidebar.MenuLink");
+  const { active, variant = "default", itemLabel, class: className, ...rest } = props;
+  const collapsed = ctx.collapsed.value;
+
+  const hasMenuIcon = useSignal(false);
+  useContextProvider(sidebarMenuButtonContextId, { hasMenuIcon });
+
+  const variantClass =
+    variant === "outline"
+      ? "border border-separator-opaque bg-transparent shadow-sm hover:bg-fill-secondary/20 data-[active]:bg-fill-secondary/30 data-[active]:hover:bg-fill-secondary/40"
+      : "hover:bg-fill-secondary/20 data-[active]:bg-fill-secondary/30 data-[active]:hover:bg-fill-secondary/40";
+
+  const activeClass = active ? "font-medium text-label" : "text-label";
+
+  const merged = [
+    "flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-callout transition-colors",
+    "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-grouped-surface",
+    "disabled:pointer-events-none disabled:opacity-50",
+    variantClass,
+    activeClass,
+    collapsed ? "md:justify-center md:gap-0 md:px-0" : "",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <Link
+      data-q-sidebar-menu-button=""
+      data-active={active ? "" : undefined}
+      {...rest}
+      class={merged}
+    >
+      {itemLabel !== undefined && itemLabel !== "" ? (
+        <>
+          <SidebarMenuIcon>
+            <span
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-fill-secondary/30 text-caption-1 font-semibold uppercase leading-none text-label"
+              aria-hidden="true"
+            >
+              {sidebarLabelAbbrev(itemLabel)}
+            </span>
+          </SidebarMenuIcon>
+          <SidebarMenuLabel>{itemLabel}</SidebarMenuLabel>
+        </>
+      ) : (
+        <Slot />
+      )}
+    </Link>
   );
 });
 
@@ -815,22 +881,22 @@ export const SidebarTrigger = component$<SidebarTriggerProps>((props) => {
       onClick$={
         onClick$
           ? [
-              $(() => {
-                if (typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches) {
-                  ctx.toggleCollapsed$();
-                } else {
-                  ctx.toggleMobile$();
-                }
-              }),
-              onClick$,
-            ]
-          : $(() => {
+            $(() => {
               if (typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches) {
                 ctx.toggleCollapsed$();
               } else {
                 ctx.toggleMobile$();
               }
-            })
+            }),
+            onClick$,
+          ]
+          : $(() => {
+            if (typeof window !== "undefined" && window.matchMedia("(min-width: 768px)").matches) {
+              ctx.toggleCollapsed$();
+            } else {
+              ctx.toggleMobile$();
+            }
+          })
       }
     >
       <Slot />
@@ -892,6 +958,7 @@ export const Sidebar = {
   Menu: SidebarMenu,
   MenuItem: SidebarMenuItem,
   MenuButton: SidebarMenuButton,
+  MenuLink: SidebarMenuLink,
   MenuIcon: SidebarMenuIcon,
   MenuLabel: SidebarMenuLabel,
   MenuAction: SidebarMenuAction,

@@ -55,13 +55,21 @@ export const CodeExample = component$<CodeExampleProps>((props) => {
       <div class="p-4">
         <Tab.Root behavior="manual" selectedTabId="example" class="!max-w-none">
           <Tab.List>
-            <Tab.Tab key="example">Example</Tab.Tab>
-            <Tab.Tab key="code">Code</Tab.Tab>
+            <Tab.Tab key="example" tabId="example">
+              Example
+            </Tab.Tab>
+            <Tab.Tab key="code" tabId="code">
+              Code
+            </Tab.Tab>
           </Tab.List>
-          <Tab.Panel key="example">
+          <Tab.Panel key="example" tabId="example">
             <Slot name="example" />
           </Tab.Panel>
-          <Tab.Panel key="code" class="!mt-0 !p-0 border-0 bg-transparent shadow-none ring-0 focus-visible:ring-0">
+          <Tab.Panel
+            key="code"
+            tabId="code"
+            class="!mt-0 !p-0 border-0 bg-transparent shadow-none ring-0 focus-visible:ring-0"
+          >
             <Slot name="code" />
           </Tab.Panel>
         </Tab.Root>

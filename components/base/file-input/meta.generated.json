@@ -5,9 +5,7 @@
   "kind": "compound",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [
-    "@builder.io/qwik"
-  ],
+  "npmDependencies": [],
   "apiTree": {
     "DropArea": {
       "params": {
@@ -28,7 +26,14 @@
         ],
         "hidden": "boolean",
         "hideFileName": "boolean",
-        "class": "string"
+        "class": "string",
+        "variant": [
+          "lg",
+          "md",
+          "sm",
+          "xl",
+          "xs"
+        ]
       }
     }
   }

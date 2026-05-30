@@ -6,12 +6,16 @@
   "registry": "base",
   "dependencies": [],
   "npmDependencies": [
-    "@builder.io/qwik"
+    "@qwik-ui/headless"
   ],
   "apiTree": {
     "Root": {
       "params": {
-        "aria-label": "string"
+        "aria-label": "string",
+        "as": [
+          "div",
+          "span"
+        ]
       },
       "slot": true,
       "children": {

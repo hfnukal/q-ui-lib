@@ -21,6 +21,12 @@ template/server/
 .rollup.cache/
 *.tsbuildinfo
 
+# Playwright (root)
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
 # Logs
 logs/
 *.log

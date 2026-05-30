@@ -1,48 +1,67 @@
 {
   "name": "dropdown-menu",
   "title": "DropdownMenu",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "kind": "compound",
   "registry": "base",
   "dependencies": [
+    "base/separator",
     "base/utilities"
   ],
   "npmDependencies": [
-    "@builder.io/qwik",
     "@qwik-ui/headless"
   ],
   "apiTree": {
     "Root": {
+      "slot": true,
       "children": {
-        "Trigger": {},
-        "Popover": {},
+        "Trigger": {
+          "slot": true
+        },
+        "Popover": {
+          "slot": true
+        },
         "Item": {
+          "slot": true,
           "children": {
-            "ItemIndicator": {}
+            "ItemIndicator": {
+              "slot": true
+            }
           }
         },
         "Separator": {},
         "Group": {
+          "slot": true,
           "children": {
-            "GroupLabel": {}
+            "GroupLabel": {
+              "slot": true
+            }
           }
         },
-        "CheckboxItem": {
+        "Label": {
           "slot": true
         },
-        "RadioGroup": {},
-        "RadioItem": {},
-        "Sub": {
-          "children": {
-            "SubTrigger": {},
-            "SubContent": {},
-            "SubItem": {},
-            "SubCheckboxItem": {
-              "slot": true
-            },
-            "SubRadioItem": {}
-          }
-        }
+        "CheckboxItem": {
+          "params": {
+            "value": "boolean",
+            "bind:value": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/@builder.io/qwik/dist/core\").Signal<boolean>"
+          },
+          "slot": true
+        },
+        "RadioGroup": {
+          "params": {
+            "value": "string",
+            "bind:value": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/@builder.io/qwik/dist/core\").Signal<string>"
+          },
+          "slot": true
+        },
+        "RadioItem": {
+          "params": {
+            "value": "string"
+          },
+          "slot": true
+        },
+        "MenuItem": {}
       }
     }
   }

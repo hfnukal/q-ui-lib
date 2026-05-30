@@ -8,7 +8,6 @@
     "base/utilities"
   ],
   "npmDependencies": [
-    "@builder.io/qwik",
     "@qwik-ui/headless"
   ],
   "apiTree": {

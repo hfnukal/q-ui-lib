@@ -1,0 +1,21 @@
+{
+  "name": "simple-banner",
+  "title": "SimpleBanner",
+  "version": "0.0.1",
+  "kind": "primitive",
+  "registry": "qui-test-simple",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "params": {
+      "tone": [
+        "info",
+        "success",
+        "warning"
+      ],
+      "headline": "string",
+      "class": "string"
+    },
+    "slot": true
+  }
+}

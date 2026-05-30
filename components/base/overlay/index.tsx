@@ -41,21 +41,30 @@
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
+import { Polymorphic } from "@qwik-ui/headless";
 
-export type OverlayProps = PropsOf<"div">;
+export type OverlayProps = Omit<PropsOf<"div">, "as"> & {
+  /**
+   * Root element. Default zůstává `div`; lze přepnout na `span` pro speciální textové kontejnery.
+   */
+  as?: "div" | "span";
+};
 
 /**
  * Průhledné fixní pozadí přes celou obrazovku — základ pro vlastní modální vrstvy,
  * drawer nebo jiné překryvy mimo nativní `<dialog>`.
  * Obsah (případný close handler, spinner…) vkládej přes slot.
+ * Přes `as` lze přepnout root (`div` výchozí, `span` volitelné).
+ * Pro běžné použití používejte blokové parenty; v `<p>`/`<pre>` dává smysl jen `as="span"` a omezený obsah.
  */
 export const Overlay = component$<OverlayProps>((props) => {
+  const { as = "div", ...rest } = props;
   const base =
     "fixed inset-0 z-40 bg-black/50 backdrop-blur-sm";
   const merged = [base, props.class].filter(Boolean).join(" ");
   return (
-    <div {...props} class={merged}>
+    <Polymorphic as={as} {...rest} class={merged}>
       <Slot />
-    </div>
+    </Polymorphic>
   );
 });

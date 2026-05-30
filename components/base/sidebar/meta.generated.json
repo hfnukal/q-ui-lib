@@ -5,9 +5,7 @@
   "kind": "compound",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [
-    "@builder.io/qwik"
-  ],
+  "npmDependencies": [],
   "apiTree": {
     "Root": {
       "params": {
@@ -60,6 +58,17 @@
               "slot": true
             },
             "MenuButton": {
+              "params": {
+                "active": "boolean",
+                "variant": [
+                  "default",
+                  "outline"
+                ],
+                "itemLabel": "string"
+              },
+              "slot": true
+            },
+            "MenuLink": {
               "params": {
                 "active": "boolean",
                 "variant": [

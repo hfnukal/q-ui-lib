@@ -1,0 +1,28 @@
+{
+  "name": "layout-shell",
+  "title": "LayoutShell",
+  "version": "0.0.1",
+  "kind": "compound",
+  "registry": "qui-test-layout",
+  "dependencies": [],
+  "npmDependencies": [],
+  "apiTree": {
+    "Root": {
+      "slot": true,
+      "children": {
+        "Header": {
+          "slot": true
+        },
+        "Content": {
+          "slot": true
+        },
+        "Sidebar": {
+          "slot": true
+        },
+        "Main": {
+          "slot": true
+        }
+      }
+    }
+  }
+}

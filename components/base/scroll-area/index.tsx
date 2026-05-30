@@ -68,6 +68,8 @@ export type ScrollAreaRootProps = PropsOf<"div">;
 /**
  * Vnější obal — skryje přetečení rohů (`overflow-hidden`), výšku/šířku určuje `class` (např. `h-72`).
  * Inspirace shadcn Scroll Area; bez Radix — nativní scroll (bez headless mapování; viz CREATE.md).
+ * `ScrollArea.Root` má pevný root `<div>` (`PropsOf<"div">`) a nepodporuje změnu tagu.
+ * Nevkládejte do `<p>` ani `<pre>`.
  */
 export const ScrollAreaRoot = component$<ScrollAreaRootProps>((props) => {
   const { class: className, ...rest } = props;

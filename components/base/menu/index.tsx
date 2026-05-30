@@ -5,16 +5,36 @@
  * @example Základní použití
  * Základní použití — viz ukázka níže.
  * ```tsx
- * import { Menu } from "~/components/ui/base/menu";
+ * import { LuChevronRight } from "@qwikest/icons/lucide";
+ * import { Menu, MenuItem } from "~/components/ui/base/menu";
  * 
- * <Menu.Root>
- *   <Menu.Trigger>Akce</Menu.Trigger>
- *   <Menu.Popover>
- *     <Menu.Item>Uložit</Menu.Item>
- *     <Menu.Item>Kopírovat</Menu.Item>
+ * <Menu.Root menuKey="example1">
+ *   <Menu.Trigger>Options</Menu.Trigger>
+ *   <Menu.Panel>
+ *     <Menu.Item>Profile</Menu.Item>
+ *     <Menu.Item>Billing</Menu.Item>
  *     <Menu.Separator />
- *     <Menu.Item>Smazat</Menu.Item>
- *   </Menu.Popover>
+ *     <Menu.SubMenu>
+ *       <Menu.SubTrigger>
+ *         More Options
+ *         <MenuItem.End><LuChevronRight /></MenuItem.End>
+ *       </Menu.SubTrigger>
+ *       <Menu.Panel>
+ *         <Menu.Item>Export Data...</Menu.Item>
+ *         <Menu.Separator />
+ *         <Menu.SubMenu>
+ *           <Menu.SubTrigger>
+ *             Advanced
+ *             <MenuItem.End><LuChevronRight /></MenuItem.End>
+ *           </Menu.SubTrigger>
+ *           <Menu.Panel>
+ *             <Menu.Item>Clear Cache</Menu.Item>
+ *             <Menu.Item>Reset Defaults</Menu.Item>
+ *           </Menu.Panel>
+ *         </Menu.SubMenu>
+ *       </Menu.Panel>
+ *     </Menu.SubMenu>
+ *   </Menu.Panel>
  * </Menu.Root>
  * ```
  *
@@ -22,179 +42,934 @@
  * S MenuItem layoutem — viz ukázka níže.
  * ```tsx
  * import { LuCopy, LuSave, LuTrash } from "@qwikest/icons/lucide";
- * import { Menu } from "~/components/ui/base/menu";
- * import { MenuItem } from "~/components/ui/base/menu-item";
+ * import { Menu, MenuItem } from "~/components/ui/base/menu";
  * import { KbdShortcut } from "~/components/ui/base/kbd-shortcut";
  * 
- * <Menu.Root>
- *   <Menu.Trigger>Soubor</Menu.Trigger>
- *   <Menu.Popover>
+ * <Menu.Root menuKey="example2">
+ *   <Menu.Trigger>File</Menu.Trigger>
+ *   <Menu.Panel>
  *     <Menu.Item>
- *       <MenuItem.Root>
- *         <MenuItem.Start><LuSave /></MenuItem.Start>
- *         <MenuItem.Label>Uložit</MenuItem.Label>
- *         <MenuItem.End><KbdShortcut>⌘S</KbdShortcut></MenuItem.End>
- *       </MenuItem.Root>
+ *       <MenuItem.Start><LuSave /></MenuItem.Start>
+ *       <MenuItem.Label>Save</MenuItem.Label>
+ *       <MenuItem.End><KbdShortcut>⌘S</KbdShortcut></MenuItem.End>
  *     </Menu.Item>
  *     <Menu.Item>
- *       <MenuItem.Root>
- *         <MenuItem.Start><LuCopy /></MenuItem.Start>
- *         <MenuItem.Label>Kopírovat</MenuItem.Label>
- *         <MenuItem.End><KbdShortcut>⌘C</KbdShortcut></MenuItem.End>
- *       </MenuItem.Root>
+ *       <MenuItem.Start><LuCopy /></MenuItem.Start>
+ *       <MenuItem.Label>Copy</MenuItem.Label>
+ *       <MenuItem.End><KbdShortcut>⌘C</KbdShortcut></MenuItem.End>
  *     </Menu.Item>
  *     <Menu.Separator />
- *     <Menu.Item>
- *       <MenuItem.Root>
- *         <MenuItem.Start><LuTrash /></MenuItem.Start>
- *         <MenuItem.Label>Smazat</MenuItem.Label>
- *       </MenuItem.Root>
+ *     <Menu.Item class="text-color-red">
+ *       <MenuItem.Start><LuTrash /></MenuItem.Start>
+ *       <MenuItem.Label>Move to Trash</MenuItem.Label>
+ *       <MenuItem.End><KbdShortcut>⌘⌫</KbdShortcut></MenuItem.End>
  *     </Menu.Item>
- *   </Menu.Popover>
+ *   </Menu.Panel>
  * </Menu.Root>
  * ```
  *
  * @example CheckboxItem
- * Zaškrtnutí se zobrazí jako fajfka vlevo. Stav řídí `bind:checked`.
+ * Zaškrtnutí se zobrazí jako fajfka vlevo. Stav řídí `bind:value`.
  * ```tsx
- * import { useSignal } from "@builder.io/qwik";
- * import { Menu } from "~/components/ui/base/menu";
- * import { MenuCheckboxItem } from "~/components/ui/base/menu-checkbox-item";
+ * import { useSignal, component$ } from "@builder.io/qwik";
+ * import { Menu, MenuItem } from "~/components/ui/base/menu";
  * 
  * export default component$(() => {
- *   const sidebar = useSignal(true);
- *   const statusBar = useSignal(false);
+ *   const checkedSignal = useSignal(false);
  *   return (
- *     <Menu.Root>
- *       <Menu.Trigger>Zobrazení</Menu.Trigger>
- *       <Menu.Popover>
- *         <Menu.CheckboxItem bind:checked={sidebar}>
- *           <MenuCheckboxItem.Root>
- *             <MenuCheckboxItem.Label>Postranní panel</MenuCheckboxItem.Label>
- *             <MenuCheckboxItem.End><KbdShortcut>⌘B</KbdShortcut></MenuCheckboxItem.End>
- *           </MenuCheckboxItem.Root>
- *         </Menu.CheckboxItem>
- *         <Menu.CheckboxItem bind:checked={statusBar}>
- *           <MenuCheckboxItem.Root>
- *             <MenuCheckboxItem.Label>Stavový řádek</MenuCheckboxItem.Label>
- *           </MenuCheckboxItem.Root>
- *         </Menu.CheckboxItem>
- *       </Menu.Popover>
+ *     <Menu.Root menuKey="example3">
+ *       <Menu.Trigger>Preferences</Menu.Trigger>
+ *       <Menu.Panel>
+ *         <Menu.Group>
+ *           <Menu.Label>Settings</Menu.Label>
+ *           <Menu.CheckBoxItem bind:value={checkedSignal}>
+ *             <MenuItem.Label>Enable Sync ({checkedSignal.value ? "ON" : "OFF"})</MenuItem.Label>
+ *           </Menu.CheckBoxItem>
+ *         </Menu.Group>
+ *       </Menu.Panel>
  *     </Menu.Root>
  *   );
  * });
  * ```
  *
- * @example RadioItem
+ * @example RadioGroup & RadioButton
  * Vybraná položka se označí tečkou. Stav řídí `bind:value` na `RadioGroup`.
  * ```tsx
- * import { useSignal } from "@builder.io/qwik";
- * import { Menu } from "~/components/ui/base/menu";
- * import { MenuRadioItem } from "~/components/ui/base/menu-radio-item";
+ * import { useSignal, component$ } from "@builder.io/qwik";
+ * import { Menu, MenuItem } from "~/components/ui/base/menu";
  * 
  * export default component$(() => {
- *   const theme = useSignal("light");
+ *   const radioSignal = useSignal("dark");
  *   return (
- *     <Menu.Root>
- *       <Menu.Trigger>Motiv</Menu.Trigger>
- *       <Menu.Popover>
- *         <Menu.RadioGroup bind:value={theme}>
- *           <Menu.RadioItem value="light">
- *             <MenuRadioItem.Root>
- *               <MenuRadioItem.Label>Světlý</MenuRadioItem.Label>
- *               <MenuRadioItem.End><KbdShortcut>⌘1</KbdShortcut></MenuRadioItem.End>
- *             </MenuRadioItem.Root>
- *           </Menu.RadioItem>
- *           <Menu.RadioItem value="dark">
- *             <MenuRadioItem.Root>
- *               <MenuRadioItem.Label>Tmavý</MenuRadioItem.Label>
- *               <MenuRadioItem.End><KbdShortcut>⌘2</KbdShortcut></MenuRadioItem.End>
- *             </MenuRadioItem.Root>
- *           </Menu.RadioItem>
- *           <Menu.RadioItem value="system">
- *             <MenuRadioItem.Root>
- *               <MenuRadioItem.Label>Systémový</MenuRadioItem.Label>
- *             </MenuRadioItem.Root>
- *           </Menu.RadioItem>
- *         </Menu.RadioGroup>
- *       </Menu.Popover>
+ *     <Menu.Root menuKey="example4">
+ *       <Menu.Trigger>Theme</Menu.Trigger>
+ *       <Menu.Panel>
+ *         <Menu.Group>
+ *           <Menu.Label>Appearance</Menu.Label>
+ *           <Menu.RadioGroup bind:value={radioSignal}>
+ *             <Menu.RadioButton value="light">
+ *               <MenuItem.Label>Light</MenuItem.Label>
+ *             </Menu.RadioButton>
+ *             <Menu.RadioButton value="dark">
+ *               <MenuItem.Label>Dark</MenuItem.Label>
+ *             </Menu.RadioButton>
+ *             <Menu.RadioButton value="system">
+ *               <MenuItem.Label>System</MenuItem.Label>
+ *             </Menu.RadioButton>
+ *           </Menu.RadioGroup>
+ *         </Menu.Group>
+ *       </Menu.Panel>
  *     </Menu.Root>
  *   );
  * });
  * ```
  *
- * @example Podmenu
- * Vnořené menu: `Menu.Sub`, `SubTrigger` a položky se šipkou doprava.
+ *
+ * @example MenuGroup (Menubar)
+ * Seskupení více menu, umožňuje navigaci šipkami (ArrowLeft/ArrowRight) mezi nimi.
  * ```tsx
- * import { LuChevronRight, LuSettings } from "@qwikest/icons/lucide";
- * import { Menu } from "~/components/ui/base/menu";
- * import { MenuItem } from "~/components/ui/base/menu-item";
+ * import { LuChevronRight } from "@qwikest/icons/lucide";
+ * import { Menu, MenuItem } from "~/components/ui/base/menu";
  * 
- * <Menu.Root>
- *   <Menu.Trigger>Možnosti</Menu.Trigger>
- *   <Menu.Popover>
- *     <Menu.Item>Přejmenovat</Menu.Item>
- *     <Menu.Sub>
- *       <Menu.SubTrigger>
- *         <MenuItem.Root>
- *           <MenuItem.Start><LuSettings /></MenuItem.Start>
- *           <MenuItem.Label>Nastavení</MenuItem.Label>
+ * <Menu.MenuGroup aria-label="Main menu">
+ *   <Menu.Root menuKey="file">
+ *     <Menu.Trigger>File</Menu.Trigger>
+ *     <Menu.Panel>
+ *       <Menu.Item>New</Menu.Item>
+ *       <Menu.Item>Open</Menu.Item>
+ *       <Menu.Separator />
+ *       <Menu.SubMenu>
+ *         <Menu.SubTrigger>
+ *           Recent
  *           <MenuItem.End><LuChevronRight /></MenuItem.End>
- *         </MenuItem.Root>
- *       </Menu.SubTrigger>
- *       <Menu.SubContent>
- *         <Menu.SubItem>Účet</Menu.SubItem>
- *         <Menu.SubItem>Vzhled</Menu.SubItem>
- *       </Menu.SubContent>
- *     </Menu.Sub>
- *     <Menu.Separator />
- *     <Menu.Item>Smazat</Menu.Item>
- *   </Menu.Popover>
- * </Menu.Root>
+ *         </Menu.SubTrigger>
+ *         <Menu.Panel>
+ *           <Menu.Item>file1.txt</Menu.Item>
+ *           <Menu.Item>file2.txt</Menu.Item>
+ *         </Menu.Panel>
+ *       </Menu.SubMenu>
+ *     </Menu.Panel>
+ *   </Menu.Root>
+ *   <Menu.Root menuKey="view">
+ *     <Menu.Trigger>View</Menu.Trigger>
+ *     <Menu.Panel>
+ *       <Menu.Item>Zoom In</Menu.Item>
+ *       <Menu.Item>Zoom Out</Menu.Item>
+ *       <Menu.Separator />
+ *       <Menu.SubMenu>
+ *         <Menu.SubTrigger>
+ *           Layout
+ *           <MenuItem.End><LuChevronRight /></MenuItem.End>
+ *         </Menu.SubTrigger>
+ *         <Menu.Panel>
+ *           <Menu.Item>Single</Menu.Item>
+ *           <Menu.Item>Split</Menu.Item>
+ *           <Menu.Item>Grid</Menu.Item>
+ *         </Menu.Panel>
+ *       </Menu.SubMenu>
+ *     </Menu.Panel>
+ *   </Menu.Root>
+ * </Menu.MenuGroup>
+
  * ```
- 
- 
- 
- 
- 
- 
- 
- 
- 
  */
 
 /**
- * `Menu` je thin alias nad `DropdownMenu` — plné API viz {@link ../dropdown-menu}.
- * Kompoziční typ: závisí na `dropdown-menu`.
+ * `Menu` je aria kopatibilni s web accessibility standards.
  *
  * Použití:
  * ```tsx
  * import { Menu } from "~/components/ui/base/menu";
  *
- * <Menu.Root>
- *   <Menu.Trigger>Otevřít</Menu.Trigger>
- *   <Menu.Popover>
- *     <Menu.Item>Položka 1</Menu.Item>
+ * <Menu.Root menuKey="example6">
+ *   <Menu.Trigger>Options</Menu.Trigger>
+ *   <Menu.Panel>
+ *     <Menu.Item>Profile</Menu.Item>
  *     <Menu.Separator />
- *     <Menu.Item>Položka 2</Menu.Item>
- *   </Menu.Popover>
+ *     <Menu.Item>Settings</Menu.Item>
+ *   </Menu.Panel>
  * </Menu.Root>
  * ```
  */
-export { DropdownMenu as Menu } from "../dropdown-menu";
-export type {
-  DropdownMenuRootProps as MenuRootProps,
-  DropdownMenuTriggerProps as MenuTriggerProps,
-  DropdownMenuPopoverProps as MenuPopoverProps,
-  DropdownMenuItemProps as MenuItemProps,
-  DropdownMenuSeparatorProps as MenuSeparatorProps,
-  DropdownMenuGroupProps as MenuGroupProps,
-  DropdownMenuGroupLabelProps as MenuGroupLabelProps,
-  DropdownMenuCheckboxItemProps as MenuCheckboxItemProps,
-  DropdownMenuRadioGroupProps as MenuRadioGroupProps,
-  DropdownMenuRadioItemProps as MenuRadioItemProps,
-  DropdownMenuItemIndicatorProps as MenuItemIndicatorProps,
-  DropdownMenuSubRootProps as MenuSubRootProps,
-  DropdownMenuSubTriggerProps as MenuSubTriggerProps,
-  DropdownMenuSubContentProps as MenuSubContentProps,
-} from "../dropdown-menu";
+/**
+ * Menu – ARIA keyboard navigation (WAI-ARIA Menu pattern)
+ *
+ * Kontext obsahuje POUZE serializovatelná data (string, number, array<string>).
+ * onKeyDown$ je file-level factory: makeKeyHandler(ctx) → handler.
+ * Přiřazeno na Item a SubTrigger — zachytávají klávesy, když mají focus.
+ */
+
+import {
+  $,
+  component$,
+  createContextId,
+  FunctionComponent,
+  PropsOf,
+  Slot,
+  useContext,
+  useContextProvider,
+  useSignal,
+  useStore,
+  useTask$,
+  useStyles$,
+  type Signal,
+} from "@builder.io/qwik";
+import { Popover } from "@qwik-ui/headless";
+
+/**
+ * Vizuální layout řádku menu — kombinuj s interaktivním wrapperem
+ * (např. `Menu.Item`). Skládá `Start`, `Label`, `End`.
+ */
+export const MenuItemRoot = component$<PropsOf<"div">>((props) => {
+  const { class: className, ...rest } = props;
+  const base = "flex w-full items-center gap-2";
+  const merged = [base, className].filter(Boolean).join(" ");
+  return (
+    <div {...rest} class={merged}>
+      <Slot />
+    </div>
+  );
+});
+
+/** Levá plocha pro ikonu nebo jinou vizuální indikaci. */
+export const MenuItemStart = component$<PropsOf<"span">>((props) => {
+  const { class: className, ...rest } = props;
+  const base =
+    "flex shrink-0 items-center justify-center text-secondary-label [&_svg]:h-4 [&_svg]:w-4";
+  const merged = [base, className].filter(Boolean).join(" ");
+  return (
+    <span {...rest} class={merged}>
+      <Slot />
+    </span>
+  );
+});
+
+/** Hlavní text položky — roztahuje se do dostupného prostoru. */
+export const MenuItemLabel = component$<PropsOf<"span">>((props) => {
+  const { class: className, ...rest } = props;
+  const base = "flex-1 truncate text-left";
+  const merged = [base, className].filter(Boolean).join(" ");
+  return (
+    <span {...rest} class={merged}>
+      <Slot />
+    </span>
+  );
+});
+
+/** Pravá plocha — typicky `KbdShortcut` nebo badge. */
+export const MenuItemEnd = component$<PropsOf<"span">>((props) => {
+  const { class: className, ...rest } = props;
+  const base = "ml-auto flex shrink-0 items-center gap-1 text-secondary-label";
+  const merged = [base, className].filter(Boolean).join(" ");
+  return (
+    <span {...rest} class={merged}>
+      <Slot />
+    </span>
+  );
+});
+
+/** Složené API pro vizuální layout: `MenuItem.Root`, `MenuItem.Start`, `MenuItem.Label`, `MenuItem.End`. */
+export const MenuItem = {
+  Root: MenuItemRoot,
+  Start: MenuItemStart,
+  Label: MenuItemLabel,
+  End: MenuItemEnd,
+};
+
+import { LuCheck, LuCircleDot } from "@qwikest/icons/lucide";
+import { Separator as BaseSeparator } from "../separator";
+
+const menuStyles = `
+  .q-menu-trigger:focus,
+  .q-menu-trigger[aria-expanded="true"],
+  .q-menu-trigger[data-state="open"],
+  .q-menu-trigger[data-open] {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+    border-radius: 4px;
+    outline: none;
+  }
+`;
+
+// ── Context type ───────────────────────────────────────────────────────────
+
+export type MenuContextState = {
+  menuKey: string;
+  activeId: string;
+  itemIds: string[];
+  itemIndex: number;
+  /** ID SubTriggeru v rodičovském menu — pro ArrowLeft. Prázdné u root. */
+  parentTriggerId: string;
+  isOpen: boolean;
+};
+
+const menuCtxId = createContextId<MenuContextState>("q.menu");
+const parentMenuCtxId = createContextId<MenuContextState>("q.menu.parent");
+
+export const useMenuContext = () => useContext(menuCtxId);
+
+// ── Keyboard handler factory ───────────────────────────────────────────────
+// Navigace přes DOM traversal — nezávisí na ID registraci.
+// Najde všechny [role="menuitem"] v aktuálním panelu (ne vnořených submenu).
+
+/**
+ * Vrátí všechny přímé menuitemy daného panelu (ne položky vnořených submenu).
+ * Menuitem patří panelu, pokud jeho nejbližší [role="menu"] je tento panel.
+ */
+const getMenuItems = (panel: Element): HTMLElement[] => {
+  return Array.from(panel.querySelectorAll<HTMLElement>("[role='menuitem']")).filter(
+    (el) => el.closest("[role='menu']") === panel
+  );
+};
+
+/**
+ * Zavře všechna otevřená submenu v daném panelu.
+ * Najde viditelné [role="menu"] panely uvnitř a klikne na jejich trigger (toggle off).
+ * @param exceptTrigger — pokud zadán, jeho submenu se nezavírá (pro SubTrigger hover)
+ */
+const closeChildSubmenus = (menuPanel: Element, exceptTrigger?: HTMLElement) => {
+  const subPanels = menuPanel.querySelectorAll<HTMLElement>("[role='menu']");
+  subPanels.forEach((subPanel) => {
+    const rect = subPanel.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) return; // skrytý
+    // Najdi trigger tohoto subpanelu (sibling v Popover.Root wrapperu)
+    const wrapper = subPanel.parentElement;
+    const trigger = wrapper?.querySelector<HTMLElement>("[aria-haspopup='menu']");
+    if (trigger && trigger !== exceptTrigger) {
+      trigger.click(); // zavře submenu
+    }
+  });
+};
+
+/**
+ * Vrátí Set všech aktuálně viditelných [role="menu"] panelů.
+ */
+const getVisiblePanels = (): Set<HTMLElement> => {
+  return new Set(
+    Array.from(document.querySelectorAll<HTMLElement>("[role='menu']")).filter(
+      (p) => {
+        const r = p.getBoundingClientRect();
+        return r.width > 0 || r.height > 0;
+      }
+    )
+  );
+};
+
+/**
+ * Počká na objevení NOVÉHO submenu panelu (který nebyl ve snapshotu)
+ * a focusne jeho první menuitem. Retry loop přes rAF, max 300ms.
+ */
+const focusNewSubMenuItem = (existingPanels: Set<HTMLElement>) => {
+  const start = performance.now();
+  const tryFocus = () => {
+    const allPanels = document.querySelectorAll<HTMLElement>("[role='menu']");
+    for (const panel of allPanels) {
+      if (existingPanels.has(panel)) continue; // existoval před klikem
+      const rect = panel.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) continue;
+      const items = getMenuItems(panel);
+      if (items.length > 0) {
+        items[0].focus();
+        return;
+      }
+    }
+    if (performance.now() - start < 500) {
+      setTimeout(tryFocus, 10);
+    }
+  };
+  setTimeout(tryFocus, 10);
+};
+
+const makeKeyHandler = (ctx: MenuContextState) => {
+  return $((e: KeyboardEvent) => {
+    const KEYS = [
+      "ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft",
+      "Home", "End", "Enter", " ", "Escape",
+    ];
+    if (!KEYS.includes(e.key)) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Najdi focusovaný menuitem a jeho panel
+    const focusedEl = (e.target as HTMLElement)?.closest("[role='menuitem']") as HTMLElement | null;
+    if (!focusedEl) return;
+    const panel = focusedEl.closest("[role='menu']");
+    if (!panel) return;
+
+    // Všechny menuitemy tohoto panelu (ne vnořených submenu)
+    const items = getMenuItems(panel);
+    const curIdx = items.indexOf(focusedEl);
+    const len = items.length;
+    if (len === 0) return;
+
+    const focusedIsSubTrigger = focusedEl.getAttribute("aria-haspopup") === "menu";
+
+    const focusItem = (index: number) => {
+      const el = items[index];
+      el?.focus();
+      ctx.activeId = el?.id ?? "";
+    };
+
+    // Helper: navigate to adjacent menu in a MenuGroup
+    const navigateMenuGroup = (direction: "next" | "prev") => {
+      // Find the MenuGroup container from the current panel
+      const groupEl = (panel as HTMLElement).closest<HTMLElement>("[data-menu-group]");
+      if (!groupEl) return false; // not inside a MenuGroup
+
+      const groupTriggers = Array.from(
+        groupEl.querySelectorAll<HTMLElement>("[data-menu-group-trigger]")
+      );
+      if (groupTriggers.length < 2) return false;
+
+      // Find which group trigger owns the current panel chain
+      // Walk up from the panel to find the top-level [data-menu-group-trigger]
+      let el: HTMLElement | null = panel as HTMLElement;
+      let ownerTrigger: HTMLElement | null = null;
+      while (el && el !== groupEl) {
+        const trigger = el.querySelector<HTMLElement>("[data-menu-group-trigger]");
+        if (trigger && groupTriggers.includes(trigger)) {
+          ownerTrigger = trigger;
+          break;
+        }
+        el = el.parentElement;
+      }
+      if (!ownerTrigger) return false;
+
+      const curGroupIdx = groupTriggers.indexOf(ownerTrigger);
+      if (curGroupIdx === -1) return false;
+
+      const nextGroupIdx = direction === "next"
+        ? (curGroupIdx + 1) % groupTriggers.length
+        : (curGroupIdx - 1 + groupTriggers.length) % groupTriggers.length;
+      const nextTrigger = groupTriggers[nextGroupIdx];
+
+      // Close all visible menus first
+      ownerTrigger.click();
+      // Open next menu without focusing an item inside
+      nextTrigger.focus();
+      nextTrigger.click();
+      return true;
+    };
+
+    switch (e.key) {
+      case "ArrowDown":
+        focusItem((curIdx + 1) % len);
+        break;
+      case "ArrowUp":
+        focusItem((curIdx - 1 + len) % len);
+        break;
+      case "Home":
+        focusItem(0);
+        break;
+      case "End":
+        focusItem(len - 1);
+        break;
+
+      case "ArrowRight":
+      case "Enter":
+      case " ": {
+        if (focusedIsSubTrigger) {
+          // Snapshot PŘED klikem — pak hledáme NOVÝ panel
+          const before = getVisiblePanels();
+          focusedEl.click();
+          focusNewSubMenuItem(before);
+        } else if (e.key === "ArrowRight") {
+          // Not a SubTrigger — if inside MenuGroup, navigate to next menu
+          navigateMenuGroup("next");
+        } else if (e.key === "Enter" || e.key === " ") {
+          focusedEl.click();
+        }
+        break;
+      }
+
+      case "ArrowLeft":
+      case "Escape": {
+        // Najdi aktuální panel a jeho rodičovský trigger v DOM
+        const currentPanel = focusedEl.closest("[role='menu']");
+        if (!currentPanel) break;
+
+        // Hledáme SubTrigger, který otevřel tento panel
+        const wrapper = currentPanel.parentElement;
+        const parentTrigger = wrapper?.querySelector<HTMLElement>(
+          "[aria-haspopup='menu']"
+        );
+
+        if (parentTrigger) {
+          // Check if this parentTrigger is a MenuGroup trigger (root level)
+          const isGroupTrigger = parentTrigger.hasAttribute("data-menu-group-trigger");
+
+          if (e.key === "ArrowLeft" && isGroupTrigger) {
+            // At root panel of a grouped menu — navigate to prev menu in group
+            if (!navigateMenuGroup("prev")) {
+              // Fallback: just close
+              parentTrigger.click();
+              parentTrigger.focus();
+            }
+          } else if (e.key === "Escape" && isGroupTrigger) {
+            // Escape at root of grouped menu — close and clear highlight
+            parentTrigger.click();
+            parentTrigger.focus();
+          } else {
+            // Zavři submenu klikem na trigger (toggle)
+            parentTrigger.click();
+            parentTrigger.focus();
+          }
+        }
+        break;
+      }
+    }
+  });
+};
+
+// ── MenuContextProvider ────────────────────────────────────────────────────
+
+const MenuContextProvider = component$(
+  (props: { menuKey?: string; parentTriggerId?: string }) => {
+    useStyles$(menuStyles);
+    const store = useStore<MenuContextState>({
+      menuKey: props.menuKey ?? "menu",
+      activeId: "",
+      itemIds: [],
+      itemIndex: 0,
+      parentTriggerId: props.parentTriggerId ?? "",
+      isOpen: false,
+    });
+    useContextProvider(menuCtxId, store);
+    return <Slot />;
+  }
+);
+
+// ── Styles ─────────────────────────────────────────────────────────────────
+
+const itemClass =
+  "flex w-full items-center gap-1 p-0 cursor-pointer outline-none rounded px-1";
+/** Shared primary color for selected/active menu items, triggers and subtriggers. */
+const ACTIVE_BG = "#3b82f6";   // blue-500
+const ACTIVE_COLOR = "#ffffff"; // white text on primary bg
+const activeStyle = { background: ACTIVE_BG, color: ACTIVE_COLOR, borderRadius: "4px" };
+const panelBgClass =
+  "bg-surface-raised border border-separator-opaque px-2 py-1";
+const panelClass =
+  `z-50 w-72 max-w-[min(18rem,calc(100vw-2rem))] overflow-visible text-body text-label outline-none shadow-md rounded-md  ${panelBgClass}`;
+
+// ── Root ───────────────────────────────────────────────────────────────────
+
+const rootClass = "inline-block";
+type MenuRootProps = PropsOf<typeof Popover.Root> & {
+  menuKey?: string;
+  _parentTriggerId?: string;
+  /** Internal: index within a MenuGroup */
+  _groupIndex?: number;
+};
+
+export const Root: FunctionComponent<MenuRootProps> = (props) => {
+  const { menuKey, _parentTriggerId, _groupIndex, floating, ...rest } = props;
+  return (
+    <MenuContextProvider
+      menuKey={menuKey ?? props.id?.toString() ?? "menu"}
+      parentTriggerId={_parentTriggerId}
+    >
+      <Popover.Root
+        {...rest}
+        floating={floating || "bottom-start"}
+        class={[rootClass, rest.class].filter(Boolean).join(" ")}
+      />
+    </MenuContextProvider>
+  );
+};
+
+// ── Trigger ────────────────────────────────────────────────────────────────
+// Hlavní trigger — registruje se jako item, zvýrazňuje se při výběru.
+// ArrowDown/Up/Enter/Space otevřou menu a přesunou focus na první/poslední item.
+
+export const Trigger = component$((props: PropsOf<typeof Popover.Trigger>) => {
+  const ctx = useMenuContext();
+  const myId = useSignal("");
+
+  useTask$(() => {
+    const id = `${ctx.menuKey}-item-${ctx.itemIndex}`;
+    ctx.itemIds = [...ctx.itemIds, id];
+    ctx.itemIndex++;
+    myId.value = id;
+  });
+
+  return (
+    <Popover.Trigger
+      {...props}
+      id={myId.value || undefined}
+      onPointerDown$={$((e: Event, el: HTMLElement) => {
+        el.focus();
+      })}
+      onMouseUp$={$((e: Event, el: HTMLElement) => {
+        el.focus();
+      })}
+      data-menu-group-trigger
+      class={[itemClass, "q-menu-trigger", props.class].filter(Boolean).join(" ")}
+      role="menuitem"
+      aria-haspopup="menu"
+      data-open={ctx.isOpen ? "" : undefined}
+      onKeyDown$={$((e: KeyboardEvent) => {
+        // ── ArrowLeft / ArrowRight for MenuGroup navigation ──────────
+        const isInGroup = !!(e.target as HTMLElement)?.closest("[data-menu-group]");
+        if (isInGroup && (e.key === "ArrowLeft" || e.key === "ArrowRight")) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const groupEl = (e.target as HTMLElement).closest<HTMLElement>("[data-menu-group]")!;
+          const triggers = Array.from(
+            groupEl.querySelectorAll<HTMLElement>("[data-menu-group-trigger]")
+          );
+          const currentEl = (e.target as HTMLElement)?.closest("[data-menu-group-trigger]") as HTMLElement;
+          const curIdx = triggers.indexOf(currentEl);
+          if (curIdx === -1 || triggers.length < 2) return;
+
+          const nextIdx = e.key === "ArrowRight"
+            ? (curIdx + 1) % triggers.length
+            : (curIdx - 1 + triggers.length) % triggers.length;
+          const nextTrigger = triggers[nextIdx];
+
+          const isOpen = currentEl.hasAttribute("data-open");
+
+          if (isOpen) {
+            currentEl.click();
+            nextTrigger.focus();
+            nextTrigger.click();
+          } else {
+            nextTrigger.focus();
+          }
+          return;
+        }
+
+        const trigger = (e.target as HTMLElement)?.closest("[role='menuitem']") as HTMLElement;
+
+        if (["Enter", " "].includes(e.key)) {
+          e.preventDefault();
+          e.stopPropagation();
+          trigger?.click();
+          return;
+        }
+
+        if (!["ArrowDown", "ArrowUp"].includes(e.key)) return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        const isOpen = trigger?.hasAttribute("data-open");
+
+        if (isOpen) {
+          const menuPanel = document.querySelector<HTMLElement>(`[role='menu'][data-menu-key='${ctx.menuKey}']`);
+          if (menuPanel) {
+            const items = getMenuItems(menuPanel);
+            if (items.length > 0) {
+              const target = e.key === "ArrowUp" ? items[items.length - 1] : items[0];
+              target.focus();
+              ctx.activeId = target.id ?? "";
+            }
+          }
+        } else {
+          trigger?.click();
+
+          const focusLast = e.key === "ArrowUp";
+          const start = performance.now();
+          const tryFocus = () => {
+            const menuPanel = document.querySelector<HTMLElement>(`[role='menu'][data-menu-key='${ctx.menuKey}']`);
+            if (menuPanel) {
+              const rect = menuPanel.getBoundingClientRect();
+              if (rect.width > 0 || rect.height > 0) {
+                const items = getMenuItems(menuPanel);
+                if (items.length > 0) {
+                  const target = focusLast ? items[items.length - 1] : items[0];
+                  target.focus();
+                  ctx.activeId = target.id ?? "";
+                  return;
+                }
+              }
+            }
+            if (performance.now() - start < 500) {
+              setTimeout(tryFocus, 10);
+            }
+          };
+          setTimeout(tryFocus, 10);
+        }
+      })}
+    >
+      <Slot />
+    </Popover.Trigger>
+  );
+});
+
+// ── Item ───────────────────────────────────────────────────────────────────
+
+export const Item = component$((props: PropsOf<"button">) => {
+  const ctx = useMenuContext();
+  const myId = useSignal("");
+
+  useTask$(() => {
+    const id = `${ctx.menuKey}-item-${ctx.itemIndex}`;
+    ctx.itemIds = [...ctx.itemIds, id];
+    ctx.itemIndex++;
+    myId.value = id;
+  });
+
+  return (
+    <button
+      {...props}
+      id={myId.value || undefined}
+      class={[itemClass, props.class].filter(Boolean).join(" ")}
+      role="menuitem"
+      tabIndex={-1}
+      data-active={ctx.activeId === myId.value && myId.value !== "" ? "" : undefined}
+      style={ctx.activeId === myId.value && myId.value !== "" ? activeStyle : undefined}
+      onMouseOver$={$(() => {
+        ctx.activeId = myId.value;
+        document.getElementById(myId.value)?.focus();
+        // Zavři otevřená submenu v tomto panelu
+        const el = document.getElementById(myId.value);
+        const panel = el?.closest("[role='menu']");
+        if (panel) closeChildSubmenus(panel);
+      })}
+      onFocus$={$(() => {
+        ctx.activeId = myId.value;
+      })}
+      onKeyDown$={makeKeyHandler(ctx)}
+    >
+      {props.children ?? <Slot />}
+    </button>
+  );
+});
+
+// ── Panel ──────────────────────────────────────────────────────────────────
+
+export const Panel = component$((props: PropsOf<typeof Popover.Panel>) => {
+  const ctx = useMenuContext();
+  const merged = [panelClass, props.class].filter(Boolean).join(" ");
+
+  return (
+    <Popover.Panel
+      {...props}
+      // class={merged}
+      role="menu"
+      aria-orientation="vertical"
+      data-menu-key={ctx.menuKey}
+      onToggle$={$((e: Event) => {
+        const ev = e as any;
+        if (ev.newState) {
+          ctx.isOpen = ev.newState === "open";
+        }
+      })}
+      onMouseLeave$={$(() => {
+        ctx.activeId = "";
+      })}
+    >
+      <div class={merged}>
+        <Slot />
+      </div>
+    </Popover.Panel>
+  );
+});
+
+// ── SubMenu ────────────────────────────────────────────────────────────────
+
+const SubMenu = component$((props: Omit<MenuRootProps, "_parentTriggerId">) => {
+  const parentCtx = useMenuContext();
+  const triggerIdPrefix = `${parentCtx.menuKey}-item-${parentCtx.itemIndex}`;
+  const menuKey = `${parentCtx.menuKey}-sub${parentCtx.itemIndex}`;
+
+  useContextProvider(parentMenuCtxId, parentCtx);
+
+  return (
+    <Root
+      floating="right-start"
+      {...props}
+      class={["w-full", props.class].filter(Boolean).join(" ")}
+      menuKey={menuKey}
+      _parentTriggerId={triggerIdPrefix}
+    >
+      <Slot />
+    </Root>
+  );
+});
+
+// ── SubTrigger ─────────────────────────────────────────────────────────────
+
+export const SubTrigger = component$(
+  (props: PropsOf<typeof Popover.Trigger>) => {
+    const pCtx = useContext(parentMenuCtxId);
+    const myId = useSignal("");
+
+    useTask$(() => {
+      const id = `${pCtx.menuKey}-item-${pCtx.itemIndex}`;
+      pCtx.itemIds = [...pCtx.itemIds, id];
+      pCtx.itemIndex++;
+      myId.value = id;
+    });
+
+    return (
+      <Popover.Trigger
+        {...props}
+        id={myId.value || undefined}
+        class={[itemClass, props.class].filter(Boolean).join(" ")}
+        role="menuitem"
+        tabIndex={-1}
+        aria-haspopup="menu"
+        data-active={pCtx.activeId === myId.value && myId.value !== "" ? "" : undefined}
+        style={pCtx.activeId === myId.value && myId.value !== "" ? activeStyle : undefined}
+        onMouseOver$={$(() => {
+          pCtx.activeId = myId.value;
+          document.getElementById(myId.value)?.focus();
+        })}
+        onFocus$={$(() => {
+          pCtx.activeId = myId.value;
+        })}
+        onKeyDown$={makeKeyHandler(pCtx)}
+      >
+        <Slot />
+      </Popover.Trigger>
+    );
+  }
+);
+
+// ── CheckBoxItem ───────────────────────────────────────────────────────────
+
+export const CheckBoxItem = component$<PropsOf<"button"> & {
+  value?: boolean;
+  "bind:value"?: Signal<boolean>;
+}>((props) => {
+  const { value, "bind:value": bindValue, onClick$, ...rest } = props;
+  const internalSignal = useSignal(value ?? false);
+  const isChecked = bindValue || internalSignal;
+
+  const handleClick$ = $(() => {
+    isChecked.value = !isChecked.value;
+  });
+
+  return (
+    <Item {...rest} onClick$={[handleClick$, onClick$]}>
+      <MenuItem.Start>
+        {isChecked.value ? <LuCheck /> : <div class="h-4 w-4" />}
+      </MenuItem.Start>
+      <Slot />
+    </Item>
+  );
+});
+
+// ── RadioGroup & RadioButton ───────────────────────────────────────────────
+
+export const radioGroupCtxId = createContextId<{
+  valueSig: Signal<string>;
+}>("q.menu.radioGroup");
+
+export const RadioGroup = component$<{
+  value?: string;
+  "bind:value"?: Signal<string>;
+} & PropsOf<"div">>((props) => {
+  const { value, "bind:value": bindValue, ...rest } = props;
+  const internalSignal = useSignal(value ?? "");
+  const valueSig = bindValue || internalSignal;
+  useContextProvider(radioGroupCtxId, { valueSig });
+
+  return (
+    <div {...rest} role="group">
+      <Slot />
+    </div>
+  );
+});
+
+export const RadioButton = component$<PropsOf<"button"> & {
+  value: string;
+}>((props) => {
+  const { value, onClick$, ...rest } = props;
+  const ctx = useContext(radioGroupCtxId);
+  const isChecked = ctx.valueSig.value === value;
+
+  const handleClick$ = $(() => {
+    ctx.valueSig.value = value;
+  });
+
+  return (
+    <Item {...rest} onClick$={[handleClick$, onClick$]} role="menuitemradio" aria-checked={isChecked}>
+      <MenuItem.Start>
+        {isChecked ? <LuCircleDot /> : <div class="h-4 w-4" />}
+      </MenuItem.Start>
+      <Slot />
+    </Item>
+  );
+});
+
+// ── MenuGroup ──────────────────────────────────────────────────────────────
+// Kontejner pro více Menu.Root vedle sebe. ArrowLeft/Right na Trigger
+// přepíná (focus + otevření) mezi menu v této skupině.
+
+type MenuGroupProps = PropsOf<"div"> & {
+  /** Accessible label for the menubar group */
+  "aria-label"?: string;
+};
+
+export const MenuGroup = component$<MenuGroupProps>((props) => {
+  const { class: className, "aria-label": ariaLabel = "Menu group", ...rest } = props;
+  const merged = [
+    "flex items-center gap-2 p-0",
+    panelBgClass,
+    className,
+  ].filter(Boolean).join(" ");
+
+  return (
+    <div
+      {...rest}
+      role="menubar"
+      aria-label={ariaLabel}
+      class={merged}
+      data-menu-group
+    >
+      <Slot />
+    </div>
+  );
+});
+
+// ── Separator ──────────────────────────────────────────────────────────────
+
+export const Separator = component$<PropsOf<typeof BaseSeparator>>((props) => {
+  return (
+    <BaseSeparator
+      orientation={props.orientation || "horizontal"}
+      {...props}
+      class={[
+        props.orientation === "vertical"
+          ? "w-px h-full mx-1"
+          : "h-px w-full my-1",
+        "!bg-separator-opaque opacity-50",
+        props.class
+      ].filter(Boolean).join(" ")}
+    />
+  );
+});
+
+// ── Group & Label ──────────────────────────────────────────────────────────
+
+export const Group = component$<PropsOf<"div">>((props) => {
+  return (
+    <div {...props} role="group" class={["", props.class].filter(Boolean).join(" ")}>
+      <Slot />
+    </div>
+  );
+});
+
+export const Label = component$<PropsOf<"div">>((props) => {
+  return (
+    <div
+      {...props}
+      class={[
+        "px-2 py-1.5 text-sm font-semibold opacity-70",
+        props.class,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <Slot />
+    </div>
+  );
+});
+
+// ── Exports ────────────────────────────────────────────────────────────────
+
+export const Menu = { Root, Trigger, SubTrigger, Panel, Item, SubMenu, MenuGroup, CheckBoxItem, RadioGroup, RadioButton, Separator, Group, Label, MenuItem };
+export default Menu;

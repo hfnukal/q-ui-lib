@@ -111,6 +111,9 @@ function flattenChildren(children: unknown): JSXNode[] {
 /**
  * Kořen accordionu. Přímé děti musí být střídavě {@link AccordionTrigger} a {@link AccordionContent}
  * (Trigger, Content, Trigger, Content, …). Každá dvojice se zabalí do headless `Item` + `Header`.
+ *
+ * Poznámka: `AccordionRoot` renderuje blokový root (`<div>`), proto nesmí být vnořený uvnitř
+ * textových kontejnerů `<p>` ani `<pre>` (nevalidní HTML).
  */
 export const AccordionRoot: FunctionComponent<
   AccordionRootProps & { children?: unknown }
@@ -164,6 +167,7 @@ export const AccordionContent: FunctionComponent<AccordionContentProps> = (
 /**
  * Složené API: {@link AccordionRoot}, {@link AccordionTrigger}, {@link AccordionContent}.
  * Pod `Root` střídavě `Trigger` a `Content` (každý má vnitřní slot).
+ * Protože `AccordionRoot` renderuje `<div>`, nepoužívejte `Accordion` uvnitř `<p>` ani `<pre>`.
  */
 export const Accordion = {
   Root: AccordionRoot,

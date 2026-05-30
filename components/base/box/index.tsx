@@ -77,6 +77,8 @@ export type BoxProps = Omit<PropsOf<"div">, "class"> & {
 
 /**
  * Generic layout/styling container (LAYOUT.md). Width/height via `class` (e.g. `w-full h-full`).
+ * Root je pevně `<div>` (`BoxProps` vychází z `PropsOf<"div">`), tag nelze přepnout přes API.
+ * Nevkládejte do `<p>` ani `<pre>`.
  */
 export const Box = component$<BoxProps>((props) => {
   const {

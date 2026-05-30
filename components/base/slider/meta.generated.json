@@ -5,9 +5,7 @@
   "kind": "primitive",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [
-    "@builder.io/qwik"
-  ],
+  "npmDependencies": [],
   "apiTree": {
     "params": {
       "value": "number",
@@ -15,7 +13,7 @@
       "max": "number",
       "step": "number",
       "label": "string",
-      "onChange$": "any",
+      "onChange$": "function",
       "color": "string",
       "backgroundColor": "string",
       "thumbSize": [

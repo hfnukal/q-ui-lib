@@ -121,7 +121,7 @@ function itemRootClass(variant: ItemVariant, size: ItemSize) {
 export type ItemRootProps = Omit<PropsOf<"div">, "as"> &
   Partial<Pick<PropsOf<"a">, "href" | "target" | "rel">> &
   Partial<Pick<PropsOf<"button">, "type" | "disabled">> & {
-    /** Vykreslí jiný kořenový prvek než `div` (např. `a` pro celý řádek jako odkaz). */
+    /** Vykreslí jiný kořenový prvek než výchozí `span` (např. `a` pro celý řádek jako odkaz). */
     as?: keyof HTMLElementTagNameMap;
     variant?: ItemVariant;
     size?: ItemSize;
@@ -129,11 +129,13 @@ export type ItemRootProps = Omit<PropsOf<"div">, "as"> &
 
 /**
  * Hlavní kontejner řádku (media, titulek, popis, akce) ve stylu shadcn/ui Item.
+ * Root tag lze změnit přes prop `as`; výchozí je `span`, render běží přes `Polymorphic`.
+ * V textových parentech (`p`/`pre`) použijte `as="span"` a jen phrasing obsah; pro blokový layout dejte `as="div"`.
  * Pro odkaz použijte `as="a"` a běžné atributy kotvy (`href`, …).
  */
 export const ItemRoot = component$<ItemRootProps>((props) => {
   const {
-    as = "div",
+    as = "span",
     variant = "default",
     size = "default",
     class: className,

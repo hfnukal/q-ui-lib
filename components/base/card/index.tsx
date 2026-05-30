@@ -113,22 +113,32 @@
  */
 
 import { component$, type PropsOf, Slot } from "@builder.io/qwik";
+import { Polymorphic } from "@qwik-ui/headless";
 
-export type CardRootProps = PropsOf<"div">;
+export type CardRootProps = Omit<PropsOf<"div">, "as"> & {
+  /**
+   * Root element. Default je `span` kvůli bezpečnému vložení do textových parentů (`p`/`pre`).
+   * Pro blokové použití nastavte `as="div"`.
+   */
+  as?: "div" | "span";
+};
 
 /**
  * Kontejner karty — `grouped-surface`, okraj a stín (COLORS.md). Bez @qwik-ui/headless.
+ * Přes `as` můžete přepnout root mezi `span` (výchozí) a `div`.
+ * Do `<p>`/`<pre>` vkládejte jen variantu `as="span"` a jen s phrasing obsahem;
+ * pro běžný blokový obsah použijte parent `<div>/<section>` nebo `as="div"`.
  */
 export const CardRoot = component$<CardRootProps>((props) => {
-  const { class: className, ...rest } = props;
+  const { class: className, as = "span", ...rest } = props;
   const base =
-    "overflow-hidden rounded-xl border border-separator-opaque bg-grouped-surface text-label shadow-sm";
+    "block overflow-hidden rounded-xl border border-separator-opaque bg-grouped-surface text-label shadow-sm";
   const merged = [base, className].filter(Boolean).join(" ");
 
   return (
-    <div {...rest} class={merged}>
+    <Polymorphic as={as} {...rest} class={merged}>
       <Slot />
-    </div>
+    </Polymorphic>
   );
 });
 

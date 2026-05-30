@@ -1,7 +1,7 @@
 /**
  * @component dropdown-menu
  * @title DropdownMenu
- * @version 1.3.0
+ * @version 1.4.0
  * @example Základní menu
  * Základní menu — viz ukázka níže.
  * ```tsx
@@ -27,13 +27,13 @@
  *   <DropdownMenu.Trigger>Účet</DropdownMenu.Trigger>
  *   <DropdownMenu.Popover gutter={4}>
  *     <DropdownMenu.Group>
- *       <DropdownMenu.GroupLabel>Můj účet</DropdownMenu.GroupLabel>
+ *       <DropdownMenu.Label>Můj účet</DropdownMenu.Label>
  *       <DropdownMenu.Item>Profil</DropdownMenu.Item>
  *       <DropdownMenu.Item>Fakturace</DropdownMenu.Item>
  *     </DropdownMenu.Group>
  *     <DropdownMenu.Separator />
  *     <DropdownMenu.Group>
- *       <DropdownMenu.GroupLabel>Nebezpečná zóna</DropdownMenu.GroupLabel>
+ *       <DropdownMenu.Label>Nebezpečná zóna</DropdownMenu.Label>
  *       <DropdownMenu.Item>Odhlásit se</DropdownMenu.Item>
  *     </DropdownMenu.Group>
  *   </DropdownMenu.Popover>
@@ -41,7 +41,7 @@
  * ```
  *
  * @example Checkbox a radio
- * Pro vícenásobný výběr použij `CheckboxItem` s `bind:checked` ; pro jednu hodnotu `RadioGroup` s `bind:value` a `RadioItem` .
+ * Pro vícenásobný výběr použij `CheckboxItem` s `bind:value` ; pro jednu hodnotu `RadioGroup` s `bind:value` a `RadioItem` .
  * ```tsx
  * import { component$, useSignal } from "@builder.io/qwik";
  * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
@@ -54,7 +54,7 @@
  *     <DropdownMenu.Root>
  *       <DropdownMenu.Trigger>Volby</DropdownMenu.Trigger>
  *       <DropdownMenu.Popover gutter={4}>
- *         <DropdownMenu.CheckboxItem bind:checked={notifications} closeOnSelect={false}>
+ *         <DropdownMenu.CheckboxItem bind:value={notifications}>
  *           Oznámení
  *         </DropdownMenu.CheckboxItem>
  *         <DropdownMenu.Separator />
@@ -67,360 +67,447 @@
  *     </DropdownMenu.Root>
  *   );
  * });
+
  * ```
- *
- * @example Podmenu
- * Vnořené menu je druhý `Dropdown` kontext: `Sub` , `SubTrigger` , `SubContent` . Uvnitř panelu používej jen `SubItem` (případně `SubCheckboxItem` / `SubRadioItem` ), ne hlavní `Item` — jinak by headless walker sloučil indexy s hlavním menu.
- * ```tsx
- * import { DropdownMenu } from "~/components/ui/base/dropdown-menu";
- * 
- * <DropdownMenu.Root>
- *   <DropdownMenu.Trigger>Soubor</DropdownMenu.Trigger>
- *   <DropdownMenu.Popover gutter={4}>
- *     <DropdownMenu.Item>Nový</DropdownMenu.Item>
- *     <DropdownMenu.Sub>
- *       <DropdownMenu.SubTrigger>
- *         <span>Nedávné</span>
- *         <span class="text-secondary-label" aria-hidden="true">
- *           ›
- *         </span>
- *       </DropdownMenu.SubTrigger>
- *       <DropdownMenu.SubContent>
- *         <DropdownMenu.SubItem>Projekt A</DropdownMenu.SubItem>
- *         <DropdownMenu.SubItem>Projekt B</DropdownMenu.SubItem>
- *       </DropdownMenu.SubContent>
- *     </DropdownMenu.Sub>
- *     <DropdownMenu.Separator />
- *     <DropdownMenu.Item>Konec</DropdownMenu.Item>
- *   </DropdownMenu.Popover>
- * </DropdownMenu.Root>
- * ```
- 
- 
- 
- 
- 
- 
- 
- 
- 
  */
 
-import { $, component$, type FunctionComponent, type JSXChildren, type PropsOf, type QRL, type Signal, Slot } from "@builder.io/qwik";
-import { Dropdown as HeadlessDropdown } from "@qwik-ui/headless";
+import {
+  $,
+  component$,
+  createContextId,
+  FunctionComponent,
+  PropsOf,
+  Slot,
+  useContext,
+  useContextProvider,
+  useSignal,
+  useStore,
+  useTask$,
+  useStyles$,
+  type Signal,
+} from "@builder.io/qwik";
+import { Popover as HeadlessPopover } from "@qwik-ui/headless";
+
+/**
+ * Vizuální layout řádku menu — kombinuj s interaktivním wrapperem
+ * (např. `DropdownMenu.Item`). Skládá `Start`, `Label`, `End`.
+ */
+export const MenuItemRoot = component$<PropsOf<"div">>((props) => {
+  const { class: className, ...rest } = props;
+  const base = "flex w-full items-center gap-2";
+  const merged = [base, className].filter(Boolean).join(" ");
+  return (
+    <div {...rest} class={merged}>
+      <Slot />
+    </div>
+  );
+});
+
+/** Levá plocha pro ikonu nebo jinou vizuální indikaci. */
+export const MenuItemStart = component$<PropsOf<"span">>((props) => {
+  const { class: className, ...rest } = props;
+  const base =
+    "flex shrink-0 items-center justify-center text-secondary-label [&_svg]:h-4 [&_svg]:w-4";
+  const merged = [base, className].filter(Boolean).join(" ");
+  return (
+    <span {...rest} class={merged}>
+      <Slot />
+    </span>
+  );
+});
+
+/** Hlavní text položky — roztahuje se do dostupného prostoru. */
+export const MenuItemLabel = component$<PropsOf<"span">>((props) => {
+  const { class: className, ...rest } = props;
+  const base = "flex-1 truncate text-left";
+  const merged = [base, className].filter(Boolean).join(" ");
+  return (
+    <span {...rest} class={merged}>
+      <Slot />
+    </span>
+  );
+});
+
+/** Pravá plocha — typicky `KbdShortcut` nebo badge. */
+export const MenuItemEnd = component$<PropsOf<"span">>((props) => {
+  const { class: className, ...rest } = props;
+  const base = "ml-auto flex shrink-0 items-center gap-1 text-secondary-label";
+  const merged = [base, className].filter(Boolean).join(" ");
+  return (
+    <span {...rest} class={merged}>
+      <Slot />
+    </span>
+  );
+});
+
+/** Složené API pro vizuální layout: `MenuItem.Root`, `MenuItem.Start`, `MenuItem.Label`, `MenuItem.End`. */
+export const MenuItem = {
+  Root: MenuItemRoot,
+  Start: MenuItemStart,
+  Label: MenuItemLabel,
+  End: MenuItemEnd,
+};
+
+import { LuCheck, LuCircleDot } from "@qwikest/icons/lucide";
+import { Separator as BaseSeparator } from "../separator";
 import {
   floatingMenuListPanelClass,
   floatingOutlineButtonTriggerClass,
 } from "../utilities/floating-ui";
 
-const rootClassDefault = "inline-block";
+const dropdownStyles = `
+  .q-dropdown-trigger:focus,
+  .q-dropdown-trigger[aria-expanded="true"],
+  .q-dropdown-trigger[data-state="open"],
+  .q-dropdown-trigger[data-open] {
+    background-color: #3b82f6 !important;
+    color: #ffffff !important;
+    border-radius: 4px;
+    outline: none;
+  }
+`;
 
-const rootClassMenubar = "inline-flex";
+// ── Context type ───────────────────────────────────────────────────────────
 
-const triggerClass = floatingOutlineButtonTriggerClass;
-
-/**
- * Kompaktní spouštěč jen s ikonou (bez outline rámečku) — např. vedle řádku v sidebaru;
- * výchozí `DropdownMenu.Trigger` přidává `floatingOutlineButtonTriggerClass`, který by ikonu přebil / ořízl.
- */
-const iconTriggerClass =
-  "inline-flex aspect-square w-7 shrink-0 cursor-default items-center justify-center rounded-md border-0 bg-transparent p-0 text-secondary-label shadow-none outline-none ring-0 ring-offset-background transition-colors hover:bg-fill-secondary/10 hover:text-label focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[open]:bg-fill-secondary/10 data-[open]:text-label";
-
-/** Spouštěč vodorovné lišty menu (bez rámečku jako u samostatného tlačítka). */
-const menubarTriggerClass =
-  "inline-flex h-6 shrink-0 cursor-default select-none items-center justify-center self-center rounded-md px-2.5 text-callout font-medium text-label outline-none ring-offset-background transition-colors hover:bg-surface-overlay focus:bg-surface-overlay data-[open]:bg-surface-overlay focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
-
-const popoverPanelClass = floatingMenuListPanelClass;
-
-const itemClass =
-  "relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-callout text-label outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-surface-overlay data-[highlighted]:text-label";
-
-const separatorClass = "my-1 h-px border-0 bg-separator-opaque";
-
-const groupClass = "py-0.5";
-
-const groupLabelClass = "px-2 py-1.5 text-caption-1 font-medium text-secondary-label";
-
-const itemIndicatorClass =
-  "ml-auto inline-flex h-4 w-4 shrink-0 items-center justify-center text-label [&_svg]:h-3.5 [&_svg]:w-3.5";
-
-/** Položka s indikátorem vlevo — sdílí `itemClass` + přidává `pl-8` pro prostor indikátoru. */
-const checkableItemClass = [itemClass, "pl-8"].join(" ");
-
-/** Absolutně pozicovaný slot pro indikátor zaškrtnutí / výběru (z-index nad obsahem řádku). */
-const indicatorSlotClass =
-  "absolute left-2 z-10 flex h-3.5 w-3.5 items-center justify-center";
-
-const checkIcon = (
-  <svg
-    width="14"
-    height="14"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2.5"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    aria-hidden="true"
-  >
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
-
-const radioIcon = (
-  <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor" aria-hidden="true">
-    <circle cx="4" cy="4" r="4" />
-  </svg>
-);
-
-/** Vnitřní řádek podmenu — vypadá jako položka, ne jako hlavní tlačítkové menu. */
-const subTriggerClass = [
-  itemClass,
-  "w-full justify-between gap-2 border-0 bg-transparent font-normal shadow-none ring-offset-background",
-  "hover:bg-surface-overlay data-[open]:bg-surface-overlay",
-  "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-].join(" ");
-
-const subRootClass = "block w-full min-w-0";
-
-export type DropdownMenuRootProps = PropsOf<typeof HeadlessDropdown.Root> & {
-  /** `menubar` — `inline-flex` kořen pro položky v komponentě Menubar. */
-  variant?: "default" | "menubar";
+export type DropdownContextState = {
+  menuKey: string;
+  activeId: string;
+  itemIds: string[];
+  itemIndex: number;
+  isOpen: boolean;
 };
 
-export type DropdownMenuTriggerProps = PropsOf<typeof HeadlessDropdown.Trigger> & {
-  /** `menubar` — plochý spouštěč v liště menu. `icon` — bez outline, čtverec jako vedlejší akce u řádku. */
-  variant?: "default" | "menubar" | "icon";
+const dropdownCtxId = createContextId<DropdownContextState>("q.dropdown");
+
+export const useDropdownContext = () => useContext(dropdownCtxId);
+
+// ── Keyboard handler factory ───────────────────────────────────────────────
+
+const getMenuItems = (panel: Element): HTMLElement[] => {
+  return Array.from(panel.querySelectorAll<HTMLElement>("[role='menuitem'], [role='menuitemcheckbox'], [role='menuitemradio']")).filter(
+    (el) => el.closest("[role='menu']") === panel
+  );
 };
 
-export type DropdownMenuPopoverProps = PropsOf<typeof HeadlessDropdown.Popover>;
+const makeKeyHandler = (ctx: DropdownContextState) => {
+  return $((e: KeyboardEvent) => {
+    const KEYS = [
+      "ArrowUp", "ArrowDown",
+      "Home", "End", "Enter", " ", "Escape",
+    ];
+    if (!KEYS.includes(e.key)) return;
+    e.preventDefault();
+    e.stopPropagation();
 
-export type DropdownMenuItemProps = PropsOf<typeof HeadlessDropdown.Item>;
+    const focusedEl = (e.target as HTMLElement)?.closest("[role^='menuitem']") as HTMLElement | null;
+    if (!focusedEl) return;
+    const panel = focusedEl.closest("[role='menu']");
+    if (!panel) return;
 
-export type DropdownMenuSeparatorProps = PropsOf<typeof HeadlessDropdown.Separator>;
+    const items = getMenuItems(panel);
+    const curIdx = items.indexOf(focusedEl);
+    const len = items.length;
+    if (len === 0) return;
 
-export type DropdownMenuGroupProps = PropsOf<typeof HeadlessDropdown.Group>;
+    const focusItem = (index: number) => {
+      const el = items[index];
+      el?.focus();
+      ctx.activeId = el?.id ?? "";
+    };
 
-export type DropdownMenuGroupLabelProps = PropsOf<typeof HeadlessDropdown.GroupLabel>;
-
-export type DropdownMenuCheckboxItemProps = PropsOf<typeof HeadlessDropdown.CheckboxItem>;
-
-export type DropdownMenuRadioGroupProps = PropsOf<typeof HeadlessDropdown.RadioGroup>;
-
-export type DropdownMenuRadioItemProps = PropsOf<typeof HeadlessDropdown.RadioItem>;
-
-export type DropdownMenuItemIndicatorProps = PropsOf<typeof HeadlessDropdown.ItemIndicator>;
-
-export type DropdownMenuSubRootProps = PropsOf<typeof HeadlessDropdown.Root>;
-
-export type DropdownMenuSubTriggerProps = PropsOf<typeof HeadlessDropdown.Trigger>;
-
-export type DropdownMenuSubContentProps = PropsOf<typeof HeadlessDropdown.Popover>;
-
-export type DropdownMenuSubItemProps = PropsOf<typeof HeadlessDropdown.Item>;
-
-export type DropdownMenuSubCheckboxItemProps = PropsOf<typeof HeadlessDropdown.CheckboxItem>;
-
-export type DropdownMenuSubRadioItemProps = PropsOf<typeof HeadlessDropdown.RadioItem>;
-
-/**
- * Položky uvnitř {@link DropdownMenuSubContent} musí používat `SubItem` / `SubCheckboxItem` / `SubRadioItem`,
- * ne hlavní `Item` — jinak je sjednotí walker hlavního menu do jednoho `itemsMap`.
- */
-export const DropdownMenuSubItem: FunctionComponent<DropdownMenuSubItemProps> = (props) => {
-  const merged = [itemClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessDropdown.Item {...props} class={merged} />;
+    switch (e.key) {
+      case "ArrowDown":
+        focusItem((curIdx + 1) % len);
+        break;
+      case "ArrowUp":
+        focusItem((curIdx - 1 + len) % len);
+        break;
+      case "Home":
+        focusItem(0);
+        break;
+      case "End":
+        focusItem(len - 1);
+        break;
+      case "Enter":
+      case " ":
+        focusedEl.click();
+        break;
+      case "Escape": {
+        const currentPanel = focusedEl.closest("[role='menu']");
+        if (!currentPanel) break;
+        const wrapper = currentPanel.parentElement;
+        const trigger = wrapper?.querySelector<HTMLElement>("[aria-haspopup='menu']");
+        if (trigger) {
+          trigger.click();
+          trigger.focus();
+        }
+        break;
+      }
+    }
+  });
 };
 
-export const DropdownMenuSubCheckboxItem = component$<DropdownMenuSubCheckboxItemProps>((props) => {
-  const typed = props as typeof props & { children?: JSXChildren; "onChange$"?: QRL<(checked: boolean) => void> };
-  const p = { ...(typed as unknown as Record<string, unknown>) };
-  const className = p.class as string | undefined;
-  const userOnChange$ = p["onChange$"] as QRL<((checked: boolean) => void) | undefined>;
-  delete p.class;
-  delete p.children;
-  delete p["onChange$"];
-  const rest = p;
-  const bindChecked = (props as unknown as { "bind:checked"?: Signal<boolean> })["bind:checked"];
-  const merged = [checkableItemClass, className].filter(Boolean).join(" ");
+// ── Components ─────────────────────────────────────────────────────────────
+
+const itemClass = "flex w-full items-center gap-2 p-0 cursor-pointer outline-none rounded-sm px-2 py-1.5 text-callout text-label transition-colors";
+const activeStyle = { background: "#3b82f6", color: "#ffffff", borderRadius: "4px" };
+const panelClass = [floatingMenuListPanelClass, "z-50 min-w-32 overflow-visible text-body text-label outline-none"].join(" ");
+
+export const DropdownMenuRoot = component$((props: PropsOf<typeof HeadlessPopover.Root> & { menuKey?: string }) => {
+  const { menuKey, ...rest } = props;
+  useStyles$(dropdownStyles);
+  const store = useStore<DropdownContextState>({
+    menuKey: menuKey ?? props.id?.toString() ?? "dropdown",
+    activeId: "",
+    itemIds: [],
+    itemIndex: 0,
+    isOpen: false,
+  });
+  useContextProvider(dropdownCtxId, store);
   return (
-    <HeadlessDropdown.CheckboxItem
-      {...rest}
-      class={merged}
-      onChange$={$((checked: boolean) => {
-        if (bindChecked) bindChecked.value = checked;
-        if (userOnChange$) void userOnChange$(checked);
-      })}
-    >
-      <span class={indicatorSlotClass}>
-        <HeadlessDropdown.ItemIndicator>{checkIcon}</HeadlessDropdown.ItemIndicator>
-      </span>
+    <HeadlessPopover.Root {...rest} floating={rest.floating || "bottom-start"}>
       <Slot />
-    </HeadlessDropdown.CheckboxItem>
+    </HeadlessPopover.Root>
   );
 });
 
-export const DropdownMenuSubRadioItem: FunctionComponent<DropdownMenuSubRadioItemProps> = (props) => {
-  const { class: className, children, ...rest } = props as typeof props & { children?: JSXChildren };
-  const merged = [checkableItemClass, className].filter(Boolean).join(" ");
-  return (
-    <HeadlessDropdown.RadioItem {...rest} class={merged}>
-      <span class={indicatorSlotClass}>
-        <HeadlessDropdown.ItemIndicator>{radioIcon}</HeadlessDropdown.ItemIndicator>
-      </span>
-      {children}
-    </HeadlessDropdown.RadioItem>
-  );
-};
+export const DropdownMenuTrigger = component$((props: PropsOf<typeof HeadlessPopover.Trigger>) => {
+  const ctx = useDropdownContext();
+  const myId = useSignal("");
 
-/**
- * Kořen vnořeného menu (podmenu). Uvnitř: {@link DropdownMenuSubTrigger} + {@link DropdownMenuSubContent}.
- */
-export const DropdownMenuSubRoot: FunctionComponent<DropdownMenuSubRootProps> = (props) => {
-  const merged = [subRootClass, props.class].filter(Boolean).join(" ");
+  useTask$(() => {
+    const id = `${ctx.menuKey}-trigger`;
+    myId.value = id;
+  });
+
   return (
-    <HeadlessDropdown.Root
+    <HeadlessPopover.Trigger
       {...props}
-      class={merged}
-      dropdownItemComponent={props.dropdownItemComponent ?? DropdownMenuSubItem}
-      dropdownRadioItemComponent={props.dropdownRadioItemComponent ?? DropdownMenuSubRadioItem}
-      dropdownCheckboxItemComponent={props.dropdownCheckboxItemComponent ?? DropdownMenuSubCheckboxItem}
-    />
-  );
-};
+      id={myId.value || undefined}
+      class={[floatingOutlineButtonTriggerClass, "q-dropdown-trigger", props.class].filter(Boolean).join(" ")}
+      aria-haspopup="menu"
+      data-open={ctx.isOpen ? "" : undefined}
+      onKeyDown$={$((e: KeyboardEvent) => {
+        const trigger = (e.target as HTMLElement)?.closest("[aria-haspopup='menu']") as HTMLElement;
+        if (["Enter", " "].includes(e.key)) {
+          e.preventDefault();
+          e.stopPropagation();
+          trigger?.click();
+          return;
+        }
 
-export const DropdownMenuSubTrigger: FunctionComponent<DropdownMenuSubTriggerProps> = (props) => {
-  const merged = [subTriggerClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessDropdown.Trigger {...props} class={merged} />;
-};
+        if (!["ArrowDown", "ArrowUp"].includes(e.key)) return;
+        e.preventDefault();
+        e.stopPropagation();
 
-/** Výchozí umístění vpravo od řádku (`right-start`), vhodné pro podmenu. */
-export const DropdownMenuSubContent: FunctionComponent<DropdownMenuSubContentProps> = (props) => {
-  const { floating, gutter, class: className, ...rest } = props;
-  const merged = [popoverPanelClass, className].filter(Boolean).join(" ");
-  return (
-    <HeadlessDropdown.Popover
-      {...rest}
-      class={merged}
-      floating={floating ?? "right-start"}
-      gutter={gutter ?? 4}
-    />
-  );
-};
+        const isOpen = trigger?.hasAttribute("data-open");
 
-export const DropdownMenuItem: FunctionComponent<DropdownMenuItemProps> = (props) => {
-  const merged = [itemClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessDropdown.Item {...props} class={merged} />;
-};
-
-export const DropdownMenuCheckboxItem = component$<DropdownMenuCheckboxItemProps>((props) => {
-  const typed = props as typeof props & { children?: JSXChildren; "onChange$"?: QRL<(checked: boolean) => void> };
-  const p = { ...(typed as unknown as Record<string, unknown>) };
-  const className = p.class as string | undefined;
-  const userOnChange$ = p["onChange$"] as QRL<((checked: boolean) => void) | undefined>;
-  delete p.class;
-  delete p.children;
-  delete p["onChange$"];
-  const rest = p;
-  const bindChecked = (props as unknown as { "bind:checked"?: Signal<boolean> })["bind:checked"];
-  const merged = [checkableItemClass, className].filter(Boolean).join(" ");
-  return (
-    <HeadlessDropdown.CheckboxItem
-      {...rest}
-      class={merged}
-      onChange$={$((checked: boolean) => {
-        if (bindChecked) bindChecked.value = checked;
-        if (userOnChange$) void userOnChange$(checked);
+        if (isOpen) {
+          const menuPanel = document.querySelector<HTMLElement>(`[role='menu'][data-menu-key='${ctx.menuKey}']`);
+          if (menuPanel) {
+            const items = getMenuItems(menuPanel);
+            if (items.length > 0) {
+              const target = e.key === "ArrowUp" ? items[items.length - 1] : items[0];
+              target.focus();
+              ctx.activeId = target.id ?? "";
+            }
+          }
+        } else {
+          trigger?.click();
+          const focusLast = e.key === "ArrowUp";
+          const start = performance.now();
+          const tryFocus = () => {
+            const menuPanel = document.querySelector<HTMLElement>(`[role='menu'][data-menu-key='${ctx.menuKey}']`);
+            if (menuPanel) {
+              const rect = menuPanel.getBoundingClientRect();
+              if (rect.width > 0 || rect.height > 0) {
+                const items = getMenuItems(menuPanel);
+                if (items.length > 0) {
+                  const target = focusLast ? items[items.length - 1] : items[0];
+                  target.focus();
+                  ctx.activeId = target.id ?? "";
+                  return;
+                }
+              }
+            }
+            if (performance.now() - start < 500) {
+              setTimeout(tryFocus, 10);
+            }
+          };
+          setTimeout(tryFocus, 10);
+        }
       })}
     >
-      <span class={indicatorSlotClass}>
-        <HeadlessDropdown.ItemIndicator>{checkIcon}</HeadlessDropdown.ItemIndicator>
-      </span>
       <Slot />
-    </HeadlessDropdown.CheckboxItem>
+    </HeadlessPopover.Trigger>
   );
 });
 
-export const DropdownMenuRadioItem: FunctionComponent<DropdownMenuRadioItemProps> = (props) => {
-  const { class: className, children, ...rest } = props as typeof props & { children?: JSXChildren };
-  const merged = [checkableItemClass, className].filter(Boolean).join(" ");
-  return (
-    <HeadlessDropdown.RadioItem {...rest} class={merged}>
-      <span class={indicatorSlotClass}>
-        <HeadlessDropdown.ItemIndicator>{radioIcon}</HeadlessDropdown.ItemIndicator>
-      </span>
-      {children}
-    </HeadlessDropdown.RadioItem>
-  );
-};
+export const DropdownMenuPopover = component$((props: PropsOf<typeof HeadlessPopover.Panel>) => {
+  const ctx = useDropdownContext();
+  const merged = [panelClass, props.class].filter(Boolean).join(" ");
 
-/**
- * Kořen menu — předává stylované {@link DropdownMenuItem} / {@link DropdownMenuRadioItem} /
- * {@link DropdownMenuCheckboxItem} do headless walkeru (stejný princip jako `tabComponent` u Tab).
- */
-export const DropdownMenuRoot: FunctionComponent<DropdownMenuRootProps> = (props) => {
-  const {
-    variant = "default",
-    class: className,
-    dropdownItemComponent,
-    dropdownRadioItemComponent,
-    dropdownCheckboxItemComponent,
-    ...rest
-  } = props;
-  const rootBase = variant === "menubar" ? rootClassMenubar : rootClassDefault;
-  const merged = [rootBase, className].filter(Boolean).join(" ");
   return (
-    <HeadlessDropdown.Root
+    <HeadlessPopover.Panel
+      {...props}
+      role="menu"
+      aria-orientation="vertical"
+      data-menu-key={ctx.menuKey}
+      onToggle$={$((e: Event) => {
+        const ev = e as any;
+        if (ev.newState) {
+          ctx.isOpen = ev.newState === "open";
+        }
+      })}
+      onMouseLeave$={$(() => {
+        ctx.activeId = "";
+      })}
+    >
+      <div class={merged}>
+        <Slot />
+      </div>
+    </HeadlessPopover.Panel>
+  );
+});
+
+export const DropdownMenuItem = component$((props: PropsOf<"button">) => {
+  const ctx = useDropdownContext();
+  const myId = useSignal("");
+
+  useTask$(() => {
+    const id = `${ctx.menuKey}-item-${ctx.itemIndex}`;
+    ctx.itemIds = [...ctx.itemIds, id];
+    ctx.itemIndex++;
+    myId.value = id;
+  });
+
+  return (
+    <button
+      {...props}
+      id={myId.value || undefined}
+      class={[itemClass, props.class].filter(Boolean).join(" ")}
+      role="menuitem"
+      tabIndex={-1}
+      style={ctx.activeId === myId.value && myId.value !== "" ? activeStyle : undefined}
+      onMouseOver$={$(() => {
+        ctx.activeId = myId.value;
+        document.getElementById(myId.value)?.focus();
+      })}
+      onFocus$={$(() => {
+        ctx.activeId = myId.value;
+      })}
+      onKeyDown$={makeKeyHandler(ctx)}
+    >
+      {props.children ?? <Slot />}
+    </button>
+  );
+});
+
+export const DropdownMenuSeparator = component$((props: PropsOf<typeof BaseSeparator>) => (
+  <BaseSeparator
+    orientation="horizontal"
+    {...props}
+    class={["h-px w-full my-1 !bg-separator-opaque opacity-50", props.class].filter(Boolean).join(" ")}
+  />
+));
+
+export const DropdownMenuGroup = component$((props: PropsOf<"div">) => (
+  <div {...props} role="group" class={["py-0.5", props.class].filter(Boolean).join(" ")}>
+    <Slot />
+  </div>
+));
+
+export const DropdownMenuGroupLabel = component$((props: PropsOf<"div">) => (
+  <div
+    {...props}
+    class={["px-2 py-1.5 text-caption-1 font-medium text-secondary-label", props.class].filter(Boolean).join(" ")}
+  >
+    <Slot />
+  </div>
+));
+
+export const DropdownMenuCheckboxItem = component$<PropsOf<"button"> & {
+  value?: boolean;
+  "bind:value"?: Signal<boolean>;
+}>((props) => {
+  const { value, "bind:value": bindValue, onClick$, ...rest } = props;
+  const internalSignal = useSignal(value ?? false);
+  const isChecked = bindValue || internalSignal;
+
+  const handleClick$ = $(() => {
+    isChecked.value = !isChecked.value;
+  });
+
+  return (
+    <DropdownMenuItem
       {...rest}
-      class={merged}
-      dropdownItemComponent={dropdownItemComponent ?? DropdownMenuItem}
-      dropdownRadioItemComponent={dropdownRadioItemComponent ?? DropdownMenuRadioItem}
-      dropdownCheckboxItemComponent={dropdownCheckboxItemComponent ?? DropdownMenuCheckboxItem}
-    />
+      role="menuitemcheckbox"
+      aria-checked={isChecked.value}
+      onClick$={[handleClick$, onClick$]}
+    >
+      <MenuItem.Start>
+        {isChecked.value ? <LuCheck /> : <div class="h-4 w-4" />}
+      </MenuItem.Start>
+      <Slot />
+    </DropdownMenuItem>
   );
-};
+});
 
-export const DropdownMenuTrigger: FunctionComponent<DropdownMenuTriggerProps> = (props) => {
-  const { variant = "default", class: className, ...rest } = props;
-  const base =
-    variant === "menubar" ? menubarTriggerClass : variant === "icon" ? iconTriggerClass : triggerClass;
-  const merged = [base, className].filter(Boolean).join(" ");
-  return <HeadlessDropdown.Trigger {...rest} class={merged} />;
-};
+export const radioGroupCtxId = createContextId<{
+  valueSig: Signal<string>;
+}>("q.dropdown.radioGroup");
 
-export const DropdownMenuPopover: FunctionComponent<DropdownMenuPopoverProps> = (props) => {
-  const merged = [popoverPanelClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessDropdown.Popover {...props} class={merged} />;
-};
+export const DropdownMenuRadioGroup = component$<{
+  value?: string;
+  "bind:value"?: Signal<string>;
+} & PropsOf<"div">>((props) => {
+  const { value, "bind:value": bindValue, ...rest } = props;
+  const internalSignal = useSignal(value ?? "");
+  const valueSig = bindValue || internalSignal;
+  useContextProvider(radioGroupCtxId, { valueSig });
 
-export const DropdownMenuSeparator: FunctionComponent<DropdownMenuSeparatorProps> = (props) => {
-  const merged = [separatorClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessDropdown.Separator {...props} class={merged} />;
-};
+  return (
+    <div {...rest} role="group">
+      <Slot />
+    </div>
+  );
+});
 
-export const DropdownMenuGroup: FunctionComponent<DropdownMenuGroupProps> = (props) => {
-  const merged = [groupClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessDropdown.Group {...props} class={merged} />;
-};
+export const DropdownMenuRadioItem = component$<PropsOf<"button"> & {
+  value: string;
+}>((props) => {
+  const { value, onClick$, ...rest } = props;
+  const ctx = useContext(radioGroupCtxId);
+  const isChecked = ctx.valueSig.value === value;
 
-export const DropdownMenuGroupLabel: FunctionComponent<DropdownMenuGroupLabelProps> = (props) => {
-  const merged = [groupLabelClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessDropdown.GroupLabel {...props} class={merged} />;
-};
+  const handleClick$ = $(() => {
+    ctx.valueSig.value = value;
+  });
 
-export const DropdownMenuItemIndicator: FunctionComponent<DropdownMenuItemIndicatorProps> = (props) => {
-  const merged = [itemIndicatorClass, props.class].filter(Boolean).join(" ");
-  return <HeadlessDropdown.ItemIndicator {...props} class={merged} />;
-};
+  return (
+    <DropdownMenuItem
+      {...rest}
+      role="menuitemradio"
+      aria-checked={isChecked}
+      onClick$={[handleClick$, onClick$]}
+    >
+      <MenuItem.Start>
+        {isChecked ? <LuCircleDot /> : <div class="h-4 w-4" />}
+      </MenuItem.Start>
+      <Slot />
+    </DropdownMenuItem>
+  );
+});
 
-export const DropdownMenuRadioGroup: FunctionComponent<DropdownMenuRadioGroupProps> = (props) => (
-  <HeadlessDropdown.RadioGroup {...props} />
-);
+export const DropdownMenuItemIndicator = component$((props: PropsOf<"span">) => (
+  <span
+    {...props}
+    class={["ml-auto inline-flex h-4 w-4 shrink-0 items-center justify-center text-label", props.class].filter(Boolean).join(" ")}
+  >
+    <Slot />
+  </span>
+));
 
-/**
- * Složené API nad {@link https://qwikui.com/docs/headless/dropdown | @qwik-ui/headless Dropdown}
- * (shadcn „Dropdown Menu“); styly z COLORS.md jako u Popover / Tabs.
- */
 export const DropdownMenu = {
   Root: DropdownMenuRoot,
   Trigger: DropdownMenuTrigger,
@@ -429,14 +516,10 @@ export const DropdownMenu = {
   Separator: DropdownMenuSeparator,
   Group: DropdownMenuGroup,
   GroupLabel: DropdownMenuGroupLabel,
+  Label: DropdownMenuGroupLabel,
   CheckboxItem: DropdownMenuCheckboxItem,
   RadioGroup: DropdownMenuRadioGroup,
   RadioItem: DropdownMenuRadioItem,
   ItemIndicator: DropdownMenuItemIndicator,
-  Sub: DropdownMenuSubRoot,
-  SubTrigger: DropdownMenuSubTrigger,
-  SubContent: DropdownMenuSubContent,
-  SubItem: DropdownMenuSubItem,
-  SubCheckboxItem: DropdownMenuSubCheckboxItem,
-  SubRadioItem: DropdownMenuSubRadioItem,
+  MenuItem,
 };
