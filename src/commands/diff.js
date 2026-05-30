@@ -13,6 +13,11 @@ const {
   toComponentKey,
 } = require("../services/component-catalog");
 const {
+  listInstalledComponents,
+  listSubdirs,
+  resolveInstalledComponentSpec,
+} = require("../services/installed-components");
+const {
   compareComponentDirectories,
   compareComponentMetadata,
   formatDependencyChanges,
@@ -20,100 +25,6 @@ const {
   resolveComponentAction,
 } = require("../services/component-diff");
 const { EXIT_CODES } = require("../constants");
-
-function readMeta(componentDir) {
-  const metaPath = path.join(componentDir, "meta.generated.json");
-  if (!fs.existsSync(metaPath)) return null;
-  try {
-    return JSON.parse(fs.readFileSync(metaPath, "utf8"));
-  } catch {
-    return null;
-  }
-}
-
-function collectComponentSlugs(currentDir, prefix = "") {
-  if (!fs.existsSync(currentDir)) return [];
-  const slugs = [];
-  for (const entry of fs.readdirSync(currentDir)) {
-    const entryPath = path.join(currentDir, entry);
-    if (!fs.statSync(entryPath).isDirectory()) continue;
-    const slug = prefix ? `${prefix}/${entry}` : entry;
-    if (fs.existsSync(path.join(entryPath, "meta.generated.json"))) {
-      slugs.push(slug);
-    }
-    slugs.push(...collectComponentSlugs(entryPath, slug));
-  }
-  return slugs;
-}
-
-function listSubdirs(parentDir) {
-  if (!fs.existsSync(parentDir)) return [];
-  return fs
-    .readdirSync(parentDir)
-    .filter((name) => fs.statSync(path.join(parentDir, name)).isDirectory());
-}
-
-function listInstalledComponents(targetDir) {
-  const installed = [];
-  for (const uilib of listSubdirs(targetDir)) {
-    const uilibDir = path.join(targetDir, uilib);
-    for (const slug of collectComponentSlugs(uilibDir)) {
-      const dir = path.join(uilibDir, slug);
-      installed.push({
-        key: toComponentKey(uilib, slug),
-        uilib,
-        slug,
-        dir,
-        meta: readMeta(dir),
-      });
-    }
-  }
-  return installed;
-}
-
-function resolveInstalledComponentSpec(installed, orderedUilibs, spec, preferredUilib) {
-  const value = String(spec || "").trim();
-  if (!value) return null;
-  const byKey = new Map(installed.map((component) => [component.key, component]));
-  if (byKey.has(value)) return byKey.get(value);
-
-  if (value.includes("/")) {
-    const [uilib, ...rest] = value.split("/");
-    const slug = rest.join("/");
-    if (!uilib || !slug) return null;
-    return byKey.get(toComponentKey(uilib, slug)) || null;
-  }
-
-  const candidates = [];
-  if (preferredUilib) candidates.push(preferredUilib);
-  for (const uilib of orderedUilibs) {
-    if (!candidates.includes(uilib)) candidates.push(uilib);
-  }
-
-  const directMatch = installed.find(
-    (component) => candidates.includes(component.uilib) && component.slug === value
-  );
-  if (directMatch) return directMatch;
-
-  for (const uilib of candidates) {
-    for (const component of installed) {
-      if (component.uilib !== uilib) continue;
-      const name = typeof component.meta?.name === "string" ? component.meta.name.trim() : "";
-      const registry =
-        typeof component.meta?.registry === "string" ? component.meta.registry.trim() : "";
-      const leaf = component.slug.split("/").pop();
-      const aliases = new Set([leaf, name].filter(Boolean));
-      if (registry) {
-        aliases.add(`${registry}/${leaf}`);
-        if (name) aliases.add(`${registry}/${name}`);
-      }
-      if (aliases.has(value)) {
-        return component;
-      }
-    }
-  }
-  return null;
-}
 
 function inferRepoForInstalledComponent(config, component, fallbackRepoName) {
   const registry =
@@ -177,6 +88,17 @@ function repoSelectorFromParsed(parsed, flagsRepo, config, component, fallbackRe
   return repoSelectorForComponent(config, component, flagsRepo, fallbackRepoName);
 }
 
+function installedTargetFromComponent(config, component, flagsRepo, fallbackRepoName) {
+  return {
+    key: component.key,
+    uilib: component.uilib,
+    slug: component.slug,
+    localDir: component.dir,
+    localMeta: component.meta,
+    repoSelector: repoSelectorForComponent(config, component, flagsRepo, fallbackRepoName),
+  };
+}
+
 function resolveSingleDiffTarget(cwd, config, spec, flags, targetDir, fallbackRepoName) {
   const parsed = parseUserComponentSpec(spec);
   if (!parsed) {
@@ -227,35 +149,78 @@ function resolveSingleDiffTarget(cwd, config, spec, flags, targetDir, fallbackRe
     uilib: hit.uilib,
     slug: hit.slug,
     localDir: path.join(targetDir, hit.uilib, hit.slug),
-    localMeta: readMeta(path.join(targetDir, hit.uilib, hit.slug)),
+    localMeta: null,
     repoSelector: flagsRepo || `${hit.repoName}/${hit.uilib}`,
   };
 }
 
-function resolveDiffTargets(cwd, config, flags, componentSpec, targetDir, fallbackRepoName) {
-  if (componentSpec) {
-    return [resolveSingleDiffTarget(cwd, config, componentSpec, flags, targetDir, fallbackRepoName)];
+function expandDiffScope(cwd, config, flags, spec, targetDir, fallbackRepoName) {
+  const value = String(spec || "").trim();
+  if (!value) return [];
+
+  const parts = value.split("/").filter(Boolean);
+  const installed = listInstalledComponents(targetDir);
+
+  if (parts.length === 1 && config.repos[parts[0]]) {
+    const repoName = parts[0];
+    return installed
+      .filter((component) => inferRepoForInstalledComponent(config, component, fallbackRepoName) === repoName)
+      .filter((component) => matchesRepoFilter(config, component, flags.repo, fallbackRepoName))
+      .map((component) => installedTargetFromComponent(config, component, flags.repo, fallbackRepoName));
   }
 
-  const installed = listInstalledComponents(targetDir);
-  const targets = [];
-  for (const component of installed) {
-    if (!matchesRepoFilter(config, component, flags.repo, fallbackRepoName)) continue;
-    targets.push({
-      key: component.key,
-      uilib: component.uilib,
-      slug: component.slug,
-      localDir: component.dir,
-      localMeta: component.meta,
-      repoSelector: repoSelectorForComponent(config, component, flags.repo, fallbackRepoName),
-    });
+  if (
+    parts.length === 2 &&
+    config.repos[parts[0]] &&
+    config.repos[parts[0]].uilibs.includes(parts[1])
+  ) {
+    const [, uilib] = parts;
+    const repoName = parts[0];
+    return installed
+      .filter((component) => component.uilib === uilib)
+      .filter((component) => inferRepoForInstalledComponent(config, component, fallbackRepoName) === repoName)
+      .filter((component) => matchesRepoFilter(config, component, flags.repo, fallbackRepoName))
+      .map((component) => installedTargetFromComponent(config, component, flags.repo, fallbackRepoName));
   }
-  if (targets.length === 0) {
-    const err = new Error("No installed components matched the diff scope.");
+
+  const uilibDir = path.join(targetDir, parts[0]);
+  if (parts.length === 1 && fs.existsSync(uilibDir) && fs.statSync(uilibDir).isDirectory()) {
+    const uilib = parts[0];
+    return installed
+      .filter((component) => component.uilib === uilib)
+      .filter((component) => matchesRepoFilter(config, component, flags.repo, fallbackRepoName))
+      .map((component) => installedTargetFromComponent(config, component, flags.repo, fallbackRepoName));
+  }
+
+  return [resolveSingleDiffTarget(cwd, config, spec, flags, targetDir, fallbackRepoName)];
+}
+
+function resolveDiffTargets(cwd, config, flags, positionals, targetDir, fallbackRepoName) {
+  if (positionals.length === 0) {
+    const installed = listInstalledComponents(targetDir);
+    const targets = installed
+      .filter((component) => matchesRepoFilter(config, component, flags.repo, fallbackRepoName))
+      .map((component) => installedTargetFromComponent(config, component, flags.repo, fallbackRepoName));
+    if (targets.length === 0) {
+      const err = new Error("No installed components matched the diff scope.");
+      err.exitCode = EXIT_CODES.USAGE_PARSER_ERROR;
+      throw err;
+    }
+    return targets;
+  }
+
+  const byKey = new Map();
+  for (const spec of positionals) {
+    for (const target of expandDiffScope(cwd, config, flags, spec, targetDir, fallbackRepoName)) {
+      byKey.set(target.key, target);
+    }
+  }
+  if (byKey.size === 0) {
+    const err = new Error("No components matched the diff scope.");
     err.exitCode = EXIT_CODES.USAGE_PARSER_ERROR;
     throw err;
   }
-  return targets;
+  return [...byKey.values()];
 }
 
 function groupTargetsByRepoSelector(targets) {
@@ -316,31 +281,14 @@ function compareTargetWithRemote(target, componentsRootDir, orderedUilibs) {
   };
 }
 
-function collectMutatingFlagWarnings(flags) {
-  const warnings = [];
-  if (flags.auto) warnings.push("--auto is ignored by diff (read-only command).");
-  if (flags.force) warnings.push("--force is ignored by diff (read-only command).");
-  if (flags.dryRun) warnings.push("--dry-run is ignored by diff (read-only command).");
-  if (flags.yes) warnings.push("--yes is ignored by diff (read-only command).");
-  return warnings;
-}
-
 async function runDiff(context) {
   const { cwd, flags, positionals } = context;
-  if (positionals.length > 1) {
-    const err = new Error(
-      "diff accepts at most one component spec in the form [<repo>/][<uilib>/]<component>."
-    );
-    err.exitCode = EXIT_CODES.USAGE_PARSER_ERROR;
-    throw err;
-  }
-  const componentSpec = positionals[0] || null;
   const { config } = readConfig(cwd);
   const resolved = resolveRepo(config, flags.repo);
   const disconnected = resolved.repo.connected === false;
   const targetPath = flags.targetPath || config.targetPath;
   const targetDir = ensureRelativeUnderCwd(cwd, targetPath);
-  const warnings = collectMutatingFlagWarnings(flags);
+  const warnings = [];
 
   if (disconnected) {
     warnings.push("Repo is disconnected; diff reports pending reconnect.");
@@ -354,7 +302,7 @@ async function runDiff(context) {
       summary: { checked: 1, changed: 1, warnings: warnings.length, errors: 0 },
       items: [
         {
-          component: componentSpec || "*",
+          component: positionals[0] || "*",
           action: "update",
           files: [],
           dependencies: [],
@@ -370,7 +318,7 @@ async function runDiff(context) {
     cwd,
     config,
     flags,
-    componentSpec,
+    positionals,
     targetDir,
     resolved.repoName
   );

@@ -9,22 +9,19 @@ const GLOBAL_BOOLEAN_FLAGS = new Set([
   "all",
   "ci",
   "remove",
+  "help",
 ]);
 const GLOBAL_VALUE_FLAGS = new Set([
   "on-error",
   "repo",
   "url",
   "target-path",
-  "components-root",
-  "uilibs",
   "connected",
   "ref",
   "base-branch",
   "title",
   "route-base",
   "branch",
-  "routes-dir",
-  "components-dir",
   "search-levels",
 ]);
 
@@ -40,8 +37,12 @@ function normalizeFlagName(name) {
 
 function parseArgv(argv) {
   const [command, ...rest] = argv;
-  if (!command || command === "--help" || command === "-h" || command === "help") {
+  if (!command || command === "--help" || command === "-h") {
     return { command: "help", positionals: [], flags: {}, raw: [] };
+  }
+  if (command === "help") {
+    const topic = rest.find((token) => !token.startsWith("--")) || null;
+    return { command: "help", positionals: topic ? [topic] : [], flags: {}, raw: rest };
   }
 
   const positionals = [];
@@ -75,33 +76,7 @@ function parseArgv(argv) {
   return { command, positionals, flags, raw };
 }
 
-function parseConnectPairs(rawArgs) {
-  const pairs = [];
-  for (let i = 0; i < rawArgs.length; i += 1) {
-    const token = rawArgs[i];
-    if (token === "--repo") {
-      const repo = rawArgs[i + 1];
-      const urlFlag = rawArgs[i + 2];
-      const url = rawArgs[i + 3];
-      if (!repo || urlFlag !== "--url" || !url) {
-        usageError("connect requires strict pairing: --repo <repo> --url <url>.");
-      }
-      pairs.push({ repo, url });
-      i += 3;
-      continue;
-    }
-    if (token === "--url") {
-      usageError("connect does not allow --url without immediately preceding --repo.");
-    }
-  }
-  if (pairs.length === 0) {
-    usageError("connect requires at least one --repo <repo> --url <url> pair.");
-  }
-  return pairs;
-}
-
 module.exports = {
   parseArgv,
-  parseConnectPairs,
   usageError,
 };

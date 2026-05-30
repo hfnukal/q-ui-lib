@@ -446,9 +446,6 @@ async function runInit(context) {
 
   const config = createDefaultConfig(repo, url, {
     targetPath,
-    componentsRoot: flags.componentsRoot,
-    uilibs: flags.uilibs ? flags.uilibs.split(",").map((x) => x.trim()).filter(Boolean) : undefined,
-    connected: flags.connected ? flags.connected === "true" : true,
   });
 
   const configWarnings = [...scaffoldWarnings];

@@ -16,14 +16,13 @@ function runConnect(cwd, args) {
   });
 }
 
-test("legacy connect --dry-run --json does not modify qui.config.json", () => {
-  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "qui-connect-smoke-"));
-  const cfgPath = path.join(tmp, "qui.config.json");
-  const cfg = createDefaultConfig("local", "https://example.com/lib.git", {
-    targetPath: "src/components/ui",
-  });
-  fs.writeFileSync(cfgPath, `${JSON.stringify(cfg, null, 2)}\n`, "utf8");
-  const before = fs.readFileSync(cfgPath, "utf8");
+test("connect without URL positional exits 2 (legacy --repo/--url pairs removed)", () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "qui-connect-legacy-"));
+  fs.writeFileSync(
+    path.join(tmp, "qui.config.json"),
+    `${JSON.stringify(createDefaultConfig("local", "https://example.com/lib.git"), null, 2)}\n`,
+    "utf8"
+  );
 
   const r = runConnect(tmp, [
     "--repo",
@@ -33,17 +32,8 @@ test("legacy connect --dry-run --json does not modify qui.config.json", () => {
     "--dry-run",
     "--json",
   ]);
-  assert.equal(r.status, 0, r.stderr || r.stdout);
-  const report = JSON.parse(r.stdout.trim());
-  assert.equal(report.command, "connect");
-  assert.equal(report.ok, true);
-  assert.ok(report.summary.planned >= 1);
-  assert.equal(report.summary.applied, 0);
-  assert.ok(report.warnings.some((w) => String(w).includes("deprecated")));
-  assert.ok(
-    report.warnings.some((w) => String(w).includes("dry-run") || String(w).includes("not modified"))
-  );
-  assert.equal(fs.readFileSync(cfgPath, "utf8"), before);
+  assert.equal(r.status, 2, r.stderr || r.stdout);
+  assert.match(r.stderr || r.stdout, /requires <url>/);
 });
 
 test("modern connect file URL with repo and uilibs writes expected config shape", () => {

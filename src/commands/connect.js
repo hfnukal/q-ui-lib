@@ -1,8 +1,9 @@
 const path = require("node:path");
 const { readConfig, writeConfigAtomic, getConfigPath } = require("../services/config");
 const { createReport } = require("../services/report");
-const { parseConnectPairs, usageError } = require("../parser");
+const { usageError } = require("../parser");
 const { resolvePolicy } = require("../services/policy");
+const { COMPONENTS_DIR_NAME } = require("../help");
 const {
   buildDiscoveryReport,
   matchRepoCandidate,
@@ -17,13 +18,6 @@ const {
   userRejected,
 } = require("../services/interactive");
 const { EXIT_CODES } = require("../constants");
-
-const LEGACY_DEPRECATION_WARNING =
-  "connect: --repo/--url flag pairs are deprecated; use `qui connect <url> [repo [...uilibs]]`.";
-
-function isLegacyConnectSyntax(rawArgv) {
-  return rawArgv.some((token) => token === "--repo");
-}
 
 function printDiscoveryListing(searchLevels, candidates) {
   process.stdout.write(`Discovering repos (search-levels=${searchLevels})…\n\n`);
@@ -267,62 +261,6 @@ async function confirmRepoOverwrite(repoId, exists, policy, flags) {
   }
 }
 
-async function runConnectLegacy(context) {
-  const { cwd, rawArgv, flags } = context;
-  const pairs = parseConnectPairs(rawArgv);
-  const { config } = readConfig(cwd);
-  const policy = resolvePolicy(flags, config.policy);
-
-  const componentsRoot = flags.componentsRoot || "components";
-  const uilibs = flags.uilibs
-    ? flags.uilibs.split(",").map((x) => x.trim()).filter(Boolean)
-    : ["base"];
-  const connected = flags.connected ? flags.connected === "true" : true;
-
-  const nextConfig = JSON.parse(JSON.stringify(config));
-  const items = [];
-  const warnings = [LEGACY_DEPRECATION_WARNING];
-
-  for (const pair of pairs) {
-    const exists = Boolean(config.repos[pair.repo]);
-    await confirmRepoOverwrite(pair.repo, exists, policy, flags);
-    nextConfig.repos[pair.repo] = {
-      url: pair.url,
-      componentsRoot,
-      uilibs,
-      connected,
-    };
-    items.push({
-      action: exists ? "modify" : "create",
-      target: `repos.${pair.repo}`,
-      status: flags.dryRun ? "planned" : "applied",
-      details: { url: pair.url, componentsRoot, uilibs },
-    });
-  }
-
-  if (!flags.dryRun) {
-    writeConfigAtomic(cwd, nextConfig);
-  }
-  if (flags.dryRun) {
-    warnings.push("--dry-run: qui.config.json was not modified.");
-  }
-
-  return createReport({
-    command: "connect",
-    ok: true,
-    exitCode: EXIT_CODES.SUCCESS,
-    summary: {
-      planned: items.filter((x) => x.status === "planned").length,
-      applied: items.filter((x) => x.status === "applied").length,
-      skipped: 0,
-      failed: 0,
-    },
-    items,
-    warnings,
-    targetPath: nextConfig.targetPath,
-  });
-}
-
 async function runConnectModern(context) {
   const { cwd, positionals, flags } = context;
   const { config } = readConfig(cwd);
@@ -345,7 +283,7 @@ async function runConnectModern(context) {
   }
 
   const connected = flags.connected ? flags.connected === "true" : true;
-  const componentsDirName = flags.componentsRoot || "components";
+  const componentsDirName = COMPONENTS_DIR_NAME;
   const explicitConnect = isExplicitConnect(repoPositional, uilibPositionals, flags);
 
   const materialized = materializeAndDiscover(cwd, inputUrl, {
@@ -524,9 +462,6 @@ async function runConnectModern(context) {
 async function runConnect(context) {
   if (context.flags.remove) {
     return runConnectRemove(context);
-  }
-  if (isLegacyConnectSyntax(context.rawArgv)) {
-    return runConnectLegacy(context);
   }
   return runConnectModern(context);
 }

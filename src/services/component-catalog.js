@@ -151,6 +151,21 @@ function parseUserComponentSpec(spec) {
   return { kind: "triple", repo: parts[0], uilib: parts[1], slug: parts.slice(2).join("/") };
 }
 
+function parseLocalComponentSpec(spec, config) {
+  const parsed = parseUserComponentSpec(spec);
+  if (!parsed) return null;
+  if (
+    parsed.kind === "uilib-slug" &&
+    config.repos[parsed.uilib] &&
+    config.repos[parsed.uilib].uilibs.includes(parsed.slug)
+  ) {
+    const err = new Error(`'${spec}' is a repo/uilib scope, not a component.`);
+    err.exitCode = EXIT_CODES.USAGE_PARSER_ERROR;
+    throw err;
+  }
+  return parsed;
+}
+
 function parseAllScopeSpec(spec) {
   const value = String(spec || "").trim();
   if (!value) return null;
@@ -333,6 +348,7 @@ module.exports = {
   orderedRepoNames,
   orderedUilibsForRepoWideAll,
   parseAllScopeSpec,
+  parseLocalComponentSpec,
   parseMeta,
   parseUserComponentSpec,
   resolveComponentSpec,

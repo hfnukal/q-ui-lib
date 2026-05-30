@@ -1,6 +1,6 @@
 const { test, describe } = require("node:test");
 const assert = require("node:assert/strict");
-const { parseArgv, parseConnectPairs } = require("../src/parser");
+const { parseArgv } = require("../src/parser");
 const { EXIT_CODES } = require("../src/constants");
 
 describe("parseArgv", () => {
@@ -26,9 +26,16 @@ describe("parseArgv", () => {
   });
 
   test("throws when value flag missing value", () => {
-    assert.throws(() => parseArgv(["connect", "--repo"]), (e) => {
+    assert.throws(() => parseArgv(["connect", "--search-levels"]), (e) => {
       assert.equal(e.exitCode, EXIT_CODES.USAGE_PARSER_ERROR);
       return true;
+    });
+  });
+
+  test("rejects removed --components-root flag", () => {
+    assert.throws(() => parseArgv(["connect", "--components-root", "components"]), (e) => {
+      assert.equal(e.exitCode, EXIT_CODES.USAGE_PARSER_ERROR);
+      return e.message.includes("Unknown option");
     });
   });
 
@@ -37,38 +44,17 @@ describe("parseArgv", () => {
     assert.equal(parseArgv(["help"]).command, "help");
     assert.equal(parseArgv(["-h"]).command, "help");
   });
-});
 
-describe("parseConnectPairs", () => {
-  test("accepts strict --repo / --url pairs", () => {
-    const pairs = parseConnectPairs([
-      "--repo",
-      "lib",
-      "--url",
-      "https://github.com/a/b.git#main",
-    ]);
-    assert.deepEqual(pairs, [{ repo: "lib", url: "https://github.com/a/b.git#main" }]);
+  test("help command with topic", () => {
+    const r = parseArgv(["help", "remove"]);
+    assert.equal(r.command, "help");
+    assert.deepEqual(r.positionals, ["remove"]);
   });
 
-  test("rejects --url without --repo", () => {
-    assert.throws(() => parseConnectPairs(["--url", "https://x.com/a.git"]), (e) => {
-      assert.equal(e.exitCode, EXIT_CODES.USAGE_PARSER_ERROR);
-      return e.message.includes("does not allow --url");
-    });
-  });
-
-  test("rejects incomplete pair", () => {
-    assert.throws(() => parseConnectPairs(["--repo", "lib", "--url"]), (e) => {
-      assert.equal(e.exitCode, EXIT_CODES.USAGE_PARSER_ERROR);
-      return true;
-    });
-  });
-
-  test("requires at least one pair", () => {
-    assert.throws(() => parseConnectPairs([]), (e) => {
-      assert.equal(e.exitCode, EXIT_CODES.USAGE_PARSER_ERROR);
-      return true;
-    });
+  test("command-level --help flag", () => {
+    const r = parseArgv(["add", "--help"]);
+    assert.equal(r.command, "add");
+    assert.equal(r.flags.help, true);
   });
 });
 

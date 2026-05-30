@@ -169,9 +169,28 @@ describe("runDiff", () => {
     fs.rmSync(cwd, { recursive: true, force: true });
   });
 
-  test("rejects multiple component positionals", async () => {
+  test("diffs multiple component positionals", async () => {
     const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "qui-diff-multi-"));
-    fs.mkdirSync(path.join(cwd, "src/ui"), { recursive: true });
+    const sourceRoot = path.join(cwd, "source");
+    const localRoot = path.join(cwd, "src/ui");
+
+    for (const slug of ["hero", "button"]) {
+      const remoteDir = path.join(sourceRoot, "components", "web", slug);
+      const localDir = path.join(localRoot, "web", slug);
+      fs.mkdirSync(remoteDir, { recursive: true });
+      fs.mkdirSync(localDir, { recursive: true });
+      fs.writeFileSync(path.join(remoteDir, "index.tsx"), `export const Remote${slug} = 1;\n`);
+      fs.writeFileSync(path.join(localDir, "index.tsx"), `export const Local${slug} = 1;\n`);
+      fs.writeFileSync(
+        path.join(localDir, "meta.generated.json"),
+        JSON.stringify({ name: slug, registry: "web", dependencies: [], npmDependencies: [] })
+      );
+      fs.writeFileSync(
+        path.join(remoteDir, "meta.generated.json"),
+        JSON.stringify({ name: slug, registry: "web", dependencies: [], npmDependencies: [] })
+      );
+    }
+
     fs.writeFileSync(
       path.join(cwd, "qui.config.json"),
       JSON.stringify({
@@ -179,7 +198,7 @@ describe("runDiff", () => {
         targetPath: "src/ui",
         repos: {
           remote: {
-            url: `file://${path.join(cwd, "source")}`,
+            url: `file://${sourceRoot}`,
             componentsRoot: "components",
             uilibs: ["web"],
             connected: true,
@@ -188,19 +207,14 @@ describe("runDiff", () => {
       })
     );
 
-    await assert.rejects(
-      () =>
-        runDiff({
-          cwd,
-          flags: {},
-          positionals: ["hero", "button"],
-        }),
-      (err) => {
-        assert.equal(err.exitCode, 2);
-        assert.match(err.message, /at most one component spec/);
-        return true;
-      }
-    );
+    const report = await runDiff({
+      cwd,
+      flags: {},
+      positionals: ["web/hero", "web/button"],
+    });
+
+    assert.equal(report.summary.checked, 2);
+    assert.equal(report.summary.changed, 2);
 
     fs.rmSync(cwd, { recursive: true, force: true });
   });

@@ -1,7 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const { readConfig } = require("../services/config");
-const { resolveSourceContext } = require("../services/source-resolver");
 const { createReport } = require("../services/report");
 const {
   ensureRelativeUnderCwd,
@@ -11,109 +10,23 @@ const {
 } = require("../services/component-files");
 const { uninstallDependencies } = require("../services/npm-dependencies");
 const { resolvePolicy } = require("../services/policy");
+const {
+  confirmYesNo,
+  isInteractiveTerminal,
+  nonInteractiveAskError,
+  userRejected,
+} = require("../services/interactive");
+const {
+  listInstalledComponents,
+  listSubdirs,
+  resolveInstalledComponentSpec,
+} = require("../services/installed-components");
 const { EXIT_CODES } = require("../constants");
 
-function readMeta(componentDir) {
-  const metaPath = path.join(componentDir, "meta.generated.json");
-  if (!fs.existsSync(metaPath)) return null;
-  try {
-    return JSON.parse(fs.readFileSync(metaPath, "utf8"));
-  } catch {
-    return null;
-  }
-}
-
-function collectComponentSlugs(currentDir, prefix = "") {
-  if (!fs.existsSync(currentDir)) return [];
-  const slugs = [];
-  for (const entry of fs.readdirSync(currentDir)) {
-    const entryPath = path.join(currentDir, entry);
-    if (!fs.statSync(entryPath).isDirectory()) continue;
-    const slug = prefix ? `${prefix}/${entry}` : entry;
-    if (fs.existsSync(path.join(entryPath, "meta.generated.json"))) {
-      slugs.push(slug);
-    }
-    slugs.push(...collectComponentSlugs(entryPath, slug));
-  }
-  return slugs;
-}
-
-function listSubdirs(parentDir) {
-  if (!fs.existsSync(parentDir)) return [];
-  return fs
-    .readdirSync(parentDir)
-    .filter((name) => fs.statSync(path.join(parentDir, name)).isDirectory());
-}
-
-function toComponentKey(uilib, slug) {
-  return `${uilib}/${slug}`;
-}
-
-function hasComponentMeta(componentDir) {
-  return fs.existsSync(path.join(componentDir, "meta.generated.json"));
-}
-
-function listInstalledComponents(targetDir) {
-  const installed = [];
-  for (const uilib of listSubdirs(targetDir)) {
-    const uilibDir = path.join(targetDir, uilib);
-    for (const slug of collectComponentSlugs(uilibDir)) {
-      const dir = path.join(uilibDir, slug);
-      installed.push({
-        key: toComponentKey(uilib, slug),
-        uilib,
-        slug,
-        dir,
-        meta: readMeta(dir),
-      });
-    }
-  }
-  return installed;
-}
-
-function resolveInstalledComponentSpec(installed, orderedUilibs, spec, preferredUilib) {
-  const value = String(spec || "").trim();
-  if (!value) return null;
-  const byKey = new Map(installed.map((component) => [component.key, component]));
-  if (byKey.has(value)) return byKey.get(value);
-
-  if (value.includes("/")) {
-    const [uilib, ...rest] = value.split("/");
-    const slug = rest.join("/");
-    if (!uilib || !slug) return null;
-    const key = toComponentKey(uilib, slug);
-    return byKey.get(key) || null;
-  }
-
-  const candidates = [];
-  if (preferredUilib) candidates.push(preferredUilib);
-  for (const uilib of orderedUilibs) {
-    if (!candidates.includes(uilib)) candidates.push(uilib);
-  }
-
-  const directMatch = installed.find(
-    (component) => candidates.includes(component.uilib) && component.slug === value
-  );
-  if (directMatch) return directMatch;
-
-  for (const uilib of candidates) {
-    for (const component of installed) {
-      if (component.uilib !== uilib) continue;
-      const name = typeof component.meta?.name === "string" ? component.meta.name.trim() : "";
-      const registry =
-        typeof component.meta?.registry === "string" ? component.meta.registry.trim() : "";
-      const leaf = component.slug.split("/").pop();
-      const aliases = new Set([leaf, name].filter(Boolean));
-      if (registry) {
-        aliases.add(`${registry}/${leaf}`);
-        if (name) aliases.add(`${registry}/${name}`);
-      }
-      if (aliases.has(value)) {
-        return component;
-      }
-    }
-  }
-  return null;
+function usageError(message) {
+  const err = new Error(message);
+  err.exitCode = EXIT_CODES.USAGE_PARSER_ERROR;
+  throw err;
 }
 
 function findDependents(installed, orderedUilibs, keysToRemove) {
@@ -159,33 +72,54 @@ function collectRemainingNpmDeps(installed, removingKeys) {
   return all;
 }
 
+function parseRemoveAllUilib(spec) {
+  const parts = String(spec || "").trim().split("/").filter(Boolean);
+  if (parts.length !== 1) {
+    usageError("remove --all scope must be a uilib name (e.g. remove --all web).");
+  }
+  return parts[0];
+}
+
+async function confirmRemove(componentsToRemove, flags) {
+  if (flags.dryRun || flags.yes || flags.force || flags.auto) return;
+  if (!isInteractiveTerminal()) {
+    throw nonInteractiveAskError("remove requires confirmation.");
+  }
+  const keys = componentsToRemove.map((component) => component.key).join(", ");
+  const ok = await confirmYesNo(
+    `Remove ${componentsToRemove.length} component(s): ${keys}?`
+  );
+  if (!ok) {
+    throw userRejected("Declined remove operation.");
+  }
+}
+
 async function runRemove(context) {
   const { cwd, flags, positionals } = context;
   const { config } = readConfig(cwd);
-  const source = resolveSourceContext(cwd, config, flags.repo);
   const policy = resolvePolicy(flags, config.policy);
   const targetPath = flags.targetPath || config.targetPath;
   const targetDir = ensureRelativeUnderCwd(cwd, targetPath);
   const installed = listInstalledComponents(targetDir);
   const installedUilibs = listSubdirs(targetDir);
-  const configuredUilibs = Array.isArray(source.repo?.uilibs) ? source.repo.uilibs : [];
+  const configuredUilibs = Object.values(config.repos || {}).flatMap((repo) => repo.uilibs || []);
   const orderedUilibs = [...new Set([...installedUilibs, ...configuredUilibs])];
 
-  if (flags.all && positionals.length > 0) {
-    const err = new Error("Cannot combine explicit components with --all.");
-    err.exitCode = EXIT_CODES.USAGE_PARSER_ERROR;
-    throw err;
-  }
-  if (flags.all && !flags.repo) {
-    const err = new Error("remove --all requires --repo.");
-    err.exitCode = EXIT_CODES.USAGE_PARSER_ERROR;
-    throw err;
-  }
-
   let componentsToRemove = [];
+
   if (flags.all) {
-    componentsToRemove = installed;
+    if (positionals.length !== 1) {
+      usageError("remove --all requires exactly one uilib argument (e.g. remove --all web).");
+    }
+    const uilib = parseRemoveAllUilib(positionals[0]);
+    componentsToRemove = installed.filter((component) => component.uilib === uilib);
+    if (componentsToRemove.length === 0) {
+      usageError(`No installed components found in uilib '${uilib}'.`);
+    }
   } else {
+    if (positionals.length === 0) {
+      usageError("remove requires <uilib>/<component>... or <uilib> --all.");
+    }
     componentsToRemove = [...new Set(positionals)].map((spec) => {
       const resolved = resolveInstalledComponentSpec(installed, orderedUilibs, spec, null);
       if (!resolved) {
@@ -196,11 +130,8 @@ async function runRemove(context) {
       return resolved;
     });
   }
-  if (componentsToRemove.length === 0) {
-    const err = new Error("remove requires components or --all.");
-    err.exitCode = EXIT_CODES.USAGE_PARSER_ERROR;
-    throw err;
-  }
+
+  await confirmRemove(componentsToRemove, flags);
 
   const removeKeys = componentsToRemove.map((component) => component.key);
   const dependents = findDependents(installed, orderedUilibs, removeKeys);

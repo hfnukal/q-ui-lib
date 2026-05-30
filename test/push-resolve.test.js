@@ -3,7 +3,8 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
-const { parsePushComponentSpec, resolvePushComponents } = require("../src/services/push-resolve");
+const { parseLocalComponentSpec } = require("../src/services/component-catalog");
+const { resolvePushComponents } = require("../src/services/push-resolve");
 
 function writeComponent(root, uilib, slug, meta = {}) {
   const dir = path.join(root, uilib, slug);
@@ -16,27 +17,40 @@ function writeComponent(root, uilib, slug, meta = {}) {
   );
 }
 
-test("parsePushComponentSpec supports repo/uilib/slug and uilib/slug", () => {
+test("parseLocalComponentSpec supports repo/uilib/slug and uilib/slug", () => {
   const config = {
     repos: {
       componentsextra: { uilibs: ["web"] },
       local: { uilibs: ["base"] },
     },
   };
-  assert.deepEqual(parsePushComponentSpec("hero", config), {
-    repo: null,
-    uilib: null,
+  assert.deepEqual(parseLocalComponentSpec("hero", config), {
+    kind: "slug",
     slug: "hero",
   });
-  assert.deepEqual(parsePushComponentSpec("web/hero", config), {
-    repo: null,
+  assert.deepEqual(parseLocalComponentSpec("web/hero", config), {
+    kind: "uilib-slug",
     uilib: "web",
     slug: "hero",
   });
-  assert.deepEqual(parsePushComponentSpec("componentsextra/web/hero", config), {
+  assert.deepEqual(parseLocalComponentSpec("componentsextra/web/hero", config), {
+    kind: "triple",
     repo: "componentsextra",
     uilib: "web",
     slug: "hero",
+  });
+});
+
+test("parseLocalComponentSpec rejects repo/uilib scope", () => {
+  const config = {
+    repos: {
+      componentsextra: { uilibs: ["web"] },
+    },
+  };
+  assert.throws(() => parseLocalComponentSpec("componentsextra/web", config), (err) => {
+    assert.equal(err.exitCode, 2);
+    assert.match(err.message, /repo\/uilib scope/);
+    return true;
   });
 });
 

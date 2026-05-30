@@ -2,6 +2,7 @@
 const { parseArgv } = require("./parser");
 const { createReport, printReport } = require("./services/report");
 const { EXIT_CODES } = require("./constants");
+const { printHelp, printCommandHelp } = require("./help");
 const { runInit } = require("./commands/init");
 const { runConnect } = require("./commands/connect");
 const { runVerify } = require("./commands/verify");
@@ -14,37 +15,6 @@ const { runGenerate } = require("./commands/generate");
 const { runGenerateDemo } = require("./commands/generate-demo");
 const { runClone } = require("./commands/clone");
 const { runPush } = require("./commands/push");
-
-function printHelp() {
-  process.stdout.write(
-    [
-      "qui-client",
-      "",
-      "Usage:",
-      "  qui <command> [options]",
-      "",
-      "Commands:",
-      "  init [dir]      Initialize qui.config.json (optional project root; empty dir scaffolds Qwik)",
-      "  connect <url> [repo [...uilibs]] [--all]  Add or update repos in qui.config.json",
-      "  connect --remove <repo> [uilib...]         Remove repo or uilib from qui.config.json",
-      "  verify          Validate config/repo selection",
-      "  diff            Compare installed components with remote source",
-      "  add|list|remove|generate|generate-demo|clone",
-      "  update [<repo>/][<uilib>/][<component>...]",
-      "  update --all [<uilib>|<repo>/<uilib>]",
-      "  push [<repo>/][<uilib>/]<component...>",
-      "",
-      "Global flags:",
-      "  --repo <repo|repo/uilib>",
-      "  --on-error <ask|warn|fail>",
-      "  --route-base /qui-demo   (generate-demo)",
-      "  --base-branch <branch>   (push)",
-      "  --branch <name>          (push)",
-      "  --auto --force --dry-run --yes --json",
-      "",
-    ].join("\n")
-  );
-}
 
 async function runCommand(command, context) {
   switch (command) {
@@ -85,7 +55,17 @@ async function main() {
     const argv = process.argv.slice(2);
     const parsed = parseArgv(argv);
     if (parsed.command === "help") {
-      printHelp();
+      const topic = parsed.positionals[0];
+      if (topic) {
+        printCommandHelp(topic);
+      } else {
+        printHelp();
+      }
+      process.exit(EXIT_CODES.SUCCESS);
+      return;
+    }
+    if (parsed.flags.help) {
+      printCommandHelp(parsed.command);
       process.exit(EXIT_CODES.SUCCESS);
       return;
     }

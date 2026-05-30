@@ -47,7 +47,7 @@ qui init [dir]
 
 - `[dir]` — optional project root (at most one; default `.`). An **empty** directory is scaffolded with `npm create qwik@latest` (empty template) + Tailwind.
 - Writes/updates `qui.config.json`, syncs `templates/app` into the project, and adds `qui-client` as a `file:` devDependency (then runs `npm install`).
-- Config defaults come from flags: `--repo` (default `local-dev`), `--url` (default `file://../`), `--target-path` (default `src/components/ui`), `--components-root`, `--uilibs` (comma-separated), `--connected` (`true`/`false`, default `true`).
+- Config defaults come from flags: `--repo` (default `local-dev`), `--url` (default `file://../`), `--target-path` (default `src/components/ui`). Other repo fields (`componentsRoot`, `uilibs`, `connected`) use schema defaults in the written config.
 - Existing-config conflict is resolved by policy/flags: `--force`/`--yes` overwrite, `--auto` writes a `qui.config-template.json`, `--on-error fail` aborts, `--on-error ask` (default) prompts interactively. `--dry-run` previews without writing.
 
 ### `connect` — add, update, or remove repos in config
@@ -75,12 +75,6 @@ qui connect --remove <repo> [uilib...] [--yes]
 - **`--remove <repo> <uilib…>`** — remove uilib(s) from the repo; if none remain, the repo entry is removed.
 - Prints what will be removed and asks for confirmation unless `--yes` (also `--auto` / `--force`).
 
-**Legacy** (deprecated, still accepted with a warning):
-
-```bash
-qui connect --repo <repo> --url <url> [--repo <repo2> --url <url2> ...]
-```
-
 See [src/commands/connect.md](src/commands/connect.md) for discovery rules and JSON report shape.
 
 ### `verify` — validate config/repo selection
@@ -95,15 +89,15 @@ qui verify [--repo <repo>]
 ### `diff` — compare installed components with remote source
 
 ```bash
-qui diff [<repo>/][<uilib>/]<component> [--repo <repo|repo/uilib>] [--ci] [--json]
+qui diff [[<repo>/][<uilib>/]<component|uilib|repo>...] [--repo <repo|repo/uilib>] [--ci] [--json]
 ```
 
 - Read-only: compares files under `targetPath` with the matching component in the configured source repo (`file://` or git clone from `repos.<name>.url`).
-- **One optional positional** in the form `[<repo>/][<uilib>/]<component>` — e.g. `hero`, `web/hero`, `componentsextra/web/hero`. Multiple component names in one invocation are not supported (exit `2`).
+- Each positional can be a **component** (`hero`, `web/hero`), a **uilib** (`web`), or a **repo** (`componentsextra`). Multiple positionals are supported.
 - With **no positional**, diffs every installed component (optionally filtered by `--repo <repo>` or `--repo <repo>/<uilib>`).
 - Resolves the local install when present; otherwise looks up the component in the remote catalog (reported as `add`). When `<repo>/` or `<uilib>/` is omitted, the source repo is inferred from installed metadata (`registry` / uilib); `--repo` disambiguates a bare slug.
 - Prints a unified diff per changed component (`git diff --no-index`). With `--json`, returns `qui-report/v1` items: `component`, `action` (`add|update|remove|noop`), `files[]` (`path`, `changeType`), and `dependencies`.
-- A disconnected repo is reported as a pending change. `--ci` exits `9` when any component differs from remote (or the repo is disconnected). Mutating flags (`--auto`, `--force`, `--dry-run`, `--yes`) are ignored with a warning.
+- A disconnected repo is reported as a pending change. `--ci` exits `9` when any component differs from remote (or the repo is disconnected).
 
 ### `add` — install components into `targetPath`
 
@@ -113,7 +107,7 @@ qui add --all [<uilib>|<repo>/<uilib>]
 ```
 
 - Without `--all`: at least one component spec is required (`button`, `web/button`, …); `--repo` selects/forces the source repo.
-- With `--all`: install everything in scope — no scope arg = the whole selected repo's `uilibs`; one scope arg `<uilib>` or `<repo>/<uilib>` narrows it. `--all` accepts at most one scope arg.
+- With `--all`: install everything in scope. **No scope arg** prompts interactively for repo and uilib(s). One scope arg `<uilib>` or `<repo>/<uilib>` narrows it. `--all` accepts at most one scope arg. In non-interactive mode, a scope is required.
 - Component dependencies from `meta.generated.json` are pulled in automatically; missing npm dependencies are installed (controlled by `--auto`/`--force` and `--on-error`).
 - `--target-path` overrides the config target. `--dry-run` previews; already-installed components are skipped.
 
@@ -151,11 +145,12 @@ qui update <uilib>/ --all
 ### `remove` — delete installed components
 
 ```bash
-qui remove <component...>
-qui remove --all --repo <repo>
+qui remove <uilib>/<component>...
+qui remove --all <uilib>
 ```
 
-- `--all` removes every installed component and **requires** `--repo`; it cannot be combined with explicit components.
+- Operates on **local installs only** (specs are `uilib/slug` paths under `targetPath`, not remote triples).
+- `--all <uilib>` removes every installed component in that uilib. Prompts for confirmation unless `--yes` (also `--auto` / `--force`).
 - Removing a component that others depend on is blocked unless `--force` (or `--on-error warn`). Unused npm dependencies are uninstalled. `--target-path` / `--dry-run` supported.
 
 ### `generate` — regenerate component metadata
@@ -245,7 +240,7 @@ Notes:
 ### Typical sequence: init → all components for the demo → generate-demo
 
 1. **`qui init`** — `qui.config.json` + syncing templates into the app (see `init` above).
-2. **`qui add --repo <repo> --all`** — adds **all** components from **all** `uilib`s listed for that repo in the config. For a demo with the full `base` and the shell from `qui-demo`, first set `uilibs` to both `base` and `qui-demo`, then run `add --all`. **The `--repo` flag is required** (without it, `--all` will not run). Alternative: add only selected components, e.g. `qui add button input`.
+2. **`qui add --all base`** (and `qui add --all qui-demo` when needed) — adds all components from the selected uilib(s). Without a scope, `add --all` prompts for repo and uilib interactively. Alternative: add only selected components, e.g. `qui add button input`.
 3. **`qui generate-demo`** — e.g. with `--route-base /qui-demo` generates/updates the demo routes for the already-installed components.
 
 To keep things clear, the **canonical CLI commands** remain here; optional npm scripts (e.g. regenerating the example app with a single command) may wrap these steps **only for development in this repository** — see [CONTRIBUTING.md](CONTRIBUTING.md).
@@ -308,16 +303,15 @@ All flags are parsed globally (any command may accept them; each command uses th
 
 - `--on-error <ask|warn|fail>` — conflict/error policy (default `ask`).
 - `--repo <repo|repo/uilib>` — source selector; optional scope hint for `push` when a uilib exists in multiple repos.
-- `--url <url>` — repo URL (`init`; legacy `connect`); supports `file://`, `http(s)://`, `ssh://`, `git@…`, and `…#<ref>`.
+- `--url <url>` — repo URL (`init` only); supports `file://`, `http(s)://`, `ssh://`, `git@…`, and `…#<ref>`.
 - `--target-path <path>` — override the configured `targetPath`.
-- `--components-root <dir>` — on `connect`, directory name used to discover repos (default `components`); legacy `connect --repo --url` writes this value directly.
 - `--search-levels <n>` — `connect` discovery depth from URL root (default `2`).
-- `--uilibs <a,b,c>` — comma-separated uilib list (legacy `connect` / `init`).
-- `--connected <true|false>` — mark a repo connected (default `true`).
+- `--connected <true|false>` — mark a repo connected on `connect` (default `true`).
 - `--base-branch <branch>` / `--branch <name>` / `--title <msg>` — `push` branch/commit/PR title options.
 - `--route-base </segment>` — `generate-demo` route base (default `/qui-demo`).
-- `--components-dir <dir>` / `--routes-dir <dir>` — generator path overrides.
 - `--ref <ref>` — **rejected**; encode the ref in `--url` as `<git-url>#<ref>` instead.
+
+Run `qui help <command>` or `qui <command> --help` for detailed per-command usage.
 
 ### Exit codes
 

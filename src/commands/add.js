@@ -13,6 +13,12 @@ const {
 const { resolvePolicy } = require("../services/policy");
 const { EXIT_CODES } = require("../constants");
 const {
+  isInteractiveTerminal,
+  nonInteractiveAskError,
+  promptSelectMany,
+  promptSelectOne,
+} = require("../services/interactive");
+const {
   collectSeedsForAllScopedRepoUilib,
   collectSeedsForAllScopedUilib,
   expandDependencies,
@@ -20,7 +26,7 @@ const {
   hasRootIndex,
   listSlugsInUilibDir,
   notFoundError,
-  orderedUilibsForRepoWideAll,
+  orderedRepoNames,
   parseAllScopeSpec,
   resolveSeedHitsFromPositionals,
   toComponentKey,
@@ -61,6 +67,69 @@ function formatRepoSelector(flagsRepo, seedHits) {
   return repos.join("|");
 }
 
+async function collectSeedsForInteractiveAll(cwd, config) {
+  const repoNames = orderedRepoNames(config);
+  if (repoNames.length === 0) {
+    const err = new Error("No repos configured in qui.config.json.");
+    err.exitCode = EXIT_CODES.CONFIG_SCHEMA_ERROR;
+    throw err;
+  }
+
+  let repoName;
+  if (repoNames.length === 1) {
+    repoName = repoNames[0];
+  } else if (isInteractiveTerminal()) {
+    repoName = await promptSelectOne(
+      "Select repo:",
+      repoNames.map((name) => ({
+        label: `${name} → uilibs: ${config.repos[name].uilibs.join(", ")}`,
+        value: name,
+      }))
+    );
+  } else {
+    throw nonInteractiveAskError(
+      "add --all requires a scope (<uilib> or <repo>/<uilib>) in non-interactive mode."
+    );
+  }
+
+  const uilibs = config.repos[repoName].uilibs || [];
+  if (uilibs.length === 0) {
+    const err = new Error(`Repo '${repoName}' has no configured uilibs.`);
+    err.exitCode = EXIT_CODES.CONFIG_SCHEMA_ERROR;
+    throw err;
+  }
+
+  let selectedUilibs;
+  if (uilibs.length === 1) {
+    selectedUilibs = [...uilibs];
+  } else if (isInteractiveTerminal()) {
+    selectedUilibs = await promptSelectMany(
+      `Select uilibs for ${repoName}:`,
+      uilibs.map((name) => ({ label: name, value: name }))
+    );
+  } else {
+    throw nonInteractiveAskError(
+      "add --all requires a scope (<uilib> or <repo>/<uilib>) in non-interactive mode."
+    );
+  }
+
+  const source = resolveSourceContext(cwd, config, repoName);
+  const workspace = prepareSourceWorkspace(source);
+  try {
+    const componentsRootDir = path.join(workspace.rootPath, source.repo.componentsRoot);
+    return selectedUilibs.flatMap((uilib) =>
+      listSlugsInUilibDir(componentsRootDir, uilib).map((slug) => ({
+        repoName,
+        uilib,
+        slug,
+        seedKey: toComponentKey(uilib, slug),
+      }))
+    );
+  } finally {
+    workspace.cleanup();
+  }
+}
+
 async function runAdd(context) {
   const { cwd, flags, positionals } = context;
   const { config } = readConfig(cwd);
@@ -86,22 +155,7 @@ async function runAdd(context) {
       throw notFoundError(positionals[0]);
     }
   } else if (flags.all) {
-    const source = resolveSourceContext(cwd, config, flags.repo);
-    const workspace = prepareSourceWorkspace(source);
-    try {
-      const componentsRootDir = path.join(workspace.rootPath, source.repo.componentsRoot);
-      const uilibs = orderedUilibsForRepoWideAll(flags.repo, source);
-      seedHits = uilibs.flatMap((uilib) =>
-        listSlugsInUilibDir(componentsRootDir, uilib).map((slug) => ({
-          repoName: source.repoName,
-          uilib,
-          slug,
-          seedKey: toComponentKey(uilib, slug),
-        }))
-      );
-    } finally {
-      workspace.cleanup();
-    }
+    seedHits = await collectSeedsForInteractiveAll(cwd, config);
     if (seedHits.length === 0) {
       const err = new Error("add --all found no components in the selected scope.");
       err.exitCode = EXIT_CODES.SOURCE_GIT_NETWORK_ERROR;
