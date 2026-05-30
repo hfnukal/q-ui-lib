@@ -5,7 +5,7 @@
  * @example Úvodní blok
  * Nadpis H1, podnadpis, obrázek a hlavní CTA.
  * ```tsx
- * import { WebHero } from "~/components/ui/hero";
+ * import { WebHero } from "~/components/ui/web/hero";
  *
  * <WebHero
  *   eyebrow="Vítejte"
