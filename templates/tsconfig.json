@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/components/ui/base/*": ["../components/base/*"],
+      "~/components/ui/qui-demo/*": ["../components/qui-demo/*"],
+      "~/*": ["./demo/src/*", "./app/src/*"]
+    }
+  },
+  "include": [
+    "demo/**/*.ts",
+    "demo/**/*.tsx",
+    "app/**/*.ts",
+    "app/**/*.tsx"
+  ]
+}

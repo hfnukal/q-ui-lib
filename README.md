@@ -24,19 +24,135 @@ npm run qui -- <command> [options]
 
 ## CLI (`qui`)
 
-Current commands:
+General shape:
 
-- `init` - creates/updates `qui.config.json` and syncs the app template files.
-- `connect` - adds or edits repositories in `qui.config.json`.
-- `verify` - verifies the configuration and the connection state of the selected repository.
-- `diff` - currently a minimal diff report (migration status).
-- `add` - adds components into `targetPath` and pulls in dependencies (including npm deps).
-- `update` - overwrites installed components with a newer source.
-- `remove` - removes components and, where applicable, drops unused npm dependencies.
-- `generate` - regenerates `meta.generated.json` for components in `targetPath` (based on `index.tsx`/`index.ts`).
-- `generate-demo` - syncs the demo template files and generates/updates demo routes in `src/routes/<route-base>/components/...` for the installed components.
-- `clone` - clones a locally installed component under a new name.
-- `push` - pushes modified components from the app back to the remote Git repository.
+```bash
+qui <command> [positionals...] [--flags]
+```
+
+- The first non-flag token is the **command**; the rest are **positionals** (e.g. component specs).
+- Flags can appear in any order. Boolean flags take no value (`--dry-run`); value flags take the next token (`--repo acme`).
+- An unknown `--flag`, a value flag with a missing value, or an unknown command exits with code `2` (usage error).
+- `--help`, `-h`, `help`, or no command prints usage and exits `0`.
+- `--ref` is parsed but **rejected** at runtime — encode a ref in the URL instead: `--url <git-url>#<ref>`.
+- Every command except `init` reads `qui.config.json` from the **current working directory** (`init` creates it).
+
+A **component spec** is either a bare slug (`button`) or a `uilib/slug` pair (`base/button`); see [Repo vs ui-lib + component lookup](#repo-vs-ui-lib--component-lookup).
+
+### `init` — scaffold/initialize a project
+
+```bash
+qui init [dir]
+```
+
+- `[dir]` — optional project root (at most one; default `.`). An **empty** directory is scaffolded with `npm create qwik@latest` (empty template) + Tailwind.
+- Writes/updates `qui.config.json`, syncs `templates/app` into the project, and adds `qui-client` as a `file:` devDependency (then runs `npm install`).
+- Config defaults come from flags: `--repo` (default `local-dev`), `--url` (default `file://../`), `--target-path` (default `src/components/ui`), `--components-root`, `--uilibs` (comma-separated), `--connected` (`true`/`false`, default `true`).
+- Existing-config conflict is resolved by policy/flags: `--force`/`--yes` overwrite, `--auto` writes a `qui.config-template.json`, `--on-error fail` aborts, `--on-error ask` (default) prompts interactively. `--dry-run` previews without writing.
+
+### `connect` — add/update repos in config
+
+```bash
+qui connect --repo <repo> --url <url> [--repo <repo2> --url <url2> ...]
+```
+
+- Requires **strict pairing**: each `--repo` must be immediately followed by `--url` (at least one pair). A `--url` without a preceding `--repo` is an error.
+- Applies to each repo: `--components-root` (default `components`), `--uilibs` (comma-separated, default `base`), `--connected` (`true`/`false`, default `true`).
+- Overwriting an existing repo follows `--on-error` (`ask` default / `warn` / `fail`); `--force`/`--auto`/`--yes` skip the prompt. `--dry-run` leaves the config untouched.
+
+### `verify` — validate config/repo selection
+
+```bash
+qui verify [--repo <repo>]
+```
+
+- Reports whether the selected repo (or the first repo) is configured and `connected`.
+- `--ci` turns a not-connected repo into a non-zero exit (`9`, verify/diff mismatch).
+
+### `diff` — minimal migration diff report
+
+```bash
+qui diff [--repo <repo>] [--ci]
+```
+
+- Currently a minimal report (config-only verification). A disconnected repo is reported as a pending change; with `--ci` that yields exit `9`.
+
+### `add` — install components into `targetPath`
+
+```bash
+qui add <component...>
+qui add --all [<uilib>|<repo>/<uilib>]
+```
+
+- Without `--all`: at least one component spec is required (`button`, `web/button`, …); `--repo` selects/forces the source repo.
+- With `--all`: install everything in scope — no scope arg = the whole selected repo's `uilibs`; one scope arg `<uilib>` or `<repo>/<uilib>` narrows it. `--all` accepts at most one scope arg.
+- Component dependencies from `meta.generated.json` are pulled in automatically; missing npm dependencies are installed (controlled by `--auto`/`--force` and `--on-error`).
+- `--target-path` overrides the config target. `--dry-run` previews; already-installed components are skipped.
+
+### `list` — resolve/preview components without installing
+
+```bash
+qui list <component...>
+qui list --all [<uilib>|<repo>/<uilib>]
+```
+
+- Same selection rules as `add` (including dependency expansion), but it only prints the resolved fully-qualified keys (`<repo>/<uilib>/<slug>`) — nothing is written.
+
+### `update` — overwrite installed components from source
+
+```bash
+qui update <component...>
+qui update --all
+```
+
+- `--all` re-installs every installed component; it **cannot** be combined with explicit components.
+- Without `--repo`, `--all` infers each component's source repo from its installed metadata. `--repo`, `--target-path`, and `--dry-run` behave as in `add`.
+
+### `remove` — delete installed components
+
+```bash
+qui remove <component...>
+qui remove --all --repo <repo>
+```
+
+- `--all` removes every installed component and **requires** `--repo`; it cannot be combined with explicit components.
+- Removing a component that others depend on is blocked unless `--force` (or `--on-error warn`). Unused npm dependencies are uninstalled. `--target-path` / `--dry-run` supported.
+
+### `generate` — regenerate component metadata
+
+```bash
+qui generate
+```
+
+- Regenerates `meta.generated.json` for every component under `targetPath` (from `index.tsx`/`index.ts`) and ensures `@qwik-ui/headless` is listed when imported. `--target-path` / `--dry-run` supported.
+
+### `generate-demo` — build demo routes
+
+```bash
+qui generate-demo [<slug>...]
+```
+
+- Syncs `templates/demo`, runs `add --all qui-demo` and `add --all base`, then generates demo routes under `src/routes/<route-base>/components/...`.
+- `--route-base` sets the route segment (default `/qui-demo`). Optional positional slugs limit which components get routes. `--target-path` / `--dry-run` supported.
+
+### `clone` — copy an installed component under a new name
+
+```bash
+qui clone <source-component> <new-component>
+```
+
+- Requires exactly two positionals. The source must already be installed in `targetPath`. Copies the directory, rewrites references/`@component`, and records clone provenance in `meta.generated.json`.
+- `--force` overwrites an existing target; `--repo` / `--target-path` / `--dry-run` supported.
+
+### `push` — publish modified components back to a remote
+
+```bash
+qui push --repo <repo>/<uilib> <component...>
+```
+
+- `--repo` is **required** and must be `<repo>/<uilib>` (exactly one slash); at least one component is required.
+- The repo URL must be a real git remote (`https`/`ssh`/`git@`) — `file://` is rejected. Component metadata is validated against the configured repo/url.
+- `--base-branch <branch>` and `--branch <name>` control the push branch; `--title <msg>` sets the commit message (default `qui push: <components>`). `--dry-run` previews the workflow.
 
 ## `qui.config.json` (schema `qui-config/v1`)
 
@@ -114,10 +230,35 @@ npx qui diff --repo acme --ci
 
 ## Global flags
 
-Global flags supported by the current parser:
+All flags are parsed globally (any command may accept them; each command uses the subset relevant to it).
 
-- Bool: `--auto`, `--force`, `--dry-run`, `--yes`, `--json`, `--all`, `--ci`
-- Value: `--on-error`, `--repo`, `--url`, `--target-path`, `--components-root`, `--uilibs`, `--connected`, `--base-branch`, `--title`, `--route-base`, `--branch`, `--routes-dir`, `--components-dir`
+**Boolean** (no value):
+
+- `--auto` — non-interactive "auto" policy (e.g. auto-install npm deps, write `*-template` on config conflict).
+- `--force` — force/overwrite; sets policy to non-interactive `warn`, forces npm install/overwrite.
+- `--yes` — assume "yes" for confirmations (overwrite on conflict).
+- `--dry-run` — preview only; no files/config/git changes are written.
+- `--all` — operate on the whole scope (see `add`/`list`/`update`/`remove`).
+- `--ci` — turn a `verify`/`diff` mismatch into a non-zero exit code.
+- `--json` — emit a single JSON report envelope on stdout.
+
+**Value** (consume the next token):
+
+- `--on-error <ask|warn|fail>` — conflict/error policy (default `ask`).
+- `--repo <repo|repo/uilib>` — source selector (`push` requires `<repo>/<uilib>`).
+- `--url <url>` — repo URL (`init`/`connect`); supports `file://`, `http(s)://`, `ssh://`, `git@…`, and `…#<ref>`.
+- `--target-path <path>` — override the configured `targetPath`.
+- `--components-root <dir>` — repo's components root (default `components`).
+- `--uilibs <a,b,c>` — comma-separated uilib list.
+- `--connected <true|false>` — mark a repo connected (default `true`).
+- `--base-branch <branch>` / `--branch <name>` / `--title <msg>` — `push` branch/commit options.
+- `--route-base </segment>` — `generate-demo` route base (default `/qui-demo`).
+- `--components-dir <dir>` / `--routes-dir <dir>` — generator path overrides.
+- `--ref <ref>` — **rejected**; encode the ref in `--url` as `<git-url>#<ref>` instead.
+
+### Exit codes
+
+`0` success · `1` unexpected runtime error · `2` usage/parser error · `3` config/schema error · `4` source/git/network error · `5` policy fail-stop · `6` user rejected plan · `7` scope safety violation · `8` dependency install error · `9` verify/diff mismatch.
 
 ## Scripts in this repository
 
