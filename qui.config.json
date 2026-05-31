@@ -2,11 +2,12 @@
   "configSchemaVersion": "qui-config/v1",
   "targetPath": "components",
   "repos": {
-    "local": {
-      "url": "file://./",
+    "quibase": {
+      "url": "https://github.com/hfnukal/q-ui-lib.git",
       "componentsRoot": "components",
       "uilibs": [
-        "base", "qui-demo"
+        "base",
+        "qui-demo"
       ],
       "connected": true
     }

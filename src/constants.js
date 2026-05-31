@@ -14,9 +14,13 @@ const EXIT_CODES = Object.freeze({
 const REPORT_SCHEMA_VERSION = "qui-report/v1";
 const CONFIG_SCHEMA_VERSION = "qui-config/v1";
 const DEFAULT_TARGET_PATH = "src/components/ui";
+const DEFAULT_REPO = "quibase";
+const DEFAULT_REPO_URL = "https://github.com/hfnukal/q-ui-lib.git";
 
 module.exports = {
   CONFIG_SCHEMA_VERSION,
+  DEFAULT_REPO,
+  DEFAULT_REPO_URL,
   DEFAULT_TARGET_PATH,
   EXIT_CODES,
   REPORT_SCHEMA_VERSION,

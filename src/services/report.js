@@ -1,4 +1,9 @@
+const fs = require("node:fs");
 const { REPORT_SCHEMA_VERSION } = require("../constants");
+
+function writeStdout(text) {
+  fs.writeSync(process.stdout.fd, text);
+}
 
 function createReport({
   command,
@@ -30,21 +35,21 @@ function createReport({
 
 function printReport(report, jsonMode) {
   if (jsonMode) {
-    process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+    writeStdout(`${JSON.stringify(report, null, 2)}\n`);
     return;
   }
 
   const status = report.ok ? "OK" : "FAIL";
-  process.stdout.write(`[${status}] ${report.command} (exit ${report.exitCode})\n`);
+  writeStdout(`[${status}] ${report.command} (exit ${report.exitCode})\n`);
   if (report.warnings.length > 0) {
-    process.stdout.write(`Warnings: ${report.warnings.join(" | ")}\n`);
+    writeStdout(`Warnings: ${report.warnings.join(" | ")}\n`);
   }
   if (report.errors.length > 0) {
-    process.stdout.write(`Errors: ${report.errors.join(" | ")}\n`);
+    writeStdout(`Errors: ${report.errors.join(" | ")}\n`);
   }
   const footer = report.footer && report.footer.length > 0 ? report.footer : [];
   for (const line of footer) {
-    process.stdout.write(`${line}\n`);
+    writeStdout(`${line}\n`);
   }
 }
 

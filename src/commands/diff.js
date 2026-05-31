@@ -232,7 +232,7 @@ function groupTargetsByRepoSelector(targets) {
   return map;
 }
 
-function compareTargetWithRemote(target, componentsRootDir, orderedUilibs) {
+function compareTargetWithRemote(target, componentsRootDir, orderedUilibs, includeFooter = true) {
   const remote = resolveComponentSpec(componentsRootDir, orderedUilibs, target.key, target.uilib);
   const remoteDir = remote?.dir || null;
   const remoteMeta = remoteDir ? parseMeta(remoteDir) : null;
@@ -247,11 +247,13 @@ function compareTargetWithRemote(target, componentsRootDir, orderedUilibs) {
       files: tree.files,
       dependencies: [],
       details: "Component exists locally but was not found in the configured remote source.",
-      footerLines: renderComponentDiff(
-        target.localDir,
-        path.join(componentsRootDir, ".qui-missing-remote"),
-        target.key
-      ),
+      footerLines: includeFooter
+        ? renderComponentDiff(
+            target.localDir,
+            path.join(componentsRootDir, ".qui-missing-remote"),
+            target.key
+          )
+        : [],
     };
   }
 
@@ -266,7 +268,9 @@ function compareTargetWithRemote(target, componentsRootDir, orderedUilibs) {
   });
   const dependencies = formatDependencyChanges(dependencyDiff);
   const footerLines =
-    action === "noop" ? [] : renderComponentDiff(target.localDir, remoteDir, target.key);
+    includeFooter && action !== "noop"
+      ? renderComponentDiff(target.localDir, remoteDir, target.key)
+      : [];
 
   return {
     component: target.key,
@@ -283,6 +287,7 @@ function compareTargetWithRemote(target, componentsRootDir, orderedUilibs) {
 
 async function runDiff(context) {
   const { cwd, flags, positionals } = context;
+  const jsonMode = Boolean(flags.json);
   const { config } = readConfig(cwd);
   const resolved = resolveRepo(config, flags.repo);
   const disconnected = resolved.repo.connected === false;
@@ -336,7 +341,12 @@ async function runDiff(context) {
       const sourceUilibs = listSubdirs(componentsRootDir);
       const orderedUilibs = [...new Set([...installedUilibs, ...configuredUilibs, ...sourceUilibs])];
       for (const target of repoTargets) {
-        const item = compareTargetWithRemote(target, componentsRootDir, orderedUilibs);
+        const item = compareTargetWithRemote(
+          target,
+          componentsRootDir,
+          orderedUilibs,
+          !jsonMode
+        );
         items.push(item);
         footer.push(...item.footerLines);
         if (item.footerLines.length > 0) footer.push("");

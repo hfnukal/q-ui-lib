@@ -12,7 +12,7 @@ const { createReport } = require("../services/report");
 const { resolvePolicy } = require("../services/policy");
 const { getQuiClientRoot } = require("../services/runtime-paths");
 const { syncTemplateToProject } = require("../services/template-sync");
-const { EXIT_CODES } = require("../constants");
+const { DEFAULT_REPO, DEFAULT_REPO_URL, DEFAULT_TARGET_PATH, EXIT_CODES } = require("../constants");
 const {
   filesAreEquivalentForReplace,
   isInteractiveTerminal,
@@ -439,9 +439,9 @@ async function runInit(context) {
     }
   }
 
-  const repo = flags.repo || "local-dev";
-  const url = flags.url || "file://../";
-  const targetPath = flags.targetPath || "src/components/ui";
+  const repo = flags.repo || DEFAULT_REPO;
+  const url = flags.url || DEFAULT_REPO_URL;
+  const targetPath = flags.targetPath || DEFAULT_TARGET_PATH;
   const policy = resolvePolicy(initFlags, readConfigPolicyOnly(configPath));
 
   const config = createDefaultConfig(repo, url, {

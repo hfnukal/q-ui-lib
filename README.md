@@ -49,7 +49,7 @@ qui init [dir]
 
 - `[dir]` — optional project root (at most one; default `.`). An **empty** directory is scaffolded with `npm create qwik@latest` (empty template) + Tailwind.
 - Writes/updates `qui.config.json`, syncs `templates/app` into the project, and adds `qui-client` as a `file:` devDependency (then runs `npm install`).
-- Config defaults come from flags: `--repo` (default `local-dev`), `--url` (default `file://../`), `--target-path` (default `src/components/ui`). Other repo fields (`componentsRoot`, `uilibs`, `connected`) use schema defaults in the written config.
+- Config defaults come from flags: `--repo` (default `quibase`), `--url` (default `https://github.com/hfnukal/q-ui-lib.git`), `--target-path` (default `src/components/ui`). Other repo fields (`componentsRoot`, `uilibs`, `connected`) use schema defaults in the written config.
 - Existing-config conflict is resolved by policy/flags: `--force`/`--yes` overwrite, `--auto` writes a `qui.config-template.json`, `--on-error fail` aborts, `--on-error ask` (default) prompts interactively. `--dry-run` previews without writing.
 
 ### `connect` — add, update, or remove repos in config
@@ -205,8 +205,8 @@ The CLI works against the configuration in the app root:
   "configSchemaVersion": "qui-config/v1",
   "targetPath": "src/components/ui",
   "repos": {
-    "local-dev": {
-      "url": "file://../",
+    "quibase": {
+      "url": "https://github.com/hfnukal/q-ui-lib.git",
       "componentsRoot": "components",
       "uilibs": ["base"],
       "connected": true
@@ -290,7 +290,10 @@ Root **`vercel.json`** sets `buildCommand` to `npm run demo:build` and `outputDi
 ## Most common examples
 
 ```bash
-# 1) Initialize config
+# 1) Initialize config (defaults: quibase → https://github.com/hfnukal/q-ui-lib.git)
+npx qui init
+
+# Monorepo dev: point at local clone instead
 npx qui init --repo local-dev --url file://../ --target-path src/components/ui
 
 # 2) Connect a source repo (discover + pick uilibs)
