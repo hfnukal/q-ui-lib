@@ -7,7 +7,9 @@
   "dependencies": [
     "base/separator"
   ],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@qwik-ui/headless"
+  ],
   "apiTree": {
     "Root": {
       "children": {

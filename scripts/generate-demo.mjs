@@ -19,6 +19,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { spawnSync } from "child_process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
@@ -822,6 +823,16 @@ function main() {
   console.log(
     `generate-demo: written ${written}, skipped (no JSDoc) ${skipped}, removed stale ${removed}`,
   );
+
+  const registryScript = path.join(repoRoot, "scripts", "generate-meta-registry.mjs");
+  const registryResult = spawnSync(
+    process.execPath,
+    [registryScript, "--target", appRoot, "--components-dir", componentsDir],
+    { stdio: "inherit" },
+  );
+  if (registryResult.status !== 0) {
+    process.exit(registryResult.status ?? 1);
+  }
 }
 
 main();

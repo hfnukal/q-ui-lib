@@ -1,11 +1,9 @@
 import { component$, Resource, useResource$ } from "@builder.io/qwik";
 import { server$ } from "@builder.io/qwik-city";
-import type { MetaGenerated } from "./ui-component-introspect";
+import type { MetaGenerated } from "./meta-generated.types";
 
 const loadMetaGenerated = server$(async (relativePath: string) => {
-  const { readMetaGeneratedForUiIndex } = await import(
-    "./ui-component-introspect"
-  );
+  const { readMetaGeneratedForUiIndex } = await import("./read-meta-generated");
   return readMetaGeneratedForUiIndex(relativePath);
 });
 
@@ -294,7 +292,6 @@ export const ComponentPropsTable = component$<ComponentPropsTableProps>(
   (props) => {
     const resource = useResource$(async ({ track }) => {
       track(() => props.filePath);
-      console.log("props.filePath", props.filePath, 'cwd', import.meta.dirname);
       return loadMetaGenerated(props.filePath);
     });
 

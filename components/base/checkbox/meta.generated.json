@@ -7,7 +7,9 @@
   "dependencies": [
     "base/label"
   ],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@qwik-ui/headless"
+  ],
   "apiTree": {
     "Root": {
       "slot": true,

@@ -8,6 +8,7 @@ const { getQuiClientRoot } = require("../services/runtime-paths");
 const { EXIT_CODES } = require("../constants");
 
 const HEADLESS_PKG = "@qwik-ui/headless";
+const TS_MORPH_PKG = "ts-morph@^27.0.2";
 
 /** @param {string} componentDir */
 function resolveComponentIndexPath(componentDir) {
@@ -61,6 +62,68 @@ function ensureHeadlessNpmDependencyInMeta(componentDir) {
   deps.push(HEADLESS_PKG);
   deps.sort();
   meta.npmDependencies = deps;
+
+  fs.writeFileSync(metaPath, `${JSON.stringify(meta, null, 2)}\n`, "utf8");
+}
+
+/** @param {string} componentDir */
+function componentReferencesTsMorph(componentDir) {
+  let entries;
+  try {
+    entries = fs.readdirSync(componentDir, { withFileTypes: true });
+  } catch {
+    return false;
+  }
+  for (const entry of entries) {
+    if (!entry.isFile()) continue;
+    if (entry.name === "ui-component-introspect.ts") continue;
+    if (!/\.tsx?$/.test(entry.name)) continue;
+    const filePath = path.join(componentDir, entry.name);
+    let text;
+    try {
+      text = fs.readFileSync(filePath, "utf8");
+    } catch {
+      continue;
+    }
+    if (
+      /from\s+["']ts-morph(?:\/[^"']*)?["']/.test(text) ||
+      /import\s*\(\s*["']ts-morph(?:\/[^"']*)?["']\s*\)/.test(text)
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Ensures meta.generated.json pins ts-morph when auxiliary component files import it.
+ * generate-meta may list bare "ts-morph"; consumer apps need v27+ (not vercel's transitive v12).
+ * @param {string} componentDir
+ */
+function ensureTsMorphNpmDependencyInMeta(componentDir) {
+  if (!componentReferencesTsMorph(componentDir)) return;
+
+  const metaPath = path.join(componentDir, "meta.generated.json");
+  if (!fs.existsSync(metaPath)) return;
+
+  let meta;
+  try {
+    meta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
+  } catch {
+    return;
+  }
+
+  const deps = Array.isArray(meta.npmDependencies) ? [...meta.npmDependencies] : [];
+  const hasTsMorph = deps.some((d) => d === "ts-morph" || d.startsWith("ts-morph@"));
+  if (hasTsMorph) {
+    meta.npmDependencies = deps
+      .map((d) => (d === "ts-morph" ? TS_MORPH_PKG : d))
+      .sort();
+  } else {
+    deps.push(TS_MORPH_PKG);
+    deps.sort();
+    meta.npmDependencies = deps;
+  }
 
   fs.writeFileSync(metaPath, `${JSON.stringify(meta, null, 2)}\n`, "utf8");
 }
@@ -150,6 +213,7 @@ async function runGenerate(context) {
   if (!flags.dryRun) {
     for (const dir of findComponentDirsForReport(componentsAbs)) {
       ensureHeadlessNpmDependencyInMeta(dir);
+      ensureTsMorphNpmDependencyInMeta(dir);
     }
   }
 

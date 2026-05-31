@@ -4,9 +4,7 @@
   "version": "0.0.0",
   "kind": "primitive",
   "registry": "qui-demo",
-  "dependencies": [
-    "qui-demo/demo-component-props"
-  ],
+  "dependencies": [],
   "npmDependencies": [],
   "apiTree": {
     "params": {

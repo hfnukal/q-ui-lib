@@ -9,6 +9,9 @@ import {
   type SourceFile,
   type TypeNode,
 } from "ts-morph";
+import type { MetaGenerated } from "./meta-generated.types";
+
+export type { MetaGenerated } from "./meta-generated.types";
 
 export type UiPropInfo = {
   name: string;
@@ -387,21 +390,9 @@ export function scanSingleUiFile(relativePath: string): UiFileScan | null {
   };
 }
 
-/** Contents of `meta.generated.json` next to `index.tsx` (see `npm run generate:meta`). */
-export type MetaGenerated = {
-  name: string;
-  title: string;
-  version: string;
-  kind: string;
-  registry?: string;
-  dependencies?: string[];
-  npmDependencies?: string[];
-  apiTree: Record<string, unknown>;
-};
-
 /**
- * Loads `meta.generated.json` in the same folder as the component's `index.tsx` in the demo.
- * `relativePath` in the same form as in {@link scanSingleUiFile} (e.g. `src/components/ui/button/index.tsx`).
+ * @deprecated Use {@link readMetaGeneratedForUiIndex} from `./read-meta-generated` (Edge-safe registry).
+ * Dev/CLI ts-morph introspection below is not Edge-compatible.
  */
 export function readMetaGeneratedForUiIndex(
   relativePath: string,

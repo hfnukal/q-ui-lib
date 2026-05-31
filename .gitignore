@@ -268,3 +268,4 @@ demo/src/routes/qui-demo/components/qui-test-complex/complex-dashboard/index.tsx
 demo/src/routes/qui-demo/components/qui-test-html-tags/html-tags-mix/index.tsx
 demo/src/routes/qui-demo/components/qui-test-layout/layout-shell/index.tsx
 demo/src/routes/qui-demo/components/qui-test-simple/simple-banner/index.tsx
+.vercel

@@ -5,6 +5,8 @@
   "kind": "primitive",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@qwik-ui/headless"
+  ],
   "apiTree": {}
 }

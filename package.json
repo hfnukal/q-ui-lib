@@ -42,8 +42,12 @@
     "playwright:install": "playwright install",
     "generate-meta": "node ./scripts/generate-meta.mjs --app-root . --components-dir ./components",
     "qui": "node ./bin/qui.js",
-    "qui:createdemo": "node ./bin/qui.js init demo && (cd demo && node ../bin/qui.js add --all base --force && node ../bin/qui.js generate-demo) && echo \"\nDemo created. Run:\\ncd demo\\nnpm run dev\"",
-    "qui:addtest": "cd demo && node ../bin/qui.js connect --repo componenttest --url file://../componenttest --uilibs qui-test-simple,qui-test-layout,qui-test-complex,qui-test-html-tags && node ../bin/qui.js add --repo componenttest --all qui-test-simple && node ../bin/qui.js add --repo componenttest --all qui-test-layout && node ../bin/qui.js add --repo componenttest --all qui-test-complex && node ../bin/qui.js add --repo componenttest --all qui-test-html-tags"
+    "demo:prepare": "node ./bin/qui.js init demo && (cd demo && node ../bin/qui.js add --all base --force --auto) && npm run qui:addtest && (cd demo && node ../bin/qui.js generate-demo)",
+    "demo:build": "npm run demo:prepare && cd demo && npx qwik add vercel-edge --skipConfirmation true && node ../scripts/patch-demo-vercel-json.mjs && node ../scripts/generate-meta-registry.mjs && npm install && npm run build",
+    "demo:run": "node ./scripts/patch-demo-vercel-json.mjs && npx vercel dev --yes --listen 3000 demo",
+    "demo:deploy": "npm run demo:build && node ./scripts/sync-demo-vercel-output.mjs && npx vercel deploy --prebuilt --prod",
+    "qui:createdemo": "npm run demo:prepare && echo \"\nDemo created. Run:\\ncd demo\\nnpm run dev\"",
+    "qui:addtest": "cd demo && node ../bin/qui.js connect file://../componenttest componenttest --all --force --auto && node ../bin/qui.js add --repo componenttest --all qui-test-simple --force --auto && node ../bin/qui.js add --repo componenttest --all qui-test-layout --force --auto && node ../bin/qui.js add --repo componenttest --all qui-test-complex --force --auto && node ../bin/qui.js add --repo componenttest --all qui-test-html-tags --force --auto"
   },
   "dependencies": {
     "ts-morph": "^27.0.2"

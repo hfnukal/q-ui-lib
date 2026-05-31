@@ -5,7 +5,9 @@
   "kind": "compound",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [],
+  "npmDependencies": [
+    "@qwik-ui/headless"
+  ],
   "apiTree": {
     "Root": {
       "children": {

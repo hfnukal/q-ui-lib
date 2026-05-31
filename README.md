@@ -2,6 +2,8 @@
 
 **The root of this repository is the npm package `qui-client`:** the **`qui`** CLI plus the canonical Qwik UI component sources in **`components/`**. Components are pulled into an app as **source code** (copied into `targetPath`); synchronization happens from Git repositories according to `qui.config.json`.
 
+**Live demo:** [q-ui-lib.vercel.app/qui-demo](https://q-ui-lib.vercel.app/qui-demo) — browse `base` and test uilibs, theme editor, and component examples (deployed from this repo).
+
 ## Quick start
 
 ```bash
@@ -232,6 +234,8 @@ Notes:
 
 ## `base`, `qui-demo` and the generated demo app
 
+**Live demo:** [https://q-ui-lib.vercel.app/qui-demo](https://q-ui-lib.vercel.app/qui-demo)
+
 - **`base`** is the foundational `uilib` (shadcn-style components) — other sets (`qui-demo`, your own `uilib`) are expected to build on it. For a **full reference demo** it therefore makes sense to have the **entire `base`** in the target app (not just a subset).
 - **`qui-demo`** contains supporting components for the generated demo (layout, example index, etc.) and **depends on `base`**. In a given repo's `qui.config.json`, both namespaces therefore belong in `repos.<name>.uilibs`, e.g. `["base", "qui-demo"]`.
 - **`templates/demo`** (in this repo, next to the package root) is not a "finished demo app" but the **inputs for the CLI** — `generate-demo` assembles files in the target Qwik app from them.
@@ -243,7 +247,45 @@ Notes:
 2. **`qui add --all base`** (and `qui add --all qui-demo` when needed) — adds all components from the selected uilib(s). Without a scope, `add --all` prompts for repo and uilib interactively. Alternative: add only selected components, e.g. `qui add button input`.
 3. **`qui generate-demo`** — e.g. with `--route-base /qui-demo` generates/updates the demo routes for the already-installed components.
 
-To keep things clear, the **canonical CLI commands** remain here; optional npm scripts (e.g. regenerating the example app with a single command) may wrap these steps **only for development in this repository** — see [CONTRIBUTING.md](CONTRIBUTING.md).
+To keep things clear, the **canonical CLI commands** remain here; optional npm scripts wrap these steps **only for development in this repository** (see [Scripts in this repository](#scripts-in-this-repository)).
+
+### `demo/` is generated, not committed
+
+The **`demo/`** Qwik app is a **local build artifact**. It is listed in `.gitignore` and is **not** part of the published git tree. Sources of truth are **`components/`**, **`templates/app`**, and **`templates/demo`**.
+
+Regenerate it after pulling changes or when you need a fresh showcase:
+
+```bash
+npm run demo:prepare
+# or the alias:
+npm run qui:createdemo
+cd demo && npm run dev
+```
+
+Browse component examples at [q-ui-lib.vercel.app/qui-demo](https://q-ui-lib.vercel.app/qui-demo) or locally at `/qui-demo/components/base/<slug>/` (default route base).
+
+### Publish the demo to Vercel (manual, developer machine)
+
+Deployment is **intentionally manual** — there is no automatic deploy on push to GitHub. A maintainer builds and publishes from a clone of this repo.
+
+**Prerequisites:** [Vercel CLI](https://vercel.com/docs/cli) installed and logged in (`vercel login`). Link the project once from the repo root (`vercel link`) if you have not already.
+
+| Script | Purpose |
+|--------|---------|
+| `npm run demo:prepare` | `qui init demo` + `add --all base` + `qui:addtest` + `generate-demo` |
+| `npm run demo:build` | Prepare demo, add the Vercel Edge adapter (`qwik add vercel-edge`), install deps, run `qwik build` |
+| `npm run demo:run` | Start [Vercel Dev](https://vercel.com/docs/cli/dev) for the `demo/` app (default http://localhost:3000) |
+| `npm run demo:deploy` | `demo:build`, sync output to `.vercel/output`, then `vercel deploy --prebuilt --prod` |
+
+```bash
+# From the repository root (after npm install)
+npm run demo:run    # local Vercel Dev (http://localhost:3000)
+npm run demo:deploy # build + publish to production
+```
+
+Root **`vercel.json`** sets `buildCommand` to `npm run demo:build` and `outputDirectory` to `demo/.vercel/output` (Qwik Vercel Edge adapter output). The build reads components via `file://../` in generated `qui.config.json` and includes **`componenttest/`** uilibs via `qui:addtest`, so deploy from a **full monorepo clone**, not from the npm tarball alone.
+
+> **Note:** Fix any `demo/` build blockers listed in [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md) before deploying.
 
 ## Most common examples
 
@@ -323,7 +365,12 @@ In the root `package.json`:
 
 - `npm run qui -- ...` — runs the `qui` CLI (`node ./bin/qui.js`).
 - `npm test` — CLI tests (`test/*.test.js`).
+- `npm run test:e2e` — Playwright tests against a local `demo/` dev server (see [UI_TEST.md](UI_TEST.md)).
 - `npm run generate-meta` — regenerates `meta.generated.json` for the sources in `./components`.
+- `npm run demo:prepare` — regenerate the local `demo/` app (`qui init` + `add --all base` + `generate-demo`). Alias: `npm run qui:createdemo` (prints dev-server hint).
+- `npm run demo:build` — production build of the demo (includes Vercel Edge adapter via `qwik add vercel-edge`).
+- `npm run demo:run` — local Vercel Dev server (`vercel dev`, http://localhost:3000).
+- `npm run demo:deploy` — build locally and publish to Vercel with `vercel deploy --prebuilt --prod` (manual; see [Publish the demo to Vercel](#publish-the-demo-to-vercel-manual-developer-machine)).
 - `npm publish` — publishes the `qui-client` package (the tarball contents are controlled by the `files` field in `package.json`).
 
 ## Related docs
