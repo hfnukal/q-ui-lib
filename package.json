@@ -1,6 +1,6 @@
 {
   "name": "qui-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Qwik UI CLI (qui): init, connect, add, update — plus default component sources in this repo under components/",
   "license": "MIT",
   "type": "commonjs",
