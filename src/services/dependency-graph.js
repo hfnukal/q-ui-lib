@@ -33,13 +33,19 @@ function expandTransitiveComponents(componentsDir, seeds) {
 }
 
 function collectNpmDependencies(componentsDir, slugs) {
-  const packages = new Set();
+  const dependencies = new Set();
+  const devDependencies = new Set();
   for (const slug of slugs) {
     const meta = readMeta(path.join(componentsDir, slug));
     const deps = Array.isArray(meta?.npmDependencies) ? meta.npmDependencies : [];
-    for (const pkg of deps) packages.add(pkg);
+    const devDeps = Array.isArray(meta?.npmDevDependencies) ? meta.npmDevDependencies : [];
+    for (const pkg of deps) dependencies.add(pkg);
+    for (const pkg of devDeps) devDependencies.add(pkg);
   }
-  return [...packages].sort();
+  return {
+    dependencies: [...dependencies].sort(),
+    devDependencies: [...devDependencies].sort(),
+  };
 }
 
 module.exports = {

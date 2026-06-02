@@ -6,6 +6,7 @@
   "registry": "base",
   "dependencies": [],
   "npmDependencies": [],
+  "npmDevDependencies": [],
   "apiTree": {
     "params": {
       "value": "number",

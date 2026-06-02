@@ -9,6 +9,7 @@
     "base/tabs"
   ],
   "npmDependencies": [],
+  "npmDevDependencies": [],
   "apiTree": {
     "params": {
       "class": "string"

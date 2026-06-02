@@ -131,7 +131,7 @@ The generator derives this value from the component's path relative to `componen
 
 **`dependencies`** lists sibling component slugs **within the library**, derived from **relative** imports (see §2.2). The generator takes the first segment of each relative path (e.g. `../button` → `button`). The CLI uses this for **transitive copy** when adding a component to an app; keeping dependencies **in the same set** or in **`base/`** keeps that graph valid.
 
-**`npmDependencies`** lists external npm packages the component requires (beyond the library itself). The generator derives this from non-relative imports in `index.tsx`. The CLI checks that these packages are installed in the target app and warns if any are missing.
+**`npmDependencies`** lists runtime npm packages from `index.tsx` imports (minus app baseline). **`npmDevDependencies`** lists packages from auxiliary files in the component folder. The CLI installs them into `dependencies` / `devDependencies` respectively when missing.
 
 ### 5.4 Commands
 

@@ -9,6 +9,9 @@ import { Node, Project, SyntaxKind } from "ts-morph";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+/** Always present in Qwik apps — omit from per-component npm meta even when imported. */
+const NPM_META_OMIT = new Set(["@builder.io/qwik", "@builder.io/qwik-city"]);
+
 function parseCliArgs(argv) {
   let appRoot = null;
   let componentsDirArg = null;
@@ -121,9 +124,26 @@ function isNilLikeUnionMember(u) {
   return w === "undefined" || w === "void" || w === "null";
 }
 
+/**
+ * Strips machine-specific `import("/…/node_modules/pkg/…")` paths from serialized types.
+ * @param {string} rawText
+ */
+function sanitizeTypeText(rawText) {
+  let text = rawText.replace(/\s+/g, " ").trim();
+  text = text.replace(
+    /import\s*\(\s*["'][^"']*\/node_modules\/((?:@[^/"']+\/[^/"']+|[^/"']+))(?:\/[^"']*)?["']\s*\)\s*\./g,
+    (_, pkgPath) => `${npmPackageRootFromSpecifier(pkgPath.replace(/\\/g, "/"))}.`
+  );
+  text = text.replace(
+    /import\s*\(\s*["'][^"']*\/node_modules\/((?:@[^/"']+\/[^/"']+|[^/"']+))(?:\/[^"']*)?["']\s*\)/g,
+    (_, pkgPath) => npmPackageRootFromSpecifier(pkgPath.replace(/\\/g, "/")) || pkgPath
+  );
+  return text;
+}
+
 function serializePropType(type) {
   if (!type || type.isUndefined()) return "undefined";
-  const rawText = type.getText();
+  const rawText = sanitizeTypeText(type.getText());
   const norm = rawText.replace(/\s+/g, " ").trim();
   const primOpt = norm.match(/^(boolean|number|string)\s*\|\s*undefined$/);
   if (primOpt) return primOpt[1];
@@ -140,9 +160,9 @@ function serializePropType(type) {
       if (u.isStringLiteral()) literals.push(u.getLiteralValue());
       else if (u.isNumberLiteral()) literals.push(u.getLiteralValue());
       else {
-        const t = u.getText();
+        const t = sanitizeTypeText(u.getText());
         if (/PropFunction\s*<|(^|\W)QRL\s*</.test(t)) return "function";
-        return rawText.length > 120 ? `${rawText.slice(0, 117)}...` : rawText;
+        return t.length > 120 ? `${t.slice(0, 117)}...` : t;
       }
     }
     if (literals.length === parts.length) {
@@ -232,7 +252,7 @@ function paramsFromComponentTypeArg(sf, typeArg0) {
     try {
       params[propName] = serializePropType(sig.getType());
     } catch {
-      params[propName] = sig.getType().getText();
+      params[propName] = sanitizeTypeText(sig.getType().getText());
     }
   }
   return Object.keys(params).length ? params : null;
@@ -533,47 +553,59 @@ function npmPackageRootFromSpecifier(spec) {
   return spec.split("/")[0] || null;
 }
 
-function mergePackageJsonDeps(set, j) {
-  for (const key of ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"]) {
-    const o = j[key];
-    if (o && typeof o === "object") {
-      for (const k of Object.keys(o)) set.add(k);
-    }
+function mergePackageJsonSection(set, j, sectionKey) {
+  const o = j[sectionKey];
+  if (o && typeof o === "object") {
+    for (const k of Object.keys(o)) set.add(k);
   }
 }
 
 /**
- * Baseline npm names: template/package.json when present (library repo),
- * otherwise the app root package.json (consumer projects).
+ * Baseline npm names from template/package.json or app root package.json.
  * @param {string} projectRoot
+ * @returns {{ prod: Set<string>, dev: Set<string>, all: Set<string> }}
  */
-function loadBaselineNpmPackageNames(projectRoot) {
+function loadBaselineNpmSections(projectRoot) {
   /** @type {Set<string>} */
-  const set = new Set();
+  const prod = new Set();
+  /** @type {Set<string>} */
+  const dev = new Set();
+  const applyPkg = (j) => {
+    mergePackageJsonSection(prod, j, "dependencies");
+    mergePackageJsonSection(prod, j, "peerDependencies");
+    mergePackageJsonSection(prod, j, "optionalDependencies");
+    mergePackageJsonSection(dev, j, "devDependencies");
+  };
   const templatePkg = path.join(projectRoot, "template", "package.json");
   if (fs.existsSync(templatePkg)) {
-    mergePackageJsonDeps(set, JSON.parse(fs.readFileSync(templatePkg, "utf8")));
-    return set;
-  }
-  const appPkg = path.join(projectRoot, "package.json");
-  if (fs.existsSync(appPkg)) {
-    try {
-      mergePackageJsonDeps(set, JSON.parse(fs.readFileSync(appPkg, "utf8")));
-    } catch {
-      /* ignore */
+    applyPkg(JSON.parse(fs.readFileSync(templatePkg, "utf8")));
+  } else {
+    const appPkg = path.join(projectRoot, "package.json");
+    if (fs.existsSync(appPkg)) {
+      try {
+        applyPkg(JSON.parse(fs.readFileSync(appPkg, "utf8")));
+      } catch {
+        /* ignore */
+      }
     }
   }
-  return set;
+  return { prod, dev, all: new Set([...prod, ...dev]) };
 }
 
 /** @param {import('ts-morph').SourceFile} sf */
 function collectNpmImportsFromSourceFile(sf) {
   /** @type {Set<string>} */
   const pkgs = new Set();
-  for (const imp of sf.getImportDeclarations()) {
-    const spec = imp.getModuleSpecifierValue();
+  const addFromSpecifier = (spec) => {
+    if (!spec) return;
     const root = npmPackageRootFromSpecifier(spec);
     if (root) pkgs.add(root);
+  };
+  for (const imp of sf.getImportDeclarations()) {
+    addFromSpecifier(imp.getModuleSpecifierValue());
+  }
+  for (const exp of sf.getExportDeclarations()) {
+    addFromSpecifier(exp.getModuleSpecifierValue());
   }
   sf.forEachDescendant((node) => {
     if (node.getKind() !== SyntaxKind.ImportKeyword) return;
@@ -584,40 +616,87 @@ function collectNpmImportsFromSourceFile(sf) {
     if (args.length < 1) return;
     const lit = args[0];
     if (!Node.isStringLiteral(lit) && !Node.isNoSubstitutionTemplateLiteral(lit)) return;
-    const spec = lit.getLiteralValue();
-    const root = npmPackageRootFromSpecifier(spec);
-    if (root) pkgs.add(root);
+    addFromSpecifier(lit.getLiteralValue());
   });
   return pkgs;
 }
 
 /**
- * npm deps for a component folder: index imports skip repo baseline packages;
- * sibling .ts/.tsx files always contribute (consumer apps need them even when the library repo already has them).
+ * @param {string} pkg
+ * @param {boolean} indexImport
+ * @param {boolean} auxOnlyImport
+ * @param {{ prod: Set<string>, dev: Set<string> }} baseline
+ * @returns {"prod" | "dev"}
+ */
+function npmMetaSectionForPackage(pkg, indexImport, auxOnlyImport, baseline) {
+  if (baseline.dev.has(pkg)) return "dev";
+  if (baseline.prod.has(pkg)) return "prod";
+  if (auxOnlyImport && !indexImport) return "dev";
+  return "prod";
+}
+
+/**
+ * @param {string} pkg
+ * @param {{ prod: Set<string>, dev: Set<string> }} baseline
+ */
+function shouldListPackageInNpmMeta(pkg, baseline) {
+  if (NPM_META_OMIT.has(pkg)) return false;
+  if (baseline.dev.has(pkg)) return true;
+  if (baseline.prod.has(pkg)) return false;
+  return true;
+}
+
+/**
+ * npm deps for a component folder:
+ * - relative imports → `dependencies` (handled separately)
+ * - npm imports from index / siblings → npmDependencies or npmDevDependencies by app package.json section
+ * - packages only in devDependencies of the app → npmDevDependencies even when imported from index
  * @param {import('ts-morph').Project} project
  * @param {string} componentDir
  * @param {import('ts-morph').SourceFile} indexSf
- * @param {Set<string>} baseline
+ * @param {{ prod: Set<string>, dev: Set<string>, all: Set<string> }} baseline
+ * @returns {{ npmDependencies: string[], npmDevDependencies: string[] }}
  */
 function collectComponentNpmDependencies(project, componentDir, indexSf, baseline) {
   /** @type {Set<string>} */
-  const pkgs = new Set();
-  for (const pkg of collectNpmImportsFromSourceFile(indexSf)) {
-    if (!baseline.has(pkg)) pkgs.add(pkg);
-  }
+  const npmDependencies = new Set();
+  /** @type {Set<string>} */
+  const npmDevDependencies = new Set();
+  const indexPkgs = collectNpmImportsFromSourceFile(indexSf);
+  /** @type {Set<string>} */
+  const allPkgs = new Set(indexPkgs);
+  /** @type {Set<string>} */
+  const auxOnlyPkgs = new Set();
+
   const indexName = path.basename(indexSf.getFilePath());
-  const skipNpmScan = new Set(["ui-component-introspect.ts"]);
   for (const name of fs.readdirSync(componentDir)) {
-    if (name === indexName || skipNpmScan.has(name)) continue;
+    if (name === indexName) continue;
     if (!name.endsWith(".ts") && !name.endsWith(".tsx")) continue;
     const fp = path.join(componentDir, name);
     if (!fs.statSync(fp).isFile()) continue;
     const sf = project.getSourceFile(fp) ?? project.addSourceFileAtPath(fp);
     for (const pkg of collectNpmImportsFromSourceFile(sf)) {
-      pkgs.add(pkg);
+      allPkgs.add(pkg);
+      if (!indexPkgs.has(pkg)) auxOnlyPkgs.add(pkg);
     }
   }
-  return [...pkgs].sort();
+
+  for (const pkg of allPkgs) {
+    if (!shouldListPackageInNpmMeta(pkg, baseline)) continue;
+    const section = npmMetaSectionForPackage(
+      pkg,
+      indexPkgs.has(pkg),
+      auxOnlyPkgs.has(pkg),
+      baseline
+    );
+    if (section === "dev") npmDevDependencies.add(pkg);
+    else npmDependencies.add(pkg);
+  }
+
+  return {
+    npmDependencies: [...npmDependencies].sort(),
+    npmDevDependencies: [...npmDevDependencies].sort(),
+  };
 }
 
 /**
@@ -765,7 +844,7 @@ function main() {
   const componentDirs = findComponentDirs(componentsDir);
   let written = 0;
   let skipped = 0;
-  const npmBaseline = loadBaselineNpmPackageNames(projectRoot);
+  const npmBaseline = loadBaselineNpmSections(projectRoot);
 
   for (const componentDir of componentDirs) {
     const folderName = path.basename(componentDir);
@@ -792,7 +871,7 @@ function main() {
         kind: isUtilityComponent ? "utilities" : "unknown",
         registry: registryFromComponentDir(componentDir),
         dependencies: collectRelativeImportRoots(sf),
-        npmDependencies: collectComponentNpmDependencies(project, componentDir, sf, npmBaseline),
+        ...collectComponentNpmDependencies(project, componentDir, sf, npmBaseline),
         apiTree: {},
       };
       writeMetaFile(path.join(componentDir, "meta.generated.json"), payload);
@@ -807,7 +886,7 @@ function main() {
       kind: isUtilityComponent ? "utilities" : analyzed.kind,
       registry: registryFromComponentDir(componentDir),
       dependencies: collectRelativeImportRoots(sf),
-      npmDependencies: collectComponentNpmDependencies(project, componentDir, sf, npmBaseline),
+      ...collectComponentNpmDependencies(project, componentDir, sf, npmBaseline),
       apiTree: analyzed.apiTree,
     };
 

@@ -114,6 +114,8 @@ Samostatny prikaz `sync-template` neni potreba zachovavat.
 - osetrit kolize souboru (overwrite / qui-template varianta / skip dle policy),
 - pripravit `qui.config.json`.
 
+**Detekce rezimu:** prazdny `[dir]` → Qwik scaffold; Qwik bez `qui.config.json` → bootstrap (i s `qui-client` v `package.json`); Qwik s `qui.config.json` → jen sync sablon. Inicializaci znaci `qui.config.json`, ne devDependency `qui-client`.
+
 ## `generate-demo` v `qui-client`
 
 `generate-demo` je soucast `qui-client` a ma generovat dokumentacni demo vrstvu podle nainstalovanych komponent.

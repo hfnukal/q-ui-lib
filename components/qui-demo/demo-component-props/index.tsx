@@ -271,6 +271,17 @@ const MetaResolved = component$<{ meta: MetaGenerated }>((props) => {
         </div>
       ) : null}
 
+      {(m.npmDevDependencies?.length ?? 0) > 0 ? (
+        <div>
+          <h4 class="text-caption-1 font-medium text-secondary-label">
+            npmDevDependencies
+          </h4>
+          <p class="mt-1 font-mono text-xs text-label">
+            {m.npmDevDependencies!.join(", ")}
+          </p>
+        </div>
+      ) : null}
+
       <ApiStructureBlock meta={m} />
     </div>
   );

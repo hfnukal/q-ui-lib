@@ -57,7 +57,7 @@ Pro každou analyzovanou komponentu se generuje JSON:
 - **`registry`** — vždy `"base"` (lokální knihovna).
 - **`dependencies`** — seřazené unikátní kořeny z **relativních** importů (`../…`), viz níže.
 - **`apiTree`** — strom API; tvar je stejný pro **primitive** i **compound**. U **primitive** tvoří `params` a `slot` přímo kořen `apiTree`. U **compound** má každý pojmenovaný díl svůj uzel s `params` / `slot`.
-- **`npmDependencies`** — seznam npm balíčků (pole řetězců), které komponenta vyžaduje a nejsou součástí knihovny. Generátor pole odvodí z importů externích balíčků v `index.tsx`. CLI při `qui add` zkontroluje jejich přítomnost v cílové aplikaci a případně varuje.
+- **`npmDependencies`** / **`npmDevDependencies`** — npm balíčky z importů v `index.tsx` a sourozeneckých `.ts`/`.tsx` (včetně `import type` a dynamického `import()`; relativní `./` / `../` jdou do `dependencies`). Sekce v meta odpovídá `dependencies` / `devDependencies` v `package.json` aplikace (`--app-root`): balíčky jen v `devDependencies` aplikace → `npmDevDependencies` (i z `index`); jen v `dependencies` aplikace se do meta nezapisují (šablona je už má). Mimo `package.json`: import z indexu → `npmDependencies`, jen z pomocných souborů → `npmDevDependencies`. `@builder.io/qwik` / `qwik-city` se do meta nezapisují. Po `qui generate` se `ts-morph` ještě připne na `^27`, pokud je ve zdroji potřeba.
 
 ## Detekce hlavního exportu
 

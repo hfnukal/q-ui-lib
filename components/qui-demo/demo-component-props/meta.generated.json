@@ -6,6 +6,9 @@
   "registry": "qui-demo",
   "dependencies": [],
   "npmDependencies": [],
+  "npmDevDependencies": [
+    "ts-morph@^27.0.2"
+  ],
   "apiTree": {
     "params": {
       "filePath": "string",

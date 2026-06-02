@@ -111,6 +111,52 @@ function hasQuiClientDependency(pkg) {
   return d["qui-client"] != null || dd["qui-client"] != null;
 }
 
+/** @param {string} initRoot */
+function hasQwikConfigFile(initRoot) {
+  return (
+    fs.existsSync(path.join(initRoot, "qwik.config.ts")) ||
+    fs.existsSync(path.join(initRoot, "qwik.config.mjs")) ||
+    fs.existsSync(path.join(initRoot, "qwik.config.cjs"))
+  );
+}
+
+/**
+ * @param {{ emptyScaffoldRoot: boolean, hasQwikApp: boolean, hasQuiConfigFile: boolean }} ctx
+ * @returns {"scaffold_empty"|"qwik_bootstrap"|"qwik_sync_templates"|"default"}
+ */
+function resolveInitMode({ emptyScaffoldRoot, hasQwikApp, hasQuiConfigFile }) {
+  if (emptyScaffoldRoot) return "scaffold_empty";
+  if (hasQwikApp && hasQuiConfigFile) return "qwik_sync_templates";
+  if (hasQwikApp && !hasQuiConfigFile) return "qwik_bootstrap";
+  return "default";
+}
+
+/**
+ * @param {{ initMode: string, initRoot: string, existingPkg: object|null }} ctx
+ * @returns {string[]}
+ */
+function collectInitWarnings({ initMode, initRoot, existingPkg }) {
+  const warnings = [];
+  if (
+    initMode === "default" &&
+    hasQuiClientDependency(existingPkg) &&
+    !hasQwikApp(existingPkg)
+  ) {
+    warnings.push(
+      "This directory is not empty and does not look like a Qwik app, but qui-client is already in package.json. " +
+        "For a new app, use an empty directory (`npx qui init`) or a new subfolder (`npx qui init apps/web`). " +
+        "This run writes qui.config.json and syncs templates only—it does not scaffold Qwik.",
+    );
+  }
+  if (hasQwikApp(existingPkg) && !hasQwikConfigFile(initRoot)) {
+    warnings.push(
+      "package.json lists @builder.io/qwik and @builder.io/qwik-city, but no qwik.config.ts|mjs|cjs was found in this directory. " +
+        "Run init from the Qwik app package root.",
+    );
+  }
+  return warnings;
+}
+
 function toPosixPath(p) {
   return p.split(path.sep).join("/");
 }
@@ -398,19 +444,18 @@ async function runInit(context) {
   const existingPkg = readPackageJsonAt(packageJsonPath);
   const hasQuiConfigFile = fs.existsSync(configPath);
 
+  const hasQwik = hasQwikApp(existingPkg);
   /**
    * - scaffold_empty: prázdný kořen → Qwik scaffold + šablona (--force u sync).
-   * - qwik_bootstrap: existující Qwik bez qui.config a bez qui-client → doplnění jako po scaffoldu (bez npm create).
-   * - qwik_sync_templates: Qwik + qui-client → jen synchronizace `templates/app`.
-   * - default: ostatní neprázdné kořeny.
+   * - qwik_bootstrap: Qwik bez qui.config → config + šablony (qui-client v package.json nehraje roli).
+   * - qwik_sync_templates: Qwik + existující qui.config → jen synchronizace `templates/app`.
+   * - default: ostatní neprázdné kořeny (varování při předčasné instalaci qui-client).
    */
-  const initMode = emptyScaffoldRoot
-    ? "scaffold_empty"
-    : hasQwikApp(existingPkg) && hasQuiClientDependency(existingPkg)
-      ? "qwik_sync_templates"
-      : hasQwikApp(existingPkg) && !hasQuiConfigFile && !hasQuiClientDependency(existingPkg)
-        ? "qwik_bootstrap"
-        : "default";
+  const initMode = resolveInitMode({
+    emptyScaffoldRoot,
+    hasQwikApp: hasQwik,
+    hasQuiConfigFile,
+  });
 
   const initFlags = initMode === "scaffold_empty" ? { ...flags, force: true } : flags;
 
@@ -448,11 +493,13 @@ async function runInit(context) {
     targetPath,
   });
 
-  const configWarnings = [...scaffoldWarnings];
+  const configWarnings = [
+    ...scaffoldWarnings,
+    ...collectInitWarnings({ initMode, initRoot, existingPkg }),
+  ];
   let configItem = null;
 
-  const skipQuiConfigWrites =
-    initMode === "qwik_sync_templates" && hasQuiConfigFile;
+  const skipQuiConfigWrites = initMode === "qwik_sync_templates";
 
   if (skipQuiConfigWrites) {
     configItem = {
@@ -623,4 +670,10 @@ async function runInit(context) {
   });
 }
 
-module.exports = { runInit };
+module.exports = {
+  runInit,
+  resolveInitMode,
+  collectInitWarnings,
+  hasQwikApp,
+  hasQuiClientDependency,
+};

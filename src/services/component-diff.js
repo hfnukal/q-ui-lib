@@ -39,10 +39,15 @@ function compareDependencyLists(localList, remoteList) {
 function compareComponentMetadata(localMeta, remoteMeta) {
   const componentDeps = compareDependencyLists(localMeta?.dependencies, remoteMeta?.dependencies);
   const npmDeps = compareDependencyLists(localMeta?.npmDependencies, remoteMeta?.npmDependencies);
+  const npmDevDeps = compareDependencyLists(
+    localMeta?.npmDevDependencies,
+    remoteMeta?.npmDevDependencies
+  );
   return {
     component: componentDeps,
     npm: npmDeps,
-    changed: componentDeps.changed || npmDeps.changed,
+    npmDev: npmDevDeps,
+    changed: componentDeps.changed || npmDeps.changed || npmDevDeps.changed,
   };
 }
 

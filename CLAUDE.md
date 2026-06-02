@@ -12,7 +12,7 @@
 **Commands** (repo root)
 
 ```bash
-# Run qui (same entry as npx qui after npm i -D qui-client)
+# Run qui (npx qui@latest init for greenfield; npm run qui -- after npm i -D qui-client in repo)
 npm run qui -- <command> [options]
 ```
 
@@ -33,7 +33,7 @@ In a consumer app (cwd = app with `qui.config.json`): `qui generate`.
 
 **Creating or updating components** — workflow, headless pitfalls, metadata rules: **[CREATE.md](./CREATE.md)**. Metadata pipeline details: **[docs/META_GEN.md](./docs/META_GEN.md)** (the wired script is `generate-meta` at repo root). Registry / API tree: **[docs/REGISTRY.md](./docs/REGISTRY.md)**.
 
-**CLI / config contract:** [README.md](./README.md), [docs/CLI_MIGRATION.md](./docs/CLI_MIGRATION.md), [docs/MIGRATION_FROM_LEGACY_CLI.md](./docs/MIGRATION_FROM_LEGACY_CLI.md).
+**CLI / config contract:** [CONTRIBUTING.md](./CONTRIBUTING.md), [docs/CLI_MIGRATION.md](./docs/CLI_MIGRATION.md), [docs/MIGRATION_FROM_LEGACY_CLI.md](./docs/MIGRATION_FROM_LEGACY_CLI.md). Product overview: [README.md](./README.md).
 
 **Overview:** [docs/Q_UI_LIB.md](./docs/Q_UI_LIB.md).
 

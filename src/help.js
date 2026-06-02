@@ -1,7 +1,7 @@
 const COMPONENTS_DIR_NAME = "components";
 
 const COMMAND_SUMMARY = {
-  init: "Initialize qui.config.json (optional project root; empty dir scaffolds Qwik)",
+  init: "Initialize qui.config.json ([dir]; empty dir scaffolds Qwik; existing config syncs templates only)",
   connect: "Add, update, or remove repos in qui.config.json",
   verify: "Validate config/repo selection",
   diff: "Compare installed components with remote source",

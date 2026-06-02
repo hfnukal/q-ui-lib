@@ -1,385 +1,161 @@
 # qui-client
 
-**The root of this repository is the npm package `qui-client`:** the **`qui`** CLI plus the canonical Qwik UI component sources in **`components/`**. Components are pulled into an app as **source code** (copied into `targetPath`); synchronization happens from Git repositories according to `qui.config.json`.
+**`qui`** is a tool for managing UI components in Qwik apps. It copies components as **source code** into your project, keeps them in sync with upstream Git repositories, and helps you maintain your own component libraries — shared openly or privately on your own Git hosting.
 
-**Live demo:** [q-ui-lib.vercel.app/qui-demo](https://q-ui-lib.vercel.app/qui-demo) — browse `base` and test uilibs, theme editor, and component examples (deployed from this repo).
+The npm package **`qui-client`** ships the CLI plus this repository’s canonical component sources under **`components/`** (the default **`base`** ui-lib).
+
+**Live demo:** [q-ui-lib.vercel.app/qui-demo](https://q-ui-lib.vercel.app/qui-demo) — browse components, theme editor, and examples.
+
+## What you can do
+
+| Goal | How |
+|------|-----|
+| Start from a proven base set | Connect the **base** repository (shadcn-style Qwik components built on `@qwik-ui/headless`) and `qui add` what you need |
+| Compose your own components | Install primitives, then **`qui clone`** or edit copies under `targetPath`; regenerate metadata with **`qui generate`** |
+| Run your own design system | Create a Git repo with one or more **`uilib`** namespaces, **`qui connect`**, and share it internally or as open source |
+| Stay up to date with upstream | **`qui diff`** / **`qui update`** pull changes from configured repos (`https`, `ssh`, or `file://`) |
+| Contribute fixes upstream | **`qui push`** opens a branch and GitHub PR (via `gh`) when you improve a component in a remote source repo |
+
+Multiple **repos** and **ui-libs** can live in one `qui.config.json` — for example the public **base** set plus your company’s `web` or `brand` library.
+
+## Why qui
+
+- **Source in your app** — components live under `targetPath` (e.g. `src/components/ui`); you own the files and can customize freely.
+- **Git-native workflow** — sources are ordinary repositories; refs and remotes are part of `repos.<name>.url`.
+- **Dependency-aware installs** — `meta.generated.json` tracks component and npm dependencies; `add` / `update` resolve them automatically.
+- **Fork-friendly** — clone, rename, and combine existing pieces without losing traceability to upstream.
 
 ## Quick start
 
-```bash
-# In your app
-npm i -D qui-client
-
-# Initialize config + template files
-npx qui init
-
-# Add source components
-npx qui add button input
-```
-
-When developing **inside this repository** (a clone of the monorepo):
+**New app** — use an empty directory; do not run `npm i qui-client` first (init scaffolds Qwik and adds config):
 
 ```bash
-npm install
-npm run qui -- <command> [options]
+mkdir my-app && cd my-app
+npx qui-client@latest init
+npx qui-client add button input
 ```
 
-## CLI (`qui`)
-
-General shape:
+**Existing Qwik app** — from the app package root:
 
 ```bash
-qui <command> [positionals...] [--flags]
+npx qui-client@latest init
+npx qui-client add button input
 ```
 
-- The first non-flag token is the **command**; the rest are **positionals** (e.g. component specs).
-- Flags can appear in any order. Boolean flags take no value (`--dry-run`); value flags take the next token (`--repo acme`).
-- An unknown `--flag`, a value flag with a missing value, or an unknown command exits with code `2` (usage error).
-- `--help`, `-h`, `help`, or no command prints usage and exits `0`.
-- `--ref` is parsed but **rejected** at runtime — encode a ref in the URL instead: `--url <git-url>#<ref>`.
-- Every command except `init` reads `qui.config.json` from the **current working directory** (`init` creates it).
+The npm package is **`qui-client`**; the CLI command is **`qui`**. Use `npx qui-client@latest …` without a local install, or `npx qui …` after `npm i -D qui-client` (init adds it for new apps). `qui.config.json` marks a project as initialized—having `qui-client` in `package.json` alone does not.
 
-A **component spec** is either a bare slug (`button`) or a `uilib/slug` pair (`base/button`); see [Repo vs ui-lib + component lookup](#repo-vs-ui-lib--component-lookup).
-
-### `init` — scaffold/initialize a project
+**Monorepo** — scaffold into a subfolder (keeps the repo root separate):
 
 ```bash
-qui init [dir]
+npx qui-client@latest init apps/web
+cd apps/web && npx qui add button input
 ```
 
-- `[dir]` — optional project root (at most one; default `.`). An **empty** directory is scaffolded with `npm create qwik@latest` (empty template) + Tailwind.
-- Writes/updates `qui.config.json`, syncs `templates/app` into the project, and adds `qui-client` as a `file:` devDependency (then runs `npm install`).
-- Config defaults come from flags: `--repo` (default `quibase`), `--url` (default `https://github.com/hfnukal/q-ui-lib.git`), `--target-path` (default `src/components/ui`). Other repo fields (`componentsRoot`, `uilibs`, `connected`) use schema defaults in the written config.
-- Existing-config conflict is resolved by policy/flags: `--force`/`--yes` overwrite, `--auto` writes a `qui.config-template.json`, `--on-error fail` aborts, `--on-error ask` (default) prompts interactively. `--dry-run` previews without writing.
-
-### `connect` — add, update, or remove repos in config
-
-**Connect** (discover source repos and write `repos.*` entries):
+Point at a local clone when developing this monorepo (from the repository root):
 
 ```bash
-qui connect <url> [repo [...uilibs]] [--all] [options]
+npm run qui -- init --repo local-dev --url file://../ --target-path src/components/ui
 ```
 
-- `<url>` — `file://…`, git clone URL (`https://…`, `git@…`, `ssh://…`), or GitHub/GitLab tree permalink. Optional ref: `<url>#<branch|tag|commit>`.
-- Discovers repo candidates under the URL (`--search-levels`, default `2`) and their uilibs. Interactive TTY prompts for repo/uilib when omitted; non-interactive mode requires explicit `[repo]`, uilib names, or `--all`.
-- **`qui connect <url> <repo> <uilib…>`** — merges uilibs into an existing repo entry (no overwrite prompt); new uilib names are appended.
-- **`qui connect <url> <repo> --all`** — merges all discovered uilibs for that repo.
-- Writes `url`, `componentsRoot`, `uilibs`, and `connected` (`--connected`, default `true`) into `qui.config.json`. Does **not** install components — use `add` / `update` for that.
-- Overwriting an existing repo (interactive selection) follows `--on-error` (`ask` default / `warn` / `fail`); `--force`/`--auto`/`--yes` skip the prompt. `--dry-run` leaves the config untouched.
+Typical next steps: **`qui connect`** additional repos, **`qui list`** / **`qui diff`**, **`qui update`** when upstream changes, **`qui push`** when you want to send fixes back.
 
-**Remove** (edit config only — does not delete installed files under `targetPath`):
+Full command reference, config schema, and maintainer scripts: **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
-```bash
-qui connect --remove <repo> [uilib...] [--yes]
+## Components
+
+Each component lives in one folder under a **ui-lib** namespace:
+
+```text
+components/<uilib>/<slug>/     # source repo (e.g. components/base/button/)
+<targetPath>/<uilib>/<slug>/  # after qui add (e.g. src/components/ui/base/button/)
 ```
 
-- **`--remove <repo>`** — delete the entire `repos.<repo>` entry.
-- **`--remove <repo> <uilib…>`** — remove uilib(s) from the repo; if none remain, the repo entry is removed.
-- Prints what will be removed and asks for confirmation unless `--yes` (also `--auto` / `--force`).
+| File | Role |
+|------|------|
+| `index.tsx` | Qwik implementation (`component$` or compound `export const X = { Root, … }`) |
+| `meta.generated.json` | Generated metadata (props, dependencies, `apiTree`) — run `qui generate`, do not edit by hand |
 
-See [src/commands/connect.md](src/commands/connect.md) for discovery rules and JSON report shape.
+### Standard Qwik component
 
-### `verify` — validate config/repo selection
+- Prefer **`@qwik-ui/headless`** where it fits; otherwise semantic HTML + ARIA.
+- Export a typed props interface in the **same file** when you want props documented in metadata (see [CREATE.md](CREATE.md), [docs/META_GEN.md](docs/META_GEN.md)).
+- Style with design tokens from [COLORS.md](COLORS.md) (Tailwind classes tied to the token set).
+- **Compound** components export one object with PascalCase parts (`Tabs.Root`, `Tabs.List`, …); part names drive the generated `apiTree`.
 
-```bash
-qui verify [--repo <repo>]
-```
+### Documentation and examples (JSDoc)
 
-- Reports whether the selected repo (or the first repo) is configured and `connected`.
-- `--ci` turns a not-connected repo into a non-zero exit (`9`, verify/diff mismatch).
+The **leading** `/** … */` block on `index.tsx` feeds the demo generator and human docs:
 
-### `diff` — compare installed components with remote source
+| Tag | Purpose |
+|-----|---------|
+| `@component` | Slug (leaf folder name, e.g. `button`) |
+| `@title` | Page heading in the demo |
+| `@version` | Version string stored in metadata |
+| `@description` | Optional intro under the title |
+| `@example <title>` | Section title, short prose, then a fenced **tsx** code block with runnable JSX |
 
-```bash
-qui diff [[<repo>/][<uilib>/]<component|uilib|repo>...] [--repo <repo|repo/uilib>] [--ci] [--json]
-```
+Multiple `@example` blocks become separate sections (live preview + code tabs). See [components/base/button/index.tsx](components/base/button/index.tsx) for a full pattern.
 
-- Read-only: compares files under `targetPath` with the matching component in the configured source repo (`file://` or git clone from `repos.<name>.url`).
-- Each positional can be a **component** (`hero`, `web/hero`), a **uilib** (`web`), or a **repo** (`componentsextra`). Multiple positionals are supported.
-- With **no positional**, diffs every installed component (optionally filtered by `--repo <repo>` or `--repo <repo>/<uilib>`).
-- Resolves the local install when present; otherwise looks up the component in the remote catalog (reported as `add`). When `<repo>/` or `<uilib>/` is omitted, the source repo is inferred from installed metadata (`registry` / uilib); `--repo` disambiguates a bare slug.
-- Prints a unified diff per changed component (`git diff --no-index`). With `--json`, returns `qui-report/v1` items: `component`, `action` (`add|update|remove|noop`), `files[]` (`path`, `changeType`), and `dependencies`.
-- A disconnected repo is reported as a pending change. `--ci` exits `9` when any component differs from remote (or the repo is disconnected).
-
-### `add` — install components into `targetPath`
-
-```bash
-qui add <component...>
-qui add --all [<uilib>|<repo>/<uilib>]
-```
-
-- Without `--all`: at least one component spec is required (`button`, `web/button`, …); `--repo` selects/forces the source repo.
-- With `--all`: install everything in scope. **No scope arg** prompts interactively for repo and uilib(s). One scope arg `<uilib>` or `<repo>/<uilib>` narrows it. `--all` accepts at most one scope arg. In non-interactive mode, a scope is required.
-- Component dependencies from `meta.generated.json` are pulled in automatically; missing npm dependencies are installed (controlled by `--auto`/`--force` and `--on-error`).
-- `--target-path` overrides the config target. `--dry-run` previews; already-installed components are skipped.
-
-### `list` — browse configured repos, uilibs, and components
-
-```bash
-qui list
-qui list [<repo>]
-qui list [<repo>/][<uilib>/][<component>]
-qui list --all
-qui list <repo> --all
-```
-
-- With **no arguments**, lists every configured repo (`[repo] …`).
-- With **`<repo>`**, lists that repo's configured uilibs (`[lib] …`).
-- With **`<repo>/<uilib>`**, lists source components in that uilib and whether each is already installed under `targetPath` (`[cmp] …  ✓|○`).
-- A **component spec** (`button`, `web/button`, `myrepo/web/button`) lists that component and its install status.
-- **`--all`** without a scope lists every component from every configured repo/uilib; **`--all`** with `<repo>` limits to that repo.
-- **`--repo`** disambiguates a bare uilib name when it exists in multiple repos. Nothing is written to disk.
-
-### `update` — overwrite installed components from source
-
-```bash
-qui update [<repo>/][<uilib>/][<component>...]
-qui update --all [<uilib>|<repo>/<uilib>]
-qui update <uilib>/ --all
-```
-
-- Component specs match `add` / `push`: bare slug (`hero`), `uilib/slug` (`web/hero`), or `repo/uilib/slug` (`componentsextra/web/hero`). Each named component must already be installed under `targetPath`.
-- Source is resolved from configured repos (local `file://` or git clone); dependencies from `meta.generated.json` are refreshed automatically.
-- **Confirmation:** every update prompts before overwriting — `[y] yes overwrite`, `[n] no`, or `[d] diff` (unified diff vs remote). Skipped only with `--yes` (also `--auto` / `--force`). Non-interactive runs without those flags exit `6`.
-- **`--all`** updates every **installed** component in scope. No scope = all installed; `<uilib>` or `<repo>/<uilib>` (trailing `/` optional, e.g. `web/`) limits to that uilib.
-- Without `--repo`, `--all` infers each component's source repo from its installed metadata. `--target-path` and `--dry-run` behave as in `add`.
-
-### `remove` — delete installed components
-
-```bash
-qui remove <uilib>/<component>...
-qui remove --all <uilib>
-```
-
-- Operates on **local installs only** (specs are `uilib/slug` paths under `targetPath`, not remote triples).
-- `--all <uilib>` removes every installed component in that uilib. Prompts for confirmation unless `--yes` (also `--auto` / `--force`).
-- Removing a component that others depend on is blocked unless `--force` (or `--on-error warn`). Unused npm dependencies are uninstalled. `--target-path` / `--dry-run` supported.
-
-### `generate` — regenerate component metadata
+After changing source or installed copies, regenerate metadata and (in an app) demo routes:
 
 ```bash
 qui generate
+qui generate-demo
 ```
 
-- Regenerates `meta.generated.json` for every component under `targetPath` (from `index.tsx`/`index.ts`) and ensures `@qwik-ui/headless` is listed when imported. `--target-path` / `--dry-run` supported.
+## Demo
 
-### `generate-demo` — build demo routes
+The **live component browser** (e.g. [q-ui-lib.vercel.app/qui-demo](https://q-ui-lib.vercel.app/qui-demo)) is built from **installed** components under `targetPath`, not directly from the library git tree.
+
+1. **`qui add`** copies components into `targetPath/<uilib>/<slug>/`.
+2. **`qui generate-demo`** scans each `index.tsx`, parses the top JSDoc (`@title`, `@description`, `@example`), and writes Qwik City routes under `src/routes/<route-base>/components/…` (default route base **`/qui-demo`**).
+3. Generated pages import the real component and render each example with **`CodeExample`** / **`TabExample`** / **`TabCode`** (from the `qui-demo` ui-lib, installed via the same CLI).
 
 ```bash
-qui generate-demo [<slug>...]
+# App root (directory with qui.config.json)
+qui add button tabs
+qui generate-demo
+qui generate-demo button          # only listed slugs
+qui generate-demo --route-base /docs/ui
 ```
 
-- Syncs `templates/demo`, runs `add --all qui-demo` and `add --all base`, then generates demo routes under `src/routes/<route-base>/components/...`.
-- `--route-base` sets the route segment (default `/qui-demo`). Optional positional slugs limit which components get routes. `--target-path` / `--dry-run` supported.
+Stale routes for removed components are pruned on the next run. Details: [UI_TEST.md](UI_TEST.md), `scripts/generate-demo.mjs`.
 
-### `clone` — copy an installed component under a new name
+## QUI syntax
+
+General shape (run from the app root that contains `qui.config.json`):
 
 ```bash
-qui clone [<uilib>/]<source-component> [<uilib>/]<new-component>
+qui <command> [positionals...] [--flags]
+npx qui-client@latest <command> …   # without a local install
 ```
 
-- Requires exactly two positionals. Each path is relative to `targetPath` (the folder under `src/components/ui`, etc.). Use a bare slug when the component sits at the top level (`button` → `targetPath/button/`); use `<uilib>/<component>` when it is nested (`web/hero` → `targetPath/web/hero/`).
-- Example: `qui clone web/hero web/hero1` copies `targetPath/web/hero/` to `targetPath/web/hero1/`.
-- The source must already be installed at that path. Copies the directory, rewrites references/`@component`, and records clone provenance in `meta.generated.json`.
-- `--force` overwrites an existing target; `--repo` / `--target-path` / `--dry-run` supported.
+**Component spec:** `button` or `base/button` (optional `repo/uilib/slug` when multiple sources are configured). See [CONTRIBUTING.md](CONTRIBUTING.md) for flags (`--repo`, `--force`, `--yes`, `--dry-run`, `--json`, …).
 
-### `push` — publish modified components back to a remote
+| Command | What it does | Example |
+|---------|----------------|---------|
+| `init` | Scaffold Qwik (empty dir), or add `qui.config.json` + app templates | `npx qui-client@latest init` · `qui init apps/web` |
+| `connect` | Register or remove source repos / ui-libs in config | `qui connect https://github.com/acme/ui.git acme --all` · `qui connect --remove acme --yes` |
+| `add` | Copy components into `targetPath` (+ deps) | `qui add button base/tabs` · `qui add --all base` |
+| `update` | Refresh installed copies from remote | `qui update button --yes` · `qui update --all base` |
+| `remove` | Delete local installs | `qui remove base/button` · `qui remove --all base --yes` |
+| `list` | Browse repos, ui-libs, install status | `qui list` · `qui list base/button` |
+| `diff` | Compare install vs source (read-only) | `qui diff` · `qui diff base/button --ci` |
+| `verify` | Check config / repo connectivity | `qui verify --repo quibase` |
+| `generate` | Regenerate `meta.generated.json` under `targetPath` | `qui generate` |
+| `generate-demo` | Build demo routes from JSDoc | `qui generate-demo` |
+| `clone` | Fork an installed component under a new name | `qui clone base/button base/icon-button` |
+| `push` | Push local changes back to a git remote (PR via `gh`) | `qui push base/button --title "fix: button focus"` |
 
-```bash
-qui push [<repo>/][<uilib>/]<component...>
-```
+Config file: **`qui.config.json`** (`targetPath`, `repos.<name>.url`, `uilibs`, …). Git refs belong in the URL: `https://…/repo.git#main`.
 
-- At least one **installed** component spec is required. The CLI reads from `targetPath`, resolves the uilib, and maps it to the git repo that lists that uilib in `qui.config.json` (e.g. `hero` → `web/hero` → `componentsextra/components/web/hero` when `web` belongs to `componentsextra`).
-- Component specs follow the same shape as `add` / `remove`: bare slug (`hero`), `uilib/slug` (`web/hero`), or `repo/uilib/slug` (`componentsextra/web/hero`). All components in one invocation must belong to the same `repo/uilib`.
-- `--repo <repo>` or `--repo <repo>/<uilib>` optionally disambiguates when a uilib exists in multiple repos or to narrow bare-slug lookup.
-- The target repo URL must be a real git remote (`https`/`ssh`/`git@`) — `file://` is rejected. Component metadata (`quiSource`) is validated against the resolved repo/url when present.
-- Workflow: clone remote → create branch → copy files under `repos.<name>.componentsRoot/<uilib>/<component>/` → commit → push → open a GitHub PR via `gh pr create` when `gh` is available (otherwise prints a compare URL).
-- `--base-branch <branch>` and `--branch <name>` control the push branch. `--title <msg>` sets the commit and PR title; in an interactive terminal, you are prompted when `--title` is omitted (default suggestion: `qui push: <components>`). `--dry-run` previews the workflow without pushing.
+## Inspiration
 
-## `qui.config.json` (schema `qui-config/v1`)
-
-The CLI works against the configuration in the app root:
-
-```json
-{
-  "configSchemaVersion": "qui-config/v1",
-  "targetPath": "src/components/ui",
-  "repos": {
-    "quibase": {
-      "url": "https://github.com/hfnukal/q-ui-lib.git",
-      "componentsRoot": "components",
-      "uilibs": ["base"],
-      "connected": true
-    }
-  }
-}
-```
-
-Notes:
-
-- `targetPath` must be a relative path.
-- `repos.<name>.url` supports `file://`, `http(s)://`, `ssh://` and `git@...`.
-- Source selection happens via `--repo <repo>` or `--repo <repo>/<uilib>`. For `push`, the repo is usually inferred from the component's uilib; use `--repo` to disambiguate.
-- Each `repo` may contain multiple `uilib`s (the `repos.<name>.uilibs` array).
-
-## Repo vs ui-lib + component lookup
-
-- A `repo` is a source Git repository (where components are read from).
-- A `uilib` is a namespace/set of components inside a single repo (e.g. `base`, `web`).
-- When you call `qui add button` without `--repo`, the CLI uses the first repo in the config and, within it, the first `uilib` where the component is found.
-- When you call `qui add web/button`, the component is looked up directly in the `uilib` `web` (within the selected repo).
-- When you call `qui add --repo mycommon web/button`, you specify both the repo (`mycommon`) and the `uilib` (`web`).
-- During `add`, the dependencies from `meta.generated.json` (`dependencies` and `npmDependencies`) are added automatically.
-- The same principle for specifying components (`button` vs `web/button`) and selecting the source (`--repo`) also applies to `update`, `remove`, and `push`.
-
-## `base`, `qui-demo` and the generated demo app
-
-**Live demo:** [https://q-ui-lib.vercel.app/qui-demo](https://q-ui-lib.vercel.app/qui-demo)
-
-- **`base`** is the foundational `uilib` (shadcn-style components) — other sets (`qui-demo`, your own `uilib`) are expected to build on it. For a **full reference demo** it therefore makes sense to have the **entire `base`** in the target app (not just a subset).
-- **`qui-demo`** contains supporting components for the generated demo (layout, example index, etc.) and **depends on `base`**. In a given repo's `qui.config.json`, both namespaces therefore belong in `repos.<name>.uilibs`, e.g. `["base", "qui-demo"]`.
-- **`templates/demo`** (in this repo, next to the package root) is not a "finished demo app" but the **inputs for the CLI** — `generate-demo` assembles files in the target Qwik app from them.
-- **`generate-demo`** creates demo routes and examples from the components already added in `targetPath`; the **example texts** come from the components' **JSDoc** (where the generator supports it).
-
-### Typical sequence: init → all components for the demo → generate-demo
-
-1. **`qui init`** — `qui.config.json` + syncing templates into the app (see `init` above).
-2. **`qui add --all base`** (and `qui add --all qui-demo` when needed) — adds all components from the selected uilib(s). Without a scope, `add --all` prompts for repo and uilib interactively. Alternative: add only selected components, e.g. `qui add button input`.
-3. **`qui generate-demo`** — e.g. with `--route-base /qui-demo` generates/updates the demo routes for the already-installed components.
-
-To keep things clear, the **canonical CLI commands** remain here; optional npm scripts wrap these steps **only for development in this repository** (see [Scripts in this repository](#scripts-in-this-repository)).
-
-### `demo/` is generated, not committed
-
-The **`demo/`** Qwik app is a **local build artifact**. It is listed in `.gitignore` and is **not** part of the published git tree. Sources of truth are **`components/`**, **`templates/app`**, and **`templates/demo`**.
-
-Regenerate it after pulling changes or when you need a fresh showcase:
-
-```bash
-npm run demo:prepare
-# or the alias:
-npm run qui:createdemo
-cd demo && npm run dev
-```
-
-Browse component examples at [q-ui-lib.vercel.app/qui-demo](https://q-ui-lib.vercel.app/qui-demo) or locally at `/qui-demo/components/base/<slug>/` (default route base).
-
-### Publish the demo to Vercel (manual, developer machine)
-
-Deployment is **intentionally manual** — there is no automatic deploy on push to GitHub. A maintainer builds and publishes from a clone of this repo.
-
-**Prerequisites:** [Vercel CLI](https://vercel.com/docs/cli) installed and logged in (`vercel login`). Link the project once from the repo root (`vercel link`) if you have not already.
-
-| Script | Purpose |
-|--------|---------|
-| `npm run demo:prepare` | `qui init demo` + `add --all base` + `qui:addtest` + `generate-demo` |
-| `npm run demo:build` | Prepare demo, add the Vercel Edge adapter (`qwik add vercel-edge`), install deps, run `qwik build` |
-| `npm run demo:run` | Start [Vercel Dev](https://vercel.com/docs/cli/dev) for the `demo/` app (default http://localhost:3000) |
-| `npm run demo:deploy` | `demo:build`, sync output to `.vercel/output`, then `vercel deploy --prebuilt --prod` |
-
-```bash
-# From the repository root (after npm install)
-npm run demo:run    # local Vercel Dev (http://localhost:3000)
-npm run demo:deploy # build + publish to production
-```
-
-Root **`vercel.json`** sets `buildCommand` to `npm run demo:build` and `outputDirectory` to `demo/.vercel/output` (Qwik Vercel Edge adapter output). The build reads components via `file://../` in generated `qui.config.json` and includes **`componenttest/`** uilibs via `qui:addtest`, so deploy from a **full monorepo clone**, not from the npm tarball alone.
-
-> **Note:** Fix any `demo/` build blockers listed in [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md) before deploying.
-
-## Most common examples
-
-```bash
-# 1) Initialize config (defaults: quibase → https://github.com/hfnukal/q-ui-lib.git)
-npx qui init
-
-# Monorepo dev: point at local clone instead
-npx qui init --repo local-dev --url file://../ --target-path src/components/ui
-
-# 2) Connect a source repo (discover + pick uilibs)
-npx qui connect file://../ componentsextra app web
-npx qui connect https://github.com/acme/ui-kit.git my-lib --all
-
-# 2b) Remove a repo or uilib from config
-npx qui connect --remove componentsextra app --yes
-
-# 3) Add/update/remove/list components
-npx qui add button accordion
-npx qui list
-npx qui list componentsextra/app
-npx qui update hero
-npx qui update web/hero --yes
-npx qui update web/ --all
-npx qui update --all --yes
-npx qui remove accordion
-
-# 4) Metadata + demo routes
-npx qui generate
-npx qui generate-demo --route-base /qui-demo
-
-# 5) Push local changes back to a source repo
-npx qui push hero
-npx qui push web/hero --title "Fix hero spacing"
-
-# 6) Verify / diff
-npx qui verify --repo acme
-npx qui diff hero
-npx qui diff web/hero
-npx qui diff componentsextra/web/hero
-npx qui diff --repo componentsextra/web --ci
-```
-
-## Global flags
-
-All flags are parsed globally (any command may accept them; each command uses the subset relevant to it).
-
-**Boolean** (no value):
-
-- `--auto` — non-interactive "auto" policy (e.g. auto-install npm deps, write `*-template` on config conflict).
-- `--force` — force/overwrite; sets policy to non-interactive `warn`, forces npm install/overwrite.
-- `--yes` — assume "yes" for confirmations (overwrite on conflict).
-- `--dry-run` — preview only; no files/config/git changes are written.
-- `--all` — operate on the whole scope (see `add`/`update`/`remove`; on `connect`, include all discovered uilibs for a repo; on `list`, enumerate all components).
-- `--remove` — `connect` remove mode: drop a repo or uilib(s) from `qui.config.json`.
-- `--ci` — turn a `verify`/`diff` mismatch into a non-zero exit code.
-- `--json` — emit a single JSON report envelope on stdout.
-
-**Value** (consume the next token):
-
-- `--on-error <ask|warn|fail>` — conflict/error policy (default `ask`).
-- `--repo <repo|repo/uilib>` — source selector; optional scope hint for `push` when a uilib exists in multiple repos.
-- `--url <url>` — repo URL (`init` only); supports `file://`, `http(s)://`, `ssh://`, `git@…`, and `…#<ref>`.
-- `--target-path <path>` — override the configured `targetPath`.
-- `--search-levels <n>` — `connect` discovery depth from URL root (default `2`).
-- `--connected <true|false>` — mark a repo connected on `connect` (default `true`).
-- `--base-branch <branch>` / `--branch <name>` / `--title <msg>` — `push` branch/commit/PR title options.
-- `--route-base </segment>` — `generate-demo` route base (default `/qui-demo`).
-- `--ref <ref>` — **rejected**; encode the ref in `--url` as `<git-url>#<ref>` instead.
-
-Run `qui help <command>` or `qui <command> --help` for detailed per-command usage.
-
-### Exit codes
-
-`0` success · `1` unexpected runtime error · `2` usage/parser error · `3` config/schema error · `4` source/git/network error · `5` policy fail-stop · `6` user rejected plan · `7` scope safety violation · `8` dependency install error · `9` verify/diff mismatch.
-
-## Scripts in this repository
-
-In the root `package.json`:
-
-- `npm run qui -- ...` — runs the `qui` CLI (`node ./bin/qui.js`).
-- `npm test` — CLI tests (`test/*.test.js`).
-- `npm run test:e2e` — Playwright tests against a local `demo/` dev server (see [UI_TEST.md](UI_TEST.md)).
-- `npm run generate-meta` — regenerates `meta.generated.json` for the sources in `./components`.
-- `npm run demo:prepare` — regenerate the local `demo/` app (`qui init` + `add --all base` + `generate-demo`). Alias: `npm run qui:createdemo` (prints dev-server hint).
-- `npm run demo:build` — production build of the demo (includes Vercel Edge adapter via `qwik add vercel-edge`).
-- `npm run demo:run` — local Vercel Dev server (`vercel dev`, http://localhost:3000).
-- `npm run demo:deploy` — build locally and publish to Vercel with `vercel deploy --prebuilt --prod` (manual; see [Publish the demo to Vercel](#publish-the-demo-to-vercel-manual-developer-machine)).
-- `npm publish` — publishes the `qui-client` package (the tarball contents are controlled by the `files` field in `package.json`).
+Thanks to **[Qwik UI](https://qwikui.com/)** (headless primitives and patterns) and **[shadcn/ui](https://ui.shadcn.com/)** (copy-into-your-app, own-the-source model) for ideas that shaped **qui** and the **base** component set.
 
 ## Related docs
 
-- [CONTRIBUTING.md](CONTRIBUTING.md)
-- [CLAUDE.md](CLAUDE.md)
-- [docs/CLI_MIGRATION.md](docs/CLI_MIGRATION.md)
-- [docs/MIGRATION_FROM_LEGACY_CLI.md](docs/MIGRATION_FROM_LEGACY_CLI.md)
-- [docs/QUI_CLIENT.md](docs/QUI_CLIENT.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md) — CLI reference, `qui.config.json`, local development, demo deploy
+- [docs/Q_UI_LIB.md](docs/Q_UI_LIB.md) — architecture overview
+- [docs/CLI_MIGRATION.md](docs/CLI_MIGRATION.md) — CLI contract and migration notes
+- [CREATE.md](CREATE.md) — creating and updating components in a source repo

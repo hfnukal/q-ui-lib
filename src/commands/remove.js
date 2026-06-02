@@ -51,25 +51,38 @@ function findDependents(installed, orderedUilibs, keysToRemove) {
 }
 
 function collectRemovedNpmDeps(installedComponents) {
-  const deps = new Set();
+  const dependencies = new Set();
+  const devDependencies = new Set();
   for (const component of installedComponents) {
     const npmDeps = Array.isArray(component.meta?.npmDependencies)
       ? component.meta.npmDependencies
       : [];
-    for (const dep of npmDeps) deps.add(dep);
+    const npmDevDeps = Array.isArray(component.meta?.npmDevDependencies)
+      ? component.meta.npmDevDependencies
+      : [];
+    for (const dep of npmDeps) dependencies.add(dep);
+    for (const dep of npmDevDeps) devDependencies.add(dep);
   }
-  return [...deps];
+  return {
+    dependencies: [...dependencies],
+    devDependencies: [...devDependencies],
+  };
 }
 
 function collectRemainingNpmDeps(installed, removingKeys) {
   const removingSet = new Set(removingKeys);
-  const all = new Set();
+  const dependencies = new Set();
+  const devDependencies = new Set();
   for (const component of installed) {
     if (removingSet.has(component.key)) continue;
-    const deps = Array.isArray(component.meta?.npmDependencies) ? component.meta.npmDependencies : [];
-    for (const dep of deps) all.add(dep);
+    const npmDeps = Array.isArray(component.meta?.npmDependencies) ? component.meta.npmDependencies : [];
+    const npmDevDeps = Array.isArray(component.meta?.npmDevDependencies)
+      ? component.meta.npmDevDependencies
+      : [];
+    for (const dep of npmDeps) dependencies.add(dep);
+    for (const dep of npmDevDeps) devDependencies.add(dep);
   }
-  return all;
+  return { dependencies, devDependencies };
 }
 
 function parseRemoveAllUilib(spec) {
@@ -152,7 +165,14 @@ async function runRemove(context) {
   const items = [];
   const removedNpmDeps = collectRemovedNpmDeps(componentsToRemove);
   const remainingNpmDeps = collectRemainingNpmDeps(installed, removeKeys);
-  const uninstallCandidates = removedNpmDeps.filter((dep) => !remainingNpmDeps.has(dep));
+  const remainingAll = new Set([
+    ...remainingNpmDeps.dependencies,
+    ...remainingNpmDeps.devDependencies,
+  ]);
+  const uninstallCandidates = {
+    dependencies: removedNpmDeps.dependencies.filter((dep) => !remainingAll.has(dep)),
+    devDependencies: removedNpmDeps.devDependencies.filter((dep) => !remainingAll.has(dep)),
+  };
   const npmResult = await uninstallDependencies(cwd, uninstallCandidates, flags, policy);
 
   for (const component of componentsToRemove) {
@@ -184,7 +204,10 @@ async function runRemove(context) {
       }
     }
   }
-  for (const pkg of uninstallCandidates) {
+  for (const pkg of [
+    ...uninstallCandidates.dependencies,
+    ...uninstallCandidates.devDependencies,
+  ]) {
     items.push({
       action: "uninstall",
       target: pkg,

@@ -248,6 +248,7 @@ function expandDependencies(componentsRootDir, orderedUilibs, seedSpecs, repoNam
   const seen = new Set();
   const unresolvedDeps = [];
   const npmPackages = new Set();
+  const npmDevPackages = new Set();
   const explicitSeeds = new Set();
 
   for (const seed of [...new Set(seedSpecs)]) {
@@ -275,7 +276,9 @@ function expandDependencies(componentsRootDir, orderedUilibs, seedSpecs, repoNam
     const meta = parseMeta(resolved.dir);
     const deps = Array.isArray(meta?.dependencies) ? meta.dependencies : [];
     const npmDeps = Array.isArray(meta?.npmDependencies) ? meta.npmDependencies : [];
+    const npmDevDeps = Array.isArray(meta?.npmDevDependencies) ? meta.npmDevDependencies : [];
     for (const pkg of npmDeps) npmPackages.add(pkg);
+    for (const pkg of npmDevDeps) npmDevPackages.add(pkg);
 
     for (const dep of deps) {
       const depResolved = resolveComponentSpec(
@@ -295,6 +298,7 @@ function expandDependencies(componentsRootDir, orderedUilibs, seedSpecs, repoNam
   return {
     components: ordered,
     npmPackages: [...npmPackages].sort(),
+    npmDevPackages: [...npmDevPackages].sort(),
     unresolvedDeps,
     explicitSeeds,
   };

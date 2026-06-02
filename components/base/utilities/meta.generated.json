@@ -5,8 +5,7 @@
   "kind": "utilities",
   "registry": "base",
   "dependencies": [],
-  "npmDependencies": [
-    "@builder.io/qwik"
-  ],
+  "npmDependencies": [],
+  "npmDevDependencies": [],
   "apiTree": {}
 }

@@ -6,6 +6,9 @@
   "registry": "base",
   "dependencies": [],
   "npmDependencies": [],
+  "npmDevDependencies": [
+    "dayjs"
+  ],
   "apiTree": {
     "Root": {
       "params": {

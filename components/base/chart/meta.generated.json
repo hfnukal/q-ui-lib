@@ -6,6 +6,9 @@
   "registry": "base",
   "dependencies": [],
   "npmDependencies": [],
+  "npmDevDependencies": [
+    "chart.js"
+  ],
   "apiTree": {
     "params": {
       "type": [
@@ -18,8 +21,8 @@
         "radar",
         "scatter"
       ],
-      "data": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/chart.js/dist/types/index\").ChartData<keyof import(\"/Us...",
-      "options": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/chart.js/dist/types/utils\")._DeepPartialObject<import(\"...",
+      "data": "chart.js.ChartData<keyof chart.js.ChartTypeRegistry, (number | [number, number] | chart.js.Point | chart.js.BubbleDat...",
+      "options": "chart.js._DeepPartialObject<chart.js.CoreChartOptions<keyof chart.js.ChartTypeRegistry> & chart.js.ElementChartOption...",
       "class": "string",
       "canvasClass": "string"
     }

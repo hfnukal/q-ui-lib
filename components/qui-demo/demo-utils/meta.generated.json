@@ -6,5 +6,6 @@
   "registry": "qui-demo",
   "dependencies": [],
   "npmDependencies": [],
+  "npmDevDependencies": [],
   "apiTree": {}
 }

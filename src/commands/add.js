@@ -175,6 +175,7 @@ async function runAdd(context) {
   const warnings = [];
   const mergedComponents = [];
   const npmPackages = new Set();
+  const npmDevPackages = new Set();
   const activeWorkspaces = [];
 
   for (const [repoName, seedKeys] of byRepo) {
@@ -186,6 +187,7 @@ async function runAdd(context) {
     const expanded = expandDependencies(componentsRootDir, orderedUilibs, seedKeys, repoName);
     mergedComponents.push(...expanded.components);
     for (const pkg of expanded.npmPackages) npmPackages.add(pkg);
+    for (const pkg of expanded.npmDevPackages) npmDevPackages.add(pkg);
     const autoAdded = expanded.components.filter((c) => !expanded.explicitSeeds.has(c.key));
     if (autoAdded.length > 0) {
       warnings.push(
@@ -201,7 +203,15 @@ async function runAdd(context) {
 
   const expandedFlat = dedupeExpandedByInstallKey(mergedComponents);
 
-  const npmResult = await installMissingDependencies(cwd, [...npmPackages].sort(), flags, policy);
+  const npmResult = await installMissingDependencies(
+    cwd,
+    {
+      dependencies: [...npmPackages].sort(),
+      devDependencies: [...npmDevPackages].sort(),
+    },
+    flags,
+    policy
+  );
   const items = [];
 
   try {

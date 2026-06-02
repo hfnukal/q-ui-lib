@@ -9,8 +9,11 @@
     "base/input-group",
     "base/popover"
   ],
-  "npmDependencies": [
-    "@qwik-ui/headless"
+  "npmDependencies": [],
+  "npmDevDependencies": [
+    "@qwik-ui/headless",
+    "@qwikest/icons",
+    "dayjs"
   ],
   "apiTree": {
     "params": {

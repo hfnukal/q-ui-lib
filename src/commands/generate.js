@@ -7,64 +7,7 @@ const { readConfig } = require("../services/config");
 const { getQuiClientRoot } = require("../services/runtime-paths");
 const { EXIT_CODES } = require("../constants");
 
-const HEADLESS_PKG = "@qwik-ui/headless";
 const TS_MORPH_PKG = "ts-morph@^27.0.2";
-
-/** @param {string} componentDir */
-function resolveComponentIndexPath(componentDir) {
-  const tsx = path.join(componentDir, "index.tsx");
-  if (fs.existsSync(tsx)) return tsx;
-  const ts = path.join(componentDir, "index.ts");
-  if (fs.existsSync(ts)) return ts;
-  return null;
-}
-
-/**
- * True if the component entry imports from @qwik-ui/headless (static or dynamic import / export from).
- * @param {string} indexPath
- */
-function componentReferencesHeadless(indexPath) {
-  let text;
-  try {
-    text = fs.readFileSync(indexPath, "utf8");
-  } catch {
-    return false;
-  }
-  return (
-    /from\s+["']@qwik-ui\/headless(?:\/[^"']*)?["']/.test(text) ||
-    /import\s*\(\s*["']@qwik-ui\/headless(?:\/[^"']*)?["']\s*\)/.test(text) ||
-    /export\s+[^;]+?\sfrom\s+["']@qwik-ui\/headless(?:\/[^"']*)?["']/.test(text)
-  );
-}
-
-/**
- * Ensures meta.generated.json lists @qwik-ui/headless when the component source imports it.
- * generate-meta omits packages already present on the repo baseline package.json; consumers still need this for qui add.
- * @param {string} componentDir
- */
-function ensureHeadlessNpmDependencyInMeta(componentDir) {
-  const indexPath = resolveComponentIndexPath(componentDir);
-  if (!indexPath || !componentReferencesHeadless(indexPath)) return;
-
-  const metaPath = path.join(componentDir, "meta.generated.json");
-  if (!fs.existsSync(metaPath)) return;
-
-  let meta;
-  try {
-    meta = JSON.parse(fs.readFileSync(metaPath, "utf8"));
-  } catch {
-    return;
-  }
-
-  const deps = Array.isArray(meta.npmDependencies) ? [...meta.npmDependencies] : [];
-  if (deps.includes(HEADLESS_PKG)) return;
-
-  deps.push(HEADLESS_PKG);
-  deps.sort();
-  meta.npmDependencies = deps;
-
-  fs.writeFileSync(metaPath, `${JSON.stringify(meta, null, 2)}\n`, "utf8");
-}
 
 /** @param {string} componentDir */
 function componentReferencesTsMorph(componentDir) {
@@ -76,7 +19,6 @@ function componentReferencesTsMorph(componentDir) {
   }
   for (const entry of entries) {
     if (!entry.isFile()) continue;
-    if (entry.name === "ui-component-introspect.ts") continue;
     if (!/\.tsx?$/.test(entry.name)) continue;
     const filePath = path.join(componentDir, entry.name);
     let text;
@@ -114,15 +56,20 @@ function ensureTsMorphNpmDependencyInMeta(componentDir) {
   }
 
   const deps = Array.isArray(meta.npmDependencies) ? [...meta.npmDependencies] : [];
-  const hasTsMorph = deps.some((d) => d === "ts-morph" || d.startsWith("ts-morph@"));
+  meta.npmDependencies = deps
+    .filter((d) => d !== "ts-morph" && !d.startsWith("ts-morph@"))
+    .sort();
+
+  const devDeps = Array.isArray(meta.npmDevDependencies) ? [...meta.npmDevDependencies] : [];
+  const hasTsMorph = devDeps.some((d) => d === "ts-morph" || d.startsWith("ts-morph@"));
   if (hasTsMorph) {
-    meta.npmDependencies = deps
+    meta.npmDevDependencies = devDeps
       .map((d) => (d === "ts-morph" ? TS_MORPH_PKG : d))
       .sort();
   } else {
-    deps.push(TS_MORPH_PKG);
-    deps.sort();
-    meta.npmDependencies = deps;
+    devDeps.push(TS_MORPH_PKG);
+    devDeps.sort();
+    meta.npmDevDependencies = devDeps;
   }
 
   fs.writeFileSync(metaPath, `${JSON.stringify(meta, null, 2)}\n`, "utf8");
@@ -212,7 +159,6 @@ async function runGenerate(context) {
 
   if (!flags.dryRun) {
     for (const dir of findComponentDirsForReport(componentsAbs)) {
-      ensureHeadlessNpmDependencyInMeta(dir);
       ensureTsMorphNpmDependencyInMeta(dir);
     }
   }

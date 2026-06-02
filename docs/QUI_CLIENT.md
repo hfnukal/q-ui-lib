@@ -71,14 +71,17 @@ Sjednoceni:
 - v prikladech se vzdy spousti `qui` nebo `npx qui`.
 
 Priklady:
-- bez instalace:
-  - `npx qui-client@latest init`
-- globalni instalace:
+- bez instalace (doporuceno pro prvni init):
+  - `npx qui@latest init` — prazdny adresar → Qwik scaffold
+  - `npx qui@latest init apps/web` — monorepo, nova app ve slozce
+- existujici Qwik app:
+  - `npx qui@latest init` — vytvori `qui.config.json` + sablony (i kdyz uz je `qui-client` v `package.json`)
+- lokalni pin po init:
+  - `npm i -D qui-client`
+  - `npx qui add …`
+- globalni instalace (volitelne, ne jako primarni quick start):
   - `npm i -g qui-client`
   - `qui init`
-- lokalni instalace:
-  - `npm i -D qui-client`
-  - `npx qui init`
 
 ## 4) `package.json` pro CLI
 
@@ -261,32 +264,31 @@ Kazda dalsi dvojice **`--repo X --url <URL>`** prida nebo aktualizuje zaznam **`
 
 ## 7) `init` scenar (novy i existujici Qwik projekt)
 
+Rozhoduje **`qui.config.json`**, ne pritomnost `qui-client` v `package.json`.
+
+| Detekce | Rezim | Chovani |
+|---------|--------|---------|
+| Prazdny `[dir]` | `scaffold_empty` | `npm create qwik@latest` + Tailwind + config + sablony |
+| Qwik, bez `qui.config.json` | `qwik_bootstrap` | Config + sablony (bez `npm create`) |
+| Qwik + `qui.config.json` | `qwik_sync_templates` | Jen sync `templates/app`; config beze zmeny (krome kolizi / `--force`) |
+| Jiny neprazdny kořen | `default` | Config + sablony; varovani, pokud je `qui-client` bez Qwik stacku |
+
 ### A) Novy projekt
-1. Uzivatel spusti `qui init`.
-2. CLI overi pritomnost `package.json`, Qwik configu a `src/`.
-   - podporovane varianty: `qwik.config.ts`, `qwik.config.mjs`, `qwik.config.cjs`.
-3. Z `package.json` overi pozadovane runtime i dev dependencies Qwik stacku; chybejici balicky nabidne doinstalovat nebo je doinstaluje podle policy.
-4. Pokud projekt neexistuje:
-   - nabidne `npm create qwik@latest` (interaktivne), nebo
-   - vrati presny command, ktery ma uzivatel spustit.
-5. Pokud jeste neni pripojena knihovna, zavola interni flow `connect`.
-6. CLI ulozi `qui.config.json` ve schema **`qui-config/v1`** (`targetPath`, `repos{…}`, bez `root` / `defaultRepo`).
-7. Otestuje dostupnost vsech aktivnich rep (`git ls-remote` + validace `ref`).
-8. Nabidne instalaci prvnich komponent z default repo nebo `--repo`.
+1. Uzivatel spusti `npx qui@latest init` v **prazdnem** adresari (nebo `qui init apps/web`).
+2. Nepredchazi `npm i -D qui-client` — naplneny kořen bez Qwik stacku nespusti scaffold.
+3. CLI spusti `npm create qwik@latest` (empty) + Tailwind, ulozi `qui.config.json`, synchronizuje sablony.
+4. Dalsi krok: `qui add …`.
 
-### B) Existujici projekt (upgrade mode)
-1. `qui init` detekuje uz existujici Qwik app.
-2. CLI nacte stavajici config.
-3. Porovna, co by se zmenilo (target slozky, nove helpery, komponenty, repo mapovani a `url/ref`) v `src`, `public` i root souborech.
-4. Pro root soubory (`vite.config.ts` a dalsi sablony v root) plati stejna pravidla jako pro `src/public`: diff -> overwrite/qui-template/skip.
-5. Vypise diff:
-   - nove soubory,
-   - upravene soubory,
-   - soubory k prepisu.
-6. Zepta se na potvrzeni (`Apply changes?`).
-7. Teprve po potvrzeni zapise.
+### B) Existujici Qwik (prvni init)
+1. `qui init` v package root Qwik app (s nebo bez `qui-client` v `package.json`).
+2. Vytvori `qui.config.json` a synchronizuje sablony s kolizni politikou.
+3. Chybi `qwik.config.*` v kořeni → varovani (spatny working directory).
 
-### C) Kolize existujicich souboru pri `init` (`src` i `public`)
+### C) Re-init (upgrade sablon)
+1. `qui init` pri existujicim `qui.config.json` → `qwik_sync_templates`.
+2. Porovnani sablon v `src`, `public`, root; kolize: overwrite / `*-template` / skip dle policy.
+
+### D) Kolize existujicich souboru pri `init` (`src` i `public`)
 
 Pokud v existujicim projektu uz soubor existuje (napr. `src/routes/layout.tsx`), CLI musi zabranit slepemu prepisu.
 
@@ -919,15 +921,16 @@ Poznamka:
 3. Publikovat (`npm publish --access public`).
 
 ### B) Pouziti uzivatelem
-- Bez instalace:
-  - `npx qui-client@latest init`
-- Globalni instalace:
-  - `npm i -g qui-client`
-  - `qui init`
-- Lokalni instalace v projektu:
+- Bez instalace (quick start):
+  - `npx qui@latest init` — prazdny adresar nebo `npx qui@latest init <subdir>`
+  - `npx qui add …`
+- Existujici Qwik:
+  - `npx qui@latest init` v kořeni app
+- Pin CLI v projektu (volitelne po init):
   - `npm i -D qui-client`
-  - `npx qui init`
-  - nebo script v `package.json`: `"qui": "qui"`
+  - script: `"qui": "qui"`
+- Globalni instalace (volitelne):
+  - `npm i -g qui-client` → `qui init`
 
 ## 13) Doporuceny roadmap (MVP -> v2)
 

@@ -7,5 +7,6 @@ export type MetaGenerated = {
   registry?: string;
   dependencies?: string[];
   npmDependencies?: string[];
+  npmDevDependencies?: string[];
   apiTree: Record<string, unknown>;
 };

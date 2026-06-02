@@ -281,6 +281,7 @@ async function runUpdate(context) {
   const warnings = [];
   const mergedComponents = [];
   const npmPackages = new Set();
+  const npmDevPackages = new Set();
   const activeWorkspaces = [];
 
   for (const [repoName, seedKeys] of byRepo) {
@@ -293,6 +294,7 @@ async function runUpdate(context) {
     const expanded = expandDependencies(componentsRootDir, orderedUilibs, seedKeys, repoName);
     mergedComponents.push(...expanded.components);
     for (const pkg of expanded.npmPackages) npmPackages.add(pkg);
+    for (const pkg of expanded.npmDevPackages) npmDevPackages.add(pkg);
     if (expanded.unresolvedDeps.length > 0) {
       warnings.push(
         `[${repoName}] Some dependencies referenced in meta.generated.json were not found in source: ${expanded.unresolvedDeps.join(", ")}`
@@ -309,7 +311,15 @@ async function runUpdate(context) {
 
   await confirmUpdate(expandedFlat, targetDir, flags);
 
-  const npmResult = await installMissingDependencies(cwd, [...npmPackages].sort(), flags, policy);
+  const npmResult = await installMissingDependencies(
+    cwd,
+    {
+      dependencies: [...npmPackages].sort(),
+      devDependencies: [...npmDevPackages].sort(),
+    },
+    flags,
+    policy
+  );
   const items = [];
 
   try {

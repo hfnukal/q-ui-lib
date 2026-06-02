@@ -6,6 +6,7 @@
   "registry": "base",
   "dependencies": [],
   "npmDependencies": [],
+  "npmDevDependencies": [],
   "apiTree": {
     "Root": {
       "params": {
@@ -19,7 +20,7 @@
           "manual"
         ],
         "vertical": "boolean",
-        "bind:selectedTabId": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/@builder.io/qwik/dist/core\").Signal<string | undefined>"
+        "bind:selectedTabId": "@builder.io/qwik.Signal<string | undefined>"
       },
       "slot": true,
       "children": {
@@ -56,7 +57,7 @@
             "tabId": "string",
             "_tabId": "string",
             "verticalLayout": "boolean",
-            "children": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/@builder.io/qwik/dist/core\").JSXChildren"
+            "children": "string"
           },
           "slot": true,
           "children": {
@@ -65,7 +66,7 @@
                 "tabId": "string",
                 "_tabId": "string",
                 "verticalLayout": "boolean",
-                "children": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/@builder.io/qwik/dist/core\").JSXChildren"
+                "children": "string"
               },
               "slot": true
             }

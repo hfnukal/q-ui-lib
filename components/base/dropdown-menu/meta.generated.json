@@ -8,8 +8,10 @@
     "base/separator",
     "base/utilities"
   ],
-  "npmDependencies": [
-    "@qwik-ui/headless"
+  "npmDependencies": [],
+  "npmDevDependencies": [
+    "@qwik-ui/headless",
+    "@qwikest/icons"
   ],
   "apiTree": {
     "Root": {
@@ -44,14 +46,14 @@
         "CheckboxItem": {
           "params": {
             "value": "boolean",
-            "bind:value": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/@builder.io/qwik/dist/core\").Signal<boolean>"
+            "bind:value": "@builder.io/qwik.Signal<boolean>"
           },
           "slot": true
         },
         "RadioGroup": {
           "params": {
             "value": "string",
-            "bind:value": "import(\"/Users/hfnukal/work/honzicekdev/q-ui-lib/node_modules/@builder.io/qwik/dist/core\").Signal<string>"
+            "bind:value": "@builder.io/qwik.Signal<string>"
           },
           "slot": true
         },
