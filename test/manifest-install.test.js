@@ -9,8 +9,8 @@ const pkgRoot = path.resolve(__dirname, "..");
 const quiBin = path.join(pkgRoot, "bin", "qui.js");
 const { readManifestFile } = require("../src/services/manifest");
 
-function localManifest(name) {
-  const src = path.join(pkgRoot, "components", name, "base.manifest.json");
+function localManifest(name, manifestFile = `${name}.manifest.json`) {
+  const src = path.join(pkgRoot, "components", name, manifestFile);
   const manifest = readManifestFile(src);
   manifest.config.repos.quibase.url = `file://${pkgRoot}/`;
   return manifest;
@@ -59,11 +59,15 @@ test("install runs init by default on empty directory (dry-run)", () => {
   }
 });
 
-test("qui-demo base.manifest.json validates and dry-run installs", () => {
+test("qui-demo demo.manifest.json validates and dry-run installs", () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "qui-manifest-demo-"));
   try {
     const manifestPath = path.join(tmp, "manifest.json");
-    fs.writeFileSync(manifestPath, `${JSON.stringify(localManifest("qui-demo"), null, 2)}\n`, "utf8");
+    fs.writeFileSync(
+      manifestPath,
+      `${JSON.stringify(localManifest("qui-demo", "demo.manifest.json"), null, 2)}\n`,
+      "utf8",
+    );
     const r = spawnSync(
       process.execPath,
       [quiBin, "install", manifestPath, tmp, "--no-init", "--dry-run", "--yes", "--json"],
