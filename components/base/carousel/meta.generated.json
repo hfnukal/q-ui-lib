@@ -14,6 +14,9 @@
       "children": {
         "Scroller": {},
         "Slide": {
+          "params": {
+            "frameless": "boolean"
+          },
           "slot": true
         },
         "Previous": {
