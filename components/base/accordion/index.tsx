@@ -94,7 +94,7 @@ const triggerClass =
 const contentClass = "px-4 pb-3 pt-3 text-callout text-secondary-label";
 
 const rootClass =
-  "w-full max-w-xl divide-y divide-separator-opaque overflow-hidden rounded-lg border border-separator-opaque bg-surface-raised shadow-sm";
+  "w-full divide-y divide-separator-opaque overflow-hidden rounded-lg border border-separator-opaque bg-surface-raised shadow-sm";
 
 export type AccordionRootProps = PropsOf<typeof HeadlessAccordion.Root>;
 
@@ -192,7 +192,7 @@ export interface AccordionProps {
  */
 export const AccordionList = component$<AccordionProps>((props) => {
   return (
-    <AccordionRoot multiple={props.multiple}>
+    <AccordionRoot class="max-w-xl" multiple={props.multiple}>
       {props.items.flatMap((item) => [
         <AccordionTrigger key={`${item.value}-t`}>{item.title}</AccordionTrigger>,
         <AccordionContent key={`${item.value}-c`}>{item.content}</AccordionContent>,
