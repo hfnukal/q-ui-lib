@@ -66,7 +66,7 @@
  *   Combobox,
  *   comboboxMultiselectControlClass,
  *   comboboxMultiselectInputClass,
- * } from "~/components/ui/base/combobox";
+ * } from "./";
  * 
  * const LANGS = [
  *   { value: "ts", label: "TypeScript" },
