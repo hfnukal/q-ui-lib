@@ -62,6 +62,7 @@ import {
   useContext,
   useContextProvider,
   useSignal,
+  useTask$,
   useVisibleTask$,
 } from "@builder.io/qwik";
 
@@ -92,12 +93,11 @@ function clamp(n: number, min: number, max: number) {
 /** Immediates layout update even when signal writes from a native listener do not re-run Qwik. */
 function applyResizableSplitCss(group: HTMLElement, pct: number) {
   group.style.setProperty("--q-resizable-start", `${pct}%`);
-  group.style.setProperty("--q-resizable-end", `${100 - pct}%`);
 }
 
 /**
  * Container for two {@link ResizablePanel}s separated by one {@link ResizableHandle}.
- * Uses flex % basis; give the group explicit height (horizontal) or width (vertical) as needed.
+ * Uses CSS grid (start % · handle · 1fr end); give the group explicit height (horizontal) or width (vertical) as needed.
  */
 export const ResizablePanelGroup = component$<ResizablePanelGroupProps>((props) => {
   const {
@@ -120,19 +120,25 @@ export const ResizablePanelGroup = component$<ResizablePanelGroupProps>((props) 
     groupRef,
   });
 
-  const flexDir =
-    direction === "horizontal" ? "flex h-full min-h-[8rem] w-full flex-row" : "flex min-h-[12rem] w-full min-w-0 flex-col";
+  const gridShell =
+    direction === "horizontal"
+      ? "grid h-full min-h-[8rem] w-full min-w-0"
+      : "grid min-h-[12rem] w-full min-w-0";
 
-  const merged = [flexDir, "min-w-0 overflow-hidden", className].filter(Boolean).join(" ");
+  const merged = [gridShell, "overflow-hidden", className].filter(Boolean).join(" ");
 
   // Reading splitPercent here subscribes the group to updates so CSS vars refresh (child Panels alone may not re-run).
   const split = splitPercent.value;
+  /** Fixed 12px (w-3) track — `auto` can collapse to 0 when panels use % tracks. */
+  const trackTemplate = "var(--q-resizable-start) 12px 1fr";
   const groupStyle = {
     ...(typeof userStyle === "object" && userStyle !== null && !Array.isArray(userStyle)
       ? userStyle
       : {}),
     "--q-resizable-start": `${split}%`,
-    "--q-resizable-end": `${100 - split}%`,
+    ...(direction === "horizontal"
+      ? { gridTemplateColumns: trackTemplate }
+      : { gridTemplateRows: trackTemplate, gridTemplateColumns: "minmax(0, 1fr)" }),
   };
 
   return (
@@ -160,36 +166,27 @@ export const ResizablePanel = component$<ResizablePanelProps>((props) => {
   const ctx = useContext(resizableContextId);
   const { side, minSize, class: className, ...rest } = props;
 
-  const m = clamp(minSize ?? 10, 0, 50);
-  if (side === "start") {
-    ctx.minStart.value = m;
-  } else {
-    ctx.minEnd.value = m;
-  }
+  useTask$(({ track }) => {
+    track(() => side);
+    track(() => minSize);
+    const m = clamp(minSize ?? 10, 0, 50);
+    if (side === "start") {
+      ctx.minStart.value = m;
+    } else {
+      ctx.minEnd.value = m;
+    }
+  });
 
   const min0 = side === "start" ? "min-w-0 min-h-0" : "min-w-0 min-h-0";
 
-  const merged = [
-    "overflow-auto",
-    min0,
-    "shrink-0 grow-0",
-    className,
-  ]
+  const merged = ["min-h-0 overflow-auto", min0, className]
     .filter(Boolean)
     .join(" ");
-
-  const flexBasis =
-    side === "start" ? "var(--q-resizable-start)" : "var(--q-resizable-end)";
 
   return (
     <div
       {...rest}
       class={merged}
-      style={{
-        flexBasis,
-        flexGrow: 0,
-        flexShrink: 0,
-      }}
     >
       <Slot />
     </div>
@@ -222,7 +219,7 @@ export const ResizableHandle = component$<ResizableHandleProps>((props) => {
   const merged = [
     horizontal
       ? "group/rhandle relative flex w-3 shrink-0 cursor-col-resize items-stretch justify-center"
-      : "group/rhandle relative flex h-3 shrink-0 cursor-row-resize items-center justify-stretch",
+      : "group/rhandle relative flex h-3 w-full shrink-0 cursor-row-resize items-center justify-stretch",
     "touch-none select-none outline-none transition-colors duration-150",
     "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     disabled ? "pointer-events-none cursor-not-allowed opacity-40" : "",
@@ -385,7 +382,7 @@ export const ResizableHandle = component$<ResizableHandleProps>((props) => {
 });
 
 /**
- * Resizable split view (two panels + handle). Not in @qwik-ui/headless — native flex + pointer events, COLORS.md tokens.
+ * Resizable split view (two panels + handle). Not in @qwik-ui/headless — CSS grid + pointer events, COLORS.md tokens.
  *
  * @example
  * ```tsx
