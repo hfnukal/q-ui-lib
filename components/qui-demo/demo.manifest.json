@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "qui-manifest/v1",
+  "templatePath": ".",
+  "config": {
+    "configSchemaVersion": "qui-config/v1",
+    "targetPath": "src/components/ui",
+    "repos": {
+      "quibase": {
+        "url": "https://github.com/hfnukal/q-ui-lib.git",
+        "componentsRoot": "components",
+        "uilibs": ["base", "qui-demo"],
+        "connected": true
+      }
+    }
+  },
+  "components": ["base/", "qui-demo/"],
+  "templates": ["quibase/qui-demo/demo"]
+}

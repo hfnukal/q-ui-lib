@@ -58,6 +58,8 @@ End-to-end UI tests: `npm run test:e2e` (see [UI_TEST.md](UI_TEST.md)).
 
 The library is designed so you can connect **multiple sources** (`repos`) and **`uilib`s** in `qui.config.json`. You can keep your own component sets in a separate repository and connect them via `qui connect`; this repo is mainly for shared components and the development of `qui-client`.
 
+You can also build a **custom CLI** on top of `qui-client`: import command functions directly instead of shelling out to the `qui` binary (see [Programmatic API](#programmatic-api-requirequi-client)).
+
 ---
 
 ## CLI (`qui`)
@@ -233,6 +235,85 @@ qui push [<repo>/][<uilib>/]<component...>
 - Workflow: clone remote → create branch → copy files under `repos.<name>.componentsRoot/<uilib>/<component>/` → commit → push → open a GitHub PR via `gh pr create` when `gh` is available (otherwise prints a compare URL).
 - `--base-branch <branch>` and `--branch <name>` control the push branch. `--title <msg>` sets the commit and PR title; in an interactive terminal, you are prompted when `--title` is omitted (default suggestion: `qui push: <components>`). `--dry-run` previews the workflow without pushing.
 
+### `route` — copy a uilib route pack into the app
+
+```bash
+qui route <repo>/<uilib>/<folder>[/<subpath...>]
+```
+
+- Source layout in the configured repo: `components/<uilib>/<folder>/routes/` (see [Routes and templates in source repos](#routes-and-templates-in-source-repos)).
+- Copies into **`src/routes`** by default (`--routes-path <path>` overrides).
+- Optional **subpath** after `<folder>` installs only that segment (e.g. `quibase/base/routescomp/[slug]` → `src/routes/[slug]/`).
+- **Conflict policy** matches `init` template sync and component overwrite flows: interactive `[o] overwrite`, `[p] save as *-template*`, `[s] skip`, `[d] diff`; non-interactive via `--yes` / `--auto` / `--force` and `--on-error`.
+
+### `template` — copy a uilib template pack into the app
+
+```bash
+qui template <repo>/<uilib>/<folder>[/<subpath...>]
+```
+
+- Source: `components/<uilib>/<folder>/template/` in the configured repo.
+- Copies into **`src/`** by default (`--template-path <path>` overrides). An optional subpath maps under that target.
+- Same conflict handling as `route` (overwrite / `*-template*` / skip / diff).
+
+### `install` — apply a manifest
+
+```bash
+qui install <manifest.json> [<path>]
+```
+
+- **`<path>`** — project root to install into (default: current directory).
+- By default runs **`qui init`** first (empty dir → Qwik scaffold; existing Qwik → config + `templates/app`; existing `qui.config.json` → template sync only). Repo URL for init is taken from the manifest `config`. **`--no-init`** skips init and applies only the manifest steps.
+- Reads **`qui-manifest/v1`**: `config` (full `qui.config.json`), `components[]`, `templates[]`, `routes[]`, optional `templatePath`.
+- **Components** entries: bare slug (`button`), `uilib/slug` (`base/button`), or `uilib/` (all components in that uilib, same as `add --all <uilib>`).
+- **Templates** / **routes** entries use the same triple as `template` / `route` (`<repo>/<uilib>/<folder>[/<subpath...>]`).
+- Overwrites `qui.config.json` from the manifest, then runs the equivalent `add` / `template` / `route` steps. `--dry-run` previews without writing.
+
+### `register` — register a local uilib in config
+
+```bash
+qui register <repo>/<uilib>/
+```
+
+- Adds **`uilib`** to **`repos.<repo>.uilibs`** in `qui.config.json`.
+- **`<repo>`** must already be configured (typically via **`qui connect`**); the command does not connect new remotes.
+- Verifies that **`targetPath/<uilib>/`** exists and contains at least one component (`index.tsx` / `index.ts`).
+- If the uilib is already listed for that repo, the command is a no-op. `--target-path` / `--dry-run` supported.
+
+### `export` — write a manifest from the current project
+
+```bash
+qui export [components] [templates] [routes] [filters...]
+```
+
+- Default output: **`manifest.json`** (`--output <file>` to override).
+- With **no positionals**, exports all three sections: installed components (from `targetPath`), plus empty `templates` / `routes` unless pack specs are listed.
+- **Section keywords** (`components`, `templates`, `routes`) limit which arrays appear in the manifest.
+- **Component filters** — bare slug, `uilib/slug`, or `uilib/` — narrow the `components` list to installed matches.
+- **Pack specs** after a section keyword (or when only packs are given) populate `templates` / `routes`.
+- Trims **`config.repos`** to repositories referenced by the exported entries.
+
+### Routes and templates in source repos
+
+A ui-lib folder may define optional packs alongside (or instead of) a component `index.tsx`:
+
+```text
+components/<uilib>/<folder>/
+  routes/
+    index.tsx
+    layout.tsx
+    [slug]/index.tsx
+  template/
+    ...
+```
+
+Example:
+
+```bash
+qui route quibase/base/routescomp
+qui template quibase/base/mytemplate
+```
+
 ## `qui.config.json` (schema `qui-config/v1`)
 
 The CLI works against the configuration in the app root:
@@ -363,6 +444,15 @@ npx qui diff hero
 npx qui diff web/hero
 npx qui diff componentsextra/web/hero
 npx qui diff --repo componentsextra/web --ci
+
+# 7) Routes, templates, manifest
+npx qui route quibase/base/routescomp
+npx qui template quibase/base/mytemplate
+npx qui export components button base/tabs
+npx qui install manifest.json
+
+# 8) Register a local uilib with a connected repo
+npx qui register quibase/mycustom/
 ```
 
 ## Global flags
@@ -377,6 +467,7 @@ All flags are parsed globally (any command may accept them; each command uses th
 - `--dry-run` — preview only; no files/config/git changes are written.
 - `--all` — operate on the whole scope (see `add`/`update`/`remove`; on `connect`, include all discovered uilibs for a repo; on `list`, enumerate all components).
 - `--remove` — `connect` remove mode: drop a repo or uilib(s) from `qui.config.json`.
+- `--no-init` — `install` skips the automatic `qui init` step.
 - `--ci` — turn a `verify`/`diff` mismatch into a non-zero exit code.
 - `--json` — emit a single JSON report envelope on stdout.
 
@@ -390,6 +481,9 @@ All flags are parsed globally (any command may accept them; each command uses th
 - `--connected <true|false>` — mark a repo connected on `connect` (default `true`).
 - `--base-branch <branch>` / `--branch <name>` / `--title <msg>` — `push` branch/commit/PR title options.
 - `--route-base </segment>` — `generate-demo` route base (default `/qui-demo`).
+- `--routes-path <path>` — `route` install target (default `src/routes`).
+- `--template-path <path>` — `template` install target (default `src`).
+- `--output <file>` — `export` manifest filename (default `manifest.json`).
 - `--ref <ref>` — **rejected**; encode the ref in `--url` as `<git-url>#<ref>` instead.
 
 Run `qui help <command>` or `qui <command> --help` for detailed per-command usage.
@@ -397,6 +491,125 @@ Run `qui help <command>` or `qui <command> --help` for detailed per-command usag
 ### Exit codes
 
 `0` success · `1` unexpected runtime error · `2` usage/parser error · `3` config/schema error · `4` source/git/network error · `5` policy fail-stop · `6` user rejected plan · `7` scope safety violation · `8` dependency install error · `9` verify/diff mismatch.
+
+## Programmatic API (`require('qui-client')`)
+
+The npm package exports a **library entry** (`package.json` → `"main": "./src/index.js"`) in addition to the `qui` binary. Every built-in command is available as an async function that returns a **report object** (same shape as `--json` on stdout). Only `src/cli.js` calls `process.exit`; library callers handle exit codes themselves.
+
+### Install and import
+
+```bash
+npm i -D qui-client
+```
+
+```js
+const {
+  createContext,
+  runArgv,
+  runCommand,
+  runAdd,
+  runList,
+  printReport,
+  EXIT_CODES,
+} = require("qui-client");
+```
+
+TypeScript: types ship in `src/index.d.ts` (`import type { QuiContext, QuiReport } from "qui-client"`).
+
+### Context
+
+Commands receive a **context** object (same as the binary):
+
+| Field | Type | Role |
+|-------|------|------|
+| `cwd` | `string` | Working directory; must contain `qui.config.json` for all commands except `init` |
+| `flags` | `object` | Parsed CLI flags (`yes`, `dryRun`, `repo`, …) — camelCase keys from `parseArgv` |
+| `positionals` | `string[]` | Non-flag arguments after the command name |
+| `rawArgv` | `string[]` | Optional; raw tokens after the command (used by some commands for logging) |
+
+Build context explicitly:
+
+```js
+const context = createContext({
+  cwd: process.cwd(),
+  positionals: ["button", "input"],
+  flags: { yes: true, auto: true },
+});
+```
+
+### Running commands
+
+**By name** (dispatcher used by the binary):
+
+```js
+const report = await runCommand("add", context);
+```
+
+**Argv-style** (parses flags like `qui`):
+
+```js
+const report = await runArgv(["add", "button", "--yes"], { cwd: appRoot });
+```
+
+**Direct** (one function per command):
+
+```js
+const report = await runAdd(context);
+```
+
+Available `run*` exports: `runInit`, `runConnect`, `runVerify`, `runDiff`, `runAdd`, `runList`, `runUpdate`, `runRemove`, `runGenerate`, `runGenerateDemo`, `runClone`, `runPush`, `runRoute`, `runTemplate`, `runInstall`, `runExport`, `runRegister`.
+
+### Report and output
+
+- `report.ok` — boolean success
+- `report.exitCode` — use for `process.exit(report.exitCode)` in your CLI
+- `report.items`, `report.warnings`, `report.errors` — same as CLI text/JSON output
+- `printReport(report, jsonMode?)` — optional human-readable stdout (skip if you only need structured data)
+- `createReport({ … })` — build custom reports in wrappers
+- `parseArgv(argv)` — reuse the CLI parser in custom commands
+
+### Example: custom `myqui` binary
+
+```js
+#!/usr/bin/env node
+const { createContext, runAdd, printReport } = require("qui-client");
+
+async function main() {
+  const slugs = process.argv.slice(2);
+  if (slugs.length === 0) {
+    console.error("Usage: myqui <slug> [slug...]");
+    process.exit(2);
+  }
+
+  const report = await runAdd(
+    createContext({
+      cwd: process.cwd(),
+      positionals: slugs,
+      flags: { yes: true, auto: true },
+    })
+  );
+
+  printReport(report);
+  process.exit(report.exitCode);
+}
+
+main().catch((error) => {
+  console.error(error.message);
+  process.exit(error.exitCode ?? 1);
+});
+```
+
+In `package.json` of your wrapper: `"bin": { "myqui": "./bin/myqui.js" }`, `"dependencies": { "qui-client": "^0.1.2" }` (or `"file:../q-ui-lib"` in a monorepo).
+
+### Notes for programmatic use
+
+1. Set **`cwd`** to the app root with `qui.config.json` (not the monorepo root unless config lives there).
+2. Use **`--yes` / `--auto` / `--force`** via `flags` when stdin is not a TTY — otherwise interactive commands throw or exit `6`.
+3. **`--dry-run`** works the same: no filesystem writes; inspect `report.items` for the plan.
+4. Unknown commands: `runCommand` throws an `Error` with `exitCode: 2` (same as the binary).
+5. Internal orchestration (`qui install` calling `runInit` + `runAdd`, etc.) uses the same API — no subprocess between qui commands.
+
+Tests: `test/api.test.js`.
 
 ## Scripts in this repository
 

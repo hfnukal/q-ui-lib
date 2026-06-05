@@ -16,8 +16,9 @@ function createReport({
   warnings = [],
   errors = [],
   footer = [],
+  details,
 }) {
-  return {
+  const report = {
     schemaVersion: REPORT_SCHEMA_VERSION,
     command,
     ok,
@@ -31,6 +32,10 @@ function createReport({
     footer,
     timestamp: new Date().toISOString(),
   };
+  if (details !== undefined) {
+    report.details = details;
+  }
+  return report;
 }
 
 function printReport(report, jsonMode) {

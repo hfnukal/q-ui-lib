@@ -9,6 +9,7 @@ const GLOBAL_BOOLEAN_FLAGS = new Set([
   "all",
   "ci",
   "remove",
+  "no-init",
   "help",
 ]);
 const GLOBAL_VALUE_FLAGS = new Set([
@@ -21,6 +22,9 @@ const GLOBAL_VALUE_FLAGS = new Set([
   "base-branch",
   "title",
   "route-base",
+  "routes-path",
+  "template-path",
+  "output",
   "branch",
   "search-levels",
 ]);

@@ -146,8 +146,82 @@ npx qui-client@latest <command> …   # without a local install
 | `generate-demo` | Build demo routes from JSDoc | `qui generate-demo` |
 | `clone` | Fork an installed component under a new name | `qui clone base/button base/icon-button` |
 | `push` | Push local changes back to a git remote (PR via `gh`) | `qui push base/button --title "fix: button focus"` |
+| `route` | Copy a uilib route pack into `src/routes` | `qui route quibase/base/routescomp` |
+| `template` | Copy a uilib template pack into `src` | `qui template quibase/base/mytemplate` |
+| `install` | Run `init`, then apply a `manifest.json` (config + components + templates + routes) | `qui install manifest.json` · `qui install manifest.json --no-init` |
+| `export` | Write `manifest.json` from the current project | `qui export` · `qui export components button` |
+| `register` | Register a local uilib under `targetPath` with a connected repo | `qui register quibase/myuilib/` |
 
 Config file: **`qui.config.json`** (`targetPath`, `repos.<name>.url`, `uilibs`, …). Git refs belong in the URL: `https://…/repo.git#main`.
+
+### Routes and templates in source repos
+
+Within a ui-lib, use **separate folder names** for installable components vs route/template packs:
+
+```text
+# Installable component (qui add / update / remove)
+components/<uilib>/<slug>/
+  index.tsx          # or index.ts — required for CLI discovery
+  meta.generated.json
+  helper.ts          # optional co-located modules (copied with the component)
+
+# Route or template pack only (qui route / qui template — not a component)
+components/<uilib>/<pack-folder>/
+  routes/            # Qwik City routes (route command)
+    index.tsx
+    layout.tsx
+    [slug]/index.tsx
+  template/          # app scaffolding files (template command)
+    ...
+```
+
+**Do not put `index.ts(x)` at the root of a pack-only folder.** The CLI treats any directory with a root `index.ts` or `index.tsx` as a component (`list`, `add --all`, dependency expansion). `add` / `update` copy the **entire** directory into `targetPath`, so a root index would also pull `routes/` and `template/` into `src/components/…` — the wrong place. Reference pack folders only from manifest `templates[]` / `routes[]` or explicit `qui template` / `qui route` specs (e.g. `quibase/base/app`, `quibase/qui-demo/demo`).
+
+If you need both a UI component and a demo route pack, use two folders (e.g. `demo-layout` + `demo`) or rely on **`qui generate-demo`** for generated demo routes from installed components.
+
+- **`qui route <repo>/<uilib>/<folder>`** copies `routes/` into `src/routes` (optional subpath, e.g. `.../routescomp/[slug]`).
+- **`qui template <repo>/<uilib>/<folder>`** copies `template/` into `src/`.
+- On overwrite conflicts, both commands offer the same choices as component updates: overwrite, save as `*-template*`, diff, or skip.
+
+### Manifest install / export
+
+Use a **`manifest.json`** to reproduce or share a full setup:
+
+```json
+{
+  "schemaVersion": "qui-manifest/v1",
+  "config": { "...": "qui.config.json contents" },
+  "components": ["base/", "qui-demo/codeexample", "button"],
+  "templates": ["quibase/base/mytemplate"],
+  "routes": ["quibase/base/routescomp", "quibase/base/routescomp/[slug]"]
+}
+```
+
+- **`qui install <manifest.json> [<path>]`** — runs **`qui init`** first (Qwik scaffold in an empty dir, `templates/app`, `qui-client`), then writes manifest `config` and runs `add` / `template` / `route` for each entry (`<path>` defaults to `.`). Use **`--no-init`** to skip the init step.
+- **`qui export [components] [templates] [routes] [filters…]`** — creates `manifest.json`; trims `config.repos` to only repositories referenced in the manifest.
+
+## Programmatic API
+
+Besides the `qui` binary, **`qui-client`** exposes the same commands as importable functions — useful for a custom CLI (`myqui`) or automation without spawning a subprocess.
+
+```js
+const { createContext, runAdd, printReport } = require("qui-client");
+
+const report = await runAdd(
+  createContext({
+    cwd: "/path/to/app", // directory with qui.config.json
+    positionals: ["button", "input"],
+    flags: { yes: true, auto: true },
+  })
+);
+
+printReport(report);
+process.exit(report.exitCode);
+```
+
+Or parse argv like the binary: `runArgv(["add", "button", "--yes"], { cwd })`.
+
+TypeScript consumers get types from `src/index.d.ts` (`import { runList } from "qui-client"`). Full reference: **[CONTRIBUTING.md — Programmatic API](CONTRIBUTING.md#programmatic-api-requirequi-client)**.
 
 ## Inspiration
 
@@ -155,7 +229,7 @@ Thanks to **[Qwik UI](https://qwikui.com/)** (headless primitives and patterns) 
 
 ## Related docs
 
-- [CONTRIBUTING.md](CONTRIBUTING.md) — CLI reference, `qui.config.json`, local development, demo deploy
+- [CONTRIBUTING.md](CONTRIBUTING.md) — CLI reference, programmatic API, `qui.config.json`, local development, demo deploy
 - [docs/Q_UI_LIB.md](docs/Q_UI_LIB.md) — architecture overview
 - [docs/CLI_MIGRATION.md](docs/CLI_MIGRATION.md) — CLI contract and migration notes
 - [CREATE.md](CREATE.md) — creating and updating components in a source repo

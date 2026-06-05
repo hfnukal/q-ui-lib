@@ -30,6 +30,9 @@ function ensureRelativeUnderCwd(cwd, relativePath) {
 
 function copyComponentDirectory(sourceDir, targetDir) {
   fs.mkdirSync(path.dirname(targetDir), { recursive: true });
+  if (fs.existsSync(targetDir)) {
+    fs.rmSync(targetDir, { recursive: true, force: true });
+  }
   fs.cpSync(sourceDir, targetDir, { recursive: true, force: true });
 }
 
