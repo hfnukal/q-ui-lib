@@ -14,6 +14,7 @@
           "default",
           "line"
         ],
+        "panelBorder": "boolean",
         "selectedTabId": "string",
         "behavior": [
           "automatic",
@@ -57,6 +58,7 @@
             "tabId": "string",
             "_tabId": "string",
             "verticalLayout": "boolean",
+            "panelBorder": "boolean",
             "children": "string"
           },
           "slot": true,
@@ -66,6 +68,7 @@
                 "tabId": "string",
                 "_tabId": "string",
                 "verticalLayout": "boolean",
+                "panelBorder": "boolean",
                 "children": "string"
               },
               "slot": true

@@ -140,6 +140,36 @@ const panelClassHorizontalLine =
   "text-body text-secondary-label ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 mt-4";
 const panelClassVertical = `${panelClassBase} mt-0 flex-1 min-w-0`;
 
+const panelClassHorizontalBorderless = `${panelClassHorizontalLine}`;
+const panelClassVerticalBorderless =
+  "text-body text-secondary-label ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 mt-0 flex-1 min-w-0";
+
+export function tabsListClassName(
+  variant: "default" | "line",
+  vertical: boolean,
+): string {
+  if (variant === "line") return listClassLine;
+  return vertical ? listClassVertical : listClassHorizontal;
+}
+
+export function tabsTriggerClassName(variant: "default" | "line"): string {
+  return variant === "line" ? triggerClassLine : triggerClass;
+}
+
+export function tabsPanelClassName(
+  variant: "default" | "line",
+  vertical: boolean,
+  panelBorder: boolean,
+): string {
+  if (!panelBorder) {
+    return vertical ? panelClassVerticalBorderless : panelClassHorizontalBorderless;
+  }
+  if (variant === "line") {
+    return vertical ? panelClassVertical : panelClassHorizontalLine;
+  }
+  return vertical ? panelClassVertical : panelClassHorizontal;
+}
+
 const listClassHorizontal =
   "inline-flex items-center justify-center rounded-lg border border-separator-opaque bg-surface-raised p-1 text-secondary-label shadow-sm";
 const listClassLine =
@@ -151,6 +181,8 @@ const listClassVertical =
 export type TabRootProps = Omit<PropsOf<"div">, "role"> & {
   /** `line` — underlined tabs, content without a border; the default variant has a border around both the list and the panel. */
   variant?: "default" | "line";
+  /** Border and raised background around tab panels (default variant only; line variant is always borderless). */
+  panelBorder?: boolean;
   /** Controlled selected tab id. */
   selectedTabId?: string;
   /** Activation mode. */
@@ -180,6 +212,8 @@ export type TabPanelProps = Omit<PropsOf<"div">, "children"> & {
    */
   _tabId?: string;
   verticalLayout?: boolean;
+  /** Overrides `panelBorder` from `Tab.Root`. */
+  panelBorder?: boolean;
   children?: PropsOf<"div">["children"];
 };
 
@@ -194,6 +228,8 @@ const behaviorContext = createContextId<Signal<"automatic" | "manual">>(
 const idPrefixContext = createContextId<Signal<string>>("q-ui-lib.tabs.id-prefix");
 const autoTabIdContext = createContextId<Signal<number>>("q-ui-lib.tabs.auto-tab-id");
 const autoPanelIdContext = createContextId<Signal<number>>("q-ui-lib.tabs.auto-panel-id");
+const variantContext = createContextId<Signal<"default" | "line">>("q-ui-lib.tabs.variant");
+const panelBorderContext = createContextId<Signal<boolean>>("q-ui-lib.tabs.panel-border");
 
 /**
  * Styled Tabs root — layout, tokens from COLORS.md.
@@ -201,6 +237,7 @@ const autoPanelIdContext = createContextId<Signal<number>>("q-ui-lib.tabs.auto-p
 export const TabRoot = component$<TabRootProps>((props) => {
   const {
     variant = "default",
+    panelBorder = true,
     class: className,
     selectedTabId,
     "bind:selectedTabId": bindSelectedTabId,
@@ -217,6 +254,8 @@ export const TabRoot = component$<TabRootProps>((props) => {
   const behaviorSig = useSignal(behavior);
   const autoTabIdSig = useSignal(0);
   const autoPanelIdSig = useSignal(0);
+  const variantSig = useSignal(variant);
+  const panelBorderSig = useSignal(panelBorder);
   const prefixSig = useSignal(
     props.id && typeof props.id === "string" ? `${props.id}` : `tabs-${Math.random().toString(36).slice(2, 10)}`,
   );
@@ -237,6 +276,13 @@ export const TabRoot = component$<TabRootProps>((props) => {
   useContextProvider(idPrefixContext, prefixSig);
   useContextProvider(autoTabIdContext, autoTabIdSig);
   useContextProvider(autoPanelIdContext, autoPanelIdSig);
+  useContextProvider(variantContext, variantSig);
+  useContextProvider(panelBorderContext, panelBorderSig);
+
+  useTask$(({ track }) => {
+    variantSig.value = track(() => props.variant) ?? "default";
+    panelBorderSig.value = track(() => props.panelBorder) ?? true;
+  });
 
   useVisibleTask$(({ track }) => {
     track(() => tabIdsSig.value.length);
@@ -282,8 +328,14 @@ export const TabTrigger = component$<TabTriggerProps>((props) => {
       resolvedTabIdSig.value = `tab-${autoIdSig.value}`;
     }
   });
+  const variantSig = useContext(variantContext);
   const { class: className, disabled, onClick$: userOnClick$, ...rest } = props;
-  const merged = [triggerClass, className].filter(Boolean).join(" ");
+  const merged = [
+    tabsTriggerClassName(variantSig.value),
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
   const isSelected = selectedTabIdSig.value === resolvedTabIdSig.value;
 
   useVisibleTask$(({ track }) => {
@@ -313,7 +365,7 @@ export const TabTrigger = component$<TabTriggerProps>((props) => {
           void (extra as (e: PointerEvent, el: HTMLButtonElement) => unknown)(event, element);
         }
       })}
-      onKeyDown$={(event, element) => {
+      onKeyDown$={$((event, element) => {
         const ids = tabIdsSig.value;
         const currentIndex = ids.indexOf(resolvedTabIdSig.value);
         if (currentIndex === -1 || ids.length === 0) {
@@ -366,7 +418,7 @@ export const TabTrigger = component$<TabTriggerProps>((props) => {
           event.preventDefault();
           selectedTabIdSig.value = resolvedTabIdSig.value;
         }
-      }}
+      })}
     >
       <Slot />
     </button>
@@ -425,7 +477,7 @@ export const TabTriggerLine = component$<TabTriggerProps>((props) => {
           void (extra as (e: PointerEvent, el: HTMLButtonElement) => unknown)(event, element);
         }
       })}
-      onKeyDown$={(event, element) => {
+      onKeyDown$={$((event, element) => {
         const ids = tabIdsSig.value;
         const currentIndex = ids.indexOf(resolvedTabIdSig.value);
         if (currentIndex === -1 || ids.length === 0) {
@@ -478,7 +530,7 @@ export const TabTriggerLine = component$<TabTriggerProps>((props) => {
           event.preventDefault();
           selectedTabIdSig.value = resolvedTabIdSig.value;
         }
-      }}
+      })}
     >
       <Slot />
     </button>
@@ -487,13 +539,17 @@ export const TabTriggerLine = component$<TabTriggerProps>((props) => {
 
 export const TabList = component$<TabListProps>((props) => {
   const verticalSig = useContext(verticalContext);
+  const variantSig = useContext(variantContext);
   const { class: className, verticalLayout, ...rest } = props;
+  const vertical = verticalLayout || verticalSig.value;
+  const defaultListClass = tabsListClassName(variantSig.value, vertical);
+  const merged = [defaultListClass, className].filter(Boolean).join(" ");
   return (
     <div
       {...rest}
       role="tablist"
-      aria-orientation={verticalLayout || verticalSig.value ? "vertical" : "horizontal"}
-      class={className}
+      aria-orientation={vertical ? "vertical" : "horizontal"}
+      class={merged}
     >
       <Slot />
     </div>
@@ -504,6 +560,9 @@ export const TabPanel = component$<TabPanelProps>((props) => {
   const selectedTabIdSig = useContext(selectedTabIdContext);
   const prefixSig = useContext(idPrefixContext);
   const autoIdSig = useContext(autoPanelIdContext);
+  const verticalSig = useContext(verticalContext);
+  const variantSig = useContext(variantContext);
+  const panelBorderSig = useContext(panelBorderContext);
   const resolvedTabIdSig = useSignal<string>(explicitTabId(props) ?? "");
   useTask$(({ track }) => {
     track(() => props.tabId);
@@ -518,11 +577,21 @@ export const TabPanel = component$<TabPanelProps>((props) => {
       resolvedTabIdSig.value = `tab-${autoIdSig.value}`;
     }
   });
-  const { verticalLayout, class: className, hidden, tabId, _tabId, ...rest } = props;
-  void verticalLayout;
+  const { verticalLayout, class: className, hidden, tabId, _tabId, panelBorder, ...rest } =
+    props;
   void tabId;
   void _tabId;
-  const merged = [panelClassHorizontal, className].filter(Boolean).join(" ");
+  const bordered = panelBorder ?? panelBorderSig.value;
+  const merged = [
+    tabsPanelClassName(
+      variantSig.value,
+      Boolean(verticalLayout || verticalSig.value),
+      bordered,
+    ),
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
   const isSelected =
     selectedTabIdSig.value === resolvedTabIdSig.value;
 
@@ -546,6 +615,8 @@ export const TabPanelLine = component$<TabPanelProps>((props) => {
   const selectedTabIdSig = useContext(selectedTabIdContext);
   const prefixSig = useContext(idPrefixContext);
   const autoIdSig = useContext(autoPanelIdContext);
+  const verticalSig = useContext(verticalContext);
+  const panelBorderSig = useContext(panelBorderContext);
   const resolvedTabIdSig = useSignal<string>(explicitTabId(props) ?? "");
   useTask$(({ track }) => {
     track(() => props.tabId);
@@ -560,11 +631,21 @@ export const TabPanelLine = component$<TabPanelProps>((props) => {
       resolvedTabIdSig.value = `tab-${autoIdSig.value}`;
     }
   });
-  const { verticalLayout, class: className, hidden, tabId, _tabId, ...rest } = props;
-  void verticalLayout;
+  const { verticalLayout, class: className, hidden, tabId, _tabId, panelBorder, ...rest } =
+    props;
   void tabId;
   void _tabId;
-  const merged = [panelClassHorizontalLine, className].filter(Boolean).join(" ");
+  const bordered = panelBorder ?? panelBorderSig.value;
+  const merged = [
+    tabsPanelClassName(
+      "line",
+      Boolean(verticalLayout || verticalSig.value),
+      bordered,
+    ),
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
   const isSelected =
     selectedTabIdSig.value === resolvedTabIdSig.value;
 
@@ -618,6 +699,7 @@ export interface TabsGroupProps {
   vertical?: boolean;
   /** `line` — underlined tabs, content without a border. */
   variant?: TabRootProps["variant"];
+  panelBorder?: boolean;
   class?: string;
 }
 
@@ -633,47 +715,28 @@ export const TabsGroup = component$<TabsGroupProps>((props) => {
       ? defaultId
       : firstEnabled;
 
-  const vertical = props.vertical;
-  const isLine = props.variant === "line";
-
-  const listClass = isLine
-    ? listClassLine
-    : vertical
-      ? listClassVertical
-      : listClassHorizontal;
-  const triggerClassName = isLine ? triggerClassLine : triggerClass;
-  const panelClassName = isLine
-    ? panelClassHorizontalLine
-    : vertical
-      ? panelClassVertical
-      : panelClassHorizontal;
+  const vertical = Boolean(props.vertical);
+  const variant = props.variant ?? "default";
+  const panelBorder = props.panelBorder ?? true;
 
   return (
     <Tab.Root
       class={props.class}
       behavior={props.behavior}
       vertical={vertical}
-      variant={props.variant}
+      variant={variant}
+      panelBorder={panelBorder}
       selectedTabId={initialId}
     >
-      <Tab.List class={listClass}>
+      <Tab.List>
         {items.map((item) => (
-          <Tab.Tab
-            key={item.value}
-            tabId={item.value}
-            disabled={item.disabled}
-            class={triggerClassName}
-          >
+          <Tab.Tab key={item.value} tabId={item.value} disabled={item.disabled}>
             {item.label}
           </Tab.Tab>
         ))}
       </Tab.List>
       {items.map((item) => (
-        <Tab.Panel
-          key={item.value}
-          tabId={item.value}
-          class={panelClassName}
-        >
+        <Tab.Panel key={item.value} tabId={item.value}>
           <p>{item.content}</p>
         </Tab.Panel>
       ))}
