@@ -165,14 +165,19 @@ const rootClass = "relative w-full";
 const scrollerClass =
   "min-h-[8rem] rounded-lg border border-separator-opaque bg-surface-base";
 
+const scrollerFramelessClass = "min-h-[8rem] rounded-lg";
+
 const slideClass =
   "flex min-h-[120px] flex-col justify-center rounded-md border border-separator-opaque bg-surface-raised p-6 text-body text-label shadow-sm";
+
+const slideFramelessClass =
+  "flex min-h-[120px] flex-col justify-center rounded-md bg-transparent p-0 text-body text-label shadow-none";
 
 const navButtonClass =
   "relative z-10 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-separator-opaque bg-surface-raised text-secondary-label shadow-sm transition-colors hover:bg-surface-overlay focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-40";
 
 const paginationClass =
-  "flex flex-wrap items-center justify-center gap-2.5 pt-4";
+  "flex flex-wrap items-center justify-center gap-2 pt-2";
 
 /** Inactive: just an outline; active (`aria-selected`): filled dot. Clicking is handled by headless. */
 const bulletClass =
@@ -183,18 +188,118 @@ const titleWrapperClass = "sr-only";
 const playerClass =
   "inline-flex h-9 items-center gap-2 rounded-md border border-separator-opaque bg-surface-raised px-3 text-callout font-medium text-label shadow-sm hover:bg-surface-overlay focus:outline-none focus-visible:ring-2 focus-visible:ring-ring";
 
-const stepperClass = "mt-3 flex flex-wrap gap-2";
+const stepperClass = "mt-1.5 flex flex-wrap gap-1.5";
 
 const stepClass =
-  "inline-flex min-h-9 min-w-9 items-center justify-center rounded-md border border-separator-opaque bg-surface-raised text-callout font-medium text-secondary-label aria-[current=step]:border-accent aria-[current=step]:text-label";
+  "inline-flex min-h-7 min-w-7 items-center justify-center rounded-md border border-separator-opaque bg-surface-raised px-1.5 text-callout font-medium text-secondary-label aria-[current=step]:border-accent aria-[current=step]:text-label";
+
+/** Umístění šipek Previous / Next vůči oblasti slidů. */
+export type CarouselArrowsPlacement =
+  | "sides-center"
+  | "bottom-left"
+  | "bottom-right"
+  | "bottom-center"
+  | "bottom-sides"
+  | "hide";
+
+export type CarouselArrowsLayout = {
+  /** Obal kolem Scroller + šipek. */
+  stage: string;
+  previous: string;
+  next: string;
+  /** Šipky vlevo a vpravo od posuvníku, svisle vycentrované k obsahu. */
+  arrowsInline: boolean;
+  /** Šipky pod karuselem. */
+  arrowsBelow: boolean;
+  arrowsRow: string;
+  /** Bez tlačítek Previous / Next. */
+  arrowsHidden: boolean;
+};
+
+/** Třídy pro rozložení šipek podle zvolené varianty. */
+export function carouselArrowsLayout(
+  placement: CarouselArrowsPlacement = "sides-center",
+): CarouselArrowsLayout {
+  switch (placement) {
+    case "hide":
+      return {
+        stage: "relative w-full min-w-0",
+        previous: "",
+        next: "",
+        arrowsInline: false,
+        arrowsBelow: false,
+        arrowsRow: "",
+        arrowsHidden: true,
+      };
+    case "bottom-left":
+      return {
+        stage: "relative w-full min-w-0",
+        previous: "",
+        next: "",
+        arrowsInline: false,
+        arrowsBelow: true,
+        arrowsRow: "mt-2 flex w-full items-center justify-start gap-2",
+        arrowsHidden: false,
+      };
+    case "bottom-right":
+      return {
+        stage: "relative w-full min-w-0",
+        previous: "",
+        next: "",
+        arrowsInline: false,
+        arrowsBelow: true,
+        arrowsRow: "mt-2 flex w-full items-center justify-end gap-2",
+        arrowsHidden: false,
+      };
+    case "bottom-center":
+      return {
+        stage: "relative w-full min-w-0",
+        previous: "",
+        next: "",
+        arrowsInline: false,
+        arrowsBelow: true,
+        arrowsRow: "mt-2 flex w-full items-center justify-center gap-2",
+        arrowsHidden: false,
+      };
+    case "bottom-sides":
+      return {
+        stage: "relative w-full min-w-0",
+        previous: "",
+        next: "",
+        arrowsInline: false,
+        arrowsBelow: true,
+        arrowsRow: "mt-2 flex w-full items-center justify-between gap-2",
+        arrowsHidden: false,
+      };
+    case "sides-center":
+    default:
+      return {
+        stage:
+          "grid w-full min-w-0 grid-cols-[auto_1fr_auto] items-center gap-2",
+        previous: "",
+        next: "",
+        arrowsInline: true,
+        arrowsBelow: false,
+        arrowsRow: "",
+        arrowsHidden: false,
+      };
+  }
+}
 
 export type CarouselRootProps = PropsOf<typeof HeadlessCarousel.Root>;
 
 /** `component$` + {@link Slot} — the same pattern as Checkbox/Label: otherwise the children are not projected into the headless primitive. */
-export const CarouselSlide = component$<PropsOf<typeof HeadlessCarousel.Slide>>((props) => {
-  const merged = [slideClass, props.class].filter(Boolean).join(" ");
+export type CarouselSlideProps = PropsOf<typeof HeadlessCarousel.Slide> & {
+  /** Bez rámečku, stínu a výchozího paddingu slidu. */
+  frameless?: boolean;
+};
+
+export const CarouselSlide = component$<CarouselSlideProps>((props) => {
+  const { frameless, class: className, ...rest } = props;
+  const base = frameless ? slideFramelessClass : slideClass;
+  const merged = [base, className].filter(Boolean).join(" ");
   return (
-    <HeadlessCarousel.Slide {...props} class={merged}>
+    <HeadlessCarousel.Slide {...rest} class={merged}>
       <Slot />
     </HeadlessCarousel.Slide>
   );
@@ -236,11 +341,15 @@ export const CarouselRoot: FunctionComponent<CarouselRootProps> = (props) => {
   );
 };
 
-export const CarouselScroller: FunctionComponent<
-  PropsOf<typeof HeadlessCarousel.Scroller>
-> = (props) => {
-  const { class: className, ...rest } = props;
-  const merged = [scrollerClass, className].filter(Boolean).join(" ");
+export type CarouselScrollerProps = PropsOf<typeof HeadlessCarousel.Scroller> & {
+  /** Bez rámečku a pozadí oblasti posuvníku. */
+  frameless?: boolean;
+};
+
+export const CarouselScroller: FunctionComponent<CarouselScrollerProps> = (props) => {
+  const { class: className, frameless, ...rest } = props;
+  const base = frameless ? scrollerFramelessClass : scrollerClass;
+  const merged = [base, className].filter(Boolean).join(" ");
   return <HeadlessCarousel.Scroller {...rest} class={merged} />;
 };
 
